@@ -157,6 +157,15 @@ void main(void)
 {
     struct boot_rsp rsp;
     int rc;
+    struct device *dev;
+
+    /* Turn on power by drive POWER_ON=1  */
+    dev = device_get_binding("GPIO_0");
+    /* Set LED pin as output */
+    gpio_pin_configure(dev, 0, GPIO_DIR_OUT); //p0.00 == LED_GREEN
+    gpio_pin_configure(dev, 31, GPIO_DIR_OUT); //p0.31 == POWER_ON
+    gpio_pin_write(dev, 0, 0);	//p0.00 == LED_GREEN ON
+    gpio_pin_write(dev, 31, 1);	//p0.31 == POWER_ON
 
     BOOT_LOG_INF("Starting bootloader");
 
