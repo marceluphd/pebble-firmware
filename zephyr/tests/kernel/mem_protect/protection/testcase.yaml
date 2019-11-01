@@ -1,0 +1,4 @@
+tests:
+  kernel.memory_protection.protection:
+    filter: CONFIG_MEMORY_PROTECTION
+    tags: kernel security ignore_faults

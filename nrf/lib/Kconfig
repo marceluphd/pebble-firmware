@@ -1,0 +1,21 @@
+#
+# Copyright (c) 2018 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+#
+
+menu "Libraries"
+
+rsource "bsdlib/Kconfig"
+
+rsource "at_host/Kconfig"
+
+rsource "dk_buttons_and_leds/Kconfig"
+
+rsource "at_cmd_parser/Kconfig"
+
+rsource "modem_info/Kconfig"
+
+rsource "pdn_management/Kconfig"
+
+endmenu

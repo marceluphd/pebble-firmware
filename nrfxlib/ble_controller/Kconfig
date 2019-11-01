@@ -1,0 +1,54 @@
+#
+# Copyright (c) 2018 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+#
+
+# BT_LL_CHOICE is declared in Zephyr and also here for a second time,
+# now with additional properties. Note that the dependencies of the
+# original config must be duplicated to not affect it's visibility.
+
+if BT && BT_HCI && BT_CTLR
+
+choice BT_LL_CHOICE
+	prompt "Bluetooth Link Layer Selection"
+
+config BT_LL_NRFXLIB
+	bool "Nordic proprietary BLE Link Layer"
+	select ZERO_LATENCY_IRQS
+	# This controller only supports nRF52, it does not support 51 or
+	# 91 (91 doesn't even have the physical HW needed for BLE).
+	depends on SOC_SERIES_NRF52X
+	help
+	  Use Nordic BLE Link Layer implementation.
+
+endchoice
+
+if BT_LL_NRFXLIB
+
+comment "Common BLE Controller module configuration"
+
+choice BLE_CONTROLLER_VARIANT
+	prompt "BLE Controller variant"
+	default BLE_CONTROLLER_S112 if SOC_NRF52810
+	default BLE_CONTROLLER_S132 if SOC_NRF52832
+	default BLE_CONTROLLER_S140 if SOC_NRF52840
+	help
+		Select a BLE Controller variant.
+
+config BLE_CONTROLLER_S112
+	depends on (SOC_NRF52810 || SOC_NRF52832)
+	bool "s112"
+
+config BLE_CONTROLLER_S132
+	depends on (SOC_NRF52810 || SOC_NRF52832)
+	bool "s132"
+
+config BLE_CONTROLLER_S140
+	depends on SOC_NRF52840
+	bool "s140"
+
+endchoice
+
+endif # BT_LL_NRFXLIB
+endif # BT && BT_HCI && BT_CTLR

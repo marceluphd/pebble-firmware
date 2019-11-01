@@ -1,0 +1,5 @@
+if(CONFIG_SOC_ATMEL_SAME70_REVB)
+  zephyr_include_directories(same70b)
+else()
+  zephyr_include_directories(${CONFIG_SOC_SERIES})
+endif()

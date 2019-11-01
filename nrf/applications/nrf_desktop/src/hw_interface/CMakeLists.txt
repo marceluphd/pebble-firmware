@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2018 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+#
+
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/board.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_MOTION_SENSOR_ENABLE app PRIVATE
+                     ${CMAKE_CURRENT_SOURCE_DIR}/motion_sensor.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_MOTION_BUTTONS_ENABLE app
+                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/motion_buttons.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_MOTION_SIMULATED_ENABLE app PRIVATE
+                     ${CMAKE_CURRENT_SOURCE_DIR}/motion_simulated.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_BUTTONS_ENABLE app
+                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/buttons.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_WHEEL_ENABLE app
+                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/wheel.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_LED_ENABLE app
+		     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/leds.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_BATTERY_CHARGER_DISCRETE app
+                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/battery_charger.c)
+
+target_sources_ifdef(CONFIG_DESKTOP_BATTERY_MEAS app
+                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/battery_meas.c)

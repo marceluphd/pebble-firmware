@@ -1,0 +1,140 @@
+#
+# Copyright (c) 2018 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+#
+
+config MCUBOOT_BUILD_S1_VARIANT
+	# This can not depend on BOOTLOADER_MCUBOOT, or SECURE_BOOT as this
+	# option has to be set when building MCUBoot itself. Instead an error
+	# is raised by CMake if an incorrect configuration is found.
+	bool "Build S1 variant of MCUBoot"
+	help
+	  Build upgrade candidate of MCUBoot for alternative slot S1.
+
+config SECURE_BOOT_CRYPTO_CLIENT
+	bool "Include Secure Bootloader crypto client API"
+	help
+	  Set this option to enable the crypto client API
+	  which gives access to the cryptographic functions
+	  from the secure bootloader. This will only work
+	  when the secure bootloader is enabled.
+
+config SECURE_BOOT
+	bool "Use Secure Bootloader"
+	depends on !IS_SECURE_BOOTLOADER
+	select FW_METADATA
+	select SECURE_BOOT_CRYPTO
+	help
+	  Set this option to enable the first stage bootloader which
+	  verifies the signature of the app.
+
+if SECURE_BOOT
+
+module=B0
+source "${ZEPHYR_BASE}/../nrf/subsys/partition_manager/Kconfig.template.build_strategy"
+
+config SB_PRIVATE_KEY_PROVIDED
+	bool
+	help
+	  Hidden config specifying whether the build system has access to the
+	  private key used for signing, and will use it to perform signing and
+	  create the public key for the provision page.
+
+
+choice SB_SIGNING
+	prompt "Firmware signing method"
+	default SB_SIGNING_PYTHON
+	config SB_SIGNING_PYTHON
+		bool "Sign with Python ecdsa library."
+		select SB_PRIVATE_KEY_PROVIDED
+
+	config SB_SIGNING_OPENSSL
+		bool "Sign with openssl command line tool."
+		select SB_PRIVATE_KEY_PROVIDED
+
+	config SB_SIGNING_CUSTOM
+		bool "Sign with custom command."
+endchoice
+
+config SB_SIGNING_KEY_FILE
+	string
+	prompt "Private key PEM file" if SB_PRIVATE_KEY_PROVIDED
+	default ""
+	help
+	  Absolute path to the private key PEM file.
+	  Specifies the private key used for signing the firmware image.
+	  The hash of the corresponding public key is stored as the first
+	  entry in the list of public key hashes in the provision hex file.
+	  This value can also be set by exporting an environment variable
+	  named 'SB_SIGNING_KEY_FILE' or passing
+	  '-DSB_SIGNING_KEY_FILE=/path/to/my/pem' when running cmake.
+	  See also SB_PUBLIC_KEY_FILES.
+
+config SB_SIGNING_COMMAND
+	string
+	prompt "Custom signing command" if !SB_PRIVATE_KEY_PROVIDED
+	default ""
+	help
+	  This command will be called to produce a signature of the firmware.
+	  It will be called as "${CONFIG_SB_SIGNING_COMMAND} <file>"
+	  The command must take calculate the signature over the the contents
+	  of the <file> and write the signature to stdout.
+	  The signature must be on DER format.
+
+config SB_SIGNING_PUBLIC_KEY
+	string
+	prompt "Public key PEM file" if !SB_PRIVATE_KEY_PROVIDED
+	default ""
+	help
+	  Path to a PEM file.
+	  When using a custom signing command, specify the corresponding public
+	  key here. This public key is checked during building, and added to
+	  the provision page as the first entry. See SB_PUBLIC_KEY_FILES.
+
+config SB_PUBLIC_KEY_FILES
+	string "Public Key PEM files"
+	default ""
+	help
+	  Comma-separated list of absolute paths to public key pem files.
+	  The provision hex file will contain a list of hashes of public keys.
+	  The first public key hash is the one corresponding to the private
+	  signing key used to sign the image. See SB_SIGNING_KEY_FILE.
+	  The hashes of the public keys specified in this configuration will be
+	  placed after the aforementioned public key hash, in the order
+	  they appear in this config.
+	  If config is an empty string, 2 generated debug files
+	  will be used.
+	  Example value: ~/keys/pk1.pem,~/keys/pk2.pem,~/keys/pk3.pem
+
+
+endif # SECURE_BOOT
+
+menuconfig IS_SECURE_BOOTLOADER
+	bool "Current app is bootloader"
+	select SECURE_BOOT_CRYPTO
+	select SW_VECTOR_RELAY if SOC_SERIES_NRF51X
+	select FW_METADATA
+	depends on !KERNEL
+	help
+	  This option is set by the first stage bootloader app to include all
+	  files and set all the options required.
+
+if IS_SECURE_BOOTLOADER
+
+partition=B0
+partition-size=0x8000
+source "${ZEPHYR_BASE}/../nrf/subsys/partition_manager/Kconfig.template.partition_size"
+
+rsource "debug/Kconfig"
+
+endif # IS_SECURE_BOOTLOADER
+
+if IS_SECURE_BOOTLOADER || SECURE_BOOT
+config SB_FIRMWARE_INFO_OFFSET
+	hex
+	default FW_FIRMWARE_INFO_OFFSET
+
+rsource "bl_crypto/Kconfig"
+endif # IS_SECURE_BOOTLOADER || SECURE_BOOT
+

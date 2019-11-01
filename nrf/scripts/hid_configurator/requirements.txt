@@ -1,0 +1,2 @@
+# pyhidapi
+hid>=1.0.3
