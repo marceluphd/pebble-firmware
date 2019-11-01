@@ -15,5 +15,11 @@ target_sources(app PRIVATE
 	src/main.c
 	)
 
+target_sources(app PRIVATE src/bme/bme680.c)
+target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
+target_sources(app PRIVATE src/icm/Icm426xxDriver_HL.c)
+target_sources(app PRIVATE src/icm/Icm426xxTransport.c)
+
+
 target_include_directories(app PRIVATE src)
 # NORDIC SDK APP END
