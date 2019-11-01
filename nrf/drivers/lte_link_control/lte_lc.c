@@ -19,6 +19,11 @@ LOG_MODULE_REGISTER(lte_lc, CONFIG_LTE_LINK_CONTROL_LOG_LEVEL);
 #define LC_MAX_READ_LENGTH 128
 #define AT_CMD_SIZE(x) (sizeof(x) - 1)
 
+
+/* Subscribes to notifications with level 2 */
+static const char trace[] = "AT%XMODEMTRACE=1,2";
+
+
 /* Subscribes to notifications with level 2 */
 static const char subscribe[] = "AT+CEREG=2";
 
@@ -80,6 +85,9 @@ void at_handler(char *response)
 
 static int w_lte_lc_init(void)
 {
+if (at_cmd_write(trace, NULL, 0, NULL) != 0) {
+		return -EIO;
+	}
 #if defined(CONFIG_LTE_EDRX_REQ)
 	/* Request configured eDRX settings to save power */
 	if (at_cmd_write(edrx_req, NULL, 0, NULL) != 0) {

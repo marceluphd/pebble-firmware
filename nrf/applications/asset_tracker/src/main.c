@@ -11,6 +11,7 @@
 #include <gps.h>
 #include <sensor.h>
 #include <console.h>
+#include <gpio.h>
 #include <misc/reboot.h>
 #include <logging/log_ctrl.h>
 #if defined(CONFIG_BSD_LIBRARY)
@@ -114,6 +115,7 @@ static struct k_work send_flip_data_work;
 static struct k_delayed_work send_env_data_work;
 static struct k_delayed_work flip_poll_work;
 static struct k_delayed_work long_press_button_work;
+static struct k_delayed_work power_off_button_work;
 static struct k_delayed_work cloud_reboot_work;
 #if CONFIG_MODEM_INFO
 static struct k_work device_status_work;
@@ -789,6 +791,16 @@ static void long_press_handler(struct k_work *work)
 	}
 }
 
+static void power_off_handler(struct k_work *work)
+{    
+         struct device *dev;
+	
+         dev = device_get_binding("GPIO_0");
+            /* Set LED pin as output */
+         gpio_pin_write(dev, 31, 0);	//p0.31 == POWER_OFF
+
+
+}
 /**@brief Initializes and submits delayed work. */
 static void work_init(void)
 {
@@ -799,6 +811,7 @@ static void work_init(void)
 	k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
 	k_delayed_work_init(&flip_poll_work, flip_send);
 	k_delayed_work_init(&long_press_button_work, long_press_handler);
+    k_delayed_work_init(&power_off_button_work, power_off_handler);
 	k_delayed_work_init(&cloud_reboot_work, cloud_reboot_handler);
 #if CONFIG_MODEM_INFO
 	k_work_init(&device_status_work, device_status_send);
@@ -974,9 +987,12 @@ static void ui_evt_handler(struct ui_evt evt)
 	   (evt.button == UI_BUTTON_1)) {
 		if (evt.type == UI_EVT_BUTTON_ACTIVE) {
 			k_delayed_work_submit(&long_press_button_work,
+			K_SECONDS(2));// chang 5S to 2S 
+            k_delayed_work_submit(&power_off_button_work,
 			K_SECONDS(5));
 		} else {
 			k_delayed_work_cancel(&long_press_button_work);
+            k_delayed_work_cancel(&power_off_button_work);
 		}
 	}
 
@@ -1011,6 +1027,14 @@ static void ui_evt_handler(struct ui_evt evt)
 void main(void)
 {
 	int ret;
+    struct device *dev;
+    ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
+    dev = device_get_binding("GPIO_0");
+    /* Set LED pin as output */
+	gpio_pin_configure(dev, 0, GPIO_DIR_OUT); //p0.00 == LED_GREEN
+    gpio_pin_configure(dev, 31, GPIO_DIR_OUT); //p0.31 == POWER_ON
+    gpio_pin_write(dev, 0, 0);	//p0.00 == LED_GREEN ON
+    gpio_pin_write(dev, 31, 1);	//p0.31 == POWER_ON
 
 	printk("Asset tracker started\n");
 
