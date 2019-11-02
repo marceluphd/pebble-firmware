@@ -14,6 +14,10 @@ zephyr_compile_definitions(PROJECT_NAME=${PROJECT_NAME})
 
 # NORDIC SDK APP START
 target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE src/bme/bme680.c)
+target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
+target_sources(app PRIVATE src/icm/Icm426xxDriver_HL.c)
+target_sources(app PRIVATE src/icm/Icm426xxTransport.c)
 # NORDIC SDK APP END
 zephyr_include_directories(src)
 
