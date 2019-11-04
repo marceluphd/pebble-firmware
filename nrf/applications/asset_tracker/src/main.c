@@ -1884,14 +1884,14 @@ void Iotex_Gpio_Init(void)
 ////////////////////////////////GPIO END/////////////////////////////////////////
 void main(void)
 {
-	int ret;
-	int err;
+    int ret;
+    int err;
     struct device *dev;
-	/* The mqtt client struct */
-	struct mqtt_client client;
+    /* The mqtt client struct */
+    struct mqtt_client client;
    
     ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
-   Iotex_Gpio_Init();
+    Iotex_Gpio_Init();
    ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
     /*dev = device_get_binding("GPIO_0");
    
@@ -1903,17 +1903,16 @@ void main(void)
     /* Iotex Init I2C */
     Iotex_I2C_Init();
     /* Iotex Init BME680 */
-    //Iotex_bme680_init();
-   // Iotex_bme680_config();
+    Iotex_bme680_init();
+    Iotex_bme680_config();
     /* Iotex Init ICM42605 */
-   // Iotex_icm42605_Init();
-   /* Iotex_icm42605_Configure((uint8_t )IS_LOW_NOISE_MODE,
+    Iotex_icm42605_Init();
+    Iotex_icm42605_Configure((uint8_t )IS_LOW_NOISE_MODE,
 	                                  ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
 	                                  ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
 	                                  ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
 	                                  ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
 	                        (uint8_t )TMST_CLKIN_32K);
-     */
 
 	printk("Asset tracker started\n");
         adc_init();	
