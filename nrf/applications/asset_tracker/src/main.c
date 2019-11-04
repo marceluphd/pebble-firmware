@@ -1855,6 +1855,7 @@ void Iotex_Gpio_Init(void)
     gpio_pin_write(ggpio_dev,LED_GREEN , 0);	//p0.00 == LED_GREEN ON
     gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
     gpio_pin_write(ggpio_dev, LED_RED, 1);	//p0.00 == LED_RED OFF
+    gpio_pin_write(ggpio_dev, IO_POWER_ON, 1);	//p0.31 == POWER_ON
 
 
     gpio_pin_configure(ggpio_dev, POWER_KEY,
@@ -1865,7 +1866,6 @@ void Iotex_Gpio_Init(void)
     gpio_init_callback(&pwr_key_gpio_cb, pwr_Key_callback, BIT(POWER_KEY));
     gpio_add_callback(ggpio_dev, &pwr_key_gpio_cb);
     gpio_pin_enable_callback(ggpio_dev, POWER_KEY);
-
 
     gpio_pin_configure(ggpio_dev, IO_NCHRQ,
 				 (GPIO_DIR_IN | GPIO_INT |
