@@ -341,7 +341,7 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
 	static u32_t fix_count;
 
 	ARG_UNUSED(trigger);
-
+        printk("GPS trigger handler %d\n",fix_count);
 	if (ui_button_is_active(UI_SWITCH_2)
 	   || !atomic_get(&send_data_enable)) {
 		return;
@@ -1050,6 +1050,7 @@ static void sensors_init(void)
 /**@brief User interface event handler. */
 static void ui_evt_handler(struct ui_evt evt)
 {
+      printk("ui evt handler %d\n",evt.button);
 	if (pattern_recording) {
 		pairing_button_register(&evt);
 		return;
@@ -1432,6 +1433,14 @@ static int client_init(struct mqtt_client *client, char *hostname)
 
 	return 0;
 }
+
+/**@brief Initialize the file descriptor structure used by poll. */
+static int fds_init(struct mqtt_client *c)
+{
+	fds.fd = c->transport.tls.sock;
+	fds.events = POLLIN;
+	return 0;
+}
 static void Iotex_I2C_Init(void)
 {
 
@@ -1808,6 +1817,7 @@ void pwr_Key_callback(struct device *port,
         //printf("time is : %u \n",k_uptime_get_32());
         gstart_time=k_uptime_get_32();
         printf("gstart_time is : %u \n",gstart_time);
+
     }
 	else
     {
@@ -1895,7 +1905,7 @@ void main(void)
    ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
     /*dev = device_get_binding("GPIO_0");
    
-	gpio_pin_configure(dev, 0, GPIO_DIR_OUT); //p0.00 == LED_GREEN
+    gpio_pin_configure(dev, 0, GPIO_DIR_OUT); //p0.00 == LED_GREEN
     gpio_pin_configure(dev, 31, GPIO_DIR_OUT); //p0.31 == POWER_ON
     gpio_pin_write(dev, 0, 0);	//p0.00 == LED_GREEN ON
     gpio_pin_write(dev, 31, 1);	//p0.31 == POWER_ON
@@ -1922,28 +1932,13 @@ void main(void)
 #endif /* CONFIG_USE_PROVISIONED_CERTIFICATES  */
 	
 	
-	/*cloud_backend = cloud_get_binding("NRF_CLOUD");
-	__ASSERT(cloud_backend != NULL, "nRF Cloud backend not found");
 
-	ret = cloud_init(cloud_backend, cloud_event_handler);
-	if (ret) {
-		printk("Cloud backend could not be initialized, error: %d\n",
-			ret);
-		cloud_error_handler(ret);
-	}
 
 #if defined(CONFIG_USE_UI_MODULE)
 	ui_init(ui_evt_handler);
 #endif
 
-	ret = cloud_decode_init(cloud_cmd_handler);
-	if (ret) {
-		printk("Cloud command decoder could not be initialized, error: %d\n", ret);
-		cloud_error_handler(ret);
-	}
-
 	work_init();
-        */
 	modem_configure();
 	printk("modem_configure\n");
 
@@ -1954,62 +1949,73 @@ void main(void)
 		printk("ERROR: mqtt_connect %d\n", err);
 		return;
 	}
-        printk("MQTT_CONNECT done\n");
-connect:
-	ret = cloud_connect(cloud_backend);
-	if (ret) {
-		printk("cloud_connect failed: %d\n", ret);
-		cloud_error_handler(ret);
+    printk("MQTT_CONNECT done\n");
+	err = fds_init(&client);
+	if (err != 0) {
+		printk("ERROR: fds_init %d\n", err);
+		//cloud_error_handler(ret);
+		return;
 	} else {
-		k_delayed_work_submit(&cloud_reboot_work,
-				      CLOUD_CONNACK_WAIT_DURATION);
+		//k_delayed_work_submit(&cloud_reboot_work,
+		//		      CLOUD_CONNACK_WAIT_DURATION);
 	}
 
-	struct pollfd fds[] = {
-		{
-			.fd = cloud_backend->config->socket,
-			.events = POLLIN
-		}
-	};
+
 
 	while (true) {
-		ret = poll(fds, ARRAY_SIZE(fds),
-			K_SECONDS(CONFIG_MQTT_KEEPALIVE));
+		err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
 
-		if (ret < 0) {
-			printk("poll() returned an error: %d\n", ret);
-			error_handler(ERROR_CLOUD, ret);
-			continue;
+		if (err < 0) {
+			printk("ERROR: poll %d\n", errno);
+			//error_handler(ERROR_CLOUD, ret);
+			//continue;
+			break;
 		}
 
-		if (ret == 0) {
-			cloud_ping(cloud_backend);
-			continue;
+		err = mqtt_live(&client);
+		if (err != 0) {
+			printk("ERROR: mqtt_live %d\n", err);
+			break;
+		}
+                printk("mqtt live\n");
+		if ((fds.revents & POLLIN) == POLLIN) {
+			err = mqtt_input(&client);
+			if (err != 0) {
+				printk("ERROR: mqtt_input %d\n", err);
+				break;
+			}
 		}
 
-		if ((fds[0].revents & POLLIN) == POLLIN) {
-			cloud_input(cloud_backend);
+		if ((fds.revents & POLLERR) == POLLERR) {
+			printk("POLLERR\n");
+			//error_handler(ERROR_CLOUD, -EIO);
+			break;
 		}
 
-		if ((fds[0].revents & POLLNVAL) == POLLNVAL) {
-			printk("Socket error: POLLNVAL\n");
-			error_handler(ERROR_CLOUD, -EIO);
-			return;
+		if ((fds.revents & POLLNVAL) == POLLNVAL) {
+			printk("POLLNVAL\n");
+			break;
 		}
 
-		if ((fds[0].revents & POLLHUP) == POLLHUP) {
-			printk("Socket error: POLLHUP\n");
-			error_handler(ERROR_CLOUD, -EIO);
-			return;
-		}
-
-		if ((fds[0].revents & POLLERR) == POLLERR) {
-			printk("Socket error: POLLERR\n");
-			error_handler(ERROR_CLOUD, -EIO);
-			return;
+		if (do_reboot) {
+			/* Teardown */
+			mqtt_disconnect(&client);
+			sys_reboot(0);
 		}
 	}
 
-	cloud_disconnect(cloud_backend);
-	goto connect;
+	printk("Disconnecting MQTT client...\n");
+
+	err = mqtt_disconnect(&client);
+	if (err) {
+		printk("Could not disconnect MQTT client. Error: %d\n", err);
+	}
+
+    gpio_pin_write(ggpio_dev, LED_RED, 0);	//p0.00 == LED_BLUE OFF
+    k_sleep(500);
+    gpio_pin_write(ggpio_dev, LED_RED, 1);	//p0.00 == LED_BLUE OFF
+    k_sleep(500);
+    gpio_pin_write(ggpio_dev, LED_RED, 0);	//p0.00 == LED_BLUE OFF
+    k_sleep(500);
+    sys_reboot(0);
 }
