@@ -195,6 +195,7 @@ static u8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
 
 /* MQTT Broker details. */
 static struct sockaddr_storage broker_storage;
+static struct mqtt_client client;
 
 /* File descriptor */
 static struct pollfd fds;
@@ -219,6 +220,10 @@ static void env_data_send(void);
 static void sensors_init(void);
 static void work_init(void);
 static void sensor_data_send(struct cloud_channel_data *data);
+
+static  void iotexsensor_data_send(void); 
+static  void iotexgps_data_send(void);
+
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
 #endif
@@ -317,11 +322,13 @@ void bsd_irrecoverable_error_handler(uint32_t err)
 
 static void send_gps_data_work_fn(struct k_work *work)
 {
-	sensor_data_send(&gps_cloud_data);
+	//sensor_data_send(&gps_cloud_data);
+        iotexgps_data_send();
 }
 
 static void send_env_data_work_fn(struct k_work *work)
 {
+        printk("[%s:%d]\n", __func__, __LINE__);
 	env_data_send();
 }
 
@@ -557,11 +564,8 @@ static void env_data_send(void)
 {
 	int err;
 	env_sensor_data_t env_data;
-	struct cloud_msg msg = {
-		.qos = CLOUD_QOS_AT_MOST_ONCE,
-		.endpoint.type = CLOUD_EP_TOPIC_MSG
-	};
 
+    printk("[%s:%d]\n", __func__, __LINE__);
 	if (!atomic_get(&send_data_enable)) {
 		return;
 	}
@@ -572,43 +576,13 @@ static void env_data_send(void)
 		return;
 	}
 
-	if (env_sensors_get_temperature(&env_data) == 0) {
-		if (cloud_encode_env_sensors_data(&env_data, &msg) == 0) {
-			err = cloud_send(cloud_backend, &msg);
-			cloud_release_data(&msg);
-			if (err) {
-				goto error;
-			}
-		}
-	}
-
-	if (env_sensors_get_humidity(&env_data) == 0) {
-		if (cloud_encode_env_sensors_data(&env_data, &msg) == 0) {
-			err = cloud_send(cloud_backend, &msg);
-			cloud_release_data(&msg);
-			if (err) {
-				goto error;
-			}
-		}
-	}
-
-	if (env_sensors_get_pressure(&env_data) == 0) {
-		if (cloud_encode_env_sensors_data(&env_data, &msg) == 0) {
-			err = cloud_send(cloud_backend, &msg);
-			cloud_release_data(&msg);
-			if (err) {
-				goto error;
-			}
-		}
-	}
+    iotexsensor_data_send();
 
 	k_delayed_work_submit(&send_env_data_work,
 	K_SECONDS(CONFIG_ENVIRONMENT_DATA_SEND_INTERVAL));
 
 	return;
-error:
-	printk("sensor_data_send failed: %d\n", err);
-	cloud_error_handler(err);
+
 }
 
 /**@brief Send sensor data to nRF Cloud. **/
@@ -966,6 +940,7 @@ static void accelerometer_init(void)
 /**@brief Initializes flip detection using orientation detector module
  * and configured accelerometer device.
  */
+ /*
 static void flip_detection_init(void)
 {
 	int err;
@@ -996,7 +971,7 @@ static void button_sensor_init(void)
 	button_cloud_data.type = CLOUD_CHANNEL_BUTTON;
 	button_cloud_data.tag = 0x1;
 }
-
+*/
 #if CONFIG_MODEM_INFO
 /**brief Initialize LTE status containers. */
 static void modem_data_init(void)
@@ -1025,25 +1000,28 @@ static void modem_data_init(void)
 /**@brief Initializes the sensors that are used by the application. */
 static void sensors_init(void)
 {
-	accelerometer_init();
-	flip_detection_init();
-	env_sensors_init_and_start();
+	//accelerometer_init();
+	//flip_detection_init();
+	//env_sensors_init_and_start();
 
 #if CONFIG_MODEM_INFO
 	modem_data_init();
 #endif /* CONFIG_MODEM_INFO */
-	if (IS_ENABLED(CONFIG_CLOUD_BUTTON)) {
-		button_sensor_init();
-	}
-
+	//if (IS_ENABLED(CONFIG_CLOUD_BUTTON)) {
+	//	button_sensor_init();
+	//}
+	printk("[%s:%d]\n", __func__, __LINE__);
 	gps_control_init(gps_trigger_handler);
 
-	flip_cloud_data.type = CLOUD_CHANNEL_FLIP;
+	//flip_cloud_data.type = CLOUD_CHANNEL_FLIP;
 
 	/* Send sensor data after initialization, as it may be a long time until
 	 * next time if the application is in power optimized mode.
 	 */
-	k_delayed_work_submit(&send_env_data_work, K_SECONDS(5));
+         printk("[%s:%d]\n", __func__, __LINE__);
+	k_delayed_work_submit(&send_env_data_work, K_SECONDS(10));
+        printk("[%s:%d]\n", __func__, __LINE__);
+
 }
 
 #if defined(CONFIG_USE_UI_MODULE)
@@ -1055,7 +1033,7 @@ static void ui_evt_handler(struct ui_evt evt)
 		pairing_button_register(&evt);
 		return;
 	}
-
+/*
 	if (IS_ENABLED(CONFIG_CLOUD_BUTTON) &&
 	   (evt.button == CONFIG_CLOUD_BUTTON_INPUT)) {
 		button_send(evt.type == UI_EVT_BUTTON_ACTIVE ? 1 : 0);
@@ -1065,7 +1043,7 @@ static void ui_evt_handler(struct ui_evt evt)
 	   && atomic_get(&send_data_enable)) {
 		flip_send(NULL);
 	}
-
+*/
 	if (IS_ENABLED(CONFIG_GPS_CONTROL_ON_LONG_PRESS) &&
 	   (evt.button == UI_BUTTON_1)) {
 		if (evt.type == UI_EVT_BUTTON_ACTIVE) {
@@ -1148,19 +1126,6 @@ void mqtt_evt_handler(struct mqtt_client * const c,
 {
 	int err;
 
-	/*err = aws_fota_mqtt_evt_handler(c, evt);
-	if (err > 0) {
-		Event handled by FOTA library so we can skip it 
-		return;
-	} else if (err < 0) {
-		printk("aws_fota_mqtt_evt_handler: Failed! %d\n", err);
-		printk("Disconnecting MQTT client...\n");
-		err = mqtt_disconnect(c);
-		if (err) {
-			printk("Could not disconnect: %d\n", err);
-		}
-	}
-*/
 	switch (evt->type) {
 	case MQTT_EVT_CONNACK:
 		if (evt->result != 0) {
@@ -1168,6 +1133,17 @@ void mqtt_evt_handler(struct mqtt_client * const c,
 			break;
 		}
         connected=1;
+        atomic_set(&send_data_enable, 1);
+        //sensors_init();
+
+        gps_control_init(gps_trigger_handler);
+
+	/* Send sensor data after initialization, as it may be a long time until
+	 * next time if the application is in power optimized mode.
+	 */
+      
+		k_delayed_work_submit(&send_env_data_work, K_SECONDS(10));
+        printk("[%s:%d]\n", __func__, __LINE__);
         gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE OFF
         gpio_pin_write(ggpio_dev, LED_GREEN, 1); //LED_GREEN = ON
 
@@ -1800,45 +1776,217 @@ int adc_init(void)
 }
 /////////////////////////ADC END//////////////////////////////////////
 
-/////////////////////////////GPIO START///////////////////////////////////////
-
-void pwr_Key_callback(struct device *port,
-		   struct gpio_callback *cb, u32_t pins)
+static int signal_quality_get(char *id_buf)
 {
+	enum at_cmd_state at_state;
+	char snr_buf[32];
 
-    u32_t pwr_key;
-    u32_t end_time;
-    int32_t key_time;
+	int err = at_cmd_write("AT+CESQ", snr_buf, 32, &at_state);
+	if (err) {
+		printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
+	}
 
-    gpio_pin_read(ggpio_dev,30,&pwr_key);
-    if(pwr_key==0)
-    {
-		printk("power_key %d key down\n", 30);
-        //printf("time is : %u \n",k_uptime_get_32());
-        gstart_time=k_uptime_get_32();
-        printf("gstart_time is : %u \n",gstart_time);
-
-    }
-	else
-    {
-        printk("power_key %d key up\n", 30);
-        //printf("time is : %u \n",k_uptime_get_32());
-        end_time=k_uptime_get_32();
-        printf("end_time is : %u \n",end_time);
-        if (end_time > gstart_time)
-        {
-            key_time=end_time-gstart_time;
-        }
-        else
-        {
-             key_time=end_time+((int32_t)gstart_time);
-        }
-        printf("key_time is : %u \n",key_time);
-         
-        if (key_time > KEY_POWER_OFF_TIME)  gpio_pin_write(ggpio_dev, IO_POWER_ON, 0);	  //POWET_OFF
-    }
+	snprintf(id_buf, 4, "%s", &snr_buf[25]);
+    //  printk("SNR:%d\n",atoi(id_buf));
+	return 0;
 }
 
+static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
+{
+	static uint8_t payload[100] ;
+    static uint8_t snr[4] ;
+
+    signal_quality_get(snr);
+    sprintf(payload, "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d}",client_id_buf,adc_sample(),atoi(snr));
+    //  Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
+	//payload[strlen(payload) - 1] = '0' + qos;
+	return payload;
+}
+
+
+static char *get_mqtt_payload_gps(enum mqtt_qos qos)
+{
+	static uint8_t payload[100] ;
+    gps_cloud_data.data.buf[gps_cloud_data.data.len-1]=0x0;   
+    sprintf(payload, "{\"GPS\":\"%s\"}",(char *)gps_cloud_data.data.buf);
+    //  Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
+	//payload[strlen(payload) - 1] = '0' + qos;
+
+	return payload;
+}
+
+static char *get_mqtt_payload_bme680(enum mqtt_qos qos)
+{
+	static uint8_t payload[100] ;
+	Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
+	//payload[strlen(payload) - 1] = '0' + qos;
+	return payload;
+}
+
+static char *get_mqtt_payload_icm42605(enum mqtt_qos qos)
+{
+	static uint8_t payload[100] ;
+    Iotex_icm42605_Reading_sensor_data(&gicm_driver,(uint8_t*)&payload);
+	//payload[strlen(payload) - 1] = '0' + qos;
+	return payload;
+}
+
+static char *get_mqtt_topic(void)
+{
+    static uint8_t mqtt_topic[IMEI_LEN + 11] ;
+    sprintf(mqtt_topic, "topic/%s",client_id_buf);	
+	return mqtt_topic;
+}
+
+static int publish_devicedata(struct mqtt_client *client, enum mqtt_qos qos)
+{
+	struct mqtt_publish_param param;
+	param.message.topic.qos = qos;
+	param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
+	param.message.topic.topic.size =
+			strlen(param.message.topic.topic.utf8);       
+	param.message.payload.data = get_mqtt_payload_devicedata(qos);
+	param.message.payload.len =
+			strlen(param.message.payload.data);
+	param.message_id = sys_rand32_get();
+	param.dup_flag = 0U;
+	param.retain_flag = 0U;
+	return mqtt_publish(client, &param);
+}
+
+static int publish_bme680(struct mqtt_client *client, enum mqtt_qos qos)
+{
+	struct mqtt_publish_param param;
+
+	param.message.topic.qos = qos;
+	param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
+	param.message.topic.topic.size =
+			strlen(param.message.topic.topic.utf8);
+	param.message.payload.data = get_mqtt_payload_bme680(qos);
+	param.message.payload.len =
+			strlen(param.message.payload.data);
+	param.message_id = sys_rand32_get();
+	param.dup_flag = 0U;
+	param.retain_flag = 0U;
+
+	return mqtt_publish(client, &param);
+}
+
+static int publish_icm42605(struct mqtt_client *client, enum mqtt_qos qos)
+{
+	struct mqtt_publish_param param;
+
+	param.message.topic.qos = qos;
+	param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
+	param.message.topic.topic.size =
+			strlen(param.message.topic.topic.utf8);
+	param.message.payload.data = get_mqtt_payload_icm42605(qos);
+	param.message.payload.len =
+			strlen(param.message.payload.data);
+	param.message_id = sys_rand32_get();
+	param.dup_flag = 0U;
+	param.retain_flag = 0U;
+
+	return mqtt_publish(client, &param);
+}
+
+static int publish_gps(struct mqtt_client *client, enum mqtt_qos qos)
+{
+	struct mqtt_publish_param param; 
+	param.message.topic.qos = qos;
+	param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
+	param.message.topic.topic.size =
+			strlen(param.message.topic.topic.utf8);        
+	param.message.payload.data = get_mqtt_payload_gps(qos);
+	param.message.payload.len =
+			strlen(param.message.payload.data);         
+	param.message_id = sys_rand32_get();
+	param.dup_flag = 0U;
+	param.retain_flag = 0U;
+	return mqtt_publish(client, &param);
+}
+
+#define RC_STR(rc) ((rc) == 0 ? "OK" : "ERROR")
+
+#define PRINT_RESULT(func, rc) \
+	printk("[%s:%d] %s: %d <%s>\n", __func__, __LINE__, \
+	       (func), rc, RC_STR(rc))
+#define SUCCESS_OR_BREAK(rc) { if (rc != 0) { return ; } }
+
+static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
+{
+	int_fast64_t remaining = timeout;  
+	int_fast64_t start_time = k_uptime_get();
+	int rc;
+      
+	while (remaining > 0 && connected ) {
+		k_busy_wait(remaining);
+      
+		rc = mqtt_live(client);
+		if (rc != 0) {
+			PRINT_RESULT("mqtt_live", rc);
+			return rc;
+		}
+
+		rc = mqtt_input(client);
+		if (rc != 0) {
+			PRINT_RESULT("mqtt_input", rc);
+			return rc;
+       
+		}
+
+		remaining = timeout + start_time - k_uptime_get();
+      
+	}
+
+	return 0;
+}
+
+ void iotexgps_data_send()
+ {
+    int rc;
+	printk("[%s:%d]\n", __func__, __LINE__);
+    if(connected)
+    {
+        //user_delay_ms(10000); 
+        rc = mqtt_ping(&client);
+        PRINT_RESULT("mqtt_ping", rc);
+        SUCCESS_OR_BREAK(rc);
+        rc = publish_gps(&client, 0);
+        PRINT_RESULT("mqtt_publish_gps", rc);
+        SUCCESS_OR_BREAK(rc);
+    }
+
+}
+
+ void iotexsensor_data_send()
+ {
+    int rc;
+    printk("[%s:%d]\n", __func__, __LINE__);
+    if(connected)
+    {
+        //user_delay_ms(10000); 
+        rc = mqtt_ping(&client);
+        PRINT_RESULT("mqtt_ping", rc);
+        SUCCESS_OR_BREAK(rc);
+        // gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
+        rc = process_mqtt_and_sleep(&client, 100);
+        SUCCESS_OR_BREAK(rc);
+        rc = publish_devicedata(&client, 0);
+        PRINT_RESULT("mqtt_publish_devicedata", rc);
+        rc = publish_bme680(&client, 0);
+        PRINT_RESULT("mqtt_publish_bme680", rc);
+        //gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE ON
+    	SUCCESS_OR_BREAK(rc);
+        rc = publish_icm42605(&client, 0);
+        PRINT_RESULT("mqtt_publish_icm42605", rc);
+        //  gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE ON         
+        SUCCESS_OR_BREAK(rc);
+    }
+
+}
+
+/////////////////////////////GPIO START///////////////////////////////////////
 void chrq_callback(struct device *port,
 		   struct gpio_callback *cb, u32_t pins)
 {
@@ -1849,7 +1997,6 @@ void chrq_callback(struct device *port,
     gpio_pin_write(ggpio_dev, LED_GREEN, (chrq+1)%2); //LED_GREEN =! LED_RED
  }
 
-static struct gpio_callback pwr_key_gpio_cb;
 static struct gpio_callback chrq_gpio_cb;
 
 void Iotex_Gpio_Init(void)
@@ -1866,16 +2013,6 @@ void Iotex_Gpio_Init(void)
     gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
     gpio_pin_write(ggpio_dev, LED_RED, 1);	//p0.00 == LED_RED OFF
     gpio_pin_write(ggpio_dev, IO_POWER_ON, 1);	//p0.31 == POWER_ON
-
-
-    gpio_pin_configure(ggpio_dev, POWER_KEY,
-				 (GPIO_DIR_IN | GPIO_INT |
-				  GPIO_INT_EDGE | GPIO_INT_DOUBLE_EDGE |
-				  GPIO_INT_DEBOUNCE));
-
-    gpio_init_callback(&pwr_key_gpio_cb, pwr_Key_callback, BIT(POWER_KEY));
-    gpio_add_callback(ggpio_dev, &pwr_key_gpio_cb);
-    gpio_pin_enable_callback(ggpio_dev, POWER_KEY);
 
     gpio_pin_configure(ggpio_dev, IO_NCHRQ,
 				 (GPIO_DIR_IN | GPIO_INT |
@@ -1894,22 +2031,11 @@ void Iotex_Gpio_Init(void)
 ////////////////////////////////GPIO END/////////////////////////////////////////
 void main(void)
 {
-    int ret;
     int err;
     struct device *dev;
-    /* The mqtt client struct */
-    struct mqtt_client client;
-   
-    ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
+
     Iotex_Gpio_Init();
-   ////////Turn on power by drive POWER_ON=1   qiuhm /////////////
-    /*dev = device_get_binding("GPIO_0");
-   
-    gpio_pin_configure(dev, 0, GPIO_DIR_OUT); //p0.00 == LED_GREEN
-    gpio_pin_configure(dev, 31, GPIO_DIR_OUT); //p0.31 == POWER_ON
-    gpio_pin_write(dev, 0, 0);	//p0.00 == LED_GREEN ON
-    gpio_pin_write(dev, 31, 1);	//p0.31 == POWER_ON
-    */
+
     /* Iotex Init I2C */
     Iotex_I2C_Init();
     /* Iotex Init BME680 */
@@ -1918,21 +2044,19 @@ void main(void)
     /* Iotex Init ICM42605 */
     Iotex_icm42605_Init();
     Iotex_icm42605_Configure((uint8_t )IS_LOW_NOISE_MODE,
-	                                  ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
-	                                  ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
-	                                  ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
-	                                  ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
+	                        ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
+	                        ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
+	                        ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
+	                        ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
 	                        (uint8_t )TMST_CLKIN_32K);
 
 	printk("Asset tracker started\n");
-        adc_init();	
+    adc_init();	
 	printk("adc_int done\n");
+
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
 	provision_certificates();
 #endif /* CONFIG_USE_PROVISIONED_CERTIFICATES  */
-	
-	
-
 
 #if defined(CONFIG_USE_UI_MODULE)
 	ui_init(ui_evt_handler);
@@ -1940,16 +2064,17 @@ void main(void)
 
 	work_init();
 	modem_configure();
-	printk("modem_configure\n");
+	printk("modem_configure done\n");
 
 	err=client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
-        err = mqtt_connect(&client);
+    err = mqtt_connect(&client);
 	if (err != 0) {
 		printk("ERROR: mqtt_connect %d\n", err);
 		return;
 	}
     printk("MQTT_CONNECT done\n");
+
 	err = fds_init(&client);
 	if (err != 0) {
 		printk("ERROR: fds_init %d\n", err);
@@ -1959,8 +2084,6 @@ void main(void)
 		//k_delayed_work_submit(&cloud_reboot_work,
 		//		      CLOUD_CONNACK_WAIT_DURATION);
 	}
-
-
 
 	while (true) {
 		err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
@@ -1977,7 +2100,8 @@ void main(void)
 			printk("ERROR: mqtt_live %d\n", err);
 			break;
 		}
-                printk("mqtt live\n");
+        printk("mqtt live\n");
+
 		if ((fds.revents & POLLIN) == POLLIN) {
 			err = mqtt_input(&client);
 			if (err != 0) {

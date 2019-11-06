@@ -109,21 +109,12 @@
 	status = "okay";
 	sda-pin = <3>;
 	scl-pin = <4>;
+};
 
-	bme680@77 {
-		compatible = "bosch,bme680";
-		label = "BME680";
-		reg = <0x77>;
-		clock-frequency = <I2C_BITRATE_FAST>;
-	};
-
-	bh1749@38 {
-			compatible = "rohm,bh1749";
-			label = "BH1749";
-			reg = <0x38>;
-			clock-frequency = <I2C_BITRATE_FAST>;
-			int-gpios = <&gpio0 27 0>;
-	};
+&i2c1 {
+	status = "okay";
+	sda-pin = <11>;
+	scl-pin = <12>;
 };
 
 &spi3 {
