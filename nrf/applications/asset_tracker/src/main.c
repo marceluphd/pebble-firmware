@@ -2050,90 +2050,90 @@ void main(void)
 	                        ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
 	                        (uint8_t )TMST_CLKIN_32K);
 
-	printk("Asset tracker started\n");
+    printk("Asset tracker started\n");
     adc_init();	
-	printk("adc_int done\n");
+    printk("adc_int done\n");
 
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
-	provision_certificates();
+    provision_certificates();
 #endif /* CONFIG_USE_PROVISIONED_CERTIFICATES  */
 
 #if defined(CONFIG_USE_UI_MODULE)
-	ui_init(ui_evt_handler);
+    ui_init(ui_evt_handler);
 #endif
 
-	work_init();
-	modem_configure();
-	printk("modem_configure done\n");
+    work_init();
+    modem_configure();
+    printk("modem_configure done\n");
 
-	err=client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
+    err=client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
     err = mqtt_connect(&client);
-	if (err != 0) {
-		printk("ERROR: mqtt_connect %d\n", err);
-		return;
-	}
+    if (err != 0) {
+	printk("ERROR: mqtt_connect %d\n", err);
+	return;
+    }
     printk("MQTT_CONNECT done\n");
 
-	err = fds_init(&client);
-	if (err != 0) {
-		printk("ERROR: fds_init %d\n", err);
-		//cloud_error_handler(ret);
-		return;
-	} else {
-		//k_delayed_work_submit(&cloud_reboot_work,
-		//		      CLOUD_CONNACK_WAIT_DURATION);
+    err = fds_init(&client);
+    if (err != 0) {
+	printk("ERROR: fds_init %d\n", err);
+	//cloud_error_handler(ret);
+	return;
+    } else {
+	//k_delayed_work_submit(&cloud_reboot_work,
+	//		      CLOUD_CONNACK_WAIT_DURATION);
+    }
+
+    while (true) {
+	err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
+
+	if (err < 0) {
+		printk("ERROR: poll %d\n", errno);
+		//error_handler(ERROR_CLOUD, ret);
+		//continue;
+		break;
 	}
 
-	while (true) {
-		err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
-
-		if (err < 0) {
-			printk("ERROR: poll %d\n", errno);
-			//error_handler(ERROR_CLOUD, ret);
-			//continue;
-			break;
-		}
-
-		err = mqtt_live(&client);
-		if (err != 0) {
-			printk("ERROR: mqtt_live %d\n", err);
-			break;
-		}
+	err = mqtt_live(&client);
+	if (err != 0) {
+                printk("ERROR: mqtt_live %d\n", err);
+		break;
+	}
         printk("mqtt live\n");
 
-		if ((fds.revents & POLLIN) == POLLIN) {
-			err = mqtt_input(&client);
-			if (err != 0) {
-				printk("ERROR: mqtt_input %d\n", err);
-				break;
-			}
-		}
-
-		if ((fds.revents & POLLERR) == POLLERR) {
-			printk("POLLERR\n");
-			//error_handler(ERROR_CLOUD, -EIO);
+	if ((fds.revents & POLLIN) == POLLIN) {
+		err = mqtt_input(&client);
+		if (err != 0) {
+			printk("ERROR: mqtt_input %d\n", err);
 			break;
-		}
-
-		if ((fds.revents & POLLNVAL) == POLLNVAL) {
-			printk("POLLNVAL\n");
-			break;
-		}
-
-		if (do_reboot) {
-			/* Teardown */
-			mqtt_disconnect(&client);
-			sys_reboot(0);
 		}
 	}
 
-	printk("Disconnecting MQTT client...\n");
-
-	err = mqtt_disconnect(&client);
-	if (err) {
-		printk("Could not disconnect MQTT client. Error: %d\n", err);
+	if ((fds.revents & POLLERR) == POLLERR) {
+		printk("POLLERR\n");
+		//error_handler(ERROR_CLOUD, -EIO);
+		break;
 	}
+
+	if ((fds.revents & POLLNVAL) == POLLNVAL) {
+		printk("POLLNVAL\n");
+		break;
+	}
+
+	if (do_reboot) {
+		/* Teardown */
+		mqtt_disconnect(&client);
+		sys_reboot(0);
+	}
+  }
+
+    printk("Disconnecting MQTT client...\n");
+
+    err = mqtt_disconnect(&client);
+    if (err) {
+	printk("Could not disconnect MQTT client. Error: %d\n", err);
+    }
 
     gpio_pin_write(ggpio_dev, LED_RED, 0);	//p0.00 == LED_BLUE OFF
     k_sleep(500);
