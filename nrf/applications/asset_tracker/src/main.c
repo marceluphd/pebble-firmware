@@ -185,7 +185,6 @@ struct device *adc_dev;
 
 static struct inv_icm426xx gicm_driver;
 struct device *ggpio_dev;
-static u32_t gstart_time;
 static u8_t client_id_buf[CLIENT_ID_LEN+1];
 
 /* Buffers for MQTT client. */
@@ -200,7 +199,6 @@ static struct mqtt_client client;
 /* File descriptor */
 static struct pollfd fds;
 
-static int   gps_fd;
 /* Set to true when application should teardown and reboot */
 static bool do_reboot;
 struct bme680_dev gas_sensor;
@@ -224,6 +222,15 @@ static void sensor_data_send(struct cloud_channel_data *data);
 static  void iotexsensor_data_send(void); 
 static  void iotexgps_data_send(void);
 
+static void Iotex_I2C_Init(void);
+static int8_t Iotex_bme680_init(void);
+static int8_t Iotex_bme680_config(void);
+static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
+                       ICM426XX_ACCEL_CONFIG0_FS_SEL_t acc_fsr_g,
+                       ICM426XX_GYRO_CONFIG0_FS_SEL_t gyr_fsr_dps,
+                       ICM426XX_ACCEL_CONFIG0_ODR_t acc_freq,
+                       ICM426XX_GYRO_CONFIG0_ODR_t gyr_freq,
+                       uint8_t is_rtc_mode);
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
 #endif
@@ -1004,27 +1011,27 @@ static void modem_data_init(void)
 /**@brief Initializes the sensors that are used by the application. */
 static void sensors_init(void)
 {
-    //accelerometer_init();
-    //flip_detection_init();
-    //env_sensors_init_and_start();
-
-#if CONFIG_MODEM_INFO
-    modem_data_init();
-#endif /* CONFIG_MODEM_INFO */
-    //if (IS_ENABLED(CONFIG_CLOUD_BUTTON)) {
-    //	button_sensor_init();
-    //}
-    printk("[%s:%d]\n", __func__, __LINE__);
+    /* Iotex Init I2C */
+    Iotex_I2C_Init();
+    /* Iotex Init BME680 */
+    Iotex_bme680_init();
+    Iotex_bme680_config();
+    /* Iotex Init ICM42605 */
+    Iotex_icm42605_Init();
+    Iotex_icm42605_Configure((uint8_t)IS_LOW_NOISE_MODE,
+                 ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
+                 ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
+                 ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
+                 ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
+                 (uint8_t)TMST_CLKIN_32K);
+    adc_init();
     gps_control_init(gps_trigger_handler);
-
-    //flip_cloud_data.type = CLOUD_CHANNEL_FLIP;
 
     /* Send sensor data after initialization, as it may be a long time until
      * next time if the application is in power optimized mode.
      */
-    printk("[%s:%d]\n", __func__, __LINE__);
     k_delayed_work_submit(&send_env_data_work, K_SECONDS(10));
-    printk("[%s:%d]\n", __func__, __LINE__);
+    printk("[%s:%d] Sensors initialized\n", __func__, __LINE__);
 }
 
 #if defined(CONFIG_USE_UI_MODULE)
@@ -1138,28 +1145,13 @@ void mqtt_evt_handler(struct mqtt_client * const c,
         k_delayed_work_cancel(&cloud_reboot_work);
         connected=1;
         atomic_set(&send_data_enable, 1);
-        //sensors_init();
+        sensors_init();
 
-        gps_control_init(gps_trigger_handler);
-
-    /* Send sensor data after initialization, as it may be a long time until
-     * next time if the application is in power optimized mode.
-     */
-      
-        k_delayed_work_submit(&send_env_data_work, K_SECONDS(10));
         printk("[%s:%d]\n", __func__, __LINE__);
         gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE OFF
         gpio_pin_write(ggpio_dev, LED_GREEN, 1); //LED_GREEN = ON
 
         printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
-        /*if (err) {
-            printk("Unable to initialize AWS jobs upon "
-                   "connection\n");
-            err = mqtt_disconnect(c);
-            if (err) {
-                printk("Could not disconnect: %d\n", err);
-            }
-        }*/
         break;
 
     case MQTT_EVT_DISCONNECT:
@@ -1632,7 +1624,7 @@ int Iotex_icm42605_Init(void)
     return rc;
 }
 
-int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
+static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
                        ICM426XX_ACCEL_CONFIG0_FS_SEL_t acc_fsr_g,
                        ICM426XX_GYRO_CONFIG0_FS_SEL_t gyr_fsr_dps,
                        ICM426XX_ACCEL_CONFIG0_ODR_t acc_freq,
@@ -2038,24 +2030,6 @@ void main(void)
     struct device *dev;
 
     Iotex_Gpio_Init();
-
-    /* Iotex Init I2C */
-    Iotex_I2C_Init();
-    /* Iotex Init BME680 */
-    Iotex_bme680_init();
-    Iotex_bme680_config();
-    /* Iotex Init ICM42605 */
-    Iotex_icm42605_Init();
-    Iotex_icm42605_Configure((uint8_t)IS_LOW_NOISE_MODE,
-                 ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
-                 ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
-                 ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
-                 ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
-                 (uint8_t)TMST_CLKIN_32K);
-
-    printk("Asset tracker started\n");
-    adc_init();	
-    printk("adc_int done\n");
 
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
     provision_certificates();
