@@ -232,6 +232,10 @@ static void device_status_send(struct k_work *work);
 void error_handler(enum error_type err_type, int err_code)
 {
     if (err_type == ERROR_CLOUD) {
+        if (mqtt_disconnect(&client)) {
+            printk("Could not disconnect MQTT client during error handler.\n");
+        }
+
         if (gps_control_is_enabled()) {
             printk("Reboot\n");
             sys_reboot(0);
@@ -1018,10 +1022,9 @@ static void sensors_init(void)
     /* Send sensor data after initialization, as it may be a long time until
      * next time if the application is in power optimized mode.
      */
-         printk("[%s:%d]\n", __func__, __LINE__);
+    printk("[%s:%d]\n", __func__, __LINE__);
     k_delayed_work_submit(&send_env_data_work, K_SECONDS(10));
-        printk("[%s:%d]\n", __func__, __LINE__);
-
+    printk("[%s:%d]\n", __func__, __LINE__);
 }
 
 #if defined(CONFIG_USE_UI_MODULE)
@@ -1132,6 +1135,7 @@ void mqtt_evt_handler(struct mqtt_client * const c,
             printk("MQTT connect failed %d\n", evt->result);
             break;
         }
+        k_delayed_work_cancel(&cloud_reboot_work);
         connected=1;
         atomic_set(&send_data_enable, 1);
         //sensors_init();
@@ -1561,7 +1565,7 @@ static int8_t Iotex_bme680_Reading_sensor_data( uint8_t* str)
 ////////////////////// ICM42605 START//////////////////////////
 void inv_icm426xx_sleep_us(uint32_t us)
 {
-	k_busy_wait(us);
+    k_busy_wait(us);
 }
 
 uint64_t inv_icm426xx_get_time_us(void)
@@ -2077,11 +2081,10 @@ void main(void)
     err = fds_init(&client);
     if (err != 0) {
         printk("ERROR: fds_init %d\n", err);
-        //cloud_error_handler(ret);
-        return;
+        cloud_error_handler(err);
     } else {
-        //k_delayed_work_submit(&cloud_reboot_work,
-        //		      CLOUD_CONNACK_WAIT_DURATION);
+        k_delayed_work_submit(&cloud_reboot_work,
+                    CLOUD_CONNACK_WAIT_DURATION);
     }
 
     while (true) {
@@ -2089,14 +2092,14 @@ void main(void)
 
         if (err < 0) {
             printk("ERROR: poll %d\n", errno);
-            //error_handler(ERROR_CLOUD, ret);
-            //continue;
+            error_handler(ERROR_CLOUD, err);
             break;
         }
 
         err = mqtt_live(&client);
         if (err != 0) {
             printk("ERROR: mqtt_live %d\n", err);
+            error_handler(ERROR_CLOUD, err);
             break;
         }
         printk("mqtt live\n");
@@ -2105,18 +2108,20 @@ void main(void)
             err = mqtt_input(&client);
             if (err != 0) {
                 printk("ERROR: mqtt_input %d\n", err);
+                error_handler(ERROR_CLOUD, -EIO);
                 break;
             }
         }
 
         if ((fds.revents & POLLERR) == POLLERR) {
             printk("POLLERR\n");
-            //error_handler(ERROR_CLOUD, -EIO);
+            error_handler(ERROR_CLOUD, -EIO);
             break;
         }
 
         if ((fds.revents & POLLNVAL) == POLLNVAL) {
             printk("POLLNVAL\n");
+            error_handler(ERROR_CLOUD, -EIO);
             break;
         }
 
