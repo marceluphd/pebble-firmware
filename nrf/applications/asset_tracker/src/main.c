@@ -219,8 +219,8 @@ static void sensors_init(void);
 static void work_init(void);
 static void sensor_data_send(struct cloud_channel_data *data);
 
-static  void iotexsensor_data_send(void); 
-static  void iotexgps_data_send(void);
+static  void publish_env_sensors_data(void); 
+static  void publish_gps_data(void);
 
 static void Iotex_I2C_Init(void);
 static int8_t Iotex_bme680_init(void);
@@ -334,7 +334,7 @@ void bsd_irrecoverable_error_handler(uint32_t err)
 static void send_gps_data_work_fn(struct k_work *work)
 {
     //sensor_data_send(&gps_cloud_data);
-        iotexgps_data_send();
+        publish_gps_data();
 }
 
 static void send_env_data_work_fn(struct k_work *work)
@@ -587,7 +587,7 @@ static void env_data_send(void)
         return;
     }
 
-    iotexsensor_data_send();
+    publish_env_sensors_data();
 
     k_delayed_work_submit(&send_env_data_work,
     K_SECONDS(CONFIG_ENVIRONMENT_DATA_SEND_INTERVAL));
@@ -1833,68 +1833,15 @@ static char *get_mqtt_topic(void)
     return mqtt_topic;
 }
 
-static int publish_devicedata(struct mqtt_client *client, enum mqtt_qos qos)
+static int publish_data(struct mqtt_client *client, enum mqtt_qos qos, char* data)
 {
     struct mqtt_publish_param param;
     param.message.topic.qos = qos;
     param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
     param.message.topic.topic.size =
             strlen(param.message.topic.topic.utf8);       
-    param.message.payload.data = get_mqtt_payload_devicedata(qos);
-    param.message.payload.len =
-            strlen(param.message.payload.data);
-    param.message_id = sys_rand32_get();
-    param.dup_flag = 0U;
-    param.retain_flag = 0U;
-    return mqtt_publish(client, &param);
-}
-
-static int publish_bme680(struct mqtt_client *client, enum mqtt_qos qos)
-{
-    struct mqtt_publish_param param;
-
-    param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
-    param.message.topic.topic.size =
-            strlen(param.message.topic.topic.utf8);
-    param.message.payload.data = get_mqtt_payload_bme680(qos);
-    param.message.payload.len =
-            strlen(param.message.payload.data);
-    param.message_id = sys_rand32_get();
-    param.dup_flag = 0U;
-    param.retain_flag = 0U;
-
-    return mqtt_publish(client, &param);
-}
-
-static int publish_icm42605(struct mqtt_client *client, enum mqtt_qos qos)
-{
-    struct mqtt_publish_param param;
-
-    param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
-    param.message.topic.topic.size =
-            strlen(param.message.topic.topic.utf8);
-    param.message.payload.data = get_mqtt_payload_icm42605(qos);
-    param.message.payload.len =
-            strlen(param.message.payload.data);
-    param.message_id = sys_rand32_get();
-    param.dup_flag = 0U;
-    param.retain_flag = 0U;
-
-    return mqtt_publish(client, &param);
-}
-
-static int publish_gps(struct mqtt_client *client, enum mqtt_qos qos)
-{
-    struct mqtt_publish_param param; 
-    param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
-    param.message.topic.topic.size =
-            strlen(param.message.topic.topic.utf8);        
-    param.message.payload.data = get_mqtt_payload_gps(qos);
-    param.message.payload.len =
-            strlen(param.message.payload.data);         
+    param.message.payload.data = data;
+    param.message.payload.len = strlen(data);
     param.message_id = sys_rand32_get();
     param.dup_flag = 0U;
     param.retain_flag = 0U;
@@ -1913,7 +1860,7 @@ static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
     int_fast64_t remaining = timeout;  
     int_fast64_t start_time = k_uptime_get();
     int rc;
-      
+
     while (remaining > 0 && connected ) {
         k_busy_wait(remaining);
       
@@ -1937,46 +1884,37 @@ static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
     return 0;
 }
 
- void iotexgps_data_send()
+ void publish_gps_data()
  {
     int rc;
     printk("[%s:%d]\n", __func__, __LINE__);
     if(connected)
     {
-        //user_delay_ms(10000); 
         rc = mqtt_ping(&client);
         PRINT_RESULT("mqtt_ping", rc);
         SUCCESS_OR_BREAK(rc);
-        rc = publish_gps(&client, 0);
+        rc = publish_data(&client, 0, get_mqtt_payload_gps(0));
         PRINT_RESULT("mqtt_publish_gps", rc);
-        SUCCESS_OR_BREAK(rc);
     }
 
 }
 
- void iotexsensor_data_send()
+ void publish_env_sensors_data()
  {
     int rc;
     printk("[%s:%d]\n", __func__, __LINE__);
     if(connected)
-    {
-        //user_delay_ms(10000); 
+    { 
         rc = mqtt_ping(&client);
         PRINT_RESULT("mqtt_ping", rc);
         SUCCESS_OR_BREAK(rc);
         // gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
-        rc = process_mqtt_and_sleep(&client, 100);
-        SUCCESS_OR_BREAK(rc);
-        rc = publish_devicedata(&client, 0);
+        rc = publish_data(&client, 0, get_mqtt_payload_devicedata(0));
         PRINT_RESULT("mqtt_publish_devicedata", rc);
-        rc = publish_bme680(&client, 0);
+        rc = publish_data(&client, 0, get_mqtt_payload_bme680(0));
         PRINT_RESULT("mqtt_publish_bme680", rc);
-        //gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE ON
-        SUCCESS_OR_BREAK(rc);
-        rc = publish_icm42605(&client, 0);
+        rc = publish_data(&client, 0, get_mqtt_payload_icm42605(0));
         PRINT_RESULT("mqtt_publish_icm42605", rc);
-        //  gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE ON         
-        SUCCESS_OR_BREAK(rc);
     }
 
 }
