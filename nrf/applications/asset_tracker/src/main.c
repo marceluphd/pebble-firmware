@@ -120,6 +120,13 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define CLOUD_LED_OFF_STR "{\"led\":\"off\"}"
 #define CLOUD_LED_MSK UI_LED_1
 
+#define RC_STR(rc) ((rc) == 0 ? "OK" : "ERROR")
+
+#define PRINT_RESULT(func, rc) \
+    printk("[%s:%d] %s: %d <%s>\n", __func__, __LINE__, \
+           (func), rc, RC_STR(rc))
+#define SUCCESS_OR_BREAK(rc) { if (rc != 0) { return ; } }
+
 struct rsrp_data {
     u16_t value;
     u16_t offset;
@@ -1723,19 +1730,15 @@ static const struct adc_channel_cfg m_1st_channel_cfg = {
     .input_positive = ADC_1ST_CHANNEL_INPUT,
 };
 
-
-#define BUFFER_SIZE 1
-
-static s16_t m_sample_buffer[BUFFER_SIZE];
-
 float  adc_sample(void)
 {
     int ret;
-        float adc_voltage = 0;
+    float adc_voltage = 0;
+    s16_t sample_buffer;
     const struct adc_sequence sequence = {
         .channels = BIT(ADC_1ST_CHANNEL_ID),
-        .buffer = m_sample_buffer,
-        .buffer_size = sizeof(m_sample_buffer),
+        .buffer = &sample_buffer,
+        .buffer_size = sizeof(sample_buffer),
         .resolution = ADC_RESOLUTION,
     };
     if (!adc_dev) {
@@ -1743,14 +1746,11 @@ float  adc_sample(void)
     }
 
     ret = adc_read(adc_dev, &sequence);
-    printk("ADC read err: %d\n", ret);
+    PRINT_RESULT("ADC read",ret);
 
-    for (int i = 0; i < BUFFER_SIZE; i++) {
-        adc_voltage = (float)(((float)m_sample_buffer[i] / 1023.0f) *2*
-                      3600.0f)/1000;
-    //	printk("ADC raw value: %d\n", m_sample_buffer[i]);
-    //	printf("Measured voltage: %f mV\n", adc_voltage);
-    }
+    adc_voltage = (float)(((float)sample_buffer / 1023.0f) * 2 * 3600.0f)/1000;
+    //printk("ADC raw value: %d\n", sample_buffer);
+    //printf("Measured voltage: %f mV\n", adc_voltage);
     return adc_voltage;
 }
 
@@ -1847,13 +1847,6 @@ static int publish_data(struct mqtt_client *client, enum mqtt_qos qos, char* dat
     param.retain_flag = 0U;
     return mqtt_publish(client, &param);
 }
-
-#define RC_STR(rc) ((rc) == 0 ? "OK" : "ERROR")
-
-#define PRINT_RESULT(func, rc) \
-    printk("[%s:%d] %s: %d <%s>\n", __func__, __LINE__, \
-           (func), rc, RC_STR(rc))
-#define SUCCESS_OR_BREAK(rc) { if (rc != 0) { return ; } }
 
 static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
 {
