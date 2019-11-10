@@ -1767,6 +1767,7 @@ int adc_init(void)
     }
     
     NRF_SAADC_NS->TASKS_CALIBRATEOFFSET = 1;
+    adc_sample();
     return err;
 }
 /////////////////////////ADC END//////////////////////////////////////
