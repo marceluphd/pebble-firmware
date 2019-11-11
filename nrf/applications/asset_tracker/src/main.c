@@ -1979,7 +1979,9 @@ void main(void)
 
     err = mqtt_connect(&client);
     if (err != 0) {
-        printk("ERROR: mqtt_connect %d\n", err);
+        printk("ERROR: mqtt_connect %d, rebooting...\n", err);
+        k_sleep(500);
+        sys_reboot(0);
         return;
     }
     printk("MQTT_CONNECT done\n");
