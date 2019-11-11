@@ -381,7 +381,7 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
     ui_led_set_pattern(UI_LED_GPS_FIX);
 
     gps_sample_fetch(dev);
-    gps_channel_get(dev, GPS_CHAN_NMEA, &gps_data);
+    gps_channel_get(dev, GPS_CHAN_PVT, &gps_data);
     gps_cloud_data.data.buf = gps_data.nmea.buf;
     gps_cloud_data.data.len = gps_data.nmea.len;
     gps_cloud_data.tag += 1;
@@ -1803,10 +1803,10 @@ static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
 static char *get_mqtt_payload_gps(enum mqtt_qos qos)
 {
     static uint8_t payload[100] ;
-    gps_cloud_data.data.buf[gps_cloud_data.data.len-1]=0x0;   
-    sprintf(payload, "{\"GPS\":\"%s\"}",(char *)gps_cloud_data.data.buf);
-    //  Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
-    //payload[strlen(payload) - 1] = '0' + qos;
+
+    printf("{GPS  latitude:%f, longitude:%f\n", gps_data.pvt.latitude, gps_data.pvt.longitude,gps_data.pvt.datetime );
+    sprintf(payload,"{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f}",
+                        "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude);
 
     return payload;
 }
