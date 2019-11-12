@@ -120,6 +120,9 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define CLOUD_LED_OFF_STR "{\"led\":\"off\"}"
 #define CLOUD_LED_MSK UI_LED_1
 
+#define TIMESTAMP_STR_LEN 50
+#define SENSOR_PAYLOAD_MAX_LEN 150
+
 #define RC_STR(rc) ((rc) == 0 ? "OK" : "ERROR")
 
 #define PRINT_RESULT(func, rc) \
@@ -154,6 +157,7 @@ static bool association_with_pin;
 
 /* Sensor data */
 static struct gps_data gps_data;
+static u8_t gps_timestamp_str[TIMESTAMP_STR_LEN];
 static struct cloud_channel_data flip_cloud_data;
 static struct cloud_channel_data gps_cloud_data;
 static struct cloud_channel_data button_cloud_data;
@@ -238,6 +242,8 @@ static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
                        ICM426XX_ACCEL_CONFIG0_ODR_t acc_freq,
                        ICM426XX_GYRO_CONFIG0_ODR_t gyr_freq,
                        uint8_t is_rtc_mode);
+
+static int app_get_modemclock();
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
 #endif
@@ -341,12 +347,12 @@ void bsd_irrecoverable_error_handler(uint32_t err)
 static void send_gps_data_work_fn(struct k_work *work)
 {
     //sensor_data_send(&gps_cloud_data);
-        publish_gps_data();
+    publish_gps_data();
 }
 
 static void send_env_data_work_fn(struct k_work *work)
 {
-        printk("[%s:%d]\n", __func__, __LINE__);
+    printk("[%s:%d]\n", __func__, __LINE__);
     env_data_send();
 }
 
@@ -382,6 +388,7 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
 
     gps_sample_fetch(dev);
     gps_channel_get(dev, GPS_CHAN_PVT, &gps_data);
+    snprintf(gps_timestamp_str, TIMESTAMP_STR_LEN, "%s", app_get_modemclock());
     gps_cloud_data.data.buf = gps_data.nmea.buf;
     gps_cloud_data.data.len = gps_data.nmea.len;
     gps_cloud_data.tag += 1;
@@ -1548,9 +1555,8 @@ static int8_t Iotex_bme680_Reading_sensor_data( uint8_t* str)
 
         printf("}\n");
 
-
-        sprintf(str,"{\"Device\":\"%s\",\"T(degC)\":%.2f,\"P(hPa)\":%.2f, \"H(%%rH)\":%.2f, \"G(ohms)\":%d}" ,"BME680",data.temperature / 100.0f,
-            data.pressure / 100.0f, data.humidity / 1000.0f, data.gas_resistance);
+        sprintf(str,"{\"Device\":\"%s\",\"T(degC)\":%.2f,\"P(hPa)\":%.2f, \"H(%%rH)\":%.2f, \"G(ohms)\":%d, \"timestamp\":%s}" ,"BME680",data.temperature / 100.0f,
+            data.pressure / 100.0f, data.humidity / 1000.0f, data.gas_resistance, app_get_modemclock());
 
         /* Trigger the next measurement if you would like to read data out continuously */
         if (gas_sensor.power_mode == BME680_FORCED_MODE) {
@@ -1708,10 +1714,11 @@ int Iotex_icm42605_Reading_sensor_data(struct inv_icm426xx * s, uint8_t * str)
               
                 
         // sprintf(buf, "{\"String\":\"%s\", \"Value\":%d}", "Hello World!", 12345);
-        sprintf(str, "{\"Device\":\"%s\",\"AX\":%d, \"AY\":%d, \"AZ\":%d, \"TEMP\":%.2f,\"GX\":%d,\"GY\":%d, \"GZ\":%d}","ICM42605",
+        sprintf(str, "{\"Device\":\"%s\",\"AX\":%d, \"AY\":%d, \"AZ\":%d, \"TEMP\":%.2f,\"GX\":%d,\"GY\":%d, \"GZ\":%d, \"timestamp\":%s}","ICM42605",
             (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
             (ftemperature/132.48)+25,
-            (int16_t)fgyro[0],(int16_t) fgyro[1],(int16_t) fgyro[2]);
+            (int16_t)fgyro[0],(int16_t) fgyro[1],(int16_t) fgyro[2],
+            app_get_modemclock());
         
     }
     /*else: Data Ready was not set*/
@@ -1789,41 +1796,38 @@ static int signal_quality_get(char *id_buf)
 
 static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
 {
-    static uint8_t payload[100] ;
+    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
     static uint8_t snr[4] ;
 
     signal_quality_get(snr);
-    sprintf(payload, "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d}",client_id_buf,adc_sample(),atoi(snr));
-    //  Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
-    //payload[strlen(payload) - 1] = '0' + qos;
+    sprintf(payload, "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d, \"timestamp\":%s}",
+            client_id_buf, adc_sample(), atoi(snr), app_get_modemclock());
     return payload;
 }
 
 
 static char *get_mqtt_payload_gps(enum mqtt_qos qos)
 {
-    static uint8_t payload[100] ;
+    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
 
-    printf("{GPS  latitude:%f, longitude:%f\n", gps_data.pvt.latitude, gps_data.pvt.longitude,gps_data.pvt.datetime );
-    sprintf(payload,"{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f}",
-                        "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude);
+    printf("{GPS  latitude:%f, longitude:%f, timestamp %s\n", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp_str);
+    sprintf(payload,"{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f, \"timestamp\":%s}",
+                        "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp_str);
 
     return payload;
 }
 
 static char *get_mqtt_payload_bme680(enum mqtt_qos qos)
 {
-    static uint8_t payload[100] ;
+    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
     Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
-    //payload[strlen(payload) - 1] = '0' + qos;
     return payload;
 }
 
 static char *get_mqtt_payload_icm42605(enum mqtt_qos qos)
 {
-    static uint8_t payload[100] ;
+    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
     Iotex_icm42605_Reading_sensor_data(&gicm_driver,(uint8_t*)&payload);
-    //payload[strlen(payload) - 1] = '0' + qos;
     return payload;
 }
 
@@ -1956,6 +1960,22 @@ void Iotex_Gpio_Init(void)
 }
 
 ////////////////////////////////GPIO END/////////////////////////////////////////
+
+static int app_get_modemclock()
+{
+    enum at_cmd_state at_state;
+    static char cclk_r_buf[TIMESTAMP_STR_LEN];
+
+    int err = at_cmd_write("AT+CCLK?", cclk_r_buf, TIMESTAMP_STR_LEN, &at_state);
+    if (err) {
+        printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
+    }
+    printk("AT CMD Modem time is:%s\n",cclk_r_buf);
+
+    //return only the data part of: +CCLK: "19/11/12,19:52:09-32"
+    return cclk_r_buf+7;
+}
+
 void main(void)
 {
     int err;
