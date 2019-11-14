@@ -1960,11 +1960,14 @@ void Iotex_Gpio_Init(void)
 }
 
 ////////////////////////////////GPIO END/////////////////////////////////////////
-
+bool isLeap(uint32_t year) {
+    return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
+}
 static int app_get_modemclock()
 {
     enum at_cmd_state at_state;
     static char cclk_r_buf[TIMESTAMP_STR_LEN];
+    static char epoch_buf[TIMESTAMP_STR_LEN];
 
     int err = at_cmd_write("AT+CCLK?", cclk_r_buf, TIMESTAMP_STR_LEN, &at_state);
     if (err) {
@@ -1972,8 +1975,32 @@ static int app_get_modemclock()
     }
     printk("AT CMD Modem time is:%s\n",cclk_r_buf);
 
-    //return only the data part of: +CCLK: "19/11/12,19:52:09-32"
-    return cclk_r_buf+7;
+    //cclk_r_buf: +CCLK: "19/11/12,19:52:09-32"
+
+    uint32_t YY,MM,DD,hh,mm,ss;
+    double epoch;
+    int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    // num of years since 1900, the formula works only for 2xxx
+    YY = (cclk_r_buf[8]-'0') * 10 + (cclk_r_buf[9]-'0') + 100;
+    MM = (cclk_r_buf[11]-'0') * 10 + (cclk_r_buf[12]-'0');
+    DD = (cclk_r_buf[14]-'0') * 10 + (cclk_r_buf[15]-'0');
+    hh = (cclk_r_buf[17]-'0') * 10 + (cclk_r_buf[18]-'0');
+    mm = (cclk_r_buf[20]-'0') * 10 + (cclk_r_buf[21]-'0');
+    ss = (cclk_r_buf[23]-'0') * 10 + (cclk_r_buf[24]-'0');
+
+    if (isLeap(YY+1900)) daysPerMonth[2] = 29;
+    // accumulate
+    for (int i = 1; i <=12; i++) daysPerMonth[i] += daysPerMonth[i-1];
+
+    epoch  = ss + mm * 60 + hh * 3600 + (daysPerMonth[ MM - 1] + DD -1) * 86400 +
+    (YY-70)*31536000L + ((YY-69)/4)*86400L -
+    ((YY-1)/100)*86400L + ((YY+299)/400)*86400L;
+
+    snprintf(epoch_buf, TIMESTAMP_STR_LEN, "%.0f", epoch);
+    printk("UTC epoch %s\n", epoch_buf);
+
+    return epoch_buf;
 }
 
 void main(void)
@@ -1994,7 +2021,7 @@ void main(void)
     work_init();
     modem_configure();
     printk("modem_configure done\n");
-
+    app_get_modemclock();
     err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
     err = mqtt_connect(&client);
