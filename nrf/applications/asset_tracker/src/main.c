@@ -106,6 +106,18 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define IO_NCHRQ     26    //p0.26 == CHRQ      0=charg 1=off
 #define POWER_KEY    30    //p0.30 == POWER_KEY  0=down 1=up
 
+#define LED_ON        0
+#define LED_OFF       1
+
+#define POWER_ON      1
+#define POWER_OFF     0
+
+#define KEY_PRESSED   0
+#define KEY_RELEASED  1
+
+#define IS_PWR_CHARGE(x)  ((x) == 0)
+#define IS_KEY_PRESSED(x) ((x) == KEY_PRESSED)
+
 #define ADC_DEVICE_NAME DT_ADC_0_NAME
 #define ADC_RESOLUTION 10
 #define ADC_GAIN ADC_GAIN_1_6
@@ -1162,16 +1174,16 @@ void mqtt_evt_handler(struct mqtt_client * const c,
         sensors_init();
 
         printk("[%s:%d]\n", __func__, __LINE__);
-        gpio_pin_write(ggpio_dev, LED_BLUE, 0);	//p0.00 == LED_BLUE OFF
-        gpio_pin_write(ggpio_dev, LED_GREEN, 1); //LED_GREEN = ON
+        gpio_pin_write(ggpio_dev, LED_BLUE, LED_ON);
+        gpio_pin_write(ggpio_dev, LED_GREEN, LED_OFF);
 
         printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
         break;
 
     case MQTT_EVT_DISCONNECT:
         connected=0;
-        gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
-        gpio_pin_write(ggpio_dev, LED_GREEN, 0); //LED_GREEN = ON
+        gpio_pin_write(ggpio_dev, LED_BLUE, LED_OFF);
+        gpio_pin_write(ggpio_dev, LED_GREEN, LED_ON);
         printk("[%s:%d] MQTT client disconnected %d\n", __func__,
                __LINE__, evt->result);
         break;
@@ -1435,7 +1447,7 @@ static void Iotex_I2C_Init(void)
     printk("Starting i2c Init\n");
 
     gi2c_dev_bme680 = device_get_binding(I2C_DEV_BME680);
-        gi2c_dev_icm42605 = device_get_binding(I2C_DEV_ICM42605);
+    gi2c_dev_icm42605 = device_get_binding(I2C_DEV_ICM42605);
 
     if ((!gi2c_dev_bme680)||(!gi2c_dev_icm42605)) {
         printk("I2C: Device driver not found.\n");
@@ -1923,28 +1935,62 @@ void chrq_callback(struct device *port,
 {
     u32_t chrq;
     printk("chrq_Pin %d triggered\n", 26);
-    gpio_pin_read(ggpio_dev,IO_NCHRQ,&chrq);
+    gpio_pin_read(ggpio_dev, IO_NCHRQ, &chrq);
     gpio_pin_write(ggpio_dev, LED_RED, chrq);  //if chrq=0 ,turn LED_RED on
-    gpio_pin_write(ggpio_dev, LED_GREEN, (chrq+1)%2); //LED_GREEN =! LED_RED
+    gpio_pin_write(ggpio_dev, LED_GREEN, (chrq + 1 ) % 2); //LED_GREEN =! LED_RED
  }
 
-static struct gpio_callback chrq_gpio_cb;
+
+static u32_t g_key_press_start_time;
+void pwr_key_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
+
+    u32_t pwr_key, end_time;
+    int32_t key_press_duration, ret;
+
+    ret = gpio_pin_read(port, POWER_KEY, &pwr_key);
+    SUCCESS_OR_BREAK(ret);
+
+    if (IS_KEY_PRESSED(pwr_key)) {
+        g_key_press_start_time = k_uptime_get_32();
+        printk("Power key pressed:[%u]\n", g_key_press_start_time);
+    }
+    else {
+        end_time = k_uptime_get_32();
+        printk("Power key released:[%u]\n", end_time);
+
+        if (end_time > g_key_press_start_time) {
+            key_press_duration = end_time - g_key_press_start_time;
+        }
+        else {
+            key_press_duration = end_time + (int32_t)g_key_press_start_time;
+        }
+
+        printk("Power key press duration: %d ms\n", key_press_duration);
+        if (key_press_duration > KEY_POWER_OFF_TIME) {
+            gpio_pin_write(port, IO_POWER_ON, POWER_OFF);
+        }
+    }
+}
+
+static struct gpio_callback chrq_gpio_cb, pwr_key_gpio_cb;
 
 void Iotex_Gpio_Init(void)
 {
     uint32_t chrq;
     ggpio_dev = device_get_binding("GPIO_0");
-    /* Set LED pin as output */
-    gpio_pin_configure(ggpio_dev, LED_GREEN, GPIO_DIR_OUT); //p0.00 == LED_GREEN
-    gpio_pin_configure(ggpio_dev, LED_BLUE, GPIO_DIR_OUT); //p0.01 == LED_BLUE
-    gpio_pin_configure(ggpio_dev, LED_RED, GPIO_DIR_OUT); //p0.02 == LED_RED
-    gpio_pin_configure(ggpio_dev, IO_POWER_ON, GPIO_DIR_OUT); //p0.31 == POWER_ON
-   
-    gpio_pin_write(ggpio_dev,LED_GREEN , 0);	//p0.00 == LED_GREEN ON
-    gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
-    gpio_pin_write(ggpio_dev, LED_RED, 1);	//p0.00 == LED_RED OFF
-    gpio_pin_write(ggpio_dev, IO_POWER_ON, 1);	//p0.31 == POWER_ON
 
+    /* Set LED pin as output */
+    gpio_pin_configure(ggpio_dev, IO_POWER_ON, GPIO_DIR_OUT);	//p0.31 == POWER_ON
+    gpio_pin_configure(ggpio_dev, LED_GREEN, GPIO_DIR_OUT); 	//p0.00 == LED_GREEN
+    gpio_pin_configure(ggpio_dev, LED_BLUE, GPIO_DIR_OUT);	//p0.01 == LED_BLUE
+    gpio_pin_configure(ggpio_dev, LED_RED, GPIO_DIR_OUT); 	//p0.02 == LED_RED
+   
+    gpio_pin_write(ggpio_dev, IO_POWER_ON, POWER_ON);	//p0.31 == POWER_ON
+    gpio_pin_write(ggpio_dev, LED_GREEN , LED_ON);	//p0.00 == LED_GREEN ON
+    gpio_pin_write(ggpio_dev, LED_BLUE, LED_OFF);	//p0.00 == LED_BLUE OFF
+    gpio_pin_write(ggpio_dev, LED_RED, LED_OFF);	//p0.00 == LED_RED 
+
+    /* USB battery charge pin */
     gpio_pin_configure(ggpio_dev, IO_NCHRQ,
                  (GPIO_DIR_IN | GPIO_INT |
                   GPIO_INT_EDGE | GPIO_INT_DOUBLE_EDGE |
@@ -1954,9 +2000,18 @@ void Iotex_Gpio_Init(void)
     gpio_add_callback(ggpio_dev, &chrq_gpio_cb);
     gpio_pin_enable_callback(ggpio_dev, IO_NCHRQ);
     
-    gpio_pin_read(ggpio_dev,IO_NCHRQ,&chrq);   //get chrq status
-    gpio_pin_write(ggpio_dev, LED_RED, chrq);   // chage LED_RED as chrq    
-    gpio_pin_write(ggpio_dev, LED_GREEN, (chrq+1)%2);  //if chrq ,turn off LED_GREEN
+    /* Power key pin configure */
+    gpio_pin_configure(ggpio_dev, POWER_KEY,
+                      (GPIO_DIR_IN | GPIO_INT |
+                      GPIO_INT_EDGE | GPIO_INT_DOUBLE_EDGE |
+                      GPIO_INT_DEBOUNCE));
+
+    gpio_init_callback(&pwr_key_gpio_cb, pwr_key_callback, BIT(POWER_KEY));
+    gpio_add_callback(ggpio_dev, &pwr_key_gpio_cb);
+    gpio_pin_enable_callback(ggpio_dev, POWER_KEY);
+
+    /* Sync charge state */
+    chrq_callback(ggpio_dev, &chrq_gpio_cb, IO_NCHRQ);
 }
 
 ////////////////////////////////GPIO END/////////////////////////////////////////
@@ -2031,7 +2086,7 @@ void main(void)
         sys_reboot(0);
         return;
     }
-    printk("MQTT_CONNECT done\n");
+    printk("MQTT_CONNECT done: %s\n", CONFIG_MQTT_BROKER_HOSTNAME);
 
     err = fds_init(&client);
     if (err != 0) {
