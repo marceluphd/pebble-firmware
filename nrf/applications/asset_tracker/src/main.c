@@ -36,14 +36,14 @@
 #include "orientation_detector.h"
 #include "ui.h"
 #include "gps_controller.h"
-#include "bme/bme680.h"
+#include "bme/bme680_helper.h"
+#include "modem/modem_helper.h"
 #include "icm/Icm426xxTransport.h"
 #include "icm/Icm426xxDefs.h"
 #include "icm/Icm426xxDriver_HL.h"
 
-#define I2C_DEV_BME680    "I2C_2"
+
 #define I2C_DEV_ICM42605  "I2C_1"
-#define I2C_ADDR_BME680   0x77
 #define I2C_ADDR_ICM42605 0x69
 #define SERIF_TYPE ICM426XX_UI_I2C
 #define IS_LOW_NOISE_MODE 1
@@ -132,7 +132,6 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define CLOUD_LED_OFF_STR "{\"led\":\"off\"}"
 #define CLOUD_LED_MSK UI_LED_1
 
-#define TIMESTAMP_STR_LEN 50
 #define SENSOR_PAYLOAD_MAX_LEN 150
 
 #define RC_STR(rc) ((rc) == 0 ? "OK" : "ERROR")
@@ -169,7 +168,7 @@ static bool association_with_pin;
 
 /* Sensor data */
 static struct gps_data gps_data;
-static u8_t gps_timestamp_str[TIMESTAMP_STR_LEN];
+static iotex_st_timestamp gps_timestamp;
 static struct cloud_channel_data flip_cloud_data;
 static struct cloud_channel_data gps_cloud_data;
 static struct cloud_channel_data button_cloud_data;
@@ -200,8 +199,6 @@ static struct k_work rsrp_work;
 #endif /* CONFIG_MODEM_INFO */
 
 static bool connected=0;
-
-static  struct device *gi2c_dev_bme680;
 static  struct device *gi2c_dev_icm42605;
 
 struct device *adc_dev;
@@ -224,7 +221,7 @@ static struct pollfd fds;
 
 /* Set to true when application should teardown and reboot */
 static bool do_reboot;
-struct bme680_dev gas_sensor;
+
 
 enum error_type {
     ERROR_CLOUD,
@@ -246,8 +243,6 @@ static  void publish_env_sensors_data(void);
 static  void publish_gps_data(void);
 
 static void Iotex_I2C_Init(void);
-static int8_t Iotex_bme680_init(void);
-static int8_t Iotex_bme680_config(void);
 static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
                        ICM426XX_ACCEL_CONFIG0_FS_SEL_t acc_fsr_g,
                        ICM426XX_GYRO_CONFIG0_FS_SEL_t gyr_fsr_dps,
@@ -400,7 +395,8 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
 
     gps_sample_fetch(dev);
     gps_channel_get(dev, GPS_CHAN_PVT, &gps_data);
-    snprintf(gps_timestamp_str, TIMESTAMP_STR_LEN, "%s", app_get_modemclock());
+    iotex_modem_get_clock(&gps_timestamp);
+
     gps_cloud_data.data.buf = gps_data.nmea.buf;
     gps_cloud_data.data.len = gps_data.nmea.len;
     gps_cloud_data.tag += 1;
@@ -1039,9 +1035,10 @@ static void sensors_init(void)
 {
     /* Iotex Init I2C */
     Iotex_I2C_Init();
+
     /* Iotex Init BME680 */
-    Iotex_bme680_init();
-    Iotex_bme680_config();
+    iotex_bme680_init();
+
     /* Iotex Init ICM42605 */
     Iotex_icm42605_Init();
     Iotex_icm42605_Configure((uint8_t)IS_LOW_NOISE_MODE,
@@ -1445,22 +1442,12 @@ static void Iotex_I2C_Init(void)
     uint8_t WhoAmI = 0u;
 
     printk("Starting i2c Init\n");
-
-    gi2c_dev_bme680 = device_get_binding(I2C_DEV_BME680);
     gi2c_dev_icm42605 = device_get_binding(I2C_DEV_ICM42605);
 
-    if ((!gi2c_dev_bme680)||(!gi2c_dev_icm42605)) {
+    if (!gi2c_dev_icm42605) {
         printk("I2C: Device driver not found.\n");
         return;
     }
-
-    if (i2c_reg_read_byte(gi2c_dev_bme680, I2C_ADDR_BME680, 0xd0, &WhoAmI) != 0) { // stop wroking at this line
-        printk("Error on i2c_read(bme680)\n");
-    } else {
-        printk("no error\r\n");
-    }
-
-    printk("BMD680 ID = 0x%x\r\n", WhoAmI);
 
     if (i2c_reg_read_byte(gi2c_dev_icm42605, I2C_ADDR_ICM42605, 0x75, &WhoAmI) != 0) { // stop wroking at this line
         printk("Error on i2c_read(icm42605)\n");
@@ -1470,114 +1457,6 @@ static void Iotex_I2C_Init(void)
 
     printk("ICM42605 ID = 0x%x\r\n", WhoAmI);
 }
-////////////////////// BME680 START//////////////////////////
-
-static void user_delay_ms(uint32_t period)
-{
-    k_sleep(period);
-}
-
-
-int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
-{
-    int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
-    rslt= i2c_burst_read(gi2c_dev_bme680,I2C_ADDR_BME680,reg_addr,reg_data,((uint32_t)len));
-    return rslt;
-}
-
-int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
-{
-    int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
-    u16_t i;
-    for(i=0;i<len;i++)
-    {
-         i2c_reg_write_byte(gi2c_dev_bme680, I2C_ADDR_BME680, reg_addr+i, *(reg_data+i));
-    }
-    return rslt;
-}
-
-static int8_t Iotex_bme680_init(void)
- {
-    gas_sensor.dev_id = I2C_ADDR_BME680;
-    gas_sensor.intf = BME680_I2C_INTF;
-    gas_sensor.read = user_i2c_read;
-    gas_sensor.write = user_i2c_write;
-    gas_sensor.delay_ms = user_delay_ms;
-    /* amb_temp can be set to 25 prior to configuring the gas sensor
-     * or by performing a few temperature readings without operating the gas sensor.
-     */
-    gas_sensor.amb_temp = 25;
-
-    int8_t rslt = BME680_OK;
-    rslt = bme680_init(&gas_sensor);
-    return rslt;
-}
-
-static int8_t Iotex_bme680_config(void)
-{
-    uint8_t set_required_settings;
-
-    /* Set the temperature, pressure and humidity settings */
-    gas_sensor.tph_sett.os_hum = BME680_OS_2X;
-    gas_sensor.tph_sett.os_pres = BME680_OS_4X;
-    gas_sensor.tph_sett.os_temp = BME680_OS_8X;
-    gas_sensor.tph_sett.filter = BME680_FILTER_SIZE_3;
-
-    /* Set the remaining gas sensor settings and link the heating profile */
-    gas_sensor.gas_sett.run_gas = BME680_ENABLE_GAS_MEAS;
-    /* Create a ramp heat waveform in 3 steps */
-    gas_sensor.gas_sett.heatr_temp = 320; /* degree Celsius */
-    gas_sensor.gas_sett.heatr_dur = 150; /* milliseconds */
-
-    /* Select the power mode */
-    /* Must be set before writing the sensor configuration */
-    gas_sensor.power_mode = BME680_FORCED_MODE;
-
-    /* Set the required sensor settings needed */
-    set_required_settings = BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_FILTER_SEL | BME680_GAS_SENSOR_SEL;
-
-    /* Set the desired sensor configuration */
-    int8_t rslt = BME680_OK;
-    rslt = bme680_set_sensor_settings(set_required_settings,&gas_sensor);
-
-    /* Set the power mode */
-    rslt = bme680_set_sensor_mode(&gas_sensor);
-     return rslt;
-}
-
-static int8_t Iotex_bme680_Reading_sensor_data( uint8_t* str)
-{
-    uint16_t meas_period;
-    int8_t rslt = BME680_OK;
-    bme680_get_profile_dur(&meas_period, &gas_sensor);
-
-    struct bme680_field_data data;
-
-   // while(1)
-   // {
-        user_delay_ms(500); /* Delay till the measurement is ready */
-
-        rslt = bme680_get_sensor_data(&data, &gas_sensor);
-
-        printf("{BME680  T: %.2f degC, P: %.2f hPa, H %.2f %%rH", data.temperature / 100.0f,
-            data.pressure / 100.0f, data.humidity / 1000.0f );
-        /* Avoid using measurements from an unstable heating setup */
-        if(data.status & BME680_GASM_VALID_MSK)
-            printf(", G: %d ohms", data.gas_resistance);
-
-        printf("}\n");
-
-        sprintf(str,"{\"Device\":\"%s\",\"T(degC)\":%.2f,\"P(hPa)\":%.2f, \"H(%%rH)\":%.2f, \"G(ohms)\":%d, \"timestamp\":%s}" ,"BME680",data.temperature / 100.0f,
-            data.pressure / 100.0f, data.humidity / 1000.0f, data.gas_resistance, app_get_modemclock());
-
-        /* Trigger the next measurement if you would like to read data out continuously */
-        if (gas_sensor.power_mode == BME680_FORCED_MODE) {
-            rslt = bme680_set_sensor_mode(&gas_sensor);
-        }
-   // }
-    return rslt;
-}
-////////////////////// BME680 END//////////////////////////
 
 ////////////////////// ICM42605 START//////////////////////////
 void inv_icm426xx_sleep_us(uint32_t us)
@@ -1730,7 +1609,7 @@ int Iotex_icm42605_Reading_sensor_data(struct inv_icm426xx * s, uint8_t * str)
             (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
             (ftemperature/132.48)+25,
             (int16_t)fgyro[0],(int16_t) fgyro[1],(int16_t) fgyro[2],
-            app_get_modemclock());
+            iotex_modem_get_clock(NULL));
         
     }
     /*else: Data Ready was not set*/
@@ -1813,7 +1692,7 @@ static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
 
     signal_quality_get(snr);
     sprintf(payload, "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d, \"timestamp\":%s}",
-            client_id_buf, adc_sample(), atoi(snr), app_get_modemclock());
+            client_id_buf, adc_sample(), atoi(snr), iotex_modem_get_clock(NULL));
     return payload;
 }
 
@@ -1822,17 +1701,17 @@ static char *get_mqtt_payload_gps(enum mqtt_qos qos)
 {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
 
-    printf("{GPS  latitude:%f, longitude:%f, timestamp %s\n", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp_str);
+    printf("{GPS  latitude:%f, longitude:%f, timestamp %s\n", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
     sprintf(payload,"{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f, \"timestamp\":%s}",
-                        "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp_str);
+                        "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
 
     return payload;
 }
 
 static char *get_mqtt_payload_bme680(enum mqtt_qos qos)
 {
-    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
-    Iotex_bme680_Reading_sensor_data((uint8_t*)&payload);
+    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN];
+    iotex_bme680_get_sensor_data((uint8_t*)&payload, sizeof(payload));
     return payload;
 }
 
@@ -2015,48 +1894,7 @@ void Iotex_Gpio_Init(void)
 }
 
 ////////////////////////////////GPIO END/////////////////////////////////////////
-bool isLeap(uint32_t year) {
-    return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
-}
-static int app_get_modemclock()
-{
-    enum at_cmd_state at_state;
-    static char cclk_r_buf[TIMESTAMP_STR_LEN];
-    static char epoch_buf[TIMESTAMP_STR_LEN];
 
-    int err = at_cmd_write("AT+CCLK?", cclk_r_buf, TIMESTAMP_STR_LEN, &at_state);
-    if (err) {
-        printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
-    }
-    printk("AT CMD Modem time is:%s\n",cclk_r_buf);
-
-    //cclk_r_buf: +CCLK: "19/11/12,19:52:09-32"
-
-    uint32_t YY,MM,DD,hh,mm,ss;
-    double epoch;
-    int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-    // num of years since 1900, the formula works only for 2xxx
-    YY = (cclk_r_buf[8]-'0') * 10 + (cclk_r_buf[9]-'0') + 100;
-    MM = (cclk_r_buf[11]-'0') * 10 + (cclk_r_buf[12]-'0');
-    DD = (cclk_r_buf[14]-'0') * 10 + (cclk_r_buf[15]-'0');
-    hh = (cclk_r_buf[17]-'0') * 10 + (cclk_r_buf[18]-'0');
-    mm = (cclk_r_buf[20]-'0') * 10 + (cclk_r_buf[21]-'0');
-    ss = (cclk_r_buf[23]-'0') * 10 + (cclk_r_buf[24]-'0');
-
-    if (isLeap(YY+1900)) daysPerMonth[2] = 29;
-    // accumulate
-    for (int i = 1; i <=12; i++) daysPerMonth[i] += daysPerMonth[i-1];
-
-    epoch  = ss + mm * 60 + hh * 3600 + (daysPerMonth[ MM - 1] + DD -1) * 86400 +
-    (YY-70)*31536000L + ((YY-69)/4)*86400L -
-    ((YY-1)/100)*86400L + ((YY+299)/400)*86400L;
-
-    snprintf(epoch_buf, TIMESTAMP_STR_LEN, "%.0f", epoch);
-    printk("UTC epoch %s\n", epoch_buf);
-
-    return epoch_buf;
-}
 
 void main(void)
 {
@@ -2076,7 +1914,8 @@ void main(void)
     work_init();
     modem_configure();
     printk("modem_configure done\n");
-    app_get_modemclock();
+    iotex_modem_get_clock(NULL);
+
     err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
     err = mqtt_connect(&client);

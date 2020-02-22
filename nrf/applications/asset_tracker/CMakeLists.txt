@@ -7,14 +7,16 @@
 cmake_minimum_required(VERSION 3.8.2)
 
 include(../../cmake/boilerplate.cmake)
-
 include($ENV{ZEPHYR_BASE}/cmake/app/boilerplate.cmake NO_POLICY_SCOPE)
+
 project(asset_tracker)
 zephyr_compile_definitions(PROJECT_NAME=${PROJECT_NAME})
 
 # NORDIC SDK APP START
 target_sources(app PRIVATE src/main.c)
 target_sources(app PRIVATE src/bme/bme680.c)
+target_sources(app PRIVATE src/bme/bme680_helper.c)
+target_sources(app PRIVATE src/modem/modem_helper.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL.c)
 target_sources(app PRIVATE src/icm/Icm426xxTransport.c)
@@ -26,6 +28,7 @@ zephyr_library_include_directories(
   src/orientation_detector
   src/ui
   src/cloud_codec
+  src
   )
 
 # Application sources
