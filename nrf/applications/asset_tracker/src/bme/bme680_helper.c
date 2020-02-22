@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <i2c.h>
 #include <device.h>
-#include <string.h>>
+#include <string.h>
 #include "bme680.h"
 #include "bme680_helper.h"
 #include "modem/modem_helper.h"
-
 
 
 static struct bme680_dev __gas_sensor;

@@ -38,16 +38,9 @@
 #include "gps_controller.h"
 #include "bme/bme680_helper.h"
 #include "modem/modem_helper.h"
-#include "icm/Icm426xxTransport.h"
-#include "icm/Icm426xxDefs.h"
-#include "icm/Icm426xxDriver_HL.h"
+#include "icm/icm42605_helper.h"
 
 
-#define I2C_DEV_ICM42605  "I2C_1"
-#define I2C_ADDR_ICM42605 0x69
-#define SERIF_TYPE ICM426XX_UI_I2C
-#define IS_LOW_NOISE_MODE 1
-#define TMST_CLKIN_32K 0
 
 #if defined(CONFIG_BSD_LIBRARY)
 #include "nrf_inbuilt_key.h"
@@ -199,11 +192,11 @@ static struct k_work rsrp_work;
 #endif /* CONFIG_MODEM_INFO */
 
 static bool connected=0;
-static  struct device *gi2c_dev_icm42605;
+
 
 struct device *adc_dev;
 
-static struct inv_icm426xx gicm_driver;
+
 struct device *ggpio_dev;
 static u8_t client_id_buf[CLIENT_ID_LEN+1];
 
@@ -242,13 +235,6 @@ static void sensor_data_send(struct cloud_channel_data *data);
 static  void publish_env_sensors_data(void); 
 static  void publish_gps_data(void);
 
-static void Iotex_I2C_Init(void);
-static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
-                       ICM426XX_ACCEL_CONFIG0_FS_SEL_t acc_fsr_g,
-                       ICM426XX_GYRO_CONFIG0_FS_SEL_t gyr_fsr_dps,
-                       ICM426XX_ACCEL_CONFIG0_ODR_t acc_freq,
-                       ICM426XX_GYRO_CONFIG0_ODR_t gyr_freq,
-                       uint8_t is_rtc_mode);
 
 static int app_get_modemclock();
 #if CONFIG_MODEM_INFO
@@ -1033,20 +1019,13 @@ static void modem_data_init(void)
 /**@brief Initializes the sensors that are used by the application. */
 static void sensors_init(void)
 {
-    /* Iotex Init I2C */
-    Iotex_I2C_Init();
-
     /* Iotex Init BME680 */
     iotex_bme680_init();
 
     /* Iotex Init ICM42605 */
-    Iotex_icm42605_Init();
-    Iotex_icm42605_Configure((uint8_t)IS_LOW_NOISE_MODE,
-                 ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
-                 ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
-                 ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
-                 ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
-                 (uint8_t)TMST_CLKIN_32K);
+    iotex_icm42605_init();
+
+
     adc_init();
     gps_control_init(gps_trigger_handler);
 
@@ -1436,187 +1415,9 @@ static int fds_init(struct mqtt_client *c)
     fds.events = POLLIN;
     return 0;
 }
-static void Iotex_I2C_Init(void)
-{
 
-    uint8_t WhoAmI = 0u;
 
-    printk("Starting i2c Init\n");
-    gi2c_dev_icm42605 = device_get_binding(I2C_DEV_ICM42605);
 
-    if (!gi2c_dev_icm42605) {
-        printk("I2C: Device driver not found.\n");
-        return;
-    }
-
-    if (i2c_reg_read_byte(gi2c_dev_icm42605, I2C_ADDR_ICM42605, 0x75, &WhoAmI) != 0) { // stop wroking at this line
-        printk("Error on i2c_read(icm42605)\n");
-    } else {
-        printk("no error\r\n");
-    }
-
-    printk("ICM42605 ID = 0x%x\r\n", WhoAmI);
-}
-
-////////////////////// ICM42605 START//////////////////////////
-void inv_icm426xx_sleep_us(uint32_t us)
-{
-    k_busy_wait(us);
-}
-
-uint64_t inv_icm426xx_get_time_us(void)
-{
-    return (SYS_CLOCK_HW_CYCLES_TO_NS64(k_cycle_get_32())/1000);
-}
-
-int inv_io_hal_read_reg(struct inv_icm426xx_serif * serif, uint8_t reg, uint8_t * rbuffer, uint32_t rlen)
-{
-    uint8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
-    rslt= i2c_burst_read(gi2c_dev_icm42605, I2C_ADDR_ICM42605,reg,rbuffer,rlen);
-    return  rslt;
-}
-
-int inv_io_hal_write_reg(struct inv_icm426xx_serif * serif, uint8_t reg, const uint8_t * wbuffer, uint32_t wlen)
-{
-    uint8_t rslt = 0;
-    for(uint32_t i=0; i<wlen; i++)
-     {
-    //rslt = inv_spi_master_write_register(INV_SPI_AP, reg+i, 1, &wbuffer[i]);
-        rslt =  i2c_reg_write_byte(gi2c_dev_icm42605, I2C_ADDR_ICM42605, reg+i, wbuffer[i]);
-        if(rslt)  return rslt;
-    }
-    return rslt;
-
-}
-
-int Iotex_icm42605_Init(void)
-{
-    int rc = 0;
-    uint8_t who_am_i;
-    static struct inv_icm426xx_serif icm_serif;
-    //  printf(" initialize Icm426xx.1\n");
-    icm_serif.context   = 0;        /* no need */
-    icm_serif.read_reg  = inv_io_hal_read_reg;
-    icm_serif.write_reg = inv_io_hal_write_reg;
-    icm_serif.max_read  = 1024*32;  /* maximum number of bytes allowed per serial read */
-    icm_serif.max_write = 1024*32;  /* maximum number of bytes allowed per serial write */
-    icm_serif.serif_type = SERIF_TYPE;
-    // printf(" initialize Icm426xx.2\n");
-
-    rc = inv_icm426xx_init(&gicm_driver, &icm_serif, NULL);
-    // printf(" initialize Icm426xx.3\n");
-    rc |= inv_icm426xx_configure_fifo(&gicm_driver, INV_ICM426XX_FIFO_DISABLED);
-    //  printf(" initialize Icm426xx.4\n");
-    if(rc != INV_ERROR_SUCCESS) {
-        printf("!!! ERROR : failed to initialize Icm426xx.\n");
-        return rc;
-    }
-
-    /* Check WHOAMI */
-    rc = inv_icm426xx_get_who_am_i(&gicm_driver, &who_am_i);
-    if(rc != INV_ERROR_SUCCESS) {
-        printf("!!! ERROR : failed to read Icm426xx whoami value.\n");
-        return rc;
-    }
-
-    if(who_am_i != ICM_WHOAMI) {
-        printf("!!! ERROR :  bad WHOAMI value. Got 0x%02x (expected: 0x%02x)\n", who_am_i, ICM_WHOAMI);
-        return INV_ERROR;
-    }
-        else    printf("WHOAMI value. Got 0x%02x\n", who_am_i);
-
-    return rc;
-}
-
-static int Iotex_icm42605_Configure(uint8_t is_low_noise_mode,
-                       ICM426XX_ACCEL_CONFIG0_FS_SEL_t acc_fsr_g,
-                       ICM426XX_GYRO_CONFIG0_FS_SEL_t gyr_fsr_dps,
-                       ICM426XX_ACCEL_CONFIG0_ODR_t acc_freq,
-                       ICM426XX_GYRO_CONFIG0_ODR_t gyr_freq,
-                       uint8_t is_rtc_mode)
-{
-    int rc = 0;
-
-    rc |= inv_icm426xx_enable_clkin_rtc(&gicm_driver, is_rtc_mode);
-
-    rc |= inv_icm426xx_set_accel_fsr(&gicm_driver, acc_fsr_g);
-    rc |= inv_icm426xx_set_gyro_fsr(&gicm_driver, gyr_fsr_dps);
-
-    rc |= inv_icm426xx_set_accel_frequency(&gicm_driver, acc_freq);
-    rc |= inv_icm426xx_set_gyro_frequency(&gicm_driver, gyr_freq);
-
-    if (is_low_noise_mode)
-        rc |= inv_icm426xx_enable_accel_low_noise_mode(&gicm_driver);
-    else
-        rc |= inv_icm426xx_enable_accel_low_power_mode(&gicm_driver);
-
-    rc |= inv_icm426xx_enable_gyro_low_noise_mode(&gicm_driver);
-
-    /* Wait Max of ICM426XX_GYR_STARTUP_TIME_US and ICM426XX_ACC_STARTUP_TIME_US*/
-    (ICM426XX_GYR_STARTUP_TIME_US > ICM426XX_ACC_STARTUP_TIME_US) ? inv_icm426xx_sleep_us(ICM426XX_GYR_STARTUP_TIME_US) : inv_icm426xx_sleep_us(ICM426XX_ACC_STARTUP_TIME_US);
-
-    return rc;
-}
-
-void inv_icm42605_format_data(const uint8_t endian, const uint8_t *in, uint16_t *out)
-{
-    if(endian == ICM426XX_INTF_CONFIG0_DATA_BIG_ENDIAN)
-        *out = (in[0] << 8) | in[1];
-    else
-        *out = (in[1] << 8) | in[0];
-}
-
-int Iotex_icm42605_Reading_sensor_data(struct inv_icm426xx * s, uint8_t * str)
-{
-    int status = 0;
-    uint8_t int_status;
-    uint8_t temperature[2];
-    uint8_t accel[ACCEL_DATA_SIZE];
-    uint8_t gyro[GYRO_DATA_SIZE];
-    uint16_t ftemperature;
-    uint16_t faccel[ACCEL_DATA_SIZE/2];
-    uint16_t fgyro[GYRO_DATA_SIZE/2];
-   
-    /* Ensure data ready status bit is set */
-    status |= inv_icm426xx_read_reg(s, MPUREG_INT_STATUS, 1, &int_status);
-    if(status)
-        return status;
-
-    if(int_status & BIT_INT_STATUS_DRDY) {
-
-        status = inv_icm426xx_read_reg(s, MPUREG_TEMP_DATA0_UI, TEMP_DATA_SIZE, temperature);
-        inv_icm42605_format_data(s->endianess_data, temperature, (uint16_t *)&(ftemperature));
-
-        status |= inv_icm426xx_read_reg(s, MPUREG_ACCEL_DATA_X0_UI, ACCEL_DATA_SIZE, accel);
-        inv_icm42605_format_data(s->endianess_data, &accel[0], (uint16_t *)&faccel[0]);
-        inv_icm42605_format_data(s->endianess_data, &accel[2], (uint16_t *)&faccel[1]);
-        inv_icm42605_format_data(s->endianess_data, &accel[4], (uint16_t *)&faccel[2]);
-
-        status |= inv_icm426xx_read_reg(s, MPUREG_GYRO_DATA_X0_UI, GYRO_DATA_SIZE, gyro);
-        inv_icm42605_format_data(s->endianess_data, &gyro[0], (uint16_t *)&fgyro[0]);
-        inv_icm42605_format_data(s->endianess_data, &gyro[2], (uint16_t *)&fgyro[1]);
-        inv_icm42605_format_data(s->endianess_data, &gyro[4], (uint16_t *)&fgyro[2]);
-        
-        if((faccel[0] != INVALID_VALUE_FIFO) && (fgyro[0] != INVALID_VALUE_FIFO))
-            printf("{ICM42605   AX:%d, AY:%d, AZ:%d, TEMP:%.2f,GX:%d, GY:%d, GZ:%d}\n",
-                (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
-                (ftemperature/132.48)+25,
-                (int16_t)fgyro[0],(int16_t) fgyro[1],(int16_t) fgyro[2]);
-              
-                
-        // sprintf(buf, "{\"String\":\"%s\", \"Value\":%d}", "Hello World!", 12345);
-        sprintf(str, "{\"Device\":\"%s\",\"AX\":%d, \"AY\":%d, \"AZ\":%d, \"TEMP\":%.2f,\"GX\":%d,\"GY\":%d, \"GZ\":%d, \"timestamp\":%s}","ICM42605",
-            (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
-            (ftemperature/132.48)+25,
-            (int16_t)fgyro[0],(int16_t) fgyro[1],(int16_t) fgyro[2],
-            iotex_modem_get_clock(NULL));
-        
-    }
-    /*else: Data Ready was not set*/
-    
-    return status;
-}
-////////////////////// ICM42605 END//////////////////////////
 
 ///////////////////////////////ADC START/////////////////////////////////////////
 
@@ -1718,7 +1519,7 @@ static char *get_mqtt_payload_bme680(enum mqtt_qos qos)
 static char *get_mqtt_payload_icm42605(enum mqtt_qos qos)
 {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
-    Iotex_icm42605_Reading_sensor_data(&gicm_driver,(uint8_t*)&payload);
+    iotex_icm42605_get_sensor_data((uint8_t*)&payload, sizeof(payload));
     return payload;
 }
 
