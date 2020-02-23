@@ -1,6 +1,6 @@
 #include <adc.h>
 #include <zephyr.h>
-#include "adc.h"
+#include "hal_adc.h"
 
 
 static struct device *__adc_dev;

@@ -11,7 +11,6 @@
 #include <gps.h>
 #include <sensor.h>
 #include <console.h>
-#include <gpio.h>
 #include <misc/reboot.h>
 #include <logging/log_ctrl.h>
 #if defined(CONFIG_BSD_LIBRARY)
@@ -26,7 +25,6 @@
 #include <net/aws_fota.h>
 #include <nrf_cloud.h>
 
-#include <i2c.h>
 #include <dfu/mcuboot.h>
 
 #include "ui.h"
@@ -35,7 +33,8 @@
 #include "gps_controller.h"
 #include "orientation_detector.h"
 
-#include "hal/adc.h"
+#include "hal/hal_adc.h"
+#include "hal/hal_gpio.h"
 #include "bme/bme680_helper.h"
 #include "modem/modem_helper.h"
 #include "icm/icm42605_helper.h"
@@ -85,32 +84,6 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define CLIENT_ID_LEN (sizeof(CONFIG_CLOUD_CLIENT_ID) - 1)
 #endif
 
-#define KEY_POWER_OFF_TIME 3000  //  press power_key 3S to power off system
-#define LED_GREEN     0    //p0.00 == LED_GREEN  0=on 1=off
-#define LED_BLUE      1    //p0.01 == LED_BLUE   0=on 1=off
-#define LED_RED       2    //p0.02 == LED_RED    0=on 1=off
-#define IO_POWER_ON  31    //p0.31 == POWER_ON  1=on 0=off
-
-#define IO_NCHRQ     26    //p0.26 == CHRQ      0=charg 1=off
-#define POWER_KEY    30    //p0.30 == POWER_KEY  0=down 1=up
-
-#define LED_ON        0
-#define LED_OFF       1
-
-#define POWER_ON      1
-#define POWER_OFF     0
-
-#define KEY_PRESSED   0
-#define KEY_RELEASED  1
-
-#define IS_PWR_CHARGE(x)  ((x) == 0)
-#define IS_KEY_PRESSED(x) ((x) == KEY_PRESSED)
-
-
-
-#define CLOUD_LED_ON_STR "{\"led\":\"on\"}"
-#define CLOUD_LED_OFF_STR "{\"led\":\"off\"}"
-#define CLOUD_LED_MSK UI_LED_1
 
 #define SENSOR_PAYLOAD_MAX_LEN 150
 
@@ -156,7 +129,6 @@ static struct k_work send_gps_data_work;
 
 static struct k_delayed_work send_env_data_work;
 static struct k_delayed_work long_press_button_work;
-static struct k_delayed_work power_off_button_work;
 static struct k_delayed_work cloud_reboot_work;
 #if CONFIG_MODEM_INFO
 static struct k_work device_status_work;
@@ -164,11 +136,6 @@ static struct k_work rsrp_work;
 #endif /* CONFIG_MODEM_INFO */
 
 static bool connected=0;
-
-
-
-
-struct device *ggpio_dev;
 static u8_t client_id_buf[CLIENT_ID_LEN+1];
 
 /* Buffers for MQTT client. */
@@ -535,16 +502,7 @@ static void long_press_handler(struct k_work *work)
     }
 }
 
-static void power_off_handler(struct k_work *work)
-{    
-         struct device *dev;
-    
-         dev = device_get_binding("GPIO_0");
-            /* Set LED pin as output */
-         gpio_pin_write(dev, 31, 0);	//p0.31 == POWER_OFF
 
-
-}
 /**@brief Initializes and submits delayed work. */
 static void work_init(void)
 {
@@ -553,7 +511,6 @@ static void work_init(void)
     k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
  
     k_delayed_work_init(&long_press_button_work, long_press_handler);
-    k_delayed_work_init(&power_off_button_work, power_off_handler);
     k_delayed_work_init(&cloud_reboot_work, cloud_reboot_handler);
 #if CONFIG_MODEM_INFO
     k_work_init(&device_status_work, device_status_send);
@@ -642,18 +599,6 @@ static void ui_evt_handler(struct ui_evt evt)
 {
       printk("ui evt handler %d\n",evt.button);
 
-    if (IS_ENABLED(CONFIG_GPS_CONTROL_ON_LONG_PRESS) &&
-       (evt.button == UI_BUTTON_1)) {
-        if (evt.type == UI_EVT_BUTTON_ACTIVE) {
-            k_delayed_work_submit(&long_press_button_work,
-            K_SECONDS(2));// chang 5S to 2S 
-            k_delayed_work_submit(&power_off_button_work,
-            K_SECONDS(5));
-        } else {
-            k_delayed_work_cancel(&long_press_button_work);
-            k_delayed_work_cancel(&power_off_button_work);
-        }
-    }
 
 #if defined(CONFIG_LTE_LINK_CONTROL)
     if ((evt.button == UI_SWITCH_2) &&
@@ -736,16 +681,16 @@ void mqtt_evt_handler(struct mqtt_client * const c,
         sensors_init();
 
         printk("[%s:%d]\n", __func__, __LINE__);
-        gpio_pin_write(ggpio_dev, LED_BLUE, LED_ON);
-        gpio_pin_write(ggpio_dev, LED_GREEN, LED_OFF);
+        iotex_hal_gpio_set(LED_BLUE, LED_ON);
+        iotex_hal_gpio_set(LED_GREEN, LED_OFF);
 
         printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
         break;
 
     case MQTT_EVT_DISCONNECT:
         connected=0;
-        gpio_pin_write(ggpio_dev, LED_BLUE, LED_OFF);
-        gpio_pin_write(ggpio_dev, LED_GREEN, LED_ON);
+        iotex_hal_gpio_set(LED_BLUE, LED_OFF);
+        iotex_hal_gpio_set(LED_GREEN, LED_ON);
         printk("[%s:%d] MQTT client disconnected %d\n", __func__,
                __LINE__, evt->result);
         break;
@@ -1142,98 +1087,12 @@ static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
 
 }
 
-/////////////////////////////GPIO START///////////////////////////////////////
-void chrq_callback(struct device *port,
-           struct gpio_callback *cb, u32_t pins)
-{
-    u32_t chrq;
-    printk("chrq_Pin %d triggered\n", 26);
-    gpio_pin_read(ggpio_dev, IO_NCHRQ, &chrq);
-    gpio_pin_write(ggpio_dev, LED_RED, chrq);  //if chrq=0 ,turn LED_RED on
-    gpio_pin_write(ggpio_dev, LED_GREEN, (chrq + 1 ) % 2); //LED_GREEN =! LED_RED
- }
-
-
-static u32_t g_key_press_start_time;
-void pwr_key_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
-
-    u32_t pwr_key, end_time;
-    int32_t key_press_duration, ret;
-
-    ret = gpio_pin_read(port, POWER_KEY, &pwr_key);
-    SUCCESS_OR_BREAK(ret);
-
-    if (IS_KEY_PRESSED(pwr_key)) {
-        g_key_press_start_time = k_uptime_get_32();
-        printk("Power key pressed:[%u]\n", g_key_press_start_time);
-    }
-    else {
-        end_time = k_uptime_get_32();
-        printk("Power key released:[%u]\n", end_time);
-
-        if (end_time > g_key_press_start_time) {
-            key_press_duration = end_time - g_key_press_start_time;
-        }
-        else {
-            key_press_duration = end_time + (int32_t)g_key_press_start_time;
-        }
-
-        printk("Power key press duration: %d ms\n", key_press_duration);
-        if (key_press_duration > KEY_POWER_OFF_TIME) {
-            gpio_pin_write(port, IO_POWER_ON, POWER_OFF);
-        }
-    }
-}
-
-static struct gpio_callback chrq_gpio_cb, pwr_key_gpio_cb;
-
-void Iotex_Gpio_Init(void)
-{
-    ggpio_dev = device_get_binding("GPIO_0");
-
-    /* Set LED pin as output */
-    gpio_pin_configure(ggpio_dev, IO_POWER_ON, GPIO_DIR_OUT);	//p0.31 == POWER_ON
-    gpio_pin_configure(ggpio_dev, LED_GREEN, GPIO_DIR_OUT); 	//p0.00 == LED_GREEN
-    gpio_pin_configure(ggpio_dev, LED_BLUE, GPIO_DIR_OUT);	//p0.01 == LED_BLUE
-    gpio_pin_configure(ggpio_dev, LED_RED, GPIO_DIR_OUT); 	//p0.02 == LED_RED
-   
-    gpio_pin_write(ggpio_dev, IO_POWER_ON, POWER_ON);	//p0.31 == POWER_ON
-    gpio_pin_write(ggpio_dev, LED_GREEN , LED_ON);	//p0.00 == LED_GREEN ON
-    gpio_pin_write(ggpio_dev, LED_BLUE, LED_OFF);	//p0.00 == LED_BLUE OFF
-    gpio_pin_write(ggpio_dev, LED_RED, LED_OFF);	//p0.00 == LED_RED 
-
-    /* USB battery charge pin */
-    gpio_pin_configure(ggpio_dev, IO_NCHRQ,
-                 (GPIO_DIR_IN | GPIO_INT |
-                  GPIO_INT_EDGE | GPIO_INT_DOUBLE_EDGE |
-                  GPIO_INT_DEBOUNCE));
-
-    gpio_init_callback(&chrq_gpio_cb, chrq_callback, BIT(IO_NCHRQ));
-    gpio_add_callback(ggpio_dev, &chrq_gpio_cb);
-    gpio_pin_enable_callback(ggpio_dev, IO_NCHRQ);
-    
-    /* Power key pin configure */
-    gpio_pin_configure(ggpio_dev, POWER_KEY,
-                      (GPIO_DIR_IN | GPIO_INT |
-                      GPIO_INT_EDGE | GPIO_INT_DOUBLE_EDGE |
-                      GPIO_INT_DEBOUNCE));
-
-    gpio_init_callback(&pwr_key_gpio_cb, pwr_key_callback, BIT(POWER_KEY));
-    gpio_add_callback(ggpio_dev, &pwr_key_gpio_cb);
-    gpio_pin_enable_callback(ggpio_dev, POWER_KEY);
-
-    /* Sync charge state */
-    chrq_callback(ggpio_dev, &chrq_gpio_cb, IO_NCHRQ);
-}
-
-////////////////////////////////GPIO END/////////////////////////////////////////
-
 
 void main(void)
 {
     int err;
 
-    Iotex_Gpio_Init();
+    iotex_hal_gpio_init();
 
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
     provision_certificates();
@@ -1320,11 +1179,11 @@ void main(void)
         printk("Could not disconnect MQTT client. Error: %d\n", err);
     }
 
-    gpio_pin_write(ggpio_dev, LED_RED, 0);	//p0.00 == LED_BLUE OFF
+    iotex_hal_gpio_set(LED_RED, LED_ON);
     k_sleep(500);
-    gpio_pin_write(ggpio_dev, LED_RED, 1);	//p0.00 == LED_BLUE OFF
+    iotex_hal_gpio_set(LED_RED, LED_OFF);
     k_sleep(500);
-    gpio_pin_write(ggpio_dev, LED_RED, 0);	//p0.00 == LED_BLUE OFF
+    iotex_hal_gpio_set(LED_RED, LED_OFF);
     k_sleep(500);
     sys_reboot(0);
 }
