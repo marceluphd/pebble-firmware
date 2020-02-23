@@ -53,11 +53,6 @@
 #define CALIBRATION_PRESS_DURATION 	K_SECONDS(5)
 #define CLOUD_CONNACK_WAIT_DURATION	K_SECONDS(CONFIG_CLOUD_WAIT_DURATION)
 
-#if defined(CONFIG_FLIP_POLL)
-#define FLIP_POLL_INTERVAL		K_MSEC(CONFIG_FLIP_POLL_INTERVAL)
-#else
-#define FLIP_POLL_INTERVAL		0
-#endif
 
 #ifdef CONFIG_ACCEL_USE_SIM
 #define FLIP_INPUT			CONFIG_FLIP_INPUT
@@ -149,22 +144,11 @@ static struct rsrp_data rsrp = {
 
 static struct cloud_backend *cloud_backend;
 
- /* Variables to keep track of nRF cloud user association. */
-#if defined(CONFIG_USE_UI_MODULE)
-static u8_t ua_pattern[6];
-#endif
-static int buttons_to_capture;
-static int buttons_captured;
-static atomic_t pattern_recording;
-static bool recently_associated;
-static bool association_with_pin;
 
 /* Sensor data */
 static struct gps_data gps_data;
 static iotex_st_timestamp gps_timestamp;
-static struct cloud_channel_data flip_cloud_data;
 static struct cloud_channel_data gps_cloud_data;
-static struct cloud_channel_data button_cloud_data;
 
 #if CONFIG_MODEM_INFO
 static struct modem_param_info modem_param;
@@ -173,16 +157,12 @@ static struct cloud_channel_data device_cloud_data;
 #endif /* CONFIG_MODEM_INFO */
 static atomic_val_t send_data_enable;
 
-/* Flag used for flip detection */
-static bool flip_mode_enabled = true;
 
 /* Structures for work */
 static struct k_work connect_work;
 static struct k_work send_gps_data_work;
-static struct k_work send_button_data_work;
-static struct k_work send_flip_data_work;
+
 static struct k_delayed_work send_env_data_work;
-static struct k_delayed_work flip_poll_work;
 static struct k_delayed_work long_press_button_work;
 static struct k_delayed_work power_off_button_work;
 static struct k_delayed_work cloud_reboot_work;
@@ -226,7 +206,6 @@ enum error_type {
 
 /* Forward declaration of functions */
 static void app_connect(struct k_work *work);
-static void flip_send(struct k_work *work);
 static void env_data_send(void);
 static void sensors_init(void);
 static void work_init(void);
@@ -235,8 +214,6 @@ static void sensor_data_send(struct cloud_channel_data *data);
 static  void publish_env_sensors_data(void); 
 static  void publish_gps_data(void);
 
-
-static int app_get_modemclock();
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
 #endif
@@ -349,16 +326,6 @@ static void send_env_data_work_fn(struct k_work *work)
     env_data_send();
 }
 
-static void send_button_data_work_fn(struct k_work *work)
-{
-    sensor_data_send(&button_cloud_data);
-}
-
-static void send_flip_data_work_fn(struct k_work *work)
-{
-    sensor_data_send(&flip_cloud_data);
-}
-
 /**@brief Callback for GPS trigger events */
 static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
 {
@@ -394,105 +361,6 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
     gps_control_stop(K_NO_WAIT);
     k_work_submit(&send_gps_data_work);
     k_delayed_work_submit(&send_env_data_work, K_NO_WAIT);
-}
-
-/**@brief Callback for sensor trigger events */
-static void sensor_trigger_handler(struct device *dev,
-            struct sensor_trigger *trigger)
-{
-    ARG_UNUSED(dev);
-    ARG_UNUSED(trigger);
-
-    flip_send(NULL);
-}
-
-#if defined(CONFIG_USE_UI_MODULE)
-/**@brief Send button presses to cloud */
-static void button_send(bool pressed)
-{
-    static char data[] = "1";
-
-    if (!atomic_get(&send_data_enable)) {
-        return;
-    }
-
-    if (pressed) {
-        data[0] = '1';
-    } else {
-        data[0] = '0';
-    }
-
-    button_cloud_data.data.buf = data;
-    button_cloud_data.data.len = strlen(data);
-    button_cloud_data.tag += 1;
-
-    if (button_cloud_data.tag == 0) {
-        button_cloud_data.tag = 0x1;
-    }
-
-    k_work_submit(&send_button_data_work);
-}
-#endif
-
-/**@brief Poll flip orientation and send to cloud if flip mode is enabled. */
-static void flip_send(struct k_work *work)
-{
-    static enum orientation_state last_orientation_state =
-        ORIENTATION_NOT_KNOWN;
-    static struct orientation_detector_sensor_data sensor_data;
-
-    if (!flip_mode_enabled || !atomic_get(&send_data_enable)) {
-        goto exit;
-    }
-
-    if (orientation_detector_poll(&sensor_data) == 0) {
-        if (sensor_data.orientation == last_orientation_state) {
-            goto exit;
-        }
-
-        switch (sensor_data.orientation) {
-        case ORIENTATION_NORMAL:
-            flip_cloud_data.data.buf = "NORMAL";
-            flip_cloud_data.data.len = sizeof("NORMAL") - 1;
-            break;
-        case ORIENTATION_UPSIDE_DOWN:
-            flip_cloud_data.data.buf = "UPSIDE_DOWN";
-            flip_cloud_data.data.len = sizeof("UPSIDE_DOWN") - 1;
-            break;
-        default:
-            goto exit;
-        }
-
-        last_orientation_state = sensor_data.orientation;
-
-        k_work_submit(&send_flip_data_work);
-    }
-
-exit:
-    if (work) {
-        k_delayed_work_submit(&flip_poll_work,
-                    FLIP_POLL_INTERVAL);
-    }
-}
-
-static void cloud_cmd_handler(struct cloud_command *cmd)
-{
-    /* Command handling goes here. */
-    if (cmd->recipient == CLOUD_RCPT_MODEM_INFO) {
-#if CONFIG_MODEM_INFO
-        if (cmd->type == CLOUD_CMD_READ) {
-            device_status_send(NULL);
-        }
-#endif
-    } else if (cmd->recipient == CLOUD_RCPT_UI) {
-        if (cmd->type == CLOUD_CMD_LED_RED) {
-            ui_led_set_color(127, 0, 0);
-        } else if (cmd->type == CLOUD_CMD_LED_GREEN) {
-            ui_led_set_color(0, 127, 0);
-        } else if (cmd->type == CLOUD_CMD_LED_BLUE) {
-            ui_led_set_color(0, 0, 127);
-        }
-    }
 }
 
 #if CONFIG_MODEM_INFO
@@ -581,9 +449,6 @@ static void device_status_send(struct k_work *work)
 /**@brief Get environment data from sensors and send to cloud. */
 static void env_data_send(void)
 {
-    int err;
-    env_sensor_data_t env_data;
-
     printk("[%s:%d]\n", __func__, __LINE__);
     if (!atomic_get(&send_data_enable)) {
         return;
@@ -647,158 +512,6 @@ static void cloud_reboot_handler(struct k_work *work)
     error_handler(ERROR_CLOUD, -ETIMEDOUT);
 }
 
-/**@brief Callback for sensor attached event from nRF Cloud. */
-void sensors_start(void)
-{
-    atomic_set(&send_data_enable, 1);
-    sensors_init();
-
-    if (IS_ENABLED(CONFIG_FLIP_POLL)) {
-        k_delayed_work_submit(&flip_poll_work, K_NO_WAIT);
-    }
-}
-
-/**@brief nRF Cloud specific callback for cloud association event. */
-static void on_user_pairing_req(const struct cloud_event *evt)
-{
-    if (evt->data.pair_info.type == CLOUD_PAIR_SEQUENCE) {
-        if (!atomic_get(&pattern_recording)) {
-            ui_led_set_pattern(UI_CLOUD_PAIRING);
-            atomic_set(&pattern_recording, 1);
-            buttons_captured = 0;
-            buttons_to_capture = *evt->data.pair_info.buf;
-
-            printk("Please enter the user association pattern ");
-            printk("using the buttons and switches\n");
-        }
-    } else if (evt->data.pair_info.type == CLOUD_PAIR_PIN) {
-        association_with_pin = true;
-        ui_led_set_pattern(UI_CLOUD_PAIRING);
-        printk("Waiting for cloud association with PIN\n");
-    }
-}
-
-#if defined(CONFIG_USE_UI_MODULE)
-/**@brief Send user association information to nRF Cloud. */
-static void cloud_user_associate(void)
-{
-    int err;
-    struct cloud_msg msg = {
-        .buf = ua_pattern,
-        .len = buttons_to_capture,
-        .endpoint = {
-            .type = CLOUD_EP_TOPIC_PAIR
-        }
-    };
-
-    atomic_set(&pattern_recording, 0);
-
-    err = cloud_send(cloud_backend, &msg);
-    if (err) {
-        printk("Could not send association message, error: %d\n", err);
-        cloud_error_handler(err);
-    }
-}
-#endif
-
-/** @brief Handle procedures after successful association with nRF Cloud. */
-void on_pairing_done(void)
-{
-    if (association_with_pin || (buttons_captured > 0)) {
-        recently_associated = true;
-
-        printk("Successful user association.\n");
-        printk("The device will attempt to reconnect to ");
-        printk("nRF Cloud. It may reset in the process.\n");
-        printk("Manual reset may be required if connection ");
-        printk("to nRF Cloud is not established within ");
-        printk("20 - 30 seconds.\n");
-    }
-
-    if (!association_with_pin) {
-        return;
-    }
-
-    int err;
-
-    printk("Disconnecting from nRF cloud...\n");
-
-    err = cloud_disconnect(cloud_backend);
-    if (err == 0) {
-        printk("Reconnecting to cloud...\n");
-        err = cloud_connect(cloud_backend);
-        if (err == 0) {
-            return;
-        }
-        printk("Could not reconnect\n");
-    } else {
-        printk("Disconnection failed\n");
-    }
-
-    printk("Fallback to controlled reboot\n");
-    printk("Shutting down LTE link...\n");
-
-#if defined(CONFIG_BSD_LIBRARY)
-    err = lte_lc_power_off();
-    if (err) {
-        printk("Could not shut down link\n");
-    } else {
-        printk("LTE link disconnected\n");
-    }
-#endif
-
-#ifdef CONFIG_REBOOT
-    printk("Rebooting...\n");
-    LOG_PANIC();
-    sys_reboot(SYS_REBOOT_COLD);
-#endif
-    printk("**** Manual reboot required ***\n");
-}
-
-void cloud_event_handler(const struct cloud_backend *const backend,
-             const struct cloud_event *const evt,
-             void *user_data)
-{
-    ARG_UNUSED(user_data);
-
-    switch (evt->type) {
-    case CLOUD_EVT_CONNECTED:
-        printk("CLOUD_EVT_CONNECTED\n");
-        k_delayed_work_cancel(&cloud_reboot_work);
-        ui_led_set_pattern(UI_CLOUD_CONNECTED);
-        break;
-    case CLOUD_EVT_READY:
-        printk("CLOUD_EVT_READY\n");
-        ui_led_set_pattern(UI_CLOUD_CONNECTED);
-        sensors_start();
-        break;
-    case CLOUD_EVT_DISCONNECTED:
-        printk("CLOUD_EVT_DISCONNECTED\n");
-        ui_led_set_pattern(UI_LTE_DISCONNECTED);
-        break;
-    case CLOUD_EVT_ERROR:
-        printk("CLOUD_EVT_ERROR\n");
-        break;
-    case CLOUD_EVT_DATA_SENT:
-        printk("CLOUD_EVT_DATA_SENT\n");
-        break;
-    case CLOUD_EVT_DATA_RECEIVED:
-        printk("CLOUD_EVT_DATA_RECEIVED\n");
-        cloud_decode_command(evt->data.msg.buf);
-        break;
-    case CLOUD_EVT_PAIR_REQUEST:
-        printk("CLOUD_EVT_PAIR_REQUEST\n");
-        on_user_pairing_req(evt);
-        break;
-    case CLOUD_EVT_PAIR_DONE:
-        printk("CLOUD_EVT_PAIR_DONE\n");
-        on_pairing_done();
-        break;
-    default:
-        printk("Unknown cloud event type: %d\n", evt->type);
-        break;
-    }
-}
 
 /**@brief Connect to nRF Cloud, */
 static void app_connect(struct k_work *work)
@@ -813,41 +526,6 @@ static void app_connect(struct k_work *work)
         cloud_error_handler(err);
     }
 }
-
-#if defined(CONFIG_USE_UI_MODULE)
-/**@brief Function to keep track of user association input when using
- *	  buttons and switches to register the association pattern.
- *	  nRF Cloud specific.
- */
-static void pairing_button_register(struct ui_evt *evt)
-{
-    if (buttons_captured < buttons_to_capture) {
-        if (evt->button == UI_BUTTON_1 &&
-            evt->type == UI_EVT_BUTTON_ACTIVE) {
-            ua_pattern[buttons_captured++] =
-                NRF_CLOUD_UA_BUTTON_INPUT_3;
-            printk("Button 1\n");
-        } else if (evt->button == UI_BUTTON_2 &&
-            evt->type == UI_EVT_BUTTON_ACTIVE) {
-            ua_pattern[buttons_captured++] =
-                NRF_CLOUD_UA_BUTTON_INPUT_4;
-            printk("Button 2\n");
-        } else if (evt->button == UI_SWITCH_1) {
-            ua_pattern[buttons_captured++] =
-                NRF_CLOUD_UA_BUTTON_INPUT_1;
-            printk("Switch 1\n");
-        } else if (evt->button == UI_SWITCH_2) {
-            ua_pattern[buttons_captured++] =
-                NRF_CLOUD_UA_BUTTON_INPUT_2;
-            printk("Switch 2\n");
-        }
-    }
-
-    if (buttons_captured == buttons_to_capture) {
-        cloud_user_associate();
-    }
-}
-#endif
 
 static void long_press_handler(struct k_work *work)
 {
@@ -881,10 +559,8 @@ static void work_init(void)
 {
     k_work_init(&connect_work, app_connect);
     k_work_init(&send_gps_data_work, send_gps_data_work_fn);
-    k_work_init(&send_button_data_work, send_button_data_work_fn);
-    k_work_init(&send_flip_data_work, send_flip_data_work_fn);
     k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
-    k_delayed_work_init(&flip_poll_work, flip_send);
+ 
     k_delayed_work_init(&long_press_button_work, long_press_handler);
     k_delayed_work_init(&power_off_button_work, power_off_handler);
     k_delayed_work_init(&cloud_reboot_work, cloud_reboot_handler);
@@ -923,74 +599,7 @@ static void modem_configure(void)
 #endif
 }
 
-/**@brief Initializes the accelerometer device and
- * configures trigger if set.
- */
-static void accelerometer_init(void)
-{
-    if (!IS_ENABLED(CONFIG_FLIP_POLL) &&
-         IS_ENABLED(CONFIG_ACCEL_USE_EXTERNAL)) {
 
-        struct device *accel_dev =
-        device_get_binding(CONFIG_ACCEL_DEV_NAME);
-
-        if (accel_dev == NULL) {
-            printk("Could not get %s device\n",
-                CONFIG_ACCEL_DEV_NAME);
-            return;
-        }
-
-        struct sensor_trigger sensor_trig = {
-            .type = SENSOR_TRIG_THRESHOLD,
-        };
-
-        printk("Setting trigger\n");
-        int err = 0;
-
-        err = sensor_trigger_set(accel_dev, &sensor_trig,
-                sensor_trigger_handler);
-
-        if (err) {
-            printk("Unable to set trigger\n");
-        }
-    }
-}
-
-/**@brief Initializes flip detection using orientation detector module
- * and configured accelerometer device.
- */
- /*
-static void flip_detection_init(void)
-{
-    int err;
-    struct device *accel_dev =
-        device_get_binding(CONFIG_ACCEL_DEV_NAME);
-
-    if (accel_dev == NULL) {
-        printk("Could not get %s device\n", CONFIG_ACCEL_DEV_NAME);
-        return;
-    }
-
-    orientation_detector_init(accel_dev);
-
-    if (!IS_ENABLED(CONFIG_ACCEL_CALIBRATE)) {
-        return;
-    }
-
-    err = orientation_detector_calibrate();
-    if (err) {
-        printk("Could not calibrate accelerometer device: %d\n", err);
-    }
-}
-
-
-
-static void button_sensor_init(void)
-{
-    button_cloud_data.type = CLOUD_CHANNEL_BUTTON;
-    button_cloud_data.tag = 0x1;
-}
-*/
 #if CONFIG_MODEM_INFO
 /**brief Initialize LTE status containers. */
 static void modem_data_init(void)
@@ -1025,8 +634,8 @@ static void sensors_init(void)
     /* Iotex Init ICM42605 */
     iotex_icm42605_init();
 
-
     adc_init();
+
     gps_control_init(gps_trigger_handler);
 
     /* Send sensor data after initialization, as it may be a long time until
@@ -1041,21 +650,7 @@ static void sensors_init(void)
 static void ui_evt_handler(struct ui_evt evt)
 {
       printk("ui evt handler %d\n",evt.button);
-    if (pattern_recording) {
-        pairing_button_register(&evt);
-        return;
-    }
-/*
-    if (IS_ENABLED(CONFIG_CLOUD_BUTTON) &&
-       (evt.button == CONFIG_CLOUD_BUTTON_INPUT)) {
-        button_send(evt.type == UI_EVT_BUTTON_ACTIVE ? 1 : 0);
-    }
 
-    if (IS_ENABLED(CONFIG_ACCEL_USE_SIM) && (evt.button == FLIP_INPUT)
-       && atomic_get(&send_data_enable)) {
-        flip_send(NULL);
-    }
-*/
     if (IS_ENABLED(CONFIG_GPS_CONTROL_ON_LONG_PRESS) &&
        (evt.button == UI_BUTTON_1)) {
         if (evt.type == UI_EVT_BUTTON_ACTIVE) {
@@ -1656,7 +1251,6 @@ static struct gpio_callback chrq_gpio_cb, pwr_key_gpio_cb;
 
 void Iotex_Gpio_Init(void)
 {
-    uint32_t chrq;
     ggpio_dev = device_get_binding("GPIO_0");
 
     /* Set LED pin as output */
@@ -1700,7 +1294,6 @@ void Iotex_Gpio_Init(void)
 void main(void)
 {
     int err;
-    struct device *dev;
 
     Iotex_Gpio_Init();
 
@@ -1752,7 +1345,7 @@ void main(void)
             error_handler(ERROR_CLOUD, err);
             break;
         }
-        printk("mqtt live\n");
+        printk("mqtt live ????\n");
 
         if ((fds.revents & POLLIN) == POLLIN) {
             err = mqtt_input(&client);
