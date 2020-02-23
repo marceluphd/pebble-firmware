@@ -27,15 +27,15 @@
 #include <nrf_cloud.h>
 
 #include <i2c.h>
-#include <adc.h>
-#include <hal/nrf_saadc.h>
 #include <dfu/mcuboot.h>
 
+#include "ui.h"
 #include "cloud_codec.h"
 #include "env_sensors.h"
-#include "orientation_detector.h"
-#include "ui.h"
 #include "gps_controller.h"
+#include "orientation_detector.h"
+
+#include "hal/adc.h"
 #include "bme/bme680_helper.h"
 #include "modem/modem_helper.h"
 #include "icm/icm42605_helper.h"
@@ -106,15 +106,7 @@ defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #define IS_PWR_CHARGE(x)  ((x) == 0)
 #define IS_KEY_PRESSED(x) ((x) == KEY_PRESSED)
 
-#define ADC_DEVICE_NAME DT_ADC_0_NAME
-#define ADC_RESOLUTION 10
-#define ADC_GAIN ADC_GAIN_1_6
-#define ADC_REFERENCE ADC_REF_INTERNAL
-#define ADC_ACQUISITION_TIME ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 10)
-#define ADC_1ST_CHANNEL_ID 0
-#define ADC_1ST_CHANNEL_INPUT NRF_SAADC_INPUT_AIN0
-#define ADC_2ND_CHANNEL_ID 2
-#define ADC_2ND_CHANNEL_INPUT NRF_SAADC_INPUT_AIN2
+
 
 #define CLOUD_LED_ON_STR "{\"led\":\"on\"}"
 #define CLOUD_LED_OFF_STR "{\"led\":\"off\"}"
@@ -174,7 +166,6 @@ static struct k_work rsrp_work;
 static bool connected=0;
 
 
-struct device *adc_dev;
 
 
 struct device *ggpio_dev;
@@ -634,7 +625,7 @@ static void sensors_init(void)
     /* Iotex Init ICM42605 */
     iotex_icm42605_init();
 
-    adc_init();
+    iotex_hal_adc_init();
 
     gps_control_init(gps_trigger_handler);
 
@@ -1013,59 +1004,6 @@ static int fds_init(struct mqtt_client *c)
 
 
 
-
-///////////////////////////////ADC START/////////////////////////////////////////
-
-static const struct adc_channel_cfg m_1st_channel_cfg = {
-    .gain = ADC_GAIN,
-    .reference = ADC_REFERENCE,
-    .acquisition_time = ADC_ACQUISITION_TIME,
-    .channel_id = ADC_1ST_CHANNEL_ID,
-    .input_positive = ADC_1ST_CHANNEL_INPUT,
-};
-
-float  adc_sample(void)
-{
-    int ret;
-    float adc_voltage = 0;
-    s16_t sample_buffer;
-    const struct adc_sequence sequence = {
-        .channels = BIT(ADC_1ST_CHANNEL_ID),
-        .buffer = &sample_buffer,
-        .buffer_size = sizeof(sample_buffer),
-        .resolution = ADC_RESOLUTION,
-    };
-    if (!adc_dev) {
-        return -1;
-    }
-
-    ret = adc_read(adc_dev, &sequence);
-    PRINT_RESULT("ADC read",ret);
-
-    adc_voltage = (float)(((float)sample_buffer / 1023.0f) * 2 * 3600.0f)/1000;
-    //printk("ADC raw value: %d\n", sample_buffer);
-    //printf("Measured voltage: %f mV\n", adc_voltage);
-    return adc_voltage;
-}
-
-int adc_init(void)
-{
-    int err;
-    adc_dev = device_get_binding("ADC_0");
-    if (!adc_dev) {
-        printk("device_get_binding ADC_0 failed\n");
-    }
-    err = adc_channel_setup(adc_dev, &m_1st_channel_cfg);
-    if (err) {
-        printk("Error in adc setup: %d\n", err);
-    }
-    
-    NRF_SAADC_NS->TASKS_CALIBRATEOFFSET = 1;
-    adc_sample();
-    return err;
-}
-/////////////////////////ADC END//////////////////////////////////////
-
 static int signal_quality_get(char *id_buf)
 {
     enum at_cmd_state at_state;
@@ -1088,7 +1026,7 @@ static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
 
     signal_quality_get(snr);
     sprintf(payload, "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d, \"timestamp\":%s}",
-            client_id_buf, adc_sample(), atoi(snr), iotex_modem_get_clock(NULL));
+            client_id_buf, iotex_hal_adc_sample(), atoi(snr), iotex_modem_get_clock(NULL));
     return payload;
 }
 

@@ -63,7 +63,7 @@ static int iotex_icm42605_configure(uint8_t is_low_noise_mode,
     rc |= inv_icm426xx_enable_gyro_low_noise_mode(&__icm_driver);
 
     /* Wait Max of ICM426XX_GYR_STARTUP_TIME_US and ICM426XX_ACC_STARTUP_TIME_US*/
-    startup_delay = (ICM426XX_GYR_STARTUP_TIME_US > ICM426XX_ACC_STARTUP_TIME_US) ? ICM426XX_GYR_STARTUP_TIME_US: ICM426XX_ACC_STARTUP_TIME_US;
+    startup_delay = (ICM426XX_GYR_STARTUP_TIME_US > ICM426XX_ACC_STARTUP_TIME_US) ? ICM426XX_GYR_STARTUP_TIME_US : ICM426XX_ACC_STARTUP_TIME_US;
     inv_icm426xx_sleep_us(startup_delay);
 
     return rc;
@@ -168,11 +168,11 @@ int iotex_icm42605_get_sensor_data(uint8_t *str, size_t size)
         }
 
         snprintf(str, size, "{\"Device\":\"%s\",\"AX\":%d, \"AY\":%d, \"AZ\":%d, \"TEMP\":%.2f,\"GX\":%d,\"GY\":%d, \"GZ\":%d, \"timestamp\":%s}",
-                "ICM42605",
-                (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
-                (ftemperature / 132.48) + 25,
-                (int16_t)fgyro[0], (int16_t) fgyro[1], (int16_t) fgyro[2],
-                iotex_modem_get_clock(NULL));
+                 "ICM42605",
+                 (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
+                 (ftemperature / 132.48) + 25,
+                 (int16_t)fgyro[0], (int16_t) fgyro[1], (int16_t) fgyro[2],
+                 iotex_modem_get_clock(NULL));
 
     }
 
