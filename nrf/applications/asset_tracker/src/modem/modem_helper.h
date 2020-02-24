@@ -2,12 +2,15 @@
 #define _IOTEX_MODEM_H_
 
 
+#define MODEM_IMEI_LEN 15
 #define TIMESTAMP_STR_LEN 50
 
 typedef struct {
     char data[TIMESTAMP_STR_LEN];
 } __attribute__((packed)) iotex_st_timestamp;
 
-char *iotex_modem_get_clock(iotex_st_timestamp *stamp);
+const char *iotex_modem_get_imei();
+int iotex_model_get_signal_quality();
+const char *iotex_modem_get_clock(iotex_st_timestamp *stamp);
 
 #endif //_IOTEX_MODEM_H_

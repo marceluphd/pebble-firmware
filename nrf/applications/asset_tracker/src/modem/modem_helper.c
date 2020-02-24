@@ -10,8 +10,37 @@ static bool isLeap(uint32_t year) {
     return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
+const char *iotex_modem_get_imei() {
 
-char *iotex_modem_get_clock(iotex_st_timestamp *stamp) {
+    int err;
+    enum at_cmd_state at_state;
+    static char imei_buf[MODEM_IMEI_LEN + 5];
+
+    if ((err = at_cmd_write("AT+CGSN", imei_buf, sizeof(imei_buf), &at_state))) {
+        printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
+        return "Unknown";
+    }
+
+    return imei_buf;
+}
+
+int iotex_model_get_signal_quality() {
+
+    enum at_cmd_state at_state;
+    static char snr_ack[32], snr[4];
+
+    int err = at_cmd_write("AT+CESQ", snr_ack, 32, &at_state);
+
+    if (err) {
+        printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
+    }
+
+    snprintf(snr, sizeof(snr), "%s", &snr_ack[25]);
+    return atoi(snr);
+}
+
+
+const char *iotex_modem_get_clock(iotex_st_timestamp *stamp) {
 
     double epoch;
     enum at_cmd_state at_state;

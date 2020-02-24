@@ -14,9 +14,15 @@ zephyr_compile_definitions(PROJECT_NAME=${PROJECT_NAME})
 
 # NORDIC SDK APP START
 target_sources(app PRIVATE src/main.c)
+
 target_sources(app PRIVATE src/bme/bme680.c)
 target_sources(app PRIVATE src/bme/bme680_helper.c)
+
+target_sources(app PRIVATE src/hal/hal_adc.c)
+target_sources(app PRIVATE src/hal/hal_gpio.c)
+
 target_sources(app PRIVATE src/modem/modem_helper.c)
+
 target_sources(app PRIVATE src/icm/icm42605_helper.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL.c)
@@ -35,7 +41,6 @@ zephyr_library_include_directories(
 # Application sources
 add_subdirectory(src/orientation_detector)
 add_subdirectory(src/ui)
-add_subdirectory(src/hal)
 add_subdirectory(src/cloud_codec)
 add_subdirectory(src/gps_controller)
 add_subdirectory(src/env_sensors)
