@@ -35,6 +35,7 @@
 
 #include "hal/hal_adc.h"
 #include "hal/hal_gpio.h"
+#include "nvs/local_storage.h"
 #include "bme/bme680_helper.h"
 #include "modem/modem_helper.h"
 #include "icm/icm42605_helper.h"
@@ -1074,6 +1075,7 @@ void main(void)
     work_init();
     modem_configure();
     iotex_modem_get_clock(NULL);
+    iotex_local_storage_init();
 
     err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 

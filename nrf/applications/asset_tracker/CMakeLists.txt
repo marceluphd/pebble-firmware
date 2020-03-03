@@ -15,13 +15,20 @@ zephyr_compile_definitions(PROJECT_NAME=${PROJECT_NAME})
 # NORDIC SDK APP START
 target_sources(app PRIVATE src/main.c)
 
+# BME680
 target_sources(app PRIVATE src/bme/bme680.c)
 target_sources(app PRIVATE src/bme/bme680_helper.c)
 
+# HAL
 target_sources(app PRIVATE src/hal/hal_adc.c)
 target_sources(app PRIVATE src/hal/hal_gpio.c)
 
+# Modem
 target_sources(app PRIVATE src/modem/modem_helper.c)
+
+# Local NVS
+target_sources(app PRIVATE src/nvs/local_storage.c)
+target_sources(app PRIVATE src/nvs/local_storage_test.c)
 
 target_sources(app PRIVATE src/icm/icm42605_helper.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
