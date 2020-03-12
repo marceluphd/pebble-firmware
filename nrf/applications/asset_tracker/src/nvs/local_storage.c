@@ -37,7 +37,6 @@ int iotex_local_storage_init(void) {
     /* Print local storage fress space */
     printk("Freespace in local storage: %u, page size: %u\n", nvs_calc_free_space(&__local_storage), info.size);
 
-    iotex_local_storage_test();
     return  0;
 }
 

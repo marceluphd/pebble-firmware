@@ -4,7 +4,7 @@
 
 #define TEST_COUNT 10
 
-void test_write() {
+static void test_write() {
 
     int i;
     iotex_storage_devinfo dev;
@@ -24,7 +24,7 @@ void test_write() {
     UNITTEST_AUTO_PASS();
 }
 
-void test_read() {
+static void test_read() {
 
     int i, count;
     iotex_storage_devinfo infos[TEST_COUNT];
@@ -55,7 +55,7 @@ void test_read() {
     UNITTEST_AUTO_PASS();
 }
 
-void test_read_history() {
+static void test_read_history() {
 
     iotex_storage_devinfo first, last;
 
@@ -73,7 +73,7 @@ void test_read_history() {
 }
 
 
-int iotex_local_storage_test(void) {
+int nvs_unittest(void) {
 
     /* Must first */
     test_write();

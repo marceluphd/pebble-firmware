@@ -26,9 +26,19 @@ target_sources(app PRIVATE src/hal/hal_gpio.c)
 # Modem
 target_sources(app PRIVATE src/modem/modem_helper.c)
 
+# Protbuf
+target_sources(app PRIVATE src/nanopb/pb_encode.c)
+target_sources(app PRIVATE src/nanopb/pb_decode.c)
+target_sources(app PRIVATE src/nanopb/pb_common.c)
+
 # Local NVS
 target_sources(app PRIVATE src/nvs/local_storage.c)
-target_sources(app PRIVATE src/nvs/local_storage_test.c)
+
+# Unittest
+target_sources(app PRIVATE src/unittest/unittest.c)
+target_sources(app PRIVATE src/unittest/nvs_unittest.c)
+target_sources(app PRIVATE src/unittest/nanopb_unittest.c)
+target_sources(app PRIVATE src/unittest/nanopb_unittest.pb.c)
 
 target_sources(app PRIVATE src/icm/icm42605_helper.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
@@ -40,8 +50,11 @@ zephyr_include_directories(src)
 # Include application events and configuration headers
 zephyr_library_include_directories(
   src/orientation_detector
-  src/ui
   src/cloud_codec
+  src/unittest
+  src/nanopb
+  src/nvs
+  src/ui
   src
   )
 

@@ -106,7 +106,7 @@ static struct rsrp_data rsrp = {
 };
 #endif /* CONFIG_MODEM_INFO */
 
-
+extern void unittest();
 static struct cloud_backend *cloud_backend;
 
 
@@ -168,6 +168,8 @@ static void sensor_data_send(struct cloud_channel_data *data);
 
 static  void publish_env_sensors_data(void);
 static  void publish_gps_data(void);
+
+static int subscribe(void);
 
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
@@ -670,6 +672,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
             iotex_hal_gpio_set(LED_GREEN, LED_OFF);
 
             printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
+            subscribe();
             break;
 
         case MQTT_EVT_DISCONNECT:
@@ -1055,6 +1058,28 @@ void publish_env_sensors_data()
 
 }
 
+static int subscribe(void)
+{
+    struct mqtt_topic subscribe_topic = {
+        .topic = {
+            .utf8 = get_mqtt_topic(),
+            .size = strlen(get_mqtt_topic())
+        },
+        .qos = MQTT_QOS_1_AT_LEAST_ONCE
+    };
+
+    const struct mqtt_subscription_list subscription_list = {
+        .list = &subscribe_topic,
+        .list_count = 1,
+        .message_id = 1234
+    };
+
+    printk("Subscribing to: %s len %u, qos %u\n",
+           subscribe_topic.topic.utf8, subscribe_topic.topic.size, subscribe_topic.qos);
+
+    return mqtt_subscribe(&client, &subscription_list);
+}
+
 
 void main(void)
 {
@@ -1076,6 +1101,8 @@ void main(void)
     modem_configure();
     iotex_modem_get_clock(NULL);
     iotex_local_storage_init();
+
+    unittest();
 
     err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
