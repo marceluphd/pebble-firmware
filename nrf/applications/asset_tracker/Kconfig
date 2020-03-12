@@ -50,7 +50,9 @@ config MQTT_MESSAGE_BUFFER_SIZE
 config MQTT_PAYLOAD_BUFFER_SIZE
 	int "MQTT payload buffer size"
 	default 128
+
 rsource "src/ui/Kconfig"
+rsource "src/unittest/Kconfig"
 
 menu "GPS"
 

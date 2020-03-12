@@ -1102,7 +1102,9 @@ void main(void)
     iotex_modem_get_clock(NULL);
     iotex_local_storage_init();
 
+#ifdef CONFIG_UNITTEST
     unittest();
+#endif
 
     err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
 
