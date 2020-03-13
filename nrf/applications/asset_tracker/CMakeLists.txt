@@ -26,6 +26,9 @@ target_sources(app PRIVATE src/hal/hal_gpio.c)
 # Modem
 target_sources(app PRIVATE src/modem/modem_helper.c)
 
+# MQTT
+target_sources(app PRIVATE src/mqtt/mqtt.c)
+
 # Protbuf
 target_sources(app PRIVATE src/nanopb/pb_encode.c)
 target_sources(app PRIVATE src/nanopb/pb_decode.c)
@@ -53,6 +56,7 @@ zephyr_library_include_directories(
   src/cloud_codec
   src/unittest
   src/nanopb
+  src/mqtt
   src/nvs
   src/ui
   src

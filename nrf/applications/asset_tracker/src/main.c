@@ -33,13 +33,13 @@
 #include "gps_controller.h"
 #include "orientation_detector.h"
 
+#include "mqtt/mqtt.h"
 #include "hal/hal_adc.h"
 #include "hal/hal_gpio.h"
 #include "nvs/local_storage.h"
 #include "bme/bme680_helper.h"
 #include "modem/modem_helper.h"
 #include "icm/icm42605_helper.h"
-
 
 
 #if defined(CONFIG_BSD_LIBRARY)
@@ -49,9 +49,6 @@
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
 #include "certificates.h"
 #endif
-
-#define CALIBRATION_PRESS_DURATION 	K_SECONDS(5)
-#define CLOUD_CONNACK_WAIT_DURATION	K_SECONDS(CONFIG_CLOUD_WAIT_DURATION)
 
 
 #ifdef CONFIG_ACCEL_USE_SIM
@@ -76,12 +73,6 @@ defined(CONFIG_LTE_AUTO_INIT_AND_CONNECT) && \
 defined(CONFIG_NRF_CLOUD_PROVISION_CERTIFICATES)
 #error "PROVISION_CERTIFICATES \
 requires CONFIG_LTE_AUTO_INIT_AND_CONNECT to be disabled!"
-#endif
-
-#if !defined(CONFIG_CLOUD_CLIENT_ID)
-#define CLIENT_ID_LEN (MODEM_IMEI_LEN + 4)
-#else
-#define CLIENT_ID_LEN (sizeof(CONFIG_CLOUD_CLIENT_ID) - 1)
 #endif
 
 
@@ -121,33 +112,19 @@ static struct cloud_channel_data signal_strength_cloud_data;
 static struct cloud_channel_data device_cloud_data;
 #endif /* CONFIG_MODEM_INFO */
 
-/* When MQTT_EVT_CONNACK callback enable data sending */
-static atomic_val_t send_data_enable;
-
-
 /* Structures for work */
 static struct k_work send_gps_data_work;
 static struct k_delayed_work send_env_data_work;
-static struct k_delayed_work cloud_reboot_work;
 #if CONFIG_MODEM_INFO
 static struct k_work device_status_work;
 static struct k_work rsrp_work;
 #endif /* CONFIG_MODEM_INFO */
 
-static bool connected = 0;
-static u8_t client_id_buf[CLIENT_ID_LEN + 1];
-
-/* Buffers for MQTT client. */
-static u8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
-static u8_t tx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
-static u8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
-
-/* MQTT Broker details. */
-static struct sockaddr_storage broker_storage;
-static struct mqtt_client client;
-
 /* File descriptor */
 static struct pollfd fds;
+
+/* MQTT Broker details. */
+static struct mqtt_client client;
 
 /* Set to true when application should teardown and reboot */
 static bool do_reboot;
@@ -169,7 +146,6 @@ static void sensor_data_send(struct cloud_channel_data *data);
 static  void publish_env_sensors_data(void);
 static  void publish_gps_data(void);
 
-static int subscribe(void);
 
 #if CONFIG_MODEM_INFO
 static void device_status_send(struct k_work *work);
@@ -262,30 +238,25 @@ void k_sys_fatal_error_handler(unsigned int reason,
     CODE_UNREACHABLE;
 }
 
-void cloud_error_handler(int err)
-{
+void cloud_error_handler(int err) {
     error_handler(ERROR_CLOUD, err);
 }
 
 /**@brief Recoverable BSD library error. */
-void bsd_recoverable_error_handler(uint32_t err)
-{
+void bsd_recoverable_error_handler(uint32_t err) {
     error_handler(ERROR_BSD_RECOVERABLE, (int)err);
 }
 
 /**@brief Irrecoverable BSD library error. */
-void bsd_irrecoverable_error_handler(uint32_t err)
-{
+void bsd_irrecoverable_error_handler(uint32_t err) {
     error_handler(ERROR_BSD_IRRECOVERABLE, (int)err);
 }
 
-static void send_gps_data_work_fn(struct k_work *work)
-{
+static void send_gps_data_work_fn(struct k_work *work) {
     publish_gps_data();
 }
 
-static void send_env_data_work_fn(struct k_work *work)
-{
+static void send_env_data_work_fn(struct k_work *work) {
     printk("[%s:%d]\n", __func__, __LINE__);
     env_data_send();
 }
@@ -472,18 +443,11 @@ static void sensor_data_send(struct cloud_channel_data *data)
     }
 }
 
-/**@brief Reboot the device if CONNACK has not arrived. */
-static void cloud_reboot_work_fn(struct k_work *work) {
-    error_handler(ERROR_CLOUD, -ETIMEDOUT);
-}
-
-
 /**@brief Initializes and submits delayed work. */
 static void work_init(void)
 {
     k_work_init(&send_gps_data_work, send_gps_data_work_fn);
     k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
-    k_delayed_work_init(&cloud_reboot_work, cloud_reboot_work_fn);
 #if CONFIG_MODEM_INFO
     k_work_init(&device_status_work, device_status_send);
     k_work_init(&rsrp_work, modem_rsrp_data_send);
@@ -611,209 +575,6 @@ static void ui_evt_handler(struct ui_evt evt)
 }
 #endif /* defined(CONFIG_USE_UI_MODULE) */
 
-/**@brief Function to print strings without null-termination. */
-static void data_print(u8_t *prefix, u8_t *data, size_t len)
-{
-    char buf[len + 1];
-
-    memcpy(buf, data, len);
-    buf[len] = 0;
-    printk("%s%s\n", prefix, buf);
-}
-
-/**@brief Function to read the published payload.
- */
-static int publish_get_payload(struct mqtt_client *c,
-                               u8_t *write_buf,
-                               size_t length)
-{
-    u8_t *buf = write_buf;
-    u8_t *end = buf + length;
-
-    if (length > sizeof(payload_buf)) {
-        return -EMSGSIZE;
-    }
-
-    while (buf < end) {
-        int ret = mqtt_read_publish_payload_blocking(c, buf, end - buf);
-
-        if (ret < 0) {
-            return ret;
-        } else if (ret == 0) {
-            return -EIO;
-        }
-
-        buf += ret;
-    }
-
-    return 0;
-}
-
-/**@brief MQTT client event handler */
-void mqtt_evt_handler(struct mqtt_client *const c,
-                      const struct mqtt_evt *evt)
-{
-    int err;
-
-    switch (evt->type) {
-        case MQTT_EVT_CONNACK:
-            if (evt->result != 0) {
-                printk("MQTT connect failed %d\n", evt->result);
-                break;
-            }
-
-            k_delayed_work_cancel(&cloud_reboot_work);
-            connected = 1;
-            atomic_set(&send_data_enable, 1);
-            sensors_init();
-
-            printk("[%s:%d]\n", __func__, __LINE__);
-            iotex_hal_gpio_set(LED_BLUE, LED_ON);
-            iotex_hal_gpio_set(LED_GREEN, LED_OFF);
-
-            printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
-            subscribe();
-            break;
-
-        case MQTT_EVT_DISCONNECT:
-            connected = 0;
-            iotex_hal_gpio_set(LED_BLUE, LED_OFF);
-            iotex_hal_gpio_set(LED_GREEN, LED_ON);
-            printk("[%s:%d] MQTT client disconnected %d\n", __func__,
-                   __LINE__, evt->result);
-            break;
-
-        case MQTT_EVT_PUBLISH: {
-            const struct mqtt_publish_param *p = &evt->param.publish;
-
-            printk("[%s:%d] MQTT PUBLISH result=%d len=%d\n", __func__,
-                   __LINE__, evt->result, p->message.payload.len);
-            err = publish_get_payload(c,
-                                      payload_buf,
-                                      p->message.payload.len);
-
-            if (err) {
-                printk("mqtt_read_publish_payload: Failed! %d\n", err);
-                printk("Disconnecting MQTT client...\n");
-
-                err = mqtt_disconnect(c);
-
-                if (err) {
-                    printk("Could not disconnect: %d\n", err);
-                }
-            }
-
-            if (p->message.topic.qos == MQTT_QOS_1_AT_LEAST_ONCE) {
-                const struct mqtt_puback_param ack = {
-                    .message_id = p->message_id
-                };
-
-                /* Send acknowledgment. */
-                err = mqtt_publish_qos1_ack(c, &ack);
-
-                if (err) {
-                    printk("unable to ack\n");
-                }
-            }
-
-            data_print("Received: ", payload_buf, p->message.payload.len);
-            break;
-        }
-
-        case MQTT_EVT_PUBACK:
-            if (evt->result != 0) {
-                printk("MQTT PUBACK error %d\n", evt->result);
-                break;
-            }
-
-            printk("[%s:%d] PUBACK packet id: %u\n", __func__, __LINE__,
-                   evt->param.puback.message_id);
-            break;
-
-        case MQTT_EVT_SUBACK:
-            if (evt->result != 0) {
-                printk("MQTT SUBACK error %d\n", evt->result);
-                break;
-            }
-
-            printk("[%s:%d] SUBACK packet id: %u\n", __func__, __LINE__,
-                   evt->param.suback.message_id);
-            break;
-
-        default:
-            printk("[%s:%d] default: %d\n", __func__, __LINE__,
-                   evt->type);
-            break;
-    }
-}
-
-
-/**@brief Resolves the configured hostname and
- * initializes the MQTT broker structure
- */
-static void broker_init(const char *hostname)
-{
-    int err;
-    struct addrinfo *result;
-    struct addrinfo *addr;
-    struct addrinfo hints = {
-        .ai_family = AF_INET,
-        .ai_socktype = SOCK_STREAM
-    };
-
-    err = getaddrinfo(hostname, NULL, &hints, &result);
-
-    if (err) {
-        printk("ERROR: getaddrinfo failed %d\n", err);
-
-        return;
-    }
-
-    addr = result;
-    err = -ENOENT;
-
-    while (addr != NULL) {
-        /* IPv4 Address. */
-        if (addr->ai_addrlen == sizeof(struct sockaddr_in)) {
-            struct sockaddr_in *broker =
-                ((struct sockaddr_in *)&broker_storage);
-
-            broker->sin_addr.s_addr =
-                ((struct sockaddr_in *)addr->ai_addr)
-                ->sin_addr.s_addr;
-            broker->sin_family = AF_INET;
-            broker->sin_port = htons(CONFIG_MQTT_BROKER_PORT);
-
-            printk("IPv4 Address 0x%08x\n", broker->sin_addr.s_addr);
-            break;
-        } else if (addr->ai_addrlen == sizeof(struct sockaddr_in6)) {
-            /* IPv6 Address. */
-            struct sockaddr_in6 *broker =
-                ((struct sockaddr_in6 *)&broker_storage);
-
-            memcpy(broker->sin6_addr.s6_addr,
-                   ((struct sockaddr_in6 *)addr->ai_addr)
-                   ->sin6_addr.s6_addr,
-                   sizeof(struct in6_addr));
-            broker->sin6_family = AF_INET6;
-            broker->sin6_port = htons(CONFIG_MQTT_BROKER_PORT);
-
-            printk("IPv6 Address");
-            break;
-        } else {
-            printk("error: ai_addrlen = %u should be %u or %u\n",
-                   (unsigned int)addr->ai_addrlen,
-                   (unsigned int)sizeof(struct sockaddr_in),
-                   (unsigned int)sizeof(struct sockaddr_in6));
-        }
-
-        addr = addr->ai_next;
-        break;
-    }
-
-    /* Free the address. */
-    freeaddrinfo(result);
-}
 
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
 static int provision_certificates(void)
@@ -873,75 +634,13 @@ static int provision_certificates(void)
 }
 #endif
 
-static int client_id_get(char *id_buf, size_t size) {
 
-#if !defined(CONFIG_CLOUD_CLIENT_ID)
-    snprintf(id_buf, size, "nrf-%s", iotex_modem_get_imei());
-#else
-    memcpy(id_buf, CONFIG_CLOUD_CLIENT_ID, CLIENT_ID_LEN + 1);
-#endif /* !defined(NRF_CLOUD_CLIENT_ID) */
-    return 0;
-}
-
-/**@brief Initialize the MQTT client structure */
-static int client_init(struct mqtt_client *client, char *hostname)
-{
-    mqtt_client_init(client);
-    broker_init(hostname);
-
-    int ret = client_id_get(client_id_buf, sizeof(client_id_buf));
-    printk("client_id: %s\n", client_id_buf);
-
-    if (ret != 0) {
-        return ret;
-    }
-
-    /* MQTT client configuration */
-    client->broker = &broker_storage;
-    client->evt_cb = mqtt_evt_handler;
-    client->client_id.utf8 = client_id_buf;
-    client->client_id.size = strlen(client_id_buf);
-    client->password = NULL;
-    client->user_name = NULL;
-    client->protocol_version = MQTT_VERSION_3_1_1;
-
-    /* MQTT buffers configuration */
-    client->rx_buf = rx_buffer;
-    client->rx_buf_size = sizeof(rx_buffer);
-    client->tx_buf = tx_buffer;
-    client->tx_buf_size = sizeof(tx_buffer);
-
-    /* MQTT transport configuration */
-    client->transport.type = MQTT_TRANSPORT_SECURE;
-
-    static sec_tag_t sec_tag_list[] = {CONFIG_CLOUD_CERT_SEC_TAG};
-    struct mqtt_sec_config *tls_config = &(client->transport).tls.config;
-
-    tls_config->peer_verify = 2;
-    tls_config->cipher_list = NULL;
-    tls_config->cipher_count = 0;
-    tls_config->sec_tag_count = ARRAY_SIZE(sec_tag_list);
-    tls_config->sec_tag_list = sec_tag_list;
-    tls_config->hostname = hostname;
-
-    return 0;
-}
-
-/**@brief Initialize the file descriptor structure used by poll. */
-static int fds_init(struct mqtt_client *c)
-{
-    fds.fd = c->transport.tls.sock;
-    fds.events = POLLIN;
-    return 0;
-}
-
-static char *get_mqtt_payload_devicedata(enum mqtt_qos qos)
-{
+static char *get_mqtt_payload_devicedata(enum mqtt_qos qos) {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN];
 
     snprintf(payload, sizeof(payload),
              "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d, \"timestamp\":%s}",
-             client_id_buf, iotex_hal_adc_sample(),
+             iotex_mqtt_get_client_id(), iotex_hal_adc_sample(),
              iotex_model_get_signal_quality(), iotex_modem_get_clock(NULL));
     return payload;
 }
@@ -957,40 +656,18 @@ static char *get_mqtt_payload_gps(enum mqtt_qos qos) {
     return payload;
 }
 
-static char *get_mqtt_payload_bme680(enum mqtt_qos qos)
-{
+static char *get_mqtt_payload_bme680(enum mqtt_qos qos) {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN];
     iotex_bme680_get_sensor_data((uint8_t *)&payload, sizeof(payload));
     return payload;
 }
 
-static char *get_mqtt_payload_icm42605(enum mqtt_qos qos)
-{
+static char *get_mqtt_payload_icm42605(enum mqtt_qos qos) {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
     iotex_icm42605_get_sensor_data((uint8_t *)&payload, sizeof(payload));
     return payload;
 }
 
-static char *get_mqtt_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 7] ;
-    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/%s", client_id_buf);
-    return mqtt_topic;
-}
-
-static int publish_data(struct mqtt_client *client, enum mqtt_qos qos, char *data)
-{
-    struct mqtt_publish_param param;
-    param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = (u8_t *)get_mqtt_topic();
-    param.message.topic.topic.size =
-        strlen(param.message.topic.topic.utf8);
-    param.message.payload.data = data;
-    param.message.payload.len = strlen(data);
-    param.message_id = sys_rand32_get();
-    param.dup_flag = 0U;
-    param.retain_flag = 0U;
-    return mqtt_publish(client, &param);
-}
 
 static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
 {
@@ -998,7 +675,7 @@ static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
     int_fast64_t start_time = k_uptime_get();
     int rc;
 
-    while (remaining > 0 && connected ) {
+    while (remaining > 0 && iotex_mqtt_is_connected()) {
         k_busy_wait(remaining);
 
         rc = mqtt_live(client);
@@ -1026,12 +703,12 @@ void publish_gps_data()
     int rc;
     printk("[%s:%d]\n", __func__, __LINE__);
 
-    if (connected)
+    if (iotex_mqtt_is_connected())
     {
         rc = mqtt_ping(&client);
         PRINT_RESULT("mqtt_ping", rc);
         SUCCESS_OR_BREAK(rc);
-        rc = publish_data(&client, 0, get_mqtt_payload_gps(0));
+        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_gps(0));
         PRINT_RESULT("mqtt_publish_gps", rc);
     }
 
@@ -1042,42 +719,20 @@ void publish_env_sensors_data()
     int rc;
     printk("[%s:%d]\n", __func__, __LINE__);
 
-    if (connected)
+    if (iotex_mqtt_is_connected())
     {
         rc = mqtt_ping(&client);
         PRINT_RESULT("mqtt_ping", rc);
         SUCCESS_OR_BREAK(rc);
         // gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
-        rc = publish_data(&client, 0, get_mqtt_payload_devicedata(0));
+        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_devicedata(0));
         PRINT_RESULT("mqtt_publish_devicedata", rc);
-        rc = publish_data(&client, 0, get_mqtt_payload_bme680(0));
+        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_bme680(0));
         PRINT_RESULT("mqtt_publish_bme680", rc);
-        rc = publish_data(&client, 0, get_mqtt_payload_icm42605(0));
+        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_icm42605(0));
         PRINT_RESULT("mqtt_publish_icm42605", rc);
     }
 
-}
-
-static int subscribe(void)
-{
-    struct mqtt_topic subscribe_topic = {
-        .topic = {
-            .utf8 = get_mqtt_topic(),
-            .size = strlen(get_mqtt_topic())
-        },
-        .qos = MQTT_QOS_1_AT_LEAST_ONCE
-    };
-
-    const struct mqtt_subscription_list subscription_list = {
-        .list = &subscribe_topic,
-        .list_count = 1,
-        .message_id = 1234
-    };
-
-    printk("Subscribing to: %s len %u, qos %u\n",
-           subscribe_topic.topic.utf8, subscribe_topic.topic.size, subscribe_topic.qos);
-
-    return mqtt_subscribe(&client, &subscription_list);
 }
 
 
@@ -1106,27 +761,14 @@ void main(void)
     unittest();
 #endif
 
-    err = client_init(&client, CONFIG_MQTT_BROKER_HOSTNAME);
-
-    err = mqtt_connect(&client);
-
-    if (err != 0) {
+    if ((err = iotex_mqtt_client_init(&client, &fds))) {
         printk("ERROR: mqtt_connect %d, rebooting...\n", err);
         k_sleep(500);
         sys_reboot(0);
         return;
     }
 
-    printk("MQTT_CONNECT done: %s\n", CONFIG_MQTT_BROKER_HOSTNAME);
-
-    err = fds_init(&client);
-
-    if (err != 0) {
-        printk("ERROR: fds_init %d\n", err);
-        cloud_error_handler(err);
-    } else {
-        k_delayed_work_submit(&cloud_reboot_work, CLOUD_CONNACK_WAIT_DURATION);
-    }
+    sensors_init();
 
     while (true) {
         err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
