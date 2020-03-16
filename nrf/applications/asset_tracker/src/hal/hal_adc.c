@@ -1,12 +1,12 @@
 #include <adc.h>
+#include <stdio.h>
 #include <zephyr.h>
 #include "hal_adc.h"
-
 
 static struct device *__adc_dev;
 
 
-float  iotex_hal_adc_sample(void) {
+float iotex_hal_adc_sample(void) {
     int ret;
     float adc_voltage = 0;
     int16_t sample_buffer;
@@ -23,9 +23,17 @@ float  iotex_hal_adc_sample(void) {
     }
 
     ret = adc_read(__adc_dev, &sequence);
-    adc_voltage = (float)(((float)sample_buffer / 1023.0f) * 2 * 3600.0f) / 1000;
-    //printk("ADC raw value: %d\n", sample_buffer);
-    //printf("Measured voltage: %f mV\n", adc_voltage);
+
+    if (ret || sample_buffer <= 0) {
+        return 0.0;
+    }
+
+    adc_voltage = sample_buffer / 1023.0 * 2 * 3600.0 / 1000.0;
+
+#ifdef CONFIG_DEBUG_ADC
+    printk("ADC raw value: %d\n", sample_buffer);
+    fprintf(stdout, "Measured voltage: %.2f mV\n", adc_voltage);
+#endif
     return adc_voltage;
 }
 

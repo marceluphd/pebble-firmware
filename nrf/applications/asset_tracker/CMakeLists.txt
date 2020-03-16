@@ -28,6 +28,7 @@ target_sources(app PRIVATE src/modem/modem_helper.c)
 
 # MQTT
 target_sources(app PRIVATE src/mqtt/mqtt.c)
+target_sources(app PRIVATE src/mqtt/payload.c)
 
 # Protbuf
 target_sources(app PRIVATE src/nanopb/pb_encode.c)
@@ -40,6 +41,7 @@ target_sources(app PRIVATE src/nvs/local_storage.c)
 # Unittest
 target_sources(app PRIVATE src/unittest/unittest.c)
 target_sources(app PRIVATE src/unittest/nvs_unittest.c)
+target_sources(app PRIVATE src/unittest/mqtt_unittest.c)
 target_sources(app PRIVATE src/unittest/nanopb_unittest.c)
 target_sources(app PRIVATE src/unittest/nanopb_unittest.pb.c)
 

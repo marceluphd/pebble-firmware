@@ -19,6 +19,11 @@ config NANOPB_UNITTEST
 	depends on UNITTEST
 	default n
 
+config MQTT_UNITTEST
+	bool "Test MQTT"
+	depends on UNITTEST
+	default n
+
 module = UNITTEST
 module-str = Unittest
 source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"

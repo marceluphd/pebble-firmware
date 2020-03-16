@@ -90,35 +90,17 @@ struct rsrp_data {
     u16_t offset;
 };
 
-#if CONFIG_MODEM_INFO
-static struct rsrp_data rsrp = {
-    .value = 0,
-    .offset = MODEM_INFO_RSRP_OFFSET_VAL,
-};
-#endif /* CONFIG_MODEM_INFO */
-
 extern void unittest();
-static struct cloud_backend *cloud_backend;
-
 
 /* Sensor data */
 static struct gps_data gps_data;
 static iotex_st_timestamp gps_timestamp;
 static struct cloud_channel_data gps_cloud_data;
 
-#if CONFIG_MODEM_INFO
-static struct modem_param_info modem_param;
-static struct cloud_channel_data signal_strength_cloud_data;
-static struct cloud_channel_data device_cloud_data;
-#endif /* CONFIG_MODEM_INFO */
 
 /* Structures for work */
 static struct k_work send_gps_data_work;
 static struct k_delayed_work send_env_data_work;
-#if CONFIG_MODEM_INFO
-static struct k_work device_status_work;
-static struct k_work rsrp_work;
-#endif /* CONFIG_MODEM_INFO */
 
 /* File descriptor */
 static struct pollfd fds;
@@ -139,17 +121,9 @@ enum error_type {
 
 /* Forward declaration of functions */
 static void env_data_send(void);
-static void sensors_init(void);
-static void work_init(void);
-static void sensor_data_send(struct cloud_channel_data *data);
 
 static  void publish_env_sensors_data(void);
 static  void publish_gps_data(void);
-
-
-#if CONFIG_MODEM_INFO
-static void device_status_send(struct k_work *work);
-#endif
 
 /**@brief nRF Cloud error handler. */
 void error_handler(enum error_type err_type, int err_code)
@@ -257,7 +231,6 @@ static void send_gps_data_work_fn(struct k_work *work) {
 }
 
 static void send_env_data_work_fn(struct k_work *work) {
-    printk("[%s:%d]\n", __func__, __LINE__);
     env_data_send();
 }
 
@@ -299,93 +272,10 @@ static void gps_trigger_handler(struct device *dev, struct gps_trigger *trigger)
     k_delayed_work_submit(&send_env_data_work, K_NO_WAIT);
 }
 
-#if CONFIG_MODEM_INFO
-/**@brief Callback handler for LTE RSRP data. */
-static void modem_rsrp_handler(char rsrp_value)
-{
-    rsrp.value = rsrp_value;
-
-    k_work_submit(&rsrp_work);
-}
-
-/**@brief Publish RSRP data to the cloud. */
-static void modem_rsrp_data_send(struct k_work *work)
-{
-    char buf[CONFIG_MODEM_INFO_BUFFER_SIZE] = {0};
-    static u32_t timestamp_prev;
-    size_t len;
-
-    if (!atomic_get(&send_data_enable)) {
-        return;
-    }
-
-    if (k_uptime_get_32() - timestamp_prev <
-            K_SECONDS(CONFIG_HOLD_TIME_RSRP)) {
-        return;
-    }
-
-    len = snprintf(buf, CONFIG_MODEM_INFO_BUFFER_SIZE,
-                   "%d", rsrp.value - rsrp.offset);
-
-    signal_strength_cloud_data.data.buf = buf;
-    signal_strength_cloud_data.data.len = len;
-    signal_strength_cloud_data.tag += 1;
-
-    if (signal_strength_cloud_data.tag == 0) {
-        signal_strength_cloud_data.tag = 0x1;
-    }
-
-    sensor_data_send(&signal_strength_cloud_data);
-    timestamp_prev = k_uptime_get_32();
-}
-
-/**@brief Poll device info and send data to the cloud. */
-static void device_status_send(struct k_work *work)
-{
-    int len;
-    int ret;
-
-    cJSON *root_obj = cJSON_CreateObject();
-
-    if (root_obj == NULL) {
-        printk("Unable to allocate JSON object\n");
-        return;
-    }
-
-    if (!atomic_get(&send_data_enable)) {
-        return;
-    }
-
-    ret = modem_info_params_get(&modem_param);
-
-    if (ret < 0) {
-        printk("Unable to obtain modem parameters: %d\n", ret);
-        return;
-    }
-
-    len = modem_info_json_object_encode(&modem_param, root_obj);
-
-    if (len < 0) {
-        return;
-    }
-
-    device_cloud_data.data.buf = (char *)root_obj;
-    device_cloud_data.data.len = len;
-    device_cloud_data.tag += 1;
-
-    if (device_cloud_data.tag == 0) {
-        device_cloud_data.tag = 0x1;
-    }
-
-    /* Transmits the data to the cloud. Frees the JSON object. */
-    sensor_data_send(&device_cloud_data);
-}
-#endif /* CONFIG_MODEM_INFO */
-
 /**@brief Get environment data from sensors and send to cloud. */
 static void env_data_send(void)
 {
-    printk("[%s:%d]\n", __func__, __LINE__);
+    printk("[%s:%d, %d]\n", __func__, __LINE__, gps_control_is_active());
 
     if (!atomic_get(&send_data_enable)) {
         return;
@@ -398,7 +288,6 @@ static void env_data_send(void)
     }
 
     publish_env_sensors_data();
-
     k_delayed_work_submit(&send_env_data_work,
                           K_SECONDS(CONFIG_ENVIRONMENT_DATA_SEND_INTERVAL));
 
@@ -406,52 +295,11 @@ static void env_data_send(void)
 
 }
 
-/**@brief Send sensor data to nRF Cloud. **/
-static void sensor_data_send(struct cloud_channel_data *data)
-{
-    int err = 0;
-    struct cloud_msg msg = {
-        .qos = CLOUD_QOS_AT_MOST_ONCE,
-        .endpoint.type = CLOUD_EP_TOPIC_MSG
-    };
-
-    if (data->type == CLOUD_CHANNEL_DEVICE_INFO) {
-        msg.endpoint.type = CLOUD_EP_TOPIC_STATE;
-    }
-
-    if (!atomic_get(&send_data_enable) || gps_control_is_active()) {
-        return;
-    }
-
-    if (data->type != CLOUD_CHANNEL_DEVICE_INFO) {
-        err = cloud_encode_data(data, &msg);
-    } else {
-        err = cloud_encode_digital_twin_data(data, &msg);
-    }
-
-    if (err) {
-        printk("Unable to encode cloud data: %d\n", err);
-    }
-
-    err = cloud_send(cloud_backend, &msg);
-
-    cloud_release_data(&msg);
-
-    if (err) {
-        printk("sensor_data_send failed: %d\n", err);
-        cloud_error_handler(err);
-    }
-}
-
 /**@brief Initializes and submits delayed work. */
 static void work_init(void)
 {
     k_work_init(&send_gps_data_work, send_gps_data_work_fn);
     k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
-#if CONFIG_MODEM_INFO
-    k_work_init(&device_status_work, device_status_send);
-    k_work_init(&rsrp_work, modem_rsrp_data_send);
-#endif /* CONFIG_MODEM_INFO */
 }
 
 /**@brief Configures modem to provide LTE link. Blocks until link is
@@ -485,33 +333,6 @@ static void modem_configure(void)
 
 #endif
 }
-
-
-#if CONFIG_MODEM_INFO
-/**brief Initialize LTE status containers. */
-static void modem_data_init(void)
-{
-    int err;
-    err = modem_info_init();
-
-    if (err) {
-        printk("Modem info could not be established: %d\n", err);
-        return;
-    }
-
-    modem_info_params_init(&modem_param);
-
-    signal_strength_cloud_data.type = CLOUD_CHANNEL_LTE_LINK_RSRP;
-    signal_strength_cloud_data.tag = 0x1;
-
-    device_cloud_data.type = CLOUD_CHANNEL_DEVICE_INFO;
-    device_cloud_data.tag = 0x1;
-
-    k_work_submit(&device_status_work);
-
-    modem_info_rsrp_register(modem_rsrp_handler);
-}
-#endif /* CONFIG_MODEM_INFO */
 
 /**@brief Initializes the sensors that are used by the application. */
 static void sensors_init(void)
@@ -652,7 +473,6 @@ static char *get_mqtt_payload_gps(enum mqtt_qos qos) {
     printf("{GPS latitude:%f, longitude:%f, timestamp %s\n", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
     snprintf(payload, sizeof(payload), "{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f, \"timestamp\":%s}",
              "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
-
     return payload;
 }
 
@@ -669,70 +489,36 @@ static char *get_mqtt_payload_icm42605(enum mqtt_qos qos) {
 }
 
 
-static int process_mqtt_and_sleep(struct mqtt_client *client, int timeout)
-{
-    int_fast64_t remaining = timeout;
-    int_fast64_t start_time = k_uptime_get();
-    int rc;
-
-    while (remaining > 0 && iotex_mqtt_is_connected()) {
-        k_busy_wait(remaining);
-
-        rc = mqtt_live(client);
-
-        if (rc != 0) {
-            PRINT_RESULT("mqtt_live", rc);
-            return rc;
-        }
-
-        rc = mqtt_input(client);
-
-        if (rc != 0) {
-            PRINT_RESULT("mqtt_input", rc);
-            return rc;
-        }
-
-        remaining = timeout + start_time - k_uptime_get();
-    }
-
-    return 0;
-}
-
-void publish_gps_data()
-{
+void publish_gps_data() {
     int rc;
     printk("[%s:%d]\n", __func__, __LINE__);
 
-    if (iotex_mqtt_is_connected())
-    {
-        rc = mqtt_ping(&client);
-        PRINT_RESULT("mqtt_ping", rc);
-        SUCCESS_OR_BREAK(rc);
+    if (iotex_mqtt_is_connected()) {
+        SUCCESS_OR_BREAK(mqtt_ping(&client));
         rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_gps(0));
         PRINT_RESULT("mqtt_publish_gps", rc);
     }
 
 }
 
-void publish_env_sensors_data()
-{
+void publish_env_sensors_data() {
     int rc;
+
     printk("[%s:%d]\n", __func__, __LINE__);
 
-    if (iotex_mqtt_is_connected())
-    {
-        rc = mqtt_ping(&client);
-        PRINT_RESULT("mqtt_ping", rc);
-        SUCCESS_OR_BREAK(rc);
-        // gpio_pin_write(ggpio_dev, LED_BLUE, 1);	//p0.00 == LED_BLUE OFF
+    if (iotex_mqtt_is_connected()) {
+
+        SUCCESS_OR_BREAK(mqtt_ping(&client));
+
         rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_devicedata(0));
         PRINT_RESULT("mqtt_publish_devicedata", rc);
+
         rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_bme680(0));
         PRINT_RESULT("mqtt_publish_bme680", rc);
+
         rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_icm42605(0));
         PRINT_RESULT("mqtt_publish_icm42605", rc);
     }
-
 }
 
 
@@ -761,6 +547,7 @@ void main(void)
     unittest();
 #endif
 
+    ui_led_set_pattern(UI_LED_GPS_FIX);
     if ((err = iotex_mqtt_client_init(&client, &fds))) {
         printk("ERROR: mqtt_connect %d, rebooting...\n", err);
         k_sleep(500);
@@ -769,6 +556,7 @@ void main(void)
     }
 
     sensors_init();
+ 
 
     while (true) {
         err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));
