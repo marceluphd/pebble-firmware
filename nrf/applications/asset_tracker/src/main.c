@@ -456,35 +456,12 @@ static int provision_certificates(void)
 #endif
 
 
-static char *get_mqtt_payload_devicedata(enum mqtt_qos qos) {
-    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN];
-
-    snprintf(payload, sizeof(payload),
-             "{\"Device\":\"%s\",\"VBAT\":%.2f, \"SNR\":%d, \"timestamp\":%s}",
-             iotex_mqtt_get_client_id(), iotex_hal_adc_sample(),
-             iotex_model_get_signal_quality(), iotex_modem_get_clock(NULL));
-    return payload;
-}
-
-
 static char *get_mqtt_payload_gps(enum mqtt_qos qos) {
     static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
 
     printf("{GPS latitude:%f, longitude:%f, timestamp %s\n", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
     snprintf(payload, sizeof(payload), "{\"Device\":\"%s\",\"latitude\":%f,\"longitude\":%f, \"timestamp\":%s}",
              "GPS", gps_data.pvt.latitude, gps_data.pvt.longitude, gps_timestamp.data);
-    return payload;
-}
-
-static char *get_mqtt_payload_bme680(enum mqtt_qos qos) {
-    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN];
-    iotex_bme680_get_sensor_data((uint8_t *)&payload, sizeof(payload));
-    return payload;
-}
-
-static char *get_mqtt_payload_icm42605(enum mqtt_qos qos) {
-    static uint8_t payload[SENSOR_PAYLOAD_MAX_LEN] ;
-    iotex_icm42605_get_sensor_data((uint8_t *)&payload, sizeof(payload));
     return payload;
 }
 
@@ -498,11 +475,11 @@ void publish_gps_data() {
         rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_gps(0));
         PRINT_RESULT("mqtt_publish_gps", rc);
     }
-
 }
 
 void publish_env_sensors_data() {
     int rc;
+    struct cloud_msg msg;
 
     printk("[%s:%d]\n", __func__, __LINE__);
 
@@ -510,14 +487,23 @@ void publish_env_sensors_data() {
 
         SUCCESS_OR_BREAK(mqtt_ping(&client));
 
-        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_devicedata(0));
-        PRINT_RESULT("mqtt_publish_devicedata", rc);
+        if (!iotex_mqtt_get_devinfo_payload(&msg)) {
+            rc = iotex_mqtt_publish_data(&client, 0, msg.buf);
+            PRINT_RESULT("mqtt_publish_devicedata", rc);
+            free(msg.buf);
+        }
 
-        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_bme680(0));
-        PRINT_RESULT("mqtt_publish_bme680", rc);
+        if (!iotex_mqtt_get_env_sensor_payload(&msg)) {
+            rc = iotex_mqtt_publish_data(&client, 0, msg.buf);
+            PRINT_RESULT("mqtt_publish_bme680", rc);
+            free(msg.buf);
+        }
 
-        rc = iotex_mqtt_publish_data(&client, 0, get_mqtt_payload_icm42605(0));
-        PRINT_RESULT("mqtt_publish_icm42605", rc);
+        if (!iotex_mqtt_get_action_sensor_payload(&msg)) {
+            rc = iotex_mqtt_publish_data(&client, 0, msg.buf);
+            PRINT_RESULT("mqtt_publish_icm42605", rc);
+            free(msg.buf);
+        }
     }
 }
 
@@ -547,7 +533,6 @@ void main(void)
     unittest();
 #endif
 
-    ui_led_set_pattern(UI_LED_GPS_FIX);
     if ((err = iotex_mqtt_client_init(&client, &fds))) {
         printk("ERROR: mqtt_connect %d, rebooting...\n", err);
         k_sleep(500);
@@ -556,7 +541,7 @@ void main(void)
     }
 
     sensors_init();
- 
+
 
     while (true) {
         err = poll(&fds, 1, K_SECONDS(CONFIG_MQTT_KEEPALIVE));

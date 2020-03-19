@@ -5,6 +5,7 @@
 #include <string.h>
 #include "bme680.h"
 #include "bme680_helper.h"
+#include "nvs/local_storage.h"
 #include "modem/modem_helper.h"
 
 
@@ -66,7 +67,7 @@ static int8_t user_config_bme680(void) {
     return rslt;
 }
 
-int8_t iotex_bme680_init(void) {
+int iotex_bme680_init(void) {
 
     /* BME680 i2c bus init */
     uint8_t chip_id = 0;
@@ -105,7 +106,7 @@ int8_t iotex_bme680_init(void) {
     return user_config_bme680();
 }
 
-int8_t iotex_bme680_get_sensor_data(uint8_t *str, size_t size) {
+int iotex_bme680_get_sensor_data(iotex_storage_bme680 *bme680) {
 
     uint16_t meas_period;
     int8_t rslt = BME680_OK;
@@ -115,19 +116,16 @@ int8_t iotex_bme680_get_sensor_data(uint8_t *str, size_t size) {
 
     /* Delay till the measurement is ready */
     user_delay_ms(500);
-    rslt = bme680_get_sensor_data(&data, &__gas_sensor);
 
-    printf("{BME680  T: %.2f degC, P: %.2f hPa, H %.2f %%rH", data.temperature / 100.0f,
-           data.pressure / 100.0f, data.humidity / 1000.0f );
+    if ((rslt = bme680_get_sensor_data(&data, &__gas_sensor))) {
+        return rslt;
+    }
 
-    /* Avoid using measurements from an unstable heating setup */
-    if (data.status & BME680_GASM_VALID_MSK)
-        printf(", G: %d ohms", data.gas_resistance);
-
-    printf("}\n");
-
-    snprintf(str, size, "{\"Device\":\"%s\",\"T(degC)\":%.2f,\"P(hPa)\":%.2f, \"H(%%rH)\":%.2f, \"G(ohms)\":%d, \"timestamp\":%s}", "BME680", data.temperature / 100.0f,
-             data.pressure / 100.0f, data.humidity / 1000.0f, data.gas_resistance, iotex_modem_get_clock(NULL));
+    /* Copy data to iotex_storage_bme680 */
+    bme680->pressure = data.pressure / 100.0;
+    bme680->humidity = data.humidity / 1000.0;
+    bme680->temperature = data.temperature / 100.0;
+    bme680->gas_resistance = data.gas_resistance;
 
     /* Trigger the next measurement if you would like to read data out continuously */
     if (__gas_sensor.power_mode == BME680_FORCED_MODE) {

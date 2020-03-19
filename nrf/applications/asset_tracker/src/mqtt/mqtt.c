@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <zephyr.h>
 #include <net/socket.h>
-
+#include <misc/reboot.h>
 #include "mqtt.h"
+#include "config.h"
 #include "hal/hal_gpio.h"
 #include "modem/modem_helper.h"
 
@@ -27,6 +28,23 @@ static struct k_delayed_work cloud_reboot_work;
 static u8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
 static u8_t tx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
 static u8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
+
+
+
+static const char *iotex_mqtt_get_topic(void) {
+    static uint8_t mqtt_topic[CLIENT_ID_LEN + 7] ;
+    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/%s",
+             iotex_mqtt_get_client_id());
+    return mqtt_topic;
+}
+
+static const char *iotex_mqtt_get_config_topic(void) {
+    static uint8_t mqtt_topic[CLIENT_ID_LEN + 15] ;
+    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/config/%s",
+             iotex_mqtt_get_client_id());
+    return mqtt_topic;
+}
+
 
 /*
  * @brief Resolves the configured hostname and
@@ -93,7 +111,7 @@ static void broker_init(const char *hostname, struct sockaddr_storage *storage) 
 
 static int subscribe_config_topic(struct mqtt_client *client) {
 
-    const char *topic = iotex_mqtt_get_topic();
+    const char *topic = iotex_mqtt_get_config_topic();
     struct mqtt_topic subscribe_topic = {
         .topic = {
             .utf8 = (uint8_t *)topic,
@@ -156,7 +174,8 @@ static int publish_get_payload(struct mqtt_client *c, u8_t *write_buf, size_t le
 /**@brief Reboot the device if CONNACK has not arrived. */
 extern void cloud_error_handler(int err);
 static void cloud_reboot_work_fn(struct k_work *work) {
-    cloud_error_handler(-ETIMEDOUT);
+    printf("[%s] MQTT Connect timeout reboot!\n", __func__);
+    sys_reboot(0);
 }
 
 /**@brief MQTT client event handler */
@@ -185,6 +204,7 @@ static void mqtt_evt_handler(struct mqtt_client *const c, const struct mqtt_evt 
 
         case MQTT_EVT_DISCONNECT:
             connected = 0;
+            atomic_set(&send_data_enable, 0);
             iotex_hal_gpio_set(LED_BLUE, LED_OFF);
             iotex_hal_gpio_set(LED_GREEN, LED_ON);
             printk("[%s:%d] MQTT client disconnected %d\n", __func__, __LINE__, evt->result);
@@ -193,27 +213,30 @@ static void mqtt_evt_handler(struct mqtt_client *const c, const struct mqtt_evt 
         case MQTT_EVT_PUBLISH: {
             const struct mqtt_publish_param *p = &evt->param.publish;
 
-            printk("[%s:%d] MQTT PUBLISH result=%d len=%d\n", __func__,
-                   __LINE__, evt->result, p->message.payload.len);
+            printk("[%s:%d] MQTT PUBLISH result = %d len= %d\n",
+                   __func__, __LINE__,
+                   evt->result, p->message.payload.len);
             err = publish_get_payload(c, payload_buf, p->message.payload.len);
 
-            if (err) {
-                printk("mqtt_read_publish_payload: Failed! %d\n", err);
-                printk("Disconnecting MQTT client...\n");
+            if (err >= 0) {
+                data_print("Received: ", payload_buf, p->message.payload.len);
+                iotex_mqtt_parse_config(payload_buf, p->message.payload.len);
+            }
+            else {
 
-                err = mqtt_disconnect(c);
-
-                if (err) {
+                if ((err = mqtt_disconnect(c))) {
                     printk("Could not disconnect: %d\n", err);
                 }
+
+                break;
             }
 
+            /* Send acknowledgment. */
             if (p->message.topic.qos == MQTT_QOS_1_AT_LEAST_ONCE) {
                 const struct mqtt_puback_param ack = {
                     .message_id = p->message_id
                 };
 
-                /* Send acknowledgment. */
                 err = mqtt_publish_qos1_ack(c, &ack);
 
                 if (err) {
@@ -221,7 +244,6 @@ static void mqtt_evt_handler(struct mqtt_client *const c, const struct mqtt_evt 
                 }
             }
 
-            data_print("Received: ", payload_buf, p->message.payload.len);
             break;
         }
 
@@ -246,20 +268,13 @@ static void mqtt_evt_handler(struct mqtt_client *const c, const struct mqtt_evt 
             break;
 
         default:
-            printk("[%s:%d] default: %d\n", __func__, __LINE__,
-                   evt->type);
+            printk("[%s:%d] default: %d\n", __func__, __LINE__, evt->type);
             break;
     }
 }
 
 bool iotex_mqtt_is_connected(void) {
     return connected;
-}
-
-const char *iotex_mqtt_get_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 7] ;
-    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/%s", iotex_mqtt_get_client_id());
-    return mqtt_topic;
 }
 
 const uint8_t *iotex_mqtt_get_client_id() {
@@ -328,6 +343,11 @@ int iotex_mqtt_client_init(struct mqtt_client *client, struct pollfd *fds) {
     tls_config->sec_tag_list = sec_tag_list;
     tls_config->hostname = CONFIG_MQTT_BROKER_HOSTNAME;
 
+    /* Reboot the device if CONNACK has not arrived in 30s */
+    k_delayed_work_init(&cloud_reboot_work, cloud_reboot_work_fn);
+    k_delayed_work_submit(&cloud_reboot_work, CLOUD_CONNACK_WAIT_DURATION);
+    printk("Before mqtt_connect\n");
+
     if ((err = mqtt_connect(client)) != 0) {
         return err;
     }
@@ -336,8 +356,5 @@ int iotex_mqtt_client_init(struct mqtt_client *client, struct pollfd *fds) {
     fds->fd = client->transport.tls.sock;
     fds->events = POLLIN;
 
-    /* Reboot the device if CONNACK has not arrived in 30s */
-    k_delayed_work_init(&cloud_reboot_work, cloud_reboot_work_fn);
-    k_delayed_work_submit(&cloud_reboot_work, CLOUD_CONNACK_WAIT_DURATION);
     return 0;
 }

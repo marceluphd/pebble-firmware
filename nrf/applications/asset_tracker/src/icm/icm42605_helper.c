@@ -7,6 +7,7 @@
 #include "Icm426xxDriver_HL.h"
 #include "icm42605_helper.h"
 #include "modem/modem_helper.h"
+#include "nvs/local_storage.h"
 
 
 static struct device *__i2c_dev_icm42605;
@@ -128,8 +129,8 @@ void inv_icm42605_format_data(const uint8_t endian, const uint8_t *in, uint16_t 
         *out = (in[1] << 8) | in[0];
 }
 
-int iotex_icm42605_get_sensor_data(uint8_t *str, size_t size)
-{
+int iotex_icm42605_get_sensor_data(iotex_storage_icm42605 *icm42605) {
+    int i;
     int status = 0;
     uint8_t int_status;
     uint8_t temperature[2];
@@ -142,8 +143,9 @@ int iotex_icm42605_get_sensor_data(uint8_t *str, size_t size)
     /* Ensure data ready status bit is set */
     status |= inv_icm426xx_read_reg(&__icm_driver, MPUREG_INT_STATUS, 1, &int_status);
 
-    if (status)
+    if (status) {
         return status;
+    }
 
     if (int_status & BIT_INT_STATUS_DRDY) {
 
@@ -161,19 +163,21 @@ int iotex_icm42605_get_sensor_data(uint8_t *str, size_t size)
         inv_icm42605_format_data(__icm_driver.endianess_data, &gyro[4], (uint16_t *)&fgyro[2]);
 
         if ((faccel[0] != INVALID_VALUE_FIFO) && (fgyro[0] != INVALID_VALUE_FIFO)) {
-            printf("{ICM42605   AX:%d, AY:%d, AZ:%d, TEMP:%.2f,GX:%d, GY:%d, GZ:%d}\n",
-                   (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
-                   (ftemperature / 132.48) + 25,
-                   (int16_t)fgyro[0], (int16_t) fgyro[1], (int16_t) fgyro[2]);
+
+            icm42605->temperature = (ftemperature / 132.48) + 25;
+
+            for (i = 0; i < ARRAY_SIZE(icm42605->gyroscope); i++) {
+                icm42605->gyroscope[i] = (int16_t)fgyro[i];
+            }
+
+            for (i = 0; i < ARRAY_SIZE(icm42605->accelerometer); i++) {
+                icm42605->accelerometer[i] = (int16_t)faccel[i];
+            }
+
         }
-
-        snprintf(str, size, "{\"Device\":\"%s\",\"AX\":%d, \"AY\":%d, \"AZ\":%d, \"TEMP\":%.2f,\"GX\":%d,\"GY\":%d, \"GZ\":%d, \"timestamp\":%s}",
-                 "ICM42605",
-                 (int16_t)faccel[0], (int16_t)faccel[1], (int16_t)faccel[2],
-                 (ftemperature / 132.48) + 25,
-                 (int16_t)fgyro[0], (int16_t) fgyro[1], (int16_t) fgyro[2],
-                 iotex_modem_get_clock(NULL));
-
+        else {
+            return -1;
+        }
     }
 
     /*else: Data Ready was not set*/

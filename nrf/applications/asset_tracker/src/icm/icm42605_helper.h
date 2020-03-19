@@ -2,6 +2,7 @@
 #define _IOTEX_ICM42605_H_
 
 #include <stdint.h>
+#include "nvs/local_storage.h"
 
 #define I2C_DEV_ICM42605  "I2C_1"
 #define I2C_ADDR_ICM42605 0x69
@@ -12,7 +13,7 @@
 #define SERIF_TYPE ICM426XX_UI_I2C
 
 int iotex_icm42605_init(void);
-int iotex_icm42605_get_sensor_data(uint8_t *str, size_t size);
+int iotex_icm42605_get_sensor_data(iotex_storage_icm42605 *icm42605);
 
 
 /* For Icm426xxDriver_HL using */

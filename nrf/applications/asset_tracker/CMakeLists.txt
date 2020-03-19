@@ -28,6 +28,7 @@ target_sources(app PRIVATE src/modem/modem_helper.c)
 
 # MQTT
 target_sources(app PRIVATE src/mqtt/mqtt.c)
+target_sources(app PRIVATE src/mqtt/config.c)
 target_sources(app PRIVATE src/mqtt/payload.c)
 
 # Protbuf
