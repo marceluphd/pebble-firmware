@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>CWSys</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following table lists the CWSys object's member functions.
+</p><table width="100%" cellspacing="0" cellpadding="2" bgcolor="#f0f0f0" style="MultiHeadingTable" border="1" fm_widths="1.7in,2.8in">
+<tr>
+<td valign="center"><b>CWSys.appendStringToFile(path, string)</b> appends <i>string</i> to the end of the file <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.copyFile(srcPath, destPath)</b> copies file <i>srcPath</i> to <i>destPath</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.crc32(array)</b> returns the CRC-32 checksum of the byte array <i>array</i>. This function computes a CRC-32 checksum on a block of data using the standard CRC-32 polynomial (0x04C11DB7) with an initial value of 0xFFFFFFFF. Note that this implementation doesn't reflect the input or the output and the result is inverted.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.fileExists(path)</b> returns true if file <i>path</i> exists.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.fileSize(path)</b> return the number of bytes in file <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.getRunStderr()</b> returns the stderr output from the last <i>CWSys.run()</i> call.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.getRunStdout()</b> returns the stdout output from the last <i>CWSys.run()</i> call.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.makeDirectory(path)</b> create the directory <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.packU32(array, offset, number, le)</b> packs <i>number</i> into the <i>array</i> at <i>offset</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.popup(text, caption)</b> prompt the user with text and return true for yes and false for no.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.readByteArrayFromFile(path)</b> returns the byte array contained in the file <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.readStringFromFile(path)</b> returns the string contained in the file <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.removeDirectory(path)</b> remove the directory <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.removeFile(path)</b> deletes file <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.renameFile(oldPath, newPath)</b> renames file <i>oldPath</i> to be <i>newPath</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.run(cmd, wait)</b> runs command line <i>cmd</i> optionally waits for it to complete if <i>wait</i> is true.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.unpackU32(array, offset, le)</b> returns the number unpacked from the <i>array</i> at <i>offset</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.writeByteArrayToFile(path, array)</b> creates a file <i>path</i> containing the byte array <i>array</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>CWSys.writeStringToFile(path, string)</b> creates a file <i>path</i> containing <i>string</i>.</td>
+</tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

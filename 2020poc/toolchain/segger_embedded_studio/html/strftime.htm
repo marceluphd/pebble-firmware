@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>strftime</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">strftime</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">smax</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">fmt</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-text">tm </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">tp</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>strftime</b>  formats the <b>*tp</b> struct to a null terminated string of maximum size <b>smax</b>-1 into the
+  array at <b>*s</b> based on the <b>fmt</b> format string. The format string consists of conversion specifications
+  and ordinary characters. Conversion specifications start with a <b>%</b> character followed by an optional <b>#</b> character.
+  The following conversion specifications are supported:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+  <tr bgcolor="#cccccc"><td>
+ Specification </td><td> Description
+  </td></tr>
+<tr><td> %a    </td><td valign="top"> Abbreviated weekday name
+  </td></tr>
+<tr><td valign="top"> %A    </td><td valign="top"> Full weekday name
+  </td></tr>
+<tr><td valign="top"> %b    </td><td valign="top"> Abbreviated month name
+  </td></tr>
+<tr><td valign="top"> %B    </td><td valign="top"> Full month name
+  </td></tr>
+<tr><td valign="top"> %c    </td><td valign="top"> Date and time representation appropriate for locale
+  </td></tr>
+<tr><td valign="top"> %#c   </td><td valign="top"> Date and time formatted as "%A, %B %#d, %Y, %H:%M:%S" (Microsoft extension)
+  </td></tr>
+<tr><td valign="top"> %C    </td><td valign="top"> Century number
+  </td></tr>
+<tr><td valign="top"> %d    </td><td valign="top"> Day of month as a decimal number [01,31]
+  </td></tr>
+<tr><td valign="top"> %#d   </td><td valign="top"> Day of month without leading zero [1,31]
+  </td></tr>
+<tr><td valign="top"> %D    </td><td valign="top"> Date in the form %m/%d/%y (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %e    </td><td valign="top"> Day of month [ 1,31], single digit preceded by space
+  </td></tr>
+<tr><td valign="top"> %F    </td><td valign="top"> Date in the format %Y-%m-%d
+  </td></tr>
+<tr><td valign="top"> %h    </td><td valign="top"> Abbreviated month name as %b
+  </td></tr>
+<tr><td valign="top"> %H    </td><td valign="top"> Hour in 24-hour format [00,23]
+  </td></tr>
+<tr><td valign="top"> %#H   </td><td valign="top"> Hour in 24-hour format without leading zeros [0,23]
+  </td></tr>
+<tr><td valign="top"> %I    </td><td valign="top"> Hour in 12-hour format [01,12]
+  </td></tr>
+<tr><td valign="top"> %#I   </td><td valign="top"> Hour in 12-hour format without leading zeros [1,12]
+  </td></tr>
+<tr><td valign="top"> %j    </td><td valign="top"> Day of year as a decimal number [001,366]
+  </td></tr>
+<tr><td valign="top"> %#j   </td><td valign="top"> Day of year as a decimal number without leading zeros [1,366]
+  </td></tr>
+<tr><td valign="top"> %k    </td><td valign="top"> Hour in 24-hour clock format [ 0,23] (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %l    </td><td valign="top"> Hour in 12-hour clock format [ 0,12] (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %m    </td><td valign="top"> Month as a decimal number [01,12]
+  </td></tr>
+<tr><td valign="top"> %#m   </td><td valign="top"> Month as a decimal number without leading zeros [1,12]
+  </td></tr>
+<tr><td valign="top"> %M    </td><td valign="top"> Minute as a decimal number [00,59]
+  </td></tr>
+<tr><td valign="top"> %#M   </td><td valign="top"> Minute as a decimal number without leading zeros [0,59]
+  </td></tr>
+<tr><td valign="top"> %n    </td><td valign="top"> Insert newline character (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %p    </td><td valign="top"> Locale's a.m or p.m indicator for 12-hour clock
+  </td></tr>
+<tr><td valign="top"> %r    </td><td valign="top"> Time as %I:%M:%s %p (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %R    </td><td valign="top"> Time as %H:%M (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %S    </td><td valign="top"> Second as a decimal number [00,59]
+  </td></tr>
+<tr><td valign="top"> %t    </td><td valign="top"> Insert tab character (POSIX.1-2008 extension)
+  </td></tr>
+<tr><td valign="top"> %T    </td><td valign="top"> Time as %H:%M:%S
+  </td></tr>
+<tr><td valign="top"> %#S   </td><td valign="top"> Second as a decimal number without leading zeros [0,59]
+  </td></tr>
+<tr><td valign="top"> %U    </td><td valign="top"> Week of year as a decimal number [00,53], Sunday is first day of the week
+  </td></tr>
+<tr><td valign="top"> %#U   </td><td valign="top"> Week of year as a decimal number without leading zeros [0,53], Sunday is first day of the week
+  </td></tr>
+<tr><td valign="top"> %w    </td><td valign="top"> Weekday as a decimal number [0,6], Sunday is 0
+  </td></tr>
+<tr><td valign="top"> %W    </td><td valign="top"> Week number as a decimal number [00,53], Monday is first day of the week
+  </td></tr>
+<tr><td valign="top"> %#W   </td><td valign="top"> Week number as a decimal number without leading zeros [0,53], Monday is first day of the week
+  </td></tr>
+<tr><td valign="top"> %x    </td><td valign="top"> Locale's date representation
+  </td></tr>
+<tr><td valign="top"> %#x   </td><td valign="top"> Locale's long date representation
+  </td></tr>
+<tr><td valign="top"> %X    </td><td valign="top"> Locale's time representation
+  </td></tr>
+<tr><td valign="top"> %y    </td><td valign="top"> Year without century, as a decimal number [00,99]
+  </td></tr>
+<tr><td valign="top"> %#y   </td><td valign="top"> Year without century, as a decimal number without leading zeros [0,99]
+  </td></tr>
+<tr><td valign="top"> %Y    </td><td valign="top"> Year with century, as decimal number
+  </td></tr>
+<tr><td valign="top"> %z,%Z </td><td valign="top"> Timezone name or abbreviation
+  </td></tr>
+<tr><td valign="top"> %%    </td><td valign="top"> %
+  </td></tr></table> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>errno</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">errno</span><span class="rwt-code-operator">;</span>
+</pre><h5>Description</h5><p><b>errno</b> is treated as an writable l-value, but the implementation of
+  how the l-value is read an written is hidden from the user.</p><p>The value of <b>errno</b> is zero at program startup, but is never set to 
+  zero by any library function. The value of <b>errno</b> may be set to a nonzero 
+  value by a library function, and this effect is documented in each function that 
+  does so.</p><h5>Note</h5><p>The ISO standard does not specify whether <b>errno</b> is a macro or an identifier 
+  declared with external linkage. Portable programs must not make assumptions 
+  about the implementation of <b>errno</b>.</p><p>In this implementation, <b>errno</b> expands to a function call to <b>__errno</b>
+  (MSP430, AVR, MAXQ) or <b>__aeabi_errno_addr</b> (ARM) that returns a pointer to a
+  volatile <b>int</b>. This function can be implemented by the application to provide
+  a thread-specific <b>errno</b>.</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mbsrtowcs_l</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mbsrtowcs_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">dst</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">**</span><span class="rwt-code-text">src</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">len</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-text">mbstate_t </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">ps</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>mbsrtowcs_l</b> converts a sequence of multi-byte characters that begins
+  in the conversion state described by the object pointed to by <b>ps</b>,
+  from the array indirectly pointed to by <b>src</b> into a sequence of
+  corresponding wide characters
+  
+  If <b>dst</b> is not a null pointer, the converted characters are stored
+  into the array pointed to by <b>dst</b>.  Conversion continues up to and
+  including a terminating null character, which is also stored.</p><p>Conversion stops earlier in two cases: when a sequence of bytes is
+  encountered that does not form a valid multi-byte character, or
+  (if <b>dst</b> is not a null pointer) when <b>len</b> wide characters have been
+  stored into the array pointed to by <b>dst</b>.  Each conversion takes place
+  as if by a call to the <b>mbrtowc</b> function.</p><p>If <b>dst</b> is not a null pointer, the pointer object pointed to by
+  <b>src</b> is assigned either a null pointer (if conversion stopped due to
+  reaching a terminating null character) or the address just past the
+  last multi-byte character converted (if any). If conversion stopped
+  due to reaching a terminating null character and if <b>dst</b> is not a null
+  pointer, the resulting state described is the initial conversion state.</p><h5>See Also</h5><p><a href="mbsrtowcs_l.htm">mbsrtowcs_l</a>, <a href="mbrtowc.htm">mbrtowc</a>
+</p> 
+    </div>
+  </body>
+</html>

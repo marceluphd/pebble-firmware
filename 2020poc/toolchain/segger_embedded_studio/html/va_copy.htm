@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>va_copy</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-function">va_copy</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">va_list </span><span class="rwt-code-text">dest</span><span class="rwt-code-operator">,</span>
+             <span class="rwt-code-text">val_list </span><span class="rwt-code-text">src</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>va_copy</b> initializes <b>dest</b> as a copy of <b>src</b>, as if the 
+  <b>va_start</b> macro had been applied to <b>dest</b> followed by the same sequence 
+  of uses of the <b>va_arg</b> macro as had previously been used to reach the 
+  present state of <b>src</b>. Neither the <b>va_copy</b> nor <b>va_start</b>
+  macro shall be invoked to reinitialize <b>dest</b> without an intervening invocation 
+  of the <b>va_end</b> macro for the same <b>dest</b>.
+</p> 
+    </div>
+  </body>
+</html>

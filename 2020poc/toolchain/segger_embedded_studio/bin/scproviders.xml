@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scproviders>
+<!--
+  <scprovider name="CVS" dll="CVSInterface$(HostDLL)" repositoryname="CVSROOT">
+    <property name="Environment/Source Code Control/CVSExecutable" type="FileName" group="CVS Options" short="Executable" long="Path to the CVS executable."/>
+    <property name="Environment/Source Code Control/CVSRoot" type="String" group="CVS Options" short="CVSROOT" long="The CVSROOT (-d) value."/>
+    <property name="Environment/Source Code Control/CVSLoginRequired" type="Boolean" group="CVS Options" short="Login/Logout Required" long="Specifies if CVS commands login/logout are to be used." default="Yes"/>
+  </scprovider> 
+-->
+  <scprovider name="Subversion" dll="SVNInterface$(HostDLL)" repositoryname="Repository">
+    <property name="Environment/Source Code Control/SVNExecutable" type="FileName" group="Subversion Options" short="Executable" long="Path to the SVN executable."/>
+    <property name="Environment/Source Code Control/SVNAuthentication" type="Boolean" group="Subversion Options" short="Authentication" long="Specifies if authentication is supplied with each command." default="No"/>
+    <property name="Environment/Source Code Control/SVNShowUpdates" type="Boolean" group="Subversion Options" short="Show Updates" long="Specifies if show-updates option is supplied with the status command." default="No"/>
+    <property name="Environment/Source Code Control/SVNPreferredUserName" type="String" group="Subversion Options" short="Preferred User Name" long="Default user name to use, e.g. 'jad'."/>
+  </scprovider>
+  <scprovider name="Git" dll="GITInterface$(HostDLL)" repositoryname="Repository">
+    <property name="Environment/Source Code Control/GITExecutable" type="FileName" group="Git Options" short="Executable" long="Path to the GIT executable."/>
+    <property name="Environment/Source Code Control/GITPreferredUserName" type="String" group="Git Options" short="Preferred User Name" long="Default author name to use, e.g. 'John Doe'."/>
+    <property name="Environment/Source Code Control/GITPreferredUserEmail" type="String" group="Git Options" short="Preferred User E-mail" long="Default author e-mail address to use, e.g. 'John.Doe@example.com'."/>
+  </scprovider>
+  <scprovider name="Mercurial" dll="HGInterface$(HostDLL)" repositoryname="Repository">
+    <property name="Environment/Source Code Control/HGExecutable" type="FileName" group="Mercurial Options" short="Executable" long="Path to the HG executable."/>
+    <property name="Environment/Source Code Control/HGPreferredUserName" type="String" group="Mercurial Options" short="Preferred User Name" long="Default user name to use, e.g. 'John Doe'."/>
+    <property name="Environment/Source Code Control/HGPreferredUserEmail" type="String" group="Mercurial Options" short="Preferred User E-mail" long="Default user e-mail address to use, e.g. 'John.Doe@example.com'."/>
+  </scprovider>
+</scproviders>

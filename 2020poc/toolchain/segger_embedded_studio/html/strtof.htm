@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>strtof</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-function">strtof</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">nptr</span><span class="rwt-code-operator">,</span>
+             <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">**</span><span class="rwt-code-text">endptr</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>strtof</b>  converts the initial portion of the string pointed to by <b>nptr</b>
+  to a <b>double</b> representation.</p><p>First, <b>strtof</b> decomposes the input string into three parts: an initial,
+  possibly empty, sequence of white-space characters (as specified by <a href="isspace.htm">isspace</a>),
+  a subject sequence resembling a floating-point constant, and a final string
+  of one or more unrecognized characters, including the terminating null character
+  of the input string. <b>strtof</b> then attempts to convert the subject sequence
+  to a floating-point number, and return the result.</p><p>The subject sequence is defined as the longest initial subsequence of the input
+  string, starting with the first non-white-space character, that is of the expected
+  form. The subject sequence contains no characters if the input string is empty
+  or consists entirely of white space, or if the first non-white-space character
+  is other than a sign or a permissible letter or digit.</p><p>The expected form of the subject sequence is an optional plus or minus sign
+  followed by a nonempty sequence of decimal digits optionally containing a decimal-point
+  character, then an optional exponent part.</p><p>If the subject sequence begins with a minus sign, the value resulting from
+  the conversion is negated.
+  A pointer to the final string is stored in the object pointed to by <b>endptr</b>,
+  provided that <b>endptr</b> is not a null pointer.</p><p>If the subject sequence is empty or does not have the expected form, no conversion
+  is performed, the value of <b>nptr</b> is stored in the object pointed to by
+  <b>endptr</b>, provided that <b>endptr</b> is not a null pointer.</p><p><b>strtof</b> returns the converted value, if any. If no conversion could be
+  performed, zero is returned. If the correct value is outside the range of representable
+  values, <b>HUGE_VALF</b> is returned according to the sign of the value, if
+  any, and the value of the macro <a href="errno.htm">errno</a>
+  is stored in <a href="errno.htm">errno</a>.
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".fold_short").click(function(a){if(this==a.target){foldElement=this.parentNode;$(foldElement).toggleClass("open")}})});

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>setlocale</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">setlocale</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">category</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>setlocale</b> sets the current locale. The <b>category</b> parameter can have the following values:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+  <tr bgcolor="#cccccc"><td>
+ Name             </td><td> Locale affected
+  </td></tr>
+<tr><td> LC_ALL           </td><td valign="top"> Entire locale
+  </td></tr>
+<tr><td valign="top"> LC_COLLATE       </td><td valign="top"> Affects <b>strcoll</b> and <b>strxfrm</b>
+  </td></tr>
+<tr><td valign="top"> LC_CTYPE         </td><td valign="top"> Affects character handling
+  </td></tr>
+<tr><td valign="top"> LC_MONETARY      </td><td valign="top"> Affects monetary formatting information
+  </td></tr>
+<tr><td valign="top"> LC_NUMERIC       </td><td valign="top"> Affects decimal-point character in I/O and string formatting operations
+  </td></tr>
+<tr><td valign="top"> LC_TIME          </td><td valign="top"> Affects <b>strftime</b>
+  </td></tr></table><p>The <b>locale</b> parameter contains the name of a C locale to set or if <b>NULL</b> is passed the current locale
+  is not changed.</p><h5>Return Value</h5><p><b>setlocale</b> returns the name of the current locale.
+</p> 
+    </div>
+  </body>
+</html>

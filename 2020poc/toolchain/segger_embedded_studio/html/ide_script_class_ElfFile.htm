@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>ElfFile</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following table lists the ElfFile object's member functions.
+</p><table width="100%" cellspacing="0" cellpadding="2" bgcolor="#f0f0f0" style="MultiHeadingTable" border="1" fm_widths="1.7in,2.8in">
+<tr>
+<td valign="center"><b>ElfFile.crc32(address, length, virtualNotPhysical, padding, programNotSection)</b> returns the CRC-32 checksum of an address range <i>length</i> bytes long, located at <i>address</i>. If <i>virtualNotPhysical</i> is true or undefined, <i>address</i> is a virtual address otherwise it is a physical address. If <i>padding</i> is defined, it specifies the byte value used to fill gaps in the program. If <i>programNotSection</i> is true or undefined, data is read using program headers rather than section headers. This function computes a CRC-32 checksum on a block of data using the standard CRC-32 polynomial (0x04C11DB7) with an initial value of 0xFFFFFFFF. Note that this implementation doesn't reflect the input or the output and the result is inverted.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.findProgram(address)</b> returns an object with <i>start</i>, the <i>data</i> and the <i>size</i> to allocate of the Elf program that contains <i>address</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.getEntryPoint()</b> returns the entry point in the ELF file.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.getSection(name)</b> returns an object with <i>start</i> and the <i>data</i> of the Elf section corresponding to the <i>name</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.isLittleEndian()</b> returns true if the Elf file has numbers encoded as little endian.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.load(path)</b> loads Elf file from <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.peekBytes(address, length, virtualNotPhysical, padding, programNotSection)</b> returns byte array containing <i>length</i> bytes peeked from <i>address</i>. If <i>virtualNotPhysical</i> is true or undefined, <i>address</i> is a virtual address otherwise it is a physical address. If <i>padding</i> is defined, it specifies the byte value used to fill gaps in the program. If <i>programNotSection</i> is true or undefined, data is read using program headers rather than section headers.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.peekUint32(address, virtualNotPhysical)</b> returns a 32-bit word peeked from <i>address</i>. If <i>virtualNotPhysical</i> is true or undefined, <i>address</i> is a virtual address otherwise it is a physical address.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.pokeBytes(address, byteArray, virtualNotPhysical)</b> poke byte array <i>byteArray</i> to <i>address</i>. If <i>virtualNotPhysical</i> is true or undefined, <i>address</i> is a virtual address otherwise it is a physical address.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.pokeUint32(address, value, virtualNotPhysical)</b> poke a <i>value</i> to 32-bit word located at <i>address</i>. If <i>virtualNotPhysical</i> is true or undefined, <i>address</i> is a virtual address otherwise it is a physical address.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.save(path)</b> saves Elf file to <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>ElfFile.symbolValue(symbol)</b> returns the value of <i>symbol</i> in Elf file.</td>
+</tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mbstowcs</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mbstowcs</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">pwcs</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>mbstowcs</b> converts a sequence of multi-byte characters that begins
+  in the initial shift state from the array pointed to by <b>s</b> into a
+  sequence of corresponding wide characters and stores not more than
+  <b>n</b> wide characters into the array pointed to by <b>pwcs</b>.</p><p>No multi-byte characters that follow a null character (which is converted
+  into a null wide character) will be examined or converted. Each multi-byte
+  character is converted as if by a call to the <b>mbtowc</b> function, except
+  that the conversion state of the <b>mbtowc</b> function is not affected.</p><p>No more than <b>n</b> elements will be modified in the array pointed to by
+  <b>pwcs</b>. If copying takes place between objects that overlap, the behavior
+  is undefined.</p><p><b>mbstowcs</b> returns &#8722;1 if an invalid multi-byte character is
+  encountered, otherwise <b>mbstowcs</b> returns the number of array
+  elements modified (if any), not including a terminating null wide
+  character.
+</p> 
+    </div>
+  </body>
+</html>

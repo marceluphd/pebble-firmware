@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Connecting to the source-control system</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>When SEGGER Embedded Studio loads a project, it examines the file system folder that
+contains the project to determine the source-control system the project uses.
+If SEGGER Embedded Studio cannot determine, from the file system, the source-control
+system in use, it disables source-control integration.</p><p>That is, if you have not set up the paths to the source-control command line
+clients, even if a working copy exists and the appropriate command line
+client is installed, SEGGER Embedded Studio cannot establish source-control integration
+for the project.</p><h5>User credentials</h5><p>You can set the credentials that the source-control system uses, for commands
+that require credentials, using <b>VCS > Options > Configure</b>.  From here you
+can set the user name and password. These details are saved to the session file
+(the password is encrypted) so you won't need to specify this information each
+time the project is loaded.</p><h5>Note</h5><p>SEGGER Embedded Studio has no facility to create repositories from scratch, nor to clone,
+pull, or checkout repositories to a working copy: it is your responsibility to
+create a working copy outside of SEGGER Embedded Studio using your selected command-line
+client or Windows Explorer extension.</p><p>The "Tortoise" products are a popular set of tools to provide source-control
+facilities in the Windows shell.  Use Google to find <b>TortoiseSVN</b>,
+<b>TortoiseGit</b>, and <b>TortoiseHG</b> and see if you like them.</p> 
+    </div>
+  </body>
+</html>

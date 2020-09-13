@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>System Macros</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h2>System Macro Values</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>$(Date)<br/><small><tt>$(Date)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Day Month Year e.g. 21 June 2011.</td></tr>
+<tr><td>$(DateDay)<br/><small><tt>$(DateDay)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Day e.g. 21.</td></tr>
+<tr><td>$(DateMonth)<br/><small><tt>$(DateMonth)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Month e.g. June.</td></tr>
+<tr><td>$(DateYear)<br/><small><tt>$(DateYear)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Year e.g. 2011.</td></tr>
+<tr><td>$(DesktopDir)<br/><small><tt>$(DesktopDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path to users desktop directory.</td></tr>
+<tr><td>$(DocumentsDir)<br/><small><tt>$(DocumentsDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path to users documents directory.</td></tr>
+<tr><td>$(EmbeddedStudioVersionNumber)<br/><small><tt>$(EmbeddedStudioVersionNumber)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The release version number.</td></tr>
+<tr><td>$(HomeDir)<br/><small><tt>$(HomeDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path to users home directory.</td></tr>
+<tr><td>$(HostArch)<br/><small><tt>$(HostArch)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The CPU architecture that SEGGER Embedded Studio is running on e.g. x86.</td></tr>
+<tr><td>$(HostDLL)<br/><small><tt>$(HostDLL)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The file extension for dynamic link libraries on the CPU that SEGGER Embedded Studio is running on e.g. .dll.</td></tr>
+<tr><td>$(HostDLLExt)<br/><small><tt>$(HostDLLExt)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The file extension for dynamic link libraries used by the operating system that SEGGER Embedded Studio is running on e.g. .dll, .so, .dylib.</td></tr>
+<tr><td>$(HostEXE)<br/><small><tt>$(HostEXE)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The file extension for executables on the CPU that SEGGER Embedded Studio is running on e.g. .exe.</td></tr>
+<tr><td>$(HostOS)<br/><small><tt>$(HostOS)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the operating system that SEGGER Embedded Studio is running on e.g. win.</td></tr>
+<tr><td>$(JLinkDir)<br/><small><tt>$(JLinkDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path to J-Link software.</td></tr>
+<tr><td>$(Micro)<br/><small><tt>$(Micro)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The SEGGER Embedded Studio target e.g. ARM.</td></tr>
+<tr><td>$(PackagesDir)<br/><small><tt>$(PackagesDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path to the users packages directory.</td></tr>
+<tr><td>$(Platform)<br/><small><tt>$(Platform)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The target platform.</td></tr>
+<tr><td>$(ProductNameShort)<br/><small><tt>$(ProductNameShort)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The product name.</td></tr>
+<tr><td>$(StudioArchiveFileExt)<br/><small><tt>$(StudioArchiveFileExt)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename extension of a studio archive file.</td></tr>
+<tr><td>$(StudioBuildToolExeName)<br/><small><tt>$(StudioBuildToolExeName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename of the build tool executable.</td></tr>
+<tr><td>$(StudioBuildToolName)<br/><small><tt>$(StudioBuildToolName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the build tool executable.</td></tr>
+<tr><td>$(StudioDir)<br/><small><tt>$(StudioDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The install directory of the product.</td></tr>
+<tr><td>$(StudioExeName)<br/><small><tt>$(StudioExeName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename of the studio executable.</td></tr>
+<tr><td>$(StudioMajorVersion)<br/><small><tt>$(StudioMajorVersion)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The major release version of software.</td></tr>
+<tr><td>$(StudioMinorVersion)<br/><small><tt>$(StudioMinorVersion)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The minor release version of software.</td></tr>
+<tr><td>$(StudioName)<br/><small><tt>$(StudioName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The full name of studio.</td></tr>
+<tr><td>$(StudioNameShort)<br/><small><tt>$(StudioNameShort)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The short name of studio.</td></tr>
+<tr><td>$(StudioPackageFileExt)<br/><small><tt>$(StudioPackageFileExt)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename extension of a studio package file.</td></tr>
+<tr><td>$(StudioProjectFileExt)<br/><small><tt>$(StudioProjectFileExt)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename extension of a studio project file.</td></tr>
+<tr><td>$(StudioScriptToolExeName)<br/><small><tt>$(StudioScriptToolExeName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename of the script tool executable.</td></tr>
+<tr><td>$(StudioScriptToolName)<br/><small><tt>$(StudioScriptToolName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the script tool executable.</td></tr>
+<tr><td>$(StudioSessionFileExt)<br/><small><tt>$(StudioSessionFileExt)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename extension of a studio session file.</td></tr>
+<tr><td>$(StudioSimulatorExeName)<br/><small><tt>$(StudioSimulatorExeName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filename of the simulator executable.</td></tr>
+<tr><td>$(StudioSimulatorName)<br/><small><tt>$(StudioSimulatorName)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the simulator executable.</td></tr>
+<tr><td>$(StudioUserDir)<br/><small><tt>$(StudioUserDir)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The directory containing the user data.</td></tr>
+<tr><td>$(TargetID)<br/><small><tt>$(TargetID)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>ID number representing the SEGGER Embedded Studio target.</td></tr>
+<tr><td>$(Time)<br/><small><tt>$(Time)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Hour:Minutes:Seconds e.g. 15:34:03.</td></tr>
+<tr><td>$(TimeHour)<br/><small><tt>$(TimeHour)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Hour e.g. 15.</td></tr>
+<tr><td>$(TimeMinute)<br/><small><tt>$(TimeMinute)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Minute e.g. 34.</td></tr>
+<tr><td>$(TimeSecond)<br/><small><tt>$(TimeSecond)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Seconds e.g. 03.</td></tr>
+<tr><td>$(UnixTime)<br/><small><tt>$(UnixTime)</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Seconds since 00:00, Jan 1 1970 UTC</td></tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

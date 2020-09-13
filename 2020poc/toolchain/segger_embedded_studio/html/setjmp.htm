@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>setjmp</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">setjmp</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">jmp_buf </span><span class="rwt-code-text">env</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>setjmp</b> saves its calling environment in the <b>env</b> for later use by the <b>longjmp</b> function.</p><p>On return from a direct invocation <b>setjmp</b> returns the value zero. 
+  On return from a call to the <b>longjmp</b> function, the <b>setjmp</b>
+  returns a nonzero value determined by the call to <b>longjmp</b>.</p><p>The environment saved by a call to <b>setjmp</b> 
+  consists of information sufficient for a call to the <b>longjmp</b> function to return 
+  execution to the correct block and invocation of that block, were it called 
+  recursively.
+</p> 
+    </div>
+  </body>
+</html>

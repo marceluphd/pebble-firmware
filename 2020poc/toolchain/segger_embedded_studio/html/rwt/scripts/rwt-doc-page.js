@@ -1,0 +1,1 @@
+$(document).ready(function(){if(typeof studio=="undefined"){if(top.document==document){window.location.replace($('script[src="./rwt/scripts/jquery-latest.js"]').attr("src").replace("rwt/scripts/jquery-latest.js","index.htm?"+window.location))}else{if(parent.document){parent.document.title=document.title;parent.foldLinkNav.setPageLoaded(document.location.href)}}}});

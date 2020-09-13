@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Memory usage window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Memory Usage</b> window displays a graphical summary of how
+memory has been used in each memory segment of a linked application.</p><p><img src="ide_memory_usage_window_1.png"/></p><p>Each bar represents an entire memory segment. Green
+represents the area of the segment that contains code or data.</p><h5>To activate the Memory Usage window:</h5><ul><li>Choose <b>View > Memory Usage</b> or press <b>Ctrl+Alt+Z</b>.</li></ul><p>The memory-usage graph will only be visible if your active
+project's target is an executable file and the file exists.
+If the executable file has not been linked by SEGGER Embedded Studio,
+memory-usage information may not be available.</p><h3>Displaying section information</h3><p>The <b>Memory Usage</b> window can also be used to visualize
+how program sections have been placed in memory. To display the program
+sections, simply click the memory segment to expand it; or, alternatively,
+right-click and choose <b>Show Memory Sections</b> from the shortcut menu.</p><p><img src="ide_memory_usage_window_2.png"/></p><p>Each bar represents an entire memory segment. Green
+represents the area of the segment that contains the program section.</p><h3>Displaying segment overflow</h3><p>The <b>Memory Usage</b> window also displays segment overflows when
+the total size of the program sections placed in a segment is larger
+than the segment size. When this happens, the segment and section bars
+represents the total memory used, green areas represent the code
+or data within the segment, and red areas
+represent code or data placed outside the segment.</p><p><img src="ide_memory_usage_window_3.png"/></p><h3>Getting more-detailed information</h3><p>If you require more-detailed information than that provided by the
+<b>Memory Usage</b> window, such as the location of specific objects
+within memory, use the <a href="ide_symbols_window.htm">Symbol browser window</a>.</p> 
+    </div>
+  </body>
+</html>

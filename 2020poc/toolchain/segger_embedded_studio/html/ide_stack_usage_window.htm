@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Stack usage window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Stack Usage Window</b> finds the call paths of your linked application and
+displays them as a call tree together with their minimal stack requirements.
+A call path of your application is any function that has been linked in but has no direct call made 
+to it but will make calls to other functions. The main function is the most obvious example of a call path, an
+interrupt handler or a function that is called only as a function pointer are other examples. To use the stack
+usage window your linked application must be compiled with debugging information enabled.</p><h3>User interface</h3><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="images/ActionGoToDefinition.png"/> </td><td valign="top">
+     Move the insertion point to the statement that defined the symbol.
+</td></tr>
+<tr><td valign="top"> <img src="ActionCollapse.png"/> </td><td valign="top">
+     Collapse the selected open call tree.
+</td></tr>
+<tr><td valign="top"> <img src="ActionExpand.png"/> </td><td valign="top">
+     Open the selected open call tree.
+</td></tr>
+<tr><td valign="top"> <img src="ProjectDependencies.png"/> </td><td valign="top">
+     Show only the deepest call path through the selected call tree.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

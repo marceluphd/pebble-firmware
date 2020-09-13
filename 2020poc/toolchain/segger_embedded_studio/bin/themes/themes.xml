@@ -1,0 +1,6 @@
+<!DOCTYPE Studio_Theme_File>
+<themes>
+  <theme name="Light" editor-color-scheme="CrossWorks Standard" default="1" />
+  <theme name="Dark" qt-style-sheet="studio-qt-style-sheet.qss" html-style-sheet="studio-html-style-sheet.css" svg-icon-style-sheet="studio-svg-icon-style-sheet.css" editor-color-scheme="Dark" icon-set="Dark" disabled-icon-color="#606060" macros="ThemeIconDir=$(StudioDir)/bin/themes/Dark;TextColor=#EFF0F1;DisabledTextColor=#606060;BackgroundColor=#31363B;EditorBackgroundColor=#232629;HighlightBackgroundColor=#000000;SelectionColor=#3DAEE9;BorderColor=#76797C;LinkColor=#3DAEE9" />
+</themes>
+

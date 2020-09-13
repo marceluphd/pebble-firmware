@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>duplocale</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">locale_t </span><span class="rwt-code-function">duplocale</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>duplocale</b> duplicates the locale object referenced by <b>loc</b>.</p><p>If there is insufficient memory to duplicate <b>loc</b>, <b>duplocale</b> returns
+  <b>NULL</b> and sets <b>errno</b> to <b>ENOMEM</b> as required by POSIX.1-2008.</p><p>Duplicated locales must be freed with <b>freelocale</b>.</p><p>This is different behavior from the GNU glibc implementation which
+  makes no mention of setting <b>errno</b> on failure.</p><h5>Note</h5><p>This extension is derived from BSD, POSIX.1, and glibc.
+</p> 
+    </div>
+  </body>
+</html>

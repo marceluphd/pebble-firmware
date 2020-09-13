@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Globals window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Globals</b> window displays a list of all variables that are global to the
+program. The operations available on the entries in this window
+are the same as the <b>Watch</b> window, except you cannot add or delete
+variables from the <b>Globals</b> window.</p><h3>Globals window user interface</h3><p>The <b>Globals</b> window consists of a toolbar and main data display.</p><p>Globals toolbar</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="images/ViewBase2.png"/>  </td><td valign="top"> Display the selected item in binary.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase8.png"/>  </td><td valign="top"> Display the selected item in octal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase10.png"/> </td><td valign="top"> Display the selected item in decimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase16.png"/> </td><td valign="top"> Display the selected item in hexadecimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewSigned.png"/> </td><td valign="top"> Display the selected item as a signed decimal.
+</td></tr>
+<tr><td valign="top"> <img src="ViewAscii.png"/>  </td><td valign="top"> Display the selected item as a character or Unicode character.
+</td></tr>
+<tr><td valign="top"> <img src="DebugLocateMemory.png"/> </td><td valign="top"> Set the range displayed in the active <b>Memory</b> window to
+      span the memory allocated to the selected item.
+</td></tr>
+<tr><td valign="top"> <img src="EditSortAscending.png"/> </td><td valign="top"> Sort variables alphabetically by name.
+</td></tr>
+<tr><td valign="top"> <img src="SortNumericAscending.png"/> </td><td valign="top"> Sort variables numerically by address or register
+      number (default).
+</td></tr></table><h3>Using the Globals window</h3><p>The <b>Globals</b> window shows the global variables of the application when the debugger
+is stopped. When the program stops at a breakpoint, or is stepped, the <b>Globals</b>
+window updates to show the active stack frame and new variable
+values. Items that have changed since they were previously displayed are
+highlighted in red.</p><h5>To activate the Globals window:</h5><ul><li>Choose <b>View > Globals</b> or press <b>Ctrl+Alt+G</b>.</li></ul><h3>Changing the display format</h3><p>When you select a variable in the main part of the display, the display-format
+button highlighted on the <b>Globals</b> window toolbar changes to show the item's
+display format.</p><h5>To change the display format of a global variable:</h5><ul><li>Right-click the item to change.
+  </li>
+<li>From the shortcut menu, choose the desired display format.</li></ul><p>&mdash;or&mdash;</p><ul><li>Click the item to change.
+  </li>
+<li>On the <b>Globals</b> window toolbar, select the desired display format.</li></ul><h5>To modify the value of a global variable:</h5><ul><li>Click the value of the global variable to modify.
+  </li>
+<li>Enter the new value for the global variable. Prefix hexadecimal numbers
+    with <b>0x</b>, binary numbers with <b>0b</b>, and octal numbers with <b>0</b>.</li></ul> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>scalbnf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-function">scalbnf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-text">x</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">exp</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>scalbnf</b> multiplies a floating-point number by an integral power
+  of <b>FLT_RADIX</b>.</p><p>As floating-point arithmetic conforms to IEC 60559, <b>FLT_RADIX</b> 
+  is 2 and <b>scalbnf</b> is (in this implementation) identical to <b>ldexpf</b>.</p><p><b>scalbnf</b> returns <b>x</b> * <b>FLT_RADIX</b> ^<b>exp</b>.</p><p>If the result overflows, <b>errno</b> is set to <b>ERANGE</b>
+  and <b>scalbnf</b> returns <b>HUGE_VALF</b>. </p><p>If <b>x</b> is &#8734; or NaN, <b>scalbnf</b> returns <b>x</b>.
+  If the result overflows, <b>scalbnf</b> returns &#8734;.</p><h5>See Also</h5><p>ldexpf
+</p> 
+    </div>
+  </body>
+</html>

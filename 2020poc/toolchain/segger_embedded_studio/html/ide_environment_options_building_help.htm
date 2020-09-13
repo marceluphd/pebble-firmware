@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Building Environment Options</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h2>Build</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Automatically Build Before Debug<br/><small><tt>Environment/Build/Build Before Debug</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enables auto-building of a project before downloading if it is out of date.</td></tr>
+<tr><td>Confirm Debugger Stop<br/><small><tt>Environment/Build/Confirm Debugger Stop</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Present a warning when you start to build that requires the debugger to stop.</td></tr>
+<tr><td>Display ETA<br/><small><tt>Environment/Build/Display ETA</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether to attempt to compute and display the ETA on building.</td></tr>
+<tr><td>Display Progress Bar<br/><small><tt>Environment/Build/Display Progress Bar</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether to display progress bar on building.</td></tr>
+<tr><td>Echo Build Command Lines<br/><small><tt>Environment/Build/Show Command Lines</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether build command lines are written to the build log.</td></tr>
+<tr><td>Echo Raw Error/Warning Output<br/><small><tt>Environment/Build/Show Unparsed Error Output</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether the unprocessed error and warning output from tools is displayed in the build log.</td></tr>
+<tr><td>Find Error After Building<br/><small><tt>Environment/Build/Find Error After Build</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Moves the cursor to the first diagnostic after a build completes with errors.</td></tr>
+<tr><td>Global Macros<br/><small><tt>Environment/Macros/Global Macros</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Build macros that are shared across all solutions and projects e.g. paths to library files.</td></tr>
+<tr><td>Keep Going On Error<br/><small><tt>Environment/Build/Keep Going On Error</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Build doesn't stop on error.</td></tr>
+<tr><td>Save Project File Before Building<br/><small><tt>Environment/Build/Save Project File On Build</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether to save the project file prior to build.</td></tr>
+<tr><td>Show Build Information<br/><small><tt>Environment/Build/Show Build Information</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Show build information.</td></tr>
+<tr><td>Toolchain Root Directory<br/><small><tt>Environment/Build/Tool Chain Root Directory</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies where to find the toolchain (compilers etc).</td></tr>
+</table>
+<h2>Build Acceleration</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Disable Unity Build<br/><small><tt>Environment/Build/Disable Unity Build</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Ignore Unity Build project properties and always build individual project components.</td></tr>
+<tr><td>Parallel Building Threads<br/><small><tt>Environment/Build/Building Threads</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The number of threads to launch when building.</td></tr>
+<tr><td>Parallel Project Building<br/><small><tt>Environment/Build/Parallel Project Building</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Selects whether to build projects or files within projects in parallel.</td></tr>
+</table>
+<h2>Compatibility</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Default Assembler Variant<br/><small><tt>ARM/Build/Assembler Variant Default</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the default assembler variant to use.</td></tr>
+<tr><td>Default Compiler Variant<br/><small><tt>ARM/Build/Compiler Variant Default</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the default compiler variant to use.</td></tr>
+<tr><td>Default Use Compiler Driver<br/><small><tt>ARM/Build/Use Compiler Driver</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies the default for the Use Compiler Driver project property.</td></tr>
+<tr><td>Installation Directory<br/><small><tt>ARM/Build/StudioDir Directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The installation directory to be used for building - the value $(StudioDir) is set to.</td></tr>
+</table>
+<h2>Window</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Show Build Log On Build<br/><small><tt>Environment/Show Transcript On Build</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Show the build log when a build starts.</td></tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Multithreading</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio for ARM libraries support multithreading, for example, where you are
+using CTL or a third-party real-time operating system (RTOS).</p><p>Where you have single-threaded processes, there is a single flow of control.
+However, in multithreaded applications there may be several flows of control
+which access the same functions, or the same resources, concurrently.
+To protect the integrity of resources, any code you write for multithreaded
+applications must be <i>reentrant</i> and <i>thread-safe</i>.</p><p>Reentrancy and thread safety are both related to the way functions
+in a multithreaded application handle resources.</p><h3>Reentrant functions</h3><p>A reentrant function does not hold static data over successive calls
+and does not return a pointer to static data. For this type of function,
+the caller provides all the data that the function requires, such as
+pointers to any workspace. This means that multiple concurrent calls
+to the function do not interfere with each other, that the function
+can be called in mainline code, and that the function can be called
+from an interrupt service routine.</p><h3>Thread-safe functions</h3><p>A thread-safe function protects shared resources from concurrent access
+using locks. In C, local variables are held in processor registers or
+are on the stack. Any function that does not use static data, or other
+shared resources, is thread-safe.  In general, thread-safe functions
+are safe to call from any thread but cannot be called directly, or
+indirectly, from an interrupt service routine.</p> 
+    </div>
+  </body>
+</html>

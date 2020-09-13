@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Clipboard Ring window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The code editor captures all cut and copy operations, and stores the cut or
+copied item on the <i>clipboard ring</i>. The clipboard ring stores the last 20
+cut or copied text items, but you can configure the maximum number
+by using the environment options dialog. The clipboard ring is an excellent
+place to store scraps of text when you're working
+with many documents and need to cut and paste between them.</p><h5>To activate the clipboard ring:</h5><ul><li>Choose <b>Edit > Clipboard Ring > Clipboard Ring</b> or press <b>Ctrl+Alt+C</b>.</li></ul><h5>To paste from the clipboard ring:</h5><ol><li> Cut or copy some text from your code. The last item you cut or
+    copy into the clipboard ring is the current item for pasting.
+  </li>
+<li> Press <b>Ctrl+Shift+V</b> to paste the clipboard ring's
+    current item into the current document.
+  </li>
+<li> Repeatedly press <b>Ctrl+Shift+V</b> to cycle through the entries
+    in the clipboard ring until you get to the one you want to permanently paste
+    into the document. Each time you press <b>Ctrl+Shift+V</b>, the editor
+    replaces the last entry you pasted from the clipboard ring, so you end
+    up with just the last one you selected. The item you stop on then becomes
+    the current item.
+  </li>
+<li> Move to another location or cancel the selection. You can use
+    <b>Ctrl+Shift+V</b> to paste the current item again or to cycle the
+    clipboard ring to a new item.</li></ol><p>Clicking an item in the clipboard ring makes it the current item.</p><h5>To paste a specific item from the clipboard ring:</h5><ol><li> Move the insertion point to the position to paste the item
+    in the document.
+  </li>
+<li> Click the arrow at the right of the item to paste.
+  </li>
+<li> Choose <i>Paste</i> from the pop-up menu.</li></ol><p>&mdash;or&mdash;</p><ol><li> Click the item to paste to make it the current item.
+  </li>
+<li> Move the insertion point to the position to paste the item
+    in the document.
+  </li>
+<li> Press <b>Ctrl+Shift+V</b>.</li></ol><h5>To paste all items into a document:</h5><p>To paste all items on the clipboard ring into the current document, move the
+insertion point to where you want to paste the items and do one of the following:</p><ul><li>Choose <b>Edit > Clipboard Ring > Paste All</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Clipboard Ring</b> toolbar, click the <b>Paste All</b> button.</li></ul><h5>To remove an item from the clipboard ring:</h5><ol><li> Click the arrow at the right of the item to remove.
+  </li>
+<li> Choose <b>Delete</b> from the pop-up menu.</li></ol><h5>To remove all items from the clipboard ring:</h5><ul><li>Choose <b>Edit > Clipboard Ring > Clear Clipboard Ring</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Clipboard Ring</b> toolbar, click the <b>Clear Clipboard Ring</b>
+  button.</li></ul><h5>To configure the clipboard ring:</h5><ol><li> Choose <b>Tools > Options</b> or press <b>Alt+,</b>.
+  </li>
+<li> Click the <b>Windows</b> category to show the <b>Clipboard Ring Options</b> group.
+  </li>
+<li> Select <b>Preserve Contents Between Runs</b> to save the content of the clipboard
+    ring between runs, or deselect it to start with an empty clipboard ring.
+  </li>
+<li> Change <b>Maximum Items Held In Ring</b> to configure the maximum number of
+    items stored on the clipboard ring.</li></ol> 
+    </div>
+  </body>
+</html>

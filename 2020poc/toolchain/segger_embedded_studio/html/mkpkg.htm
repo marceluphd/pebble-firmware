@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Package generator</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>To create a package the program <b>mkpkg</b> can be used.
+The set of files to put into the package should be in the desired
+location in the <tt>$(PackagesDir)</tt> directory. The <b>mkpkg</b> command
+should be run with <tt>$(PackagesDir)</tt> as the working directory and
+all files to go into the package must be referred to using relative
+paths. A package must have a package description file that is placed
+in the <tt>$(PackagesDir)/packages</tt> directory. The package description
+file name must end with <tt>_package.xml</tt>. If a package is to create
+entries in the new project wizard then it must have a file name
+<tt>project_templates.xml</tt>.</p><p>For example, a package for the mythical FX150 processor would supply the following files:</p><ul><li>A project template file called <tt>targets/FX150/project_templates.xml</tt>.
+  The format of the project templates file is described in <a href="ide_project_templates_file_format.htm">Project Templates file format</a>.
+</li>
+<li>The <tt>$(PackagesDir)</tt>-relative files that define the functionality of the package.
+</li>
+<li>A package description file called <tt>packages/FX150_package.xml</tt>.
+  The format of the package description file is described in <a href="ide_package_description_file_format.htm">Package Description file format</a>.</li></ul><p>The package file <tt>FX150.emPackage</tt> would be created using the following command line:</p>
+<pre class="rwt-code">mkpkg -c packages/FX150.emPackage targets/FX150/project_templates.xml &hellip; packages/FX150_package.xml </pre><p>You can list the contents of the package using the <b>-t</b> option:</p>
+<pre class="rwt-code">mkpkg -t packages/FX150.emPackage</pre><p>You can remove an entry from a package using the <b>-d</b> option:</p>
+<pre class="rwt-code">mkpkg -d packages/FX150.emPackage -d <i>fileName</i> </pre><p>You can add or replace a file into an existing package using the <b>-r</b> option:</p>
+<pre class="rwt-code">mkpkg -r packages/FX150.emPackage -r <i>fileName</i> </pre><p>You can extract files from an existing package using the <b>-x</b> option:</p>
+<pre class="rwt-code">mkpkg -x packages/FX150.emPackage <i>outputDirectory</i> </pre><p>You can automate the package creation process using a <b>Combining</b> project type.</p><ul><li>Using the new project wizard create a combining project in the directory <tt>$(PackagesDir)</tt>.
+</li>
+<li>Set the <b>Output File Path</b> property to be <tt>$(PackagesDir)/packages/mypackage.emPackage</tt>.
+</li>
+<li>Set the <b>Combine command</b> property to <b>$(StudioDir)/bin/mkpkg -c $(CombiningOutputFilePath) $(CombiningRelInputPaths)</b>.
+</li>
+<li>Add the files you want to go into the package into the project using the Project Explorer.
+</li>
+<li>Right-click the project node in the Project Explorer and choose <b>Build</b>.</li></ul><p>When a package is installed, the files in the package are copied into the desired <tt>$(PackagesDir)</tt>-relative
+locations. When a file is copied into the <tt>$(PackagesDir)/packages</tt> directory and its filename ends
+with <tt>_package.xml</tt> the file <tt>$(PackagesDir)/packages/installed_packages.xml</tt> is updated with
+an entry:</p>
+<pre class="rwt-code">&lt;include filename="FX150_package.xml" /> </pre><p>During development of a package you can manually edit this file.
+The same applies to the file <tt>$(PackagesDir)/targets/project_templates.xml</tt>
+which will contain a reference to your <tt>project_templates.xml</tt> file.</p><h5>Usage:</h5><p><tt>mkpkg</tt> [<i>options</i>] <i>packageFileName</i> <i>file1</i> <i>file2</i> &hellip;</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ Option                  </td><td> Description
+</td></tr>
+<tr><td> <tt>-c</tt>                  </td><td valign="top"> Create a new package.
+</td></tr>
+<tr><td valign="top"> <tt>-compress</tt> <tt>level</tt> </td><td valign="top"> Change compression level (0 for none, 9 for maximum).
+</td></tr>
+<tr><td valign="top"> <tt>-d</tt>                  </td><td valign="top"> Remove files from a package.
+</td></tr>
+<tr><td valign="top"> <tt>-f</tt>                  </td><td valign="top"> Output files to stdout.
+</td></tr>
+<tr><td valign="top"> <tt>-r</tt>                  </td><td valign="top"> Replace files in a package.
+</td></tr>
+<tr><td valign="top"> <tt>-readonly</tt>           </td><td valign="top"> Force all files to have read only attribute.
+</td></tr>
+<tr><td valign="top"> <tt>-t</tt>                  </td><td valign="top"> List the contents of a package.
+</td></tr>
+<tr><td valign="top"> <tt>-v</tt>                  </td><td valign="top"> Be chatty.
+</td></tr>
+<tr><td valign="top"> <tt>-V</tt>                  </td><td valign="top"> Show version information.
+</td></tr>
+<tr><td valign="top"> <tt>-x</tt>                  </td><td valign="top"> Extract files from a package.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

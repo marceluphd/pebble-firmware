@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Additional locales in source form</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio for ARM C library provides only the &lsquo;C&rsquo; locale; if you need
+other locales, you must provide those by linking them into your
+application.  We have constructed a number of locales from the Unicode
+Common Locale Data Repository (CLDR) and provided them in source form
+in the 
+<tt>$(StudioDir)/source</tt>
+folder for you to include in your application.</p><p>A C library locale is divided into two parts:</p><ul><li>the locale's date, time, numeric, and monetary formatting
+  information
+</li>
+<li>how to convert between multi-byte characters and wide
+  characters by the functions in the C library.</li></ul><p>The first, the locale data, is independent of how characters are
+represented.  The second, the code set in use, defines how to
+map between narrow, multi-byte, and wide characters.</p> 
+    </div>
+  </body>
+</html>

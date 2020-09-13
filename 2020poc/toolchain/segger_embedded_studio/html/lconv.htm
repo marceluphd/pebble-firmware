@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>lconv</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">typedef</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">struct</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">{</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">decimal_point</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">thousands_sep</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">grouping</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">int_curr_symbol</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">currency_symbol</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">mon_decimal_point</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">mon_thousands_sep</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">mon_grouping</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">positive_sign</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">negative_sign</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_frac_digits</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">frac_digits</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">p_cs_precedes</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">p_sep_by_space</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n_cs_precedes</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n_sep_by_space</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">p_sign_posn</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n_sign_posn</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_p_cs_precedes</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_n_cs_precedes</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_p_sep_by_space</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_n_sep_by_space</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_p_sign_posn</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">int_n_sign_posn</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-operator">}</span><span class="rwt-code-text"> </span><span class="rwt-code-text">lconv</span><span class="rwt-code-operator">;</span>
+</pre><h5>Description</h5><p><b>lconv</b> structure holds formatting information on how numeric values
+  are to be written.  Note that the order of fields in this structure is not consistent
+  between implementations, nor is it consistent between C89 and C99 standards.</p><p>The members <b>decimal_point</b>, <b>grouping</b>, and <b>thousands_sep</b> are controlled
+  by <b>LC_NUMERIC</b>, the remainder by <b>LC_MONETARY</b>.</p><p>The members <b>int_n_cs_precedes</b>, <b>int_n_sep_by_space</b>, <b>int_n_sign_posn</b>,
+  <b>int_p_cs_precedes</b>, <b>int_p_sep_by_space</b>. and <b>int_p_sign_posn</b> are added
+  by the C99 standard.</p><p>We have standardized on the ordering specified by the ARM EABI for the
+  base of this structure.  This ordering is neither that of C89 nor C99.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+    <tr bgcolor="#cccccc"><td>
+ Member             </td><td> Description
+    </td></tr>
+<tr><td> currency_symbol    </td><td valign="top"> Local currency symbol.
+    </td></tr>
+<tr><td valign="top"> decimal_point      </td><td valign="top"> Decimal point separator.
+    </td></tr>
+<tr><td valign="top"> frac_digits        </td><td valign="top"> Amount of fractional digits to the right of the decimal point for monetary quantities in the local format.
+    </td></tr>
+<tr><td valign="top"> grouping           </td><td valign="top"> Specifies the amount of digits that form each of the groups to be separated by thousands_sep separator for non-monetary quantities.
+    </td></tr>
+<tr><td valign="top"> int_curr_symbol    </td><td valign="top"> International currency symbol.
+    </td></tr>
+<tr><td valign="top"> int_frac_digits    </td><td valign="top"> Amount of fractional digits to the right of the decimal point for monetary quantities in the international format.
+    </td></tr>
+<tr><td valign="top"> mon_decimal_point  </td><td valign="top"> Decimal-point separator used for monetary quantities.
+    </td></tr>
+<tr><td valign="top"> mon_grouping       </td><td valign="top"> Specifies the amount of digits that form each of the groups to be separated by mon_thousands_sep separator for monetary quantities.
+    </td></tr>
+<tr><td valign="top"> mon_thousands_sep  </td><td valign="top"> Separators used to delimit groups of digits to the left of the decimal point for monetary quantities.
+    </td></tr>
+<tr><td valign="top"> negative_sign      </td><td valign="top"> Sign to be used for negative monetary quantities.
+    </td></tr>
+<tr><td valign="top"> n_cs_precedes      </td><td valign="top"> Whether the currency symbol should precede negative monetary quantities.
+    </td></tr>
+<tr><td valign="top"> n_sep_by_space     </td><td valign="top"> Whether a space should appear between the currency symbol and negative monetary quantities.
+    </td></tr>
+<tr><td valign="top"> n_sign_posn        </td><td valign="top"> Position of the sign for negative monetary quantities.
+    </td></tr>
+<tr><td valign="top"> positive_sign      </td><td valign="top"> Sign to be used for nonnegative (positive or zero) monetary quantities.
+    </td></tr>
+<tr><td valign="top"> p_cs_precedes      </td><td valign="top"> Whether the currency symbol should precede nonnegative (positive or zero) monetary quantities.
+    </td></tr>
+<tr><td valign="top"> p_sep_by_space     </td><td valign="top"> Whether a space should appear between the currency symbol and nonnegative (positive or zero) monetary quantities.
+    </td></tr>
+<tr><td valign="top"> p_sign_posn        </td><td valign="top"> Position of the sign for nonnegative (positive or zero) monetary quantities.
+    </td></tr>
+<tr><td valign="top"> thousands_sep      </td><td valign="top"> Separators used to delimit groups of digits to the left of the decimal point for non-monetary quantities.
+  </td></tr></table> 
+    </div>
+  </body>
+</html>

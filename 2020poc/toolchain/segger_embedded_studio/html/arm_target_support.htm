@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>ARM target support</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>When a target-specific executable project is created using the <b>New Project Wizard</b>,
+the following default files are added to the project:</p><ul><li><i>Target</i><tt>_Startup.s</tt> &mdash; The target-specific startup
+  code.  See <a href="arm_target_startup.htm">Target startup code</a>.
+</li>
+<li><tt>crt0.s/thumb_crt0.s</tt> &mdash; The SEGGER Embedded Studio for ARM standard C runtime. See <a href="arm_crt0.htm">Startup code</a>.
+</li>
+<li><i>Target</i>_MemoryMap.xml &mdash; The target-specific memory map
+  file for the board. See <a href="arm_memory_map_files.htm">Section Placement</a>. Note that, for some
+  targets, a general linker placement file may not be suitable.
+  In these cases, there will be two memory-map files: one for a flash
+  build and one for a RAM build.
+</li>
+<li><tt>flash_placement.xml</tt> &mdash; The linker placement file for a flash build.
+</li>
+<li><tt>sram_placement.xml</tt> &mdash; The linker placement file for a RAM build.</li></ul><p>Initially, shared versions of these files are added to the project. If you
+want to modify any these shared files, select the file in the <b>Project Explorer</b>
+and then click the <b>Import</b> option from the shortcut menu. This
+will copy a writable version of the file into your project directory and change
+the path in the <b>Project Explorer</b> to that of the local version. You can then
+make changes to the local file without affecting the shared copy of it.</p><p>The following list describes the typical flow of a C program created with
+SEGGER Embedded Studio's project templates:</p><ul><li>The processor jumps to the <b>reset_handler</b> label in the
+  target-specific startup code, which configures the target (see <a href="arm_target_startup.htm">Target startup code</a>).
+</li>
+<li>When the target is configured, the target-specific startup code jumps
+  to the <b>_start</b> entry point in the C runtime code, which sets up the C runtime
+  environment (see <a href="arm_crt0.htm">Startup code</a>).
+</li>
+<li>When the C runtime environment has been set up, the C runtime
+  code jumps to the C entry-point function, <b>main</b>.
+</li>
+<li>When the program returns from main, it re-enters the C runtime
+  code, executes the destructors and enters an endless loop.</li></ul> 
+    </div>
+  </body>
+</html>

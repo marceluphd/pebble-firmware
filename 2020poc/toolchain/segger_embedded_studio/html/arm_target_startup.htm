@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Target startup code</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following section describes the role of the target-specific startup code.</p><p>When you create a new project to produce an executable file using a target-specific
+project template, a file containing the default startup code for the
+target will be added to the project. Initially, a shared version of this file
+will be added to the project; if you want to modify this file, select
+the file in the <b>Project Explorer</b> and select <b>Import</b> to copy the file
+to your project directory.</p><h3>ARM and Cortex-A/Cortex-R startup code</h3><p>The target startup file typically consists of the exception vector table and the default
+set of exception handlers.</p><ul><li><b>_vectors</b> &mdash; This is the exception vector table. It is put into its
+  own <b>.vectors</b> section in order to ensure that it is can be placed at
+  a specific address which is usually 0x00000000 or the start of Flash memory. 
+  The vector table contains jump instructions to the 
+  particular exception handlers. It is recommended that absolute jump instructions 
+  are used <tt>ldr pc, =handler_address</tt> rather than relative
+  branch instructions <tt>b handler_address</tt> since many devices shadow
+  the memory at address zero to start execution but the program will be linked
+  to run at a different address. 
+</li>
+<li><b>reset_handler</b> &mdash; The reset handler will
+  usually carry out any target-specific initialization and then will jump to the
+  <b>_start</b> entry point. In a C system, the <b>_start</b> entry point is in the
+  <b>crt0.s</b> file. During development it is usual to replace the reset handler with
+  an endless loop which will stop the device running potentially dangerous
+  in-development code directly out of reset. In development the debugger will start
+  the device from the specified debug entry point.
+</li>
+<li><b>undef_handler</b> &mdash; This is the default, undefined-instruction exception
+  handler.<sup>*</sup>
+</li>
+<li><b>swi_handler</b> &mdash; This is the default, software-interrupt exception
+  handler.<sup>*</sup>
+</li>
+<li><b>pabort_handler</b> &mdash; This is the default, prefetch-abort exception
+  handler.<sup>*</sup>
+</li>
+<li><b>dabort_handler</b> &mdash; This is the default, data-abort exception handler.<sup>*</sup>
+</li>
+<li><b>irq_handler</b> &mdash; This is the default, IRQ-exception handler.<sup>*</sup>
+</li>
+<li><b>fiq_handler</b> &mdash; This is the default, FIQ-exception handler.<sup>*</sup></li></ul><p><sup>*</sup> Declared as a weak symbol to allow the user to override the implementation.</p><p>Note that ARM and Cortex-A/Cortex-R exception handlers must be written in ARM assembly code.
+The CPU or board support package of the project you have created will
+typically supply an ARM assembly-coded <b>irq_handler</b> implementation
+that will enable you to write interrupt service routines as C functions.</p><h3>Cortex-M startup code</h3><p>The target startup file typically consists of the exception vector
+table and the default set of exception handlers.</p><ul><li><b>_vectors</b> &mdash;  This is the exception vector table. It is put into its
+   own <b>.vectors</b> section in order to ensure that it can be placed at a 
+   specific address which is usually 0x00000000 or the start of Flash memory.</li></ul><p>The vector table is structured as follows:</p><ul><li>The first entry is the initial value of the stack pointer.
+</li>
+<li>The second entry is the address of the reset handler function.
+  The reset handler will usually carry out any
+  target-specific initialization and then jump to the <b>_start</b> entry point.
+  In a C system, the <b>_start</b> entry point is in the <tt>thumb_crt0.s</tt> file.
+  During development it is usual to replace this jump with an endless loop
+  which will stop the device running potentially dangerous in-development
+  code directly out of reset. In development the debugger will start
+  the device from the specified debug entry point.
+</li>
+<li>The following 15 entries are the addresses of the standard Cortex-M
+  exception handlers ending with the <b>SysTick_ISR</b> entry.
+</li>
+<li>Subsequent entries are addresses of device-specific interrupt sources
+  and their associated handlers.</li></ul><p>For each exception handler, a weak symbol is declared that will implement
+an endless loop. You can implement your own exception handler as a regular
+C function. Note that the name of the C function must match the name in the
+startup code e.g. <b>void SysTick_ISR(void)</b>. You can use the C preprocessor
+to rename the symbol in the startup code if you have existing code with
+different exception handler names e.g. <b>SysTick_ISR=SysTick_Handler</b>.</p> 
+    </div>
+  </body>
+</html>

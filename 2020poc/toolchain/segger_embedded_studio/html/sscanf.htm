@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>sscanf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">sscanf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">format</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-operator">...);</span>
+</pre><h5>Description</h5><p><b>sscanf</b> reads input from the string <b>s</b> under 
+  control of the string pointed to by <b>format</b> that specifies the 
+  admissible input sequences and how they are to be converted for assignment, 
+  using subsequent arguments as pointers to the objects to receive the converted 
+  input.</p><p>If there are insufficient arguments for the format, the behavior is undefined. 
+  If the format is exhausted while arguments remain, the excess arguments are 
+  evaluated but are otherwise ignored.</p><p><b>sscanf</b> returns the value of the macro <b>EOF</b>
+  if an input failure occurs before any conversion. Otherwise, <b>sscanf</b>
+  returns the number of input items assigned, which can be fewer than provided 
+  for, or even zero, in the event of an early matching failure.
+</p> 
+    </div>
+  </body>
+</html>

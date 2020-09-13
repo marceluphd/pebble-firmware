@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>memmove</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">memmove</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s1</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s2</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>memmove</b> copies <b>n</b> characters from the object pointed to by <b>s2</b>
+  into the object pointed to by <b>s1</b> ensuring that if <b>s1</b> and <b>s2</b>
+  overlap, the copy works correctly. Copying takes place as if the <b>n</b> characters 
+  from the object pointed to by <b>s2</b> are first copied into a temporary array 
+  of <b>n</b> characters that does not overlap the objects pointed to by <b>s1</b> 
+  and <b>s2</b>, and then the <b>n</b> characters from the temporary array are 
+  copied into the object pointed to by <b>s1</b>.</p><p><b>memmove</b> returns the value of <b>s1</b>.
+</p> 
+    </div>
+  </body>
+</html>

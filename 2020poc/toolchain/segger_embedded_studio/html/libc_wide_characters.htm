@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Unicode, ISO 10646, and wide characters</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The ISO standard 10646 is identical to the published Unicode standard
+and the SEGGER Embedded Studio for ARM C library uses the Unicode 6.2 definition as a base.
+Hence, whenever you see the term &lsquo;Unicode&rsquo; in this document, it is
+equivalent to Unicode 6.2 and ISO/IEC 10646:2011.</p><p>The SEGGER Embedded Studio for ARM C library supports both 16-bit and 32-bit wide characters,
+depending upon the setting of wide character width in the project.</p><p>When compiling with 16-bit wide characters, all characters in the Basic
+Multilingual Plane are representable in a single <tt>wchar_t</tt> (values
+0 through 0xFFFF).  When compiling with 32-bit wide characters, all
+characters in the Basic Multilingual Plane and planes 1 through 16
+are representable in a single <b>wchar_t</b> (values 0 through 0x10FFFF).</p><p>The wide character type will hold Unicode code points in a locale that
+is defined to use Unicode and character type functions such as <b>iswalpha</b>
+will work correctly on all Unicode code points.</p> 
+    </div>
+  </body>
+</html>

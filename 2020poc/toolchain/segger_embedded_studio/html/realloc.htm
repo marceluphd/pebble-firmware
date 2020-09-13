@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>realloc</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">realloc</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">p</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">size</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>realloc</b> deallocates the old object pointed to by <b>ptr</b> and returns
+  a pointer to a new object that has the size specified by <b>size</b>. The contents
+  of the new object is identical to that of the old object prior to deallocation, up to the
+  lesser of the new and old sizes. Any bytes in the new object beyond the size
+  of the old object have indeterminate values.</p><p>If <b>ptr</b> is a null pointer, <b>realloc</b> behaves like realloc
+  for the specified size. If memory for the new object cannot be allocated, the
+  old object is not deallocated and its value is unchanged.</p><p><b>realloc</b> returns a pointer to the new object (which may have
+  the same value as a pointer to the old object), or a null pointer if the new
+  object could not be allocated.</p><p>If <b>ptr</b> does not match a pointer earlier returned by <b>calloc</b>, <b>malloc</b>,
+  or <b>realloc</b>, or if the space has been deallocated by a call to <b>free</b>
+  or <b>realloc</b>, the behavior is undefined.
+</p> 
+    </div>
+  </body>
+</html>

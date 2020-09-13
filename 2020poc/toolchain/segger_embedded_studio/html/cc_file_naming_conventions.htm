@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>File naming conventions</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The compiler driver uses file extensions to distinguish the language the source 
+file is written in. The compiler driver recognizes the extension <b>.c</b> as 
+C source files, 
+<b>.cpp</b>, <b>.cc</b> or <b>.cxx</b> as C++ source files, 
+<b>.s</b> and <b>.asm</b> as assembly code files.</p><p>The compiler driver recognizes the extension <b>.o</b> as object files, <b>.a</b> as
+library files, <b>.ld</b> as linker script files and <b>.xml</b> as special-purpose XML files.</p><p>We strongly recommend that you adopt these extensions for your source files 
+and object files because you'll find that using the tools is much easier if 
+you do.</p><h5>C language files</h5><p>When the compiler driver finds a file with a <b>.c</b> extension, it runs 
+the C compiler to convert it to object code.</p><h5>C++ language files</h5><p>When the compiler driver finds a file with a <b>.cpp</b> extension, it runs 
+the C++ compiler to convert it to object code.</p><h5>Assembly language files</h5><p>When the compiler driver finds a file with a <b>.s</b> or <b>.asm</b> extension, 
+it runs the C preprocessor and then the assembler to convert it to object code.</p><h5>Object code files</h5><p>When the compiler driver finds a file with a <b>.o</b> or <b>.a</b> extension, it passes 
+it to the linker to include it in the final application.</p> 
+    </div>
+  </body>
+</html>

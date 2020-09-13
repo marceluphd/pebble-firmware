@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Code Options</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h2>Assembler</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional Assembler Options<br/><small><tt>asm_additional_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the assembler. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional Assembler Options From File<br/><small><tt>asm_additional_options_from_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Enables additional options to be supplied to the assembler from a file. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Assembler<br/><small><tt>arm_assembler_variant</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies which assembler to use.</td></tr>
+<tr><td>Backup Additional Assembler Options<br/><small><tt>asm_additional_options_backup</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Value of additional assembler options prior to generic options processing.</td></tr>
+<tr><td>Generate Assembler Listing File<br/><small><tt>asm_generate_listing_file</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>An assembler listing file is generated which can be found in the Ouput Files folder</td></tr>
+</table>
+<h2>Build</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Always Rebuild<br/><small><tt>build_always_rebuild</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether or not to always rebuild the project/folder/file.</td></tr>
+<tr><td>Batch Build Configurations<br/><small><tt>batch_build_configurations</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The set of configurations to batch build.</td></tr>
+<tr><td>Build Options Generic File Name<br/><small><tt>build_generic_options_file_name</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The file name containing the generic options.</td></tr>
+<tr><td>Build Quietly<br/><small><tt>build_quietly</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Suppress the display of startup banners and information messages.</td></tr>
+<tr><td>Dependency File Name<br/><small><tt>build_dependency_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>The file name to contain the dependencies.</td></tr>
+<tr><td>Enable Unused Symbol Removal<br/><small><tt>build_remove_unused_symbols</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enable the removal of unused symbols from the executable.</td></tr>
+<tr><td>Exclude From Build<br/><small><tt>build_exclude_from_build</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether or not to exclude the project/folder/file from the build.</td></tr>
+<tr><td>Include Debug Information<br/><small><tt>build_debug_information</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether symbolic debug information is generated.</td></tr>
+<tr><td>Intermediate Directory<br/><small><tt>build_intermediate_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Specifies a relative path to the intermediate file directory. This property will have macro expansion applied to it. The macro $(IntDir) is set to this value.</td></tr>
+<tr><td>Memory Map File<br/><small><tt>linker_memory_map_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the file containing the memory map description.</td></tr>
+<tr><td>Memory Map Macros<br/><small><tt>linker_memory_map_macros</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Macro values to substitue in memory map nodes. Each macro is defined as <b>name=value</b> and are seperated by <b>;</b>.</td></tr>
+<tr><td>Memory Segments<br/><small><tt>linker_section_placements_segments</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The start, access and size of named segments in the target, these are used when no memory map file is available.Each segment is specified by NAME RWX HEXSTART HEXSIZE for example FLASH RX 0x08000000 0x00010000</td></tr>
+<tr><td>Output Directory<br/><small><tt>build_output_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Specifies a relative path to the output file directory. This property will have macro expansion applied to it. The macro $(OutDir) is set to this value. The macro $(RootRelativeOutDir) is set relative to the <b>Root Output Directory</b> if specified.</td></tr>
+<tr><td>Project Can Build In Parallel<br/><small><tt>project_can_build_in_parallel</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies that dependent projects can be built in parallel. Default is No for Staging and Combining project types, Yes for all other project types.</td></tr>
+<tr><td>Project Dependencies<br/><small><tt>project_dependencies</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies the projects the current project depends upon.</td></tr>
+<tr><td>Project Directory<br/><small><tt>project_directory</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Path of the project directory relative to the directory containing the project file. The macro $(ProjectDir) is set to the absolute path of this property.</td></tr>
+<tr><td>Project Macros<br/><small><tt>macros</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies macro values which are expanded in project properties and for file names in Common configuration only. Each macro is defined as <b>name=value</b> and are seperated by <b>;</b>.</td></tr>
+<tr><td>Project Type<br/><small><tt>project_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the type of project to build. The options are <b>Executable, Library, Object file, Staging, Combining, Externally Built Executable, Externally Built Library, Externally Built Object file</b>.</td></tr>
+<tr><td>Property Groups File<br/><small><tt>property_groups_file_path</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The file containing the property groups for this project. This is applicable to <b>Executable</b> and <b>Externally Built Executable</b> project types only.</td></tr>
+<tr><td>Root Output Directory<br/><small><tt>build_root_output_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Allows a common root output directory to be specified that can be referenced using the $(RootOutDir) macro.</td></tr>
+<tr><td>Suppress Warnings<br/><small><tt>build_suppress_warnings</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Don't report warnings.</td></tr>
+<tr><td>Tool Chain Directory<br/><small><tt>build_toolchain_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Specify the root of the toolchain directory. This property will have macro expansion applied to it. The macro $(ToolChainDir) is set to this value.</td></tr>
+<tr><td>Treat Warnings as Errors<br/><small><tt>build_treat_warnings_as_errors</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Treat all warnings as errors.</td></tr>
+<tr><td>Use Compiler Driver<br/><small><tt>use_compiler_driver</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The build will issue cc commands.</td></tr>
+</table>
+<h2>Code Generation</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>ARM Advanced SIMD Auto Vectorize<br/><small><tt>arm_advanced_SIMD_auto_vectorize</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enable automatic code generation for Advanced SIMD.</td></tr>
+<tr><td>ARM Advanced SIMD Type<br/><small><tt>arm_advanced_SIMD_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the Advanced SIMD type to generate code for. The options are:<ul><li>NEON - Cortex-A based processors</li></ul></td></tr>
+<tr><td>ARM Architecture<br/><small><tt>arm_architecture</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the version of the instruction set to generate code for. The options are:<ul><li>v4T - ARM7TDMI and ARM920T processors</li><li>v5TE - ARM9E, Feroceon and XScale processors</li><li>v6 - ARM11 processors</li><li>v6M - Cortex-M0 and Cortex-M1 processors</li><li>v7M - Cortex-M3 processors</li><li>v7EM - Cortex-M4 and Cortex-M7 processors</li><li>v7R - Cortex-R processors</li><li>v7A - Cortex-A processors</li><li>v8R - Cortex-R AArch32 processors</li><li>v8A - Cortex-A AArch32 processors</li><li>v8M_Baseline - Cortex M23 processor</li><li>v8M_Mainline - Cortex M33 processor</li><li>None</li></ul>The corresponding preprocessor definitions:<ul><li>__ARM_ARCH_4T__</li><li>__ARM_ARCH_5TE__</li><li>__ARM_ARCH_6__</li><li>__ARM_ARCH_6M__</li><li>__ARM_ARCH_7M__</li><li>__ARM_ARCH_7EM__</li><li>__ARM_ARCH_7R__</li><li>__ARM_ARCH_7A__</li><li>__ARM_ARCH_8R__</li><li>__ARM_ARCH_8A__</li><li>__ARM_ARCH_8M_BASELINE__</li><li>__ARM_ARCH_8M_MAINLINE__</li></ul> are defined.</td></tr>
+<tr><td>ARM Core Type<br/><small><tt>arm_core_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the core to generate code for. The options are:<ul><li>ARM7TDMI, ARM7TDMI-S, ARM720T</li><li>ARM920T, ARM946E-S, ARM966E-S, ARM968E-S, ARM926EJ-S</li><li>ARM1136J-S, ARM1136JF-S, ARM1176JZ-S, ARM1176JZF-S</li><li>Cortex-M0, Cortex-M0+, Cortex-M1, Cortex-M23, Cortex-M3, Cortex-M33, Cortex-M4, Cortex-M7</li><li>Cortex-R4, Cortex-R4F, Cortex-R5, Cortex-R7, Cortex-R8</li><li>Cortex-R52</li><li>Cortex-A5, Cortex-A7, Cortex-A8, Cortex-A9, Cortex-A15, Cortex-A17</li><li>Cortex-A32, Cortex-A35, Cortex-A53, Cortex-A57, Cortex-A72, Cortex-A73, Cortex-A75</li><li>XScale</li><li>None</li></ul>If this property is set to None then the architecture property is used</td></tr>
+<tr><td>ARM FP ABI Type<br/><small><tt>arm_fp_abi</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the FP ABI type to generate code for. The options are:<ul><li><b>Soft</b> generate calls to the C library to implement floating point operations.</li><li><b>SoftFP</b> generate VFP code to implement floating point operations.</li><li><b>Hard</b> generate VFP code to implement floating point operations and use VFP registers to pass floating point parameters on function calls.</li><li><b>None</b> will not specify the FP ABI or the FPU.</li></ul></td></tr>
+<tr><td>ARM FPU Type<br/><small><tt>arm_fpu_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the FPU type to generate code for. The options are:<ul><li>VFP - ARM9/ARM11 based processors</li><li>VFP9 - the same as VFP</li><li>VFPv3-D32 - Cortex-A/Cortex-R based processors</li><li>VFPv3-D16 - Cortex-A/Cortex-R based processors</li><li>VFPv4-D32 - Cortex-A/Cortex-R based processors</li><li>VFPv4-D16 - Cortex-A/Cortex-R based processors</li><li>FPv4-SP-D16 - Cortex-M4 processors</li><li>FPv5-SP-D16 - Cortex-M7 processors</li><li>FPv5-D16 - Cortex-M7 processors</li><li>FP-ARMv8 - Cortex-A AArch32 processors</li></ul>The corresponding preprocessor definitions:<ul><li>__ARM_ARCH_VFP__</li><li>__ARM_ARCH_VFP3_D32__</li><li>__ARM_ARCH_VFP3_D16__</li><li>__ARM_ARCH_VFP4_D32__</li><li>__ARM_ARCH_VFP4_D16__</li><li>__ARM_ARCH_FPV4_SP_D16__</li><li>__ARM_ARCH_FPV5_SP_D16__</li><li>__ARM_ARCH_FPV5_D16__</li><li>__ARM_ARCH_FP_ARMv8__</li></ul> are defined.</td></tr>
+<tr><td>ARM/Thumb Interworking<br/><small><tt>arm_interwork</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies whether ARM/Thumb interworking code should be generated. Setting this property to <b>No</b> may result in smaller code sizes when compiling for architecture <b>v4T</b>.</td></tr>
+<tr><td>Byte Order<br/><small><tt>arm_endian</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specify the byte order of the target processor. The options are:<ul><li><b>Little</b> little endian code and data.</li><li><b>Big</b> big endian code and data.</li><li><b>BE-8</b> little endian code and big endian data.</li></ul></td></tr>
+<tr><td>CM0/CM0+/CM1 Has Small Multiplier<br/><small><tt>arm_cm0_has_small_multiplier</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The CM0/CM0+/CM1 core has the small multiplier.</td></tr>
+<tr><td>Debugging Level<br/><small><tt>gcc_debugging_level</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the level of debugging information to generate. The options are:<ul><li>None - no debugging information</li><li>Level 1 - backtrace and line number debugging information</li><li>Level 2 - Level 1 and variable display debugging information</li><li>Level 3 - Level 2 and macro display debugging information</li></ul></td></tr>
+<tr><td>Dwarf Version<br/><small><tt>gcc_dwarf_version</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the version of Dwarf debugging information to generate.</td></tr>
+<tr><td>Emit Assembler CFI<br/><small><tt>gcc_emit_assembler_cfi</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Emit DWARF 2 unwind info using GAS .cfi_* directives rather than a compiler generated .eh_frame section.</td></tr>
+<tr><td>Enable Exception Support<br/><small><tt>cpp_enable_exceptions</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether exception support is enabled for C++ programs.</td></tr>
+<tr><td>Enable RTTI Support<br/><small><tt>cpp_enable_rtti</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether RTTI support is enabled for C++ programs.</td></tr>
+<tr><td>Enumeration Size<br/><small><tt>gcc_short_enum</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Select between minimal container sized enumerations and int sized enumerations.</td></tr>
+<tr><td>Instruction Set<br/><small><tt>arm_instruction_set</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the instruction set to generate code for.</td></tr>
+<tr><td>Instrument Functions<br/><small><tt>arm_instrument_functions</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether instrumentation calls are generated for function entry and exit.</td></tr>
+<tr><td>Keep Link Time Optimization Intermediate Files<br/><small><tt>link_keep_lto_files</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to keep the link time optimization resolution and object files.</td></tr>
+<tr><td>Link Time Optimization<br/><small><tt>link_time_optimization</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the project should be built for optimization at link time.</td></tr>
+<tr><td>Long Calls<br/><small><tt>arm_long_calls</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether function calls are made using absolute addresses.</td></tr>
+<tr><td>Math Errno<br/><small><tt>arm_math_errno</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Set errno after calling math functions that are executed with a single instruction, e.g., sqrt.</td></tr>
+<tr><td>Merge Globals [clang]<br/><small><tt>clang_merge_globals</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Select whether global declarations are merged.  This may reduce code size and increase execution speed for some applications.  However, if functions are not used in an application and are eliminated by the linker, merged globals may increase the data size requirement of an application.</td></tr>
+<tr><td>No COMMON<br/><small><tt>gcc_no_common</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Don't put globals in the common section</td></tr>
+<tr><td>Omit Frame Pointer<br/><small><tt>gcc_omit_frame_pointer</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether a frame pointer register is omitted if not required.</td></tr>
+<tr><td>Optimization Level<br/><small><tt>gcc_optimization_level</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the optimization level to use. The options are:<ul><li>None - don't specify an optimization level</li><li>Level 0 - no optimization, fastest compilation and best debug experience.</li><li>Level 1 - optimize minimally.</li><li>Level 2 for speed</li><li>Level 2 balanced</li><li>Level 2 for size</li><li>Level 3 - optimize even more, will take longer to compile and may produce much larger code.</li></ul></td></tr>
+<tr><td>Unaligned Access Support.<br/><small><tt>arm_unaligned_access</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Unaligned word and half-words can be accessed. The option are:<ul><li><b>Yes</b> enable unaligned word and half-words.</li><li><b>No</b> disable unaligned word and half-words.</li><li><b>Auto</b> disable unaligned word and half-word access for v4T/v5TE/v6M/v8M_Baseline architectures, enable for others.</li></ul></td></tr>
+<tr><td>Unwind Tables<br/><small><tt>arm_unwind_tables</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Generate unwind tables for C code.</td></tr>
+<tr><td>Use Builtins<br/><small><tt>arm_use_builtins</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Use built-in library functions e.g. scanf.</td></tr>
+<tr><td>Wide Character Size<br/><small><tt>gcc_wchar_size</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Select between standard 32-bit or shorter 16-bit size for wide characters and wchar_t.</td></tr>
+<tr><td>v7A/v7R Has Integer Divide Instructions<br/><small><tt>arm_v7_has_divide_instructions</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The v7A/v7R architecture has integer divide instructions in both ARM and Thumb instruction sets.</td></tr>
+<tr><td>v8A Has CRC Instructions<br/><small><tt>arm_v8A_has_crc</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The v8A architecture has CRC instructions.</td></tr>
+<tr><td>v8A Has Crypto Instructions<br/><small><tt>arm_v8A_has_crypto</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The v8A architecture has crypto instructions.</td></tr>
+<tr><td>v8M Has CMSE Instructions<br/><small><tt>arm_v8M_has_cmse</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The v8M architecture has CMSE instructions.</td></tr>
+<tr><td>v8M Has DSP Instructions<br/><small><tt>arm_v8M_has_dsp</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The v8M architecture has DSP instructions.</td></tr>
+</table>
+<h2>Combining</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Combine Command<br/><small><tt>combine_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command to execute. This property will have macro expansion applied to it with the macro <b>$(CombiningOutputFilePath)</b> set to the output filepath of the combine command and the macro <b>$(CombiningRelInputPaths)</b> is set to the (project relative) names of all of the files in the project.</td></tr>
+<tr><td>Combine Command Working Directory<br/><small><tt>combine_command_wd</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The working directory in which the combine command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Output File Path<br/><small><tt>combine_output_filepath</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The output file path the stage command will create. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Set To Read-only<br/><small><tt>combine_set_readonly</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Set the output file to read only or read/write.</td></tr>
+</table>
+<h2>Compiler</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional C Compiler Only Options<br/><small><tt>c_only_additional_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the C compiler only. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional C Compiler Only Options From File<br/><small><tt>c_only_additional_options_from_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Enables additional options to be supplied to the C compiler only from a file. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional C++ Compiler Only Options<br/><small><tt>cpp_only_additional_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the C++ compiler only. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional C++ Compiler Only Options From File<br/><small><tt>cpp_only_additional_options_from_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Enables additional options to be supplied to the C++ compiler only from a file. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional C/C++ Compiler Options<br/><small><tt>c_additional_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the C/C++ compiler. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional C/C++ Compiler Options From File<br/><small><tt>c_additional_options_from_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Enables additional options to be supplied to the C/C++ compiler from a file. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Backup Additional C Compiler Only Options<br/><small><tt>c_only_additional_options_backup</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Value of additional C compiler options prior to generic options processing</td></tr>
+<tr><td>Backup Additional C++ Compiler Only Options<br/><small><tt>cpp_only_additional_options_backup</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Value of additional C++ compiler options prior to generic options processing</td></tr>
+<tr><td>Backup Additional Compiler Options<br/><small><tt>c_additional_options_backup</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Value of additional compiler options prior to generic options processing</td></tr>
+<tr><td>C Language Standard<br/><small><tt>gcc_c_language_standard</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the language standard to use when compiling C files. The options are:<ul><li>None - don't specify a language standard</li><li>c89/gnu89</li><li>c90/gnu90</li><li>c99/gnu99</li><li>c11/gnu11</li></ul></td></tr>
+<tr><td>C++ Language Standard<br/><small><tt>gcc_cplusplus_language_standard</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the language standard to use when compiling C files. The options are:<ul><li>None - don't specify a language standard</li><li>c++89/gnu++89</li><li>c++11/gnu++11</li><li>c++14/gnu++14</li><li>c++17/gnu++17</li></ul></td></tr>
+<tr><td>Compiler<br/><small><tt>arm_compiler_variant</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies which compiler to use.</td></tr>
+<tr><td>Enable All Warnings<br/><small><tt>gcc_enable_all_warnings</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.</td></tr>
+<tr><td>Enable All Warnings C Compiler Only Command Line Options<br/><small><tt>gcc_c_only_all_warnings_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the C compiler when Enable All Warnings is enabled.</td></tr>
+<tr><td>Enable All Warnings C++ Compiler Only Command Line Options<br/><small><tt>gcc_cpp_only_all_warnings_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the C++ compiler when Enable All Warnings is enabled.</td></tr>
+<tr><td>Enable All Warnings Command Line Options<br/><small><tt>gcc_all_warnings_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the compiler when Enable All Warnings is enabled.</td></tr>
+<tr><td>Enforce ANSI Checking<br/><small><tt>c_enforce_ansi_checking</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Perform additional checks for ensure strict conformance to the selected ISO (ANSI) C or C++ standard.</td></tr>
+<tr><td>Enforce ANSI Checking C Command Line Options<br/><small><tt>gcc_c_only_enforce_ansi_checking_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the C compiler when Enforce ANSI Checking is enabled.</td></tr>
+<tr><td>Enforce ANSI Checking C++ Command Line Options<br/><small><tt>gcc_cpp_only_enforce_ansi_checking_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the C++ compiler when Enforce ANSI Checking is enabled.</td></tr>
+<tr><td>Enforce ANSI Checking Command Line Options<br/><small><tt>gcc_enforce_ansi_checking_command_line_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The command line options supplied to the compiler when Enforce ANSI Checking is enabled.</td></tr>
+<tr><td>GNU Version [clang]<br/><small><tt>clang_gnu_version</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies value of __GNU__ and related macros</td></tr>
+<tr><td>Keep Assembly Source<br/><small><tt>arm_keep_assembly</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether assembly code generated by the compiler is kept.</td></tr>
+<tr><td>Keep Preprocessor Output<br/><small><tt>arm_keep_preprocessor_output</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether preprocessor output generated by the compiler is kept.</td></tr>
+<tr><td>Object File Name<br/><small><tt>build_object_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies a name to override the default object file name.</td></tr>
+<tr><td>Supply Absolute File Path<br/><small><tt>arm_supply_absolute_file_path</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether absolute file paths are supplied to the compiler.</td></tr>
+</table>
+<h2>External Build</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Archive Command<br/><small><tt>external_archive_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to archive object files. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Library File Name</b> property</li>.<li>$(RelTargePath) contains the project directory relative file name of the <b>Object File Name</b> property.</li><li>$(Objects) a space seperated list of files to archive, generated from the source files of the project OR.</li><li>$(ObjectsFilePath) contains the full file name of the file containing the list of files to archive</li><li>$(RelObjectsFilePath) contains the project directory relative file name of the file containing the list of files to link</li></ul></td></tr>
+<tr><td>Assemble Command<br/><small><tt>external_assemble_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to assemble an assembly source file. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Object File Name</b> property.</li><li>$(RelTargePath) contains the project directory relative file name of the <b>Object File Name</b> property.</li><li>$(AsmOptions) contains a space seperated list of options as set in the <b>Additional Assembler Options</b> property.</li><li>$(DependencyPath) contains the filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(RelDependencyPath) contains the relative filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(Defines) contains a space seperated list of preprocessor definitions as set in the <b>Preprocessor Definitions</b> property.</li><li>$(Undefines) contains a space seperated list of preprocessor undefinitions as set in the <b>Preprocessor Definitions</b> property.</li><li>$(Includes) contains a space seperated list of user include directories as set in the <b>User Include Directories</b> property.</li></ul></td></tr>
+<tr><td>Build Command<br/><small><tt>external_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to build the executable e.g. make. This property will have macro expansion applied to it.</td></tr>
+<tr><td>C Compile Command<br/><small><tt>external_c_compile_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to compile a C source file. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Object File Name</b> property.</li><li>$(RelTargePath) contains the project directory relative file name of the <b>Object File Name</b> property.</li><li>$(COptions) contains a space seperated list of options as set in the <b>C Additional C/C++ Compiler Options</b> property.</li><li>$(COnlyOptions) contains a space seperated list of options as set in the <b>C Additional C Compiler Only Options</b> property.</li><li>$(DependencyPath) contains the filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(RelDependencyPath) contains the relative filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(Defines) contains a space seperated list of preprocessor definitions as set in the <b>Preprocessor Definitions</b> property.</li><li>$(Undefines) contains a space seperated list of preprocessor undefinitions as set in the <b>Preprocessor Definitions</b> property.</li><li>$(Includes) contains a space seperated list of user include directories as set in the <b>User Include Directories</b> property.</li></ul></td></tr>
+<tr><td>C++ Compile Command<br/><small><tt>external_cpp_compile_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to compile a C++ source file. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Object File Name</b> property.</li><li>$(RelTargePath) contains the project directory relative file name of the <b>Object File Name</b> property.</li><li>$(COptions) contains a space seperated list of options as set in the <b>C Additional C/C++ Compiler Options</b> property.</li><li>$(CppOnlyOptions) contains a space seperated list of options as set in the <b>C Additional C++ Compiler Only Options</b> property.</li><li>$(DependencyPath) contains the filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(RelDependencyPath) contains the relative filename of the .d file that is required to be output by the compilation for dependency support.</li><li>$(Defines) contains a space seperated list of preprocessor definitions as set in the <b>Preprocessor Definitions</b> property</li><li>$(Undefines) contains a space seperated list of preprocessor undefinitions as set in the <b>Preprocessor Definitions</b> property.</li><li>$(Includes) contains a space seperated list of user include directories as set in the <b>User Include Directories</b> property.</li></ul></td></tr>
+<tr><td>C++ Link Command<br/><small><tt>external_cpp_link_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to link an executable. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Executable File Name</b> property.</li><li>$(RelTargePath) contains the project directory relative file name of the <b>Executable File Name</b> property.</li><li>$(LinkOptions) contains a space seperated list of options as set in the <b>Additional Linker Options</b> property.</li><li>$(Objects) a space seperated list of files to link, generated from the source files of the project and the outputs of any dependent projects OR.</li><li>$(ObjectsFilePath) contains the full file name of the file containing the list of files to link</li><li>$(RelObjectsFilePath) contains the project directory relative file name of the file containing the list of files to link</li><li>$(LinkerScriptPath) contains the full file name of the <b>Linker Script File</b> property.</li><li>$(RelLinkerScriptPath) contains the project directory relative file name of the <b>Linker Script File</b> property.</li><li>$(MapPath) contains the full file name of the required map file.</li><li>$(RelMapPath) contains the project directory relative file name of the required map file.</li></ul></td></tr>
+<tr><td>Clean Command<br/><small><tt>external_clean_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to clean the executable e.g. make clean. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Link Command<br/><small><tt>external_link_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to link an executable. This property will have macro expansion applied to it with the additional macros:<ul><li>$(TargetPath) contains the full file name of the <b>Executable File Name</b> property.</li><li>$(RelTargePath) contains the project directory relative file name of the <b>Executable File Name</b> property.</li><li>$(LinkOptions) contains a space seperated list of options as set in the <b>Additional Linker Options</b> property.</li><li>$(Objects) a space seperated list of files to link, generated from the source files of the project and the outputs of any dependent projects OR.</li><li>$(ObjectsFilePath) contains the full file name of the file containing the list of files to link</li><li>$(RelObjectsFilePath) contains the project directory relative file name of the file containing the list of files to link</li><li>$(LinkerScriptPath) contains the full file name of the <b>Linker Script File</b> property.</li><li>$(RelLinkerScriptPath) contains the project directory relative file name of the <b>Linker Script File</b> property.</li><li>$(MapPath) contains the full file name of the required map file.</li><li>$(RelMapPath) contains the project directory relative file name of the required map file.</li></ul></td></tr>
+<tr><td>Objects File<br/><small><tt>external_objects_file_name</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The name of the file containing the list of files to archive or link, generated from the source files of the project.This property will have macro expansion applied to it. The macro $(ObjectsFilePath) is set to this value.</td></tr>
+</table>
+<h2>File</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>File Encoding<br/><small><tt>file_codec</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the encoding to use when reading and writing the file.</td></tr>
+<tr><td>File Name<br/><small><tt>file_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the file. This property will have global macro expansion applied to it. The following macros are set based on the value: $(InputDir) relative directory of file, $(InputName) file name without directory or extension, $(InputFileName) file name, $(InputExt) file name extension, $(InputPath) absolute path to the file name, $(RelInputPath) relative path from project directory to the file name.</td></tr>
+<tr><td>File Open Action<br/><small><tt>file_open_with</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies how to open the file when it is double clicked.</td></tr>
+<tr><td>File Type<br/><small><tt>file_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The type of file. Default setting uses the file extension to determine file type.</td></tr>
+<tr><td>Flag<br/><small><tt>file_flag</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Flag which you can use to draw attention to important files in your project.</td></tr>
+</table>
+<h2>Folder</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Dynamic Folder Directory<br/><small><tt>path</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Dynamic folder directory specification.</td></tr>
+<tr><td>Dynamic Folder Exclude<br/><small><tt>exclude</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Dynamic folder exclude specification - ; seperated wildcards.</td></tr>
+<tr><td>Dynamic Folder Filter<br/><small><tt>filter</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Dynamic folder filter specification - ; seperated wildcards.</td></tr>
+<tr><td>Dynamic Folder Recurse<br/><small><tt>recurse</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Dynamic folder recurse into subdirectories.</td></tr>
+<tr><td>Unity Build Exclude Filter<br/><small><tt>unity_build_exclude_filter</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The filter specification to exclude from the unity build - ; seperated wildcards.</td></tr>
+<tr><td>Unity Build File Name<br/><small><tt>unity_build_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>The file name created that #includes all files in the folder for the unity build.</td></tr>
+</table>
+<h2>General</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Environment Variables<br/><small><tt>environment_variables</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Environment variables to set on solution load.</td></tr>
+<tr><td>Inherited Configurations<br/><small><tt>inherited_configurations</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The list of configurations that are inherited by this configuration.</td></tr>
+</table>
+<h2>Library</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Exclude Default Library Helper Functions<br/><small><tt>link_use_multi_threaded_libraries</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to exclude default library helper functions.</td></tr>
+<tr><td>Include Standard Libraries<br/><small><tt>link_include_standard_libraries</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the standard libraries should be linked into your application.</td></tr>
+<tr><td>Library ARM Architecture<br/><small><tt>arm_library_architecture</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the architecture variant of the library to link with. The default uses the ARM Architecture value</td></tr>
+<tr><td>Library File Name<br/><small><tt>build_output_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies a name to override the default library file name.</td></tr>
+<tr><td>Library Instruction Set<br/><small><tt>arm_library_instruction_set</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the instruction set variant of the libraries to link with.</td></tr>
+<tr><td>Library Optimization<br/><small><tt>arm_library_optimization</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies whether to link with libraries optimized for speed or size.</td></tr>
+<tr><td>Standard Libraries Directory<br/><small><tt>link_standard_libraries_directory</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies where to find the standard libraries</td></tr>
+</table>
+<h2>Linker</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional Input Files<br/><small><tt>linker_additional_files</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional object and library files to be supplied to the linker.</td></tr>
+<tr><td>Additional Linker Options<br/><small><tt>linker_additional_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the linker.</td></tr>
+<tr><td>Additional Linker Options From File<br/><small><tt>linker_additional_options_from_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Enables additional options to be supplied to the linker from a file.</td></tr>
+<tr><td>Additional Linker Script Generator Options<br/><small><tt>arm_additional_mkld_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Enables additional options to be supplied to the linker script generator</td></tr>
+<tr><td>Additional Output File Gap Fill Value<br/><small><tt>arm_linker_additional_output_file_gap_fill</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The value to fill gaps between sections in additional output file.</td></tr>
+<tr><td>Additional Output Format<br/><small><tt>linker_output_format</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The format used when creating an additional linked output file.The options are:<ul><li><b>None</b> do not create an additional output file.</li><li><b>bin</b> create a binary file.</li><li><b>srec</b> create a Motorola S-Record file.</li><li><b>hex</b> create an Intel Hex file.</li></ul></td></tr>
+<tr><td>Allow Multiple Symbol Definition<br/><small><tt>arm_linker_allow_multiple_definition</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Do not report error if the same symbol is defined more than once in object files/libraries.</td></tr>
+<tr><td>Backup Additional Linker Options<br/><small><tt>link_additional_options_backup</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Value of additional linker options prior to generic options processing</td></tr>
+<tr><td>CMSE Import Library File<br/><small><tt>arm_linker_cmse_import_library_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies the name of the CMSE import library to generate.</td></tr>
+<tr><td>Check CMSE Import Library File<br/><small><tt>arm_linker_check_cmse_import_library_file_name</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies the name of the file to check the generated CMSE import library with.</td></tr>
+<tr><td>Check For Memory Segment Overflow<br/><small><tt>arm_library_check_memory_segment_overflow</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the linker should check whether program sections fit in their memory segments.</td></tr>
+<tr><td>DebugIO Implementation<br/><small><tt>arm_link_debugio_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies which DebugIO mechanism to link in. Options are <b>Breakpoint</b> (hardware breakpoint instruction and memory locations are used, not available on v4t architecture), <b>DCC</b> (ARM debug communication channel is used), and <b>Memory Poll</b> (memory locations are polled).</td></tr>
+<tr><td>Deduplicate Code Sections [segger-ld]<br/><small><tt>link_dedupe_code</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the linker finds readonly code sections that are identical and discard duplicates.</td></tr>
+<tr><td>Deduplicate Data Sections [segger-ld]<br/><small><tt>link_dedupe_data</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the linker finds readonly data sections that are identical and discard duplicates.</td></tr>
+<tr><td>Default Fill Pattern<br/><small><tt>arm_linker_script_generator_default_fill_pattern</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default pattern used to fill unspecified regions of memory in a generated linker script. This pattern maybe overidden by the <i>fill</i> attribute of a program section in the section placement file.</td></tr>
+<tr><td>Entry Point<br/><small><tt>gcc_entry_point</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the entry point of the program.</td></tr>
+<tr><td>Generate Log File [segger-ld]<br/><small><tt>linker_log_file</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to generate a linkage log file.</td></tr>
+<tr><td>Generate Map File<br/><small><tt>linker_map_file</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to generate a linkage map file.</td></tr>
+<tr><td>Inline Small Functions [segger-ld]<br/><small><tt>link_inline</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the linker inlines small functions at the call site rather than calling the function.</td></tr>
+<tr><td>Keep Symbols<br/><small><tt>linker_keep_symbols</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies the symbols that should be kept by the linker even if they are not reachable.</td></tr>
+<tr><td>Link Dependent Projects<br/><small><tt>link_dependent_projects</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to link the output of dependent library projects.</td></tr>
+<tr><td>Linker<br/><small><tt>arm_linker_variant</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies which linker to use.</td></tr>
+<tr><td>Linker Script File<br/><small><tt>link_linker_script_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the manual linker script file.</td></tr>
+<tr><td>Linker Symbol Definitions<br/><small><tt>link_symbol_definitions</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies one or more linker symbol definitions.</td></tr>
+<tr><td>Merge String Constants [segger-ld]<br/><small><tt>link_merge_strings</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether the linker merges duplicate string constants.</td></tr>
+<tr><td>No Enum Size Warning<br/><small><tt>arm_linker_no_enum_size_warning</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Do not generate warnings when object files have different ARM EABI enum size attributes.</td></tr>
+<tr><td>No Wide Char Size Warning<br/><small><tt>arm_linker_no_wchar_size_warning</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Do not generate warnings when object files have different ARM EABI wide character size attributes.</td></tr>
+<tr><td>Section Placement File<br/><small><tt>linker_section_placement_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the file containing section placement description.</td></tr>
+<tr><td>Section Placement Macros<br/><small><tt>linker_section_placement_macros</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Macro values to substitue in section placement nodes - MACRO1=value1;MACRO2=value2.</td></tr>
+<tr><td>Strip Debug Information<br/><small><tt>linker_strip_debug_information</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether debug information should be stripped from the linked image.</td></tr>
+<tr><td>Strip Symbols<br/><small><tt>gcc_strip_symbols</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether symbols should be stripped.</td></tr>
+<tr><td>Supply Memory Segments To Linker [segger-ld]<br/><small><tt>linker_supply_memory_segments</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to supply memory segments on the linker command line.</td></tr>
+<tr><td>Suppress Warning on Mismatch<br/><small><tt>arm_linker_no_warn_on_mismatch</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>No warning on mismatched object files/libraries.</td></tr>
+<tr><td>Symbols File<br/><small><tt>arm_linker_symbols_files</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specify the name of a symbols file to link.</td></tr>
+<tr><td>Treat Linker Warnings as Errors<br/><small><tt>arm_linker_treat_warnings_as_errors</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Treat linker warnings as errors.</td></tr>
+<tr><td>Use Manual Linker Script<br/><small><tt>link_use_linker_script_file</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to use a manual linker script.</td></tr>
+</table>
+<h2>Package</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Package Dependencies<br/><small><tt>package_dependencies</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies the packages the current project depends upon.</td></tr>
+</table>
+<h2>Preprocessor</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Ignore Includes<br/><small><tt>c_ignore_includes</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Ignore the include directories properties.</td></tr>
+<tr><td>Preprocessor Definitions<br/><small><tt>c_preprocessor_definitions</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies one or more preprocessor definitions. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Preprocessor Undefinitions<br/><small><tt>c_preprocessor_undefinitions</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies one or more preprocessor undefinitions. This property will have macro expansion applied to it.</td></tr>
+<tr><td>System Include Directories<br/><small><tt>c_system_include_directories</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies the system include path. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Undefine All Preprocessor Definitions<br/><small><tt>c_undefine_all_preprocessor_definitions</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Does not define any standard preprocessor definitions.</td></tr>
+<tr><td>User Include Directories<br/><small><tt>c_user_include_directories</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specifies the user include path. This property will have macro expansion applied to it.</td></tr>
+</table>
+<h2>Printf/Scanf</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Printf Floating Point Supported<br/><small><tt>linker_printf_fp_enabled</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Are floating point numbers supported by the printf function group.</td></tr>
+<tr><td>Printf Integer Support<br/><small><tt>linker_printf_fmt_level</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The largest integer type supported by the printf function group.</td></tr>
+<tr><td>Printf Width/Precision Supported<br/><small><tt>linker_printf_width_precision_supported</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enables support for width and precision specification in the printf function group.</td></tr>
+<tr><td>Scanf Classes Supported<br/><small><tt>linker_scanf_character_group_matching_enabled</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Enables support for %[...] and %[^...] character class matching in the scanf functions.</td></tr>
+<tr><td>Scanf Floating Point Supported<br/><small><tt>linker_scanf_fp_enabled</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Are floating point numbers supported by the scanf function group.</td></tr>
+<tr><td>Scanf Integer Support<br/><small><tt>linker_scanf_fmt_level</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The largest integer type supported by the scanf function group.</td></tr>
+<tr><td>Wide Characters Supported<br/><small><tt>linker_printf_wchar_enabled</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Are wide characters supported by the printf function group.</td></tr>
+</table>
+<h2>Project</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Flag<br/><small><tt>project_flag</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Flag which you can use to draw attention to important projects in your solution.</td></tr>
+</table>
+<h2>Runtime Memory Area</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Heap Size<br/><small><tt>arm_linker_heap_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the heap in bytes. The preprocessor define __HEAP_SIZE__ is set to this value.</td></tr>
+<tr><td>Main Stack Size<br/><small><tt>arm_linker_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the main stack in bytes.</td></tr>
+<tr><td>Process Stack Size<br/><small><tt>arm_linker_process_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the process stack in bytes.</td></tr>
+<tr><td>Stack Size (Abort Mode)<br/><small><tt>arm_linker_abt_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the Abort mode stack in bytes.</td></tr>
+<tr><td>Stack Size (FIQ Mode)<br/><small><tt>arm_linker_fiq_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the FIQ mode stack in bytes.</td></tr>
+<tr><td>Stack Size (IRQ Mode)<br/><small><tt>arm_linker_irq_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the IRQ mode stack in bytes.</td></tr>
+<tr><td>Stack Size (Supervisor Mode)<br/><small><tt>arm_linker_svc_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the Supervisor mode stack in bytes.</td></tr>
+<tr><td>Stack Size (Undefined Mode)<br/><small><tt>arm_linker_und_stack_size</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The size of the Undefined mode stack in bytes.</td></tr>
+</table>
+<h2>Section</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Code Section Name<br/><small><tt>default_code_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the program code section.</td></tr>
+<tr><td>Constant Section Name<br/><small><tt>default_const_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the read-only constant section.</td></tr>
+<tr><td>Data Section Name<br/><small><tt>default_data_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the initialized, writable data section.</td></tr>
+<tr><td>ISR Section Name<br/><small><tt>default_isr_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the ISR code.</td></tr>
+<tr><td>Vector Section Name<br/><small><tt>default_vector_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the interrupt vector section.</td></tr>
+<tr><td>Zeroed Section Name<br/><small><tt>default_zeroed_section</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the default name to use for the zero-initialized, writable data section.</td></tr>
+</table>
+<h2>Solution</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Flag<br/><small><tt>solution_flag</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Flag which you can use to draw attention to important projects in your solution.</td></tr>
+<tr><td>Properties Filter<br/><small><tt>properties_filter</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The names of project properties that can be displayed at the solution</td></tr>
+</table>
+<h2>Source Code</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional Code Completion Compiler Options<br/><small><tt>code_completion_options</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Additional source indexing and code completion compiler options.</td></tr>
+<tr><td>Inhibit Source Indexing<br/><small><tt>project_inhibit_indexing</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Disable source indexing and code completion for files/folders/projects that would normally be indexed (C/C++ files in executable and library projects).</td></tr>
+<tr><td>Source Code Control Directory<br/><small><tt>source_code_control_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>Source code control directory root.</td></tr>
+</table>
+<h2>Staging</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Output File Path<br/><small><tt>stage_output_filepath</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The output file path the stage command will create. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Set To Read-only<br/><small><tt>stage_set_readonly</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Set the output file permissions to read only or read/write.</td></tr>
+<tr><td>Stage Command<br/><small><tt>stage_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command to execute. This property will have macro expansion applied to it with the additional <b>$(StageOutputFilePath)</b> macro set to the output filepath of the stage command.</td></tr>
+<tr><td>Stage Command Working Directory<br/><small><tt>stage_command_wd</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The working directory in which the stage command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Stage Project Command<br/><small><tt>stage_post_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command to execute after staging commands have executed. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Stage Project Command Working Directory<br/><small><tt>stage_post_build_command_wd</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The working directory where the post build command runs. This property will have macro expansion applied to it.</td></tr>
+</table>
+<h2>User Build Step</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Link Patch Command<br/><small><tt>linker_patch_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run after the link but prior to additional binary file generation. This property will have macro expansion applied to it with the additional <b>$(TargetPath)</b> macro set to the output filepath of the linker command.</td></tr>
+<tr><td>Link Patch Working Directory<br/><small><tt>linker_patch_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the link patch command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Archive Command<br/><small><tt>archive_post_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run after the archive command has completed.This property will have macro expansion applied to it with the additional <b>$(TargetPath)</b> macro set to the output filepath of the archive command.</td></tr>
+<tr><td>Post-Archive Working Directory<br/><small><tt>archive_post_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the post-archive command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Build Command<br/><small><tt>post_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command to execute after a project build. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Build Command Control<br/><small><tt>post_build_command_control</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Controls when the post-build command is run, either <b>Always Run</b> or when <b>Run When Build Has Occurred</b>.</td></tr>
+<tr><td>Post-Build Command Working Directory<br/><small><tt>post_build_command_wd</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The working directory in which the post-build command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Compile Command<br/><small><tt>compile_post_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run after the compile command has completed. This property will have macro expansion applied to it with the additional <b>$(TargetPath)</b> macro set to the output filepath of the compiler command.</td></tr>
+<tr><td>Post-Compile Working Directory<br/><small><tt>compile_post_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the post-compile command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Link Command<br/><small><tt>linker_post_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run after the link command has completed.This property will have macro expansion applied to it with the additional <b>$(TargetPath)</b> macro set to the output filepath of the linker command and <b>$(PostLinkOutputFilePath)</b> set to the value of the output filepath of the post link command.</td></tr>
+<tr><td>Post-Link Output File<br/><small><tt>linker_post_build_command_output_file</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the file created by the post-link command. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Post-Link Working Directory<br/><small><tt>linker_post_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the post-link command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Build Command<br/><small><tt>pre_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command to execute before a project build. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Build Command Control<br/><small><tt>pre_build_command_control</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Controls when the pre-build command is run, either <b>Always Run</b> or when <b>Run When Build Required</b>.</td></tr>
+<tr><td>Pre-Build Command Working Directory<br/><small><tt>pre_build_command_wd</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The working directory in which the pre-build command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Compile Command<br/><small><tt>compile_pre_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run before the compile command. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Compile Command Output File Path<br/><small><tt>compile_pre_build_command_output_file_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The pre-compile generated file name. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Compile Working Directory<br/><small><tt>compile_pre_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the pre-compile command is run. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Link Command<br/><small><tt>linker_pre_build_command</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A command to run before the link command. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Pre-Link Working Directory<br/><small><tt>linker_pre_build_command_wd</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory where the pre-link command is run. This property will have macro expansion applied to it.</td></tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

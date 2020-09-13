@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>wcstok</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">wcstok</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s1</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s2</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>wcstok</b> A sequence of calls to <b>wcstok</b> breaks the wide string pointed to by <b>s1</b> 
+  into a sequence of tokens, each of which is delimited by a wide character from the 
+  wide string pointed to by <b>s2</b>. The first call in the sequence has a non-null 
+  first argument; subsequent calls in the sequence have a null first argument. 
+  The separator wide string pointed to by <b>s2</b> may be different from call to call. </p><p>The first call in the sequence searches the wide string pointed to by <b>s1</b>
+  for the first wide character that is not contained in the current separator wide string
+  pointed to by <b>s2</b>. If no such wide character is found, then there are no tokens 
+  in the wide string pointed to by <b>s1</b> and <b>wcstok</b> returns a null pointer. 
+  If such a wide character is found, it is the start of the first token.</p><p><b>wcstok</b> then searches from there for a wide character that is contained in 
+  the current wide separator string. If no such wide character is found, the current token 
+  extends to the end of the wide string pointed to by <b>s1</b>, and subsequent searches 
+  for a token will return a null pointer. If such a wude character is found, it is 
+  overwritten by a wide null character, which terminates the current token. <b>wcstok</b>
+  saves a pointer to the following wide character, from which the next search for a 
+  token will start.</p><p>Each subsequent call, with a null pointer as the value of the first argument, 
+  starts searching from the saved pointer and behaves as described above.</p><h5>Note</h5><p><b>wcstok</b> maintains static state and is therefore not reentrant and
+  not thread safe.  See <a href="wcstok_r.htm">wcstok_r</a> for a thread-safe and reentrant
+  variant.
+</p> 
+    </div>
+  </body>
+</html>

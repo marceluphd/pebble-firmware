@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Project Templates file format</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio <b>New Project</b> dialog works from a file called <tt>project_templates.xml</tt> 
+in the <tt>targets</tt> subdirectory of the SEGGER Embedded Studio installation directory.
+Because you may want to add your own new project types, 
+they are structured using XML syntax to enable simple construction and parsing.</p><p>The first entry of the project file defines the XML document type
+used to validate the file format:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">!DOCTYPE </span><span class="rwt-code-attribute">Project_Templates_File</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The next entry is the <tt>projects</tt> element, which is used to group a set of new project
+entries into an XML hierarchy.</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">projects</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">project</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"> &hellip;</span>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">projects</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>Each entry has a <tt>project</tt> element that contains
+ the class of the project (attribute <tt>caption</tt>), the name of the 
+ project (attribute <tt>name</tt>), its type (attribute <tt>type</tt>) 
+ and a description (attribute <tt>description</tt>). For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">project </span><span class="rwt-code-attribute">caption</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">ARM Evaluator7T</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Executable</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">  description</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">An executable for an ARM Evaluator7T.</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> type</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Executable</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The project type can be one of these:</p><ul><li><i>Executable</i>:&nbsp;&nbsp;&mdash; a fully linked executable.
+</li>
+<li><i>Library</i>:&nbsp;&nbsp;&mdash; a static library.      
+</li>
+<li><i>Object file</i>:&nbsp;&nbsp;&mdash; an object file.
+</li>
+<li><i>Staging</i>:&nbsp;&nbsp;&mdash; a staging project.
+</li>
+<li><i>Combining</i>:&nbsp;&nbsp;&mdash; a combining project.
+</li>
+<li><i>Externally Built Executable</i>:&nbsp;&nbsp;&mdash; an externally built executable.</li></ul><p>The configurations to be created for the project are defined using the <tt>configuration</tt>
+element, which must have a <tt>name</tt> attribute:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">configuration </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">ARM RAM Release</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The property values to be created for the project are defined using the <tt>property</tt> element. If you
+have a defined value, you can specify this using the <tt>value</tt> attribute and, optionally, set the
+property in a defined <tt>configuration</tt>, such as:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">target_reset_script</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> configuration</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">RAM</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">  value</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Evaluator7T_ResetWithRamAtZero()</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>Alternatively, you can include a property that will be shown to the user, prompting them to supply a value as part of the
+new-project process.</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">linker_output_format</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The folders to be created are defined using the <tt>folder</tt> element. The <tt>folder</tt> element must have
+ a <tt>name</tt> attribute and can also have a <tt>filter</tt> attribute. For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">folder </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Source Files</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> filter</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">c;cpp;cxx;cc;h;s;asm;inc</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The files to be in the project are specified using the <tt>file</tt> element. You can use
+build-system macros (see <a href="ide_project_macros.htm">Project macros</a>) to specify files located
+in the SEGGER Embedded Studio installation directory. Files will be copied to the project
+directory or just left as references, depending on the value of the <tt>source</tt> attribute:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">main.c</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> source</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(StudioDir)/samples/Shared/main.c</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(StudioDir)/source/thumb_crt0.s</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>You can define the set of configurations that can be referred to in the 
+   top-level <tt>configurations</tt> element:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">configurations</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">configuration</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"> &hellip;</span>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">configurations</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>This contains the set of all configurations that can be created when a project is created. Each
+  configuration is defined using a <tt>configuration</tt> element, which can define the property values
+  for that configuration. For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">configuration </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Debug</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">build_debug_information</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> value</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Yes</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre> 
+    </div>
+  </body>
+</html>

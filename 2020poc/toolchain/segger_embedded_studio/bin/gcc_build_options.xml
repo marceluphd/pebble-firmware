@@ -1,0 +1,178 @@
+<!DOCTYPE Generic_Project_Options>
+<options>
+  <property
+    tool="compiler"
+    name="gcc_cl_optimization_level"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Optimization"
+    long="Code optimization"
+    default="None">
+    <enum value="None"                      option="-O0" />
+    <enum value="Level 1"                   option="-O1" />
+    <enum value="Level 2"                   option="-O2" />
+    <enum value="Level 3"                   option="-O3" />
+    <enum value="Size"                      option="-Os" />
+    <enum value="Speed"                     option="-Ofast" />
+    <enum value="Debug"                     option="-Og" />
+  </property>
+  <property
+    tool="assembler;compiler"
+    name="gcc_cl_enable_debug_info"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Include Debug Information"
+    long="Specifies whether symbolic debug information is generated."
+    default="Yes">
+    <enum value="Yes"                              option="-g" />
+    <enum value="No"                               option="" />
+    <enum value="Level 1"                          option="-g1" />
+    <enum value="Level 2"                          option="-g2" />
+    <enum value="Level 3"                          option="-g3" />
+  </property>
+  <property
+    tool="cpp_compiler"
+    name="gcc_cl_cpp_enable_rtti"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Enable RTTI Support"
+    long="Specifies whether RTTI support is enabled for C++ programs."
+    default="No">
+    <enum value="Yes"                           option="" />
+    <enum value="No"                            option="-fno-rtti" />
+  </property>
+  <property
+    tool="cpp_compiler"
+    name="gcc_cl_cpp_enable_exceptions"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Enable Exception Support"
+    long="Specifies whether exception support is enabled for C++ programs."
+    default="No">
+    <enum value="Yes"                           option="" />
+    <enum value="No"                            option="-fno-exceptions" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_function_sections"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Function Sections"
+    long="Place functions in their own sections"
+    default="Yes">
+    <enum value="Yes"                           option="-ffunction-sections" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_data_sections"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Data Sections"
+    long="Place data in their own sections"
+    default="Yes">
+    <enum value="Yes"                           option="-fdata-sections" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_pedantic"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Pedantic"
+    long="Enforce language dialect standard checking"
+    default="No">
+    <enum value="Yes"                           option="-pedantic" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_pedantic_errors"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Pedantic Warnings As Errors"
+    long="Consider language dialect standard checking as errors"
+    default="No">
+    <enum value="Yes"                           option="-pedantic-errors" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+      tool="compiler"
+      name="gcc_cl_inhibit_warnings"
+      type="Enumeration"
+      group="GCC Compiler Options"
+      short="Inhibit All Warnings"
+      long="Inhibit all warning messages"
+      default="No">
+    <enum value="Yes"                           option="-w" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_all_warnings"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="All Warnings"
+    long="Enable all warnings"
+    default="Yes">
+    <enum value="Yes"                           option="-Wall" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_extra_warnings"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Extra Warnings"
+    long="Enable extra warnings"
+    default="No">
+    <enum value="Yes"                           option="-Wextra" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="compiler"
+    name="gcc_cl_warnings_as_errors"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="Warnings As Errors"
+    long="Make all warnings errors"
+    default="No">
+    <enum value="Yes"                           option="-Werror" />
+    <enum value="No"                            option="" />
+  </property>
+  <property
+    tool="c_compiler"
+    name="gcc_cl_c_language"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="C++ Language Standard"
+    long="Specify the language standard"
+    default="None">
+    <enum value="None"                          option=""/>
+    <enum value="c90"                           option="-std=c90" />
+    <enum value="c99"                           option="-std=c99" />
+    <enum value="c11"                           option="-std=c11" />
+  </property>
+  <property
+    tool="cpp_compiler"
+    name="gcc_cl_cpp_language"
+    type="Enumeration"
+    group="GCC Compiler Options"
+    short="C Language Standard"
+    long="Specify the language standard"
+    default="None">
+    <enum value="None"                          option=""/>
+    <enum value="c++98"                         option="-std=c++98" />
+    <enum value="c++11"                         option="-std=c++11" />
+    <enum value="c++14"                         option="-std=c++14" />
+    <enum value="c++17"                         option="-std=c++17" />
+  </property>
+  <property name="external_archive_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)ar&quot; -rcs &quot;$(RelTargetPath)&quot; $(Objects)"/>
+  <property name="external_assemble_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)gcc&quot; -c $(AsmOptions) $(Defines) $(Includes) &quot;$(RelInputPath)&quot; -o &quot;$(RelTargetPath)&quot;"/>
+  <property name="external_c_compile_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)gcc&quot; -c $(COptions) $(COnlyOptions) $(Defines) $(Includes) &quot;$(RelInputPath)&quot; -MD -MF &quot;$(RelDependencyPath)&quot; -fno-diagnostics-show-caret -o &quot;$(RelTargetPath)&quot;"/>
+  <property name="external_cpp_compile_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)g++&quot; -c $(COptions) $(CppOnlyOptions) $(Defines) $(Includes) &quot;$(RelInputPath)&quot; -MD -MF &quot;$(RelDependencyPath)&quot; -fno-diagnostics-show-caret -o &quot;$(RelTargetPath)&quot;"/>
+  <property name="external_link_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)gcc&quot; $(LinkOptions) -T &quot;$(RelLinkerScriptPath)&quot; $(Objects) -o &quot;$(RelTargetPath)&quot; -Xlinker -Map=&quot;$(RelMapPath)&quot;"/>
+  <property name="external_cpp_link_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)g++&quot; $(LinkOptions) -T &quot;$(RelLinkerScriptPath)&quot; $(Objects) -o &quot;$(RelTargetPath)&quot; -Xlinker -Map=&quot;$(RelMapPath)&quot;"/>
+  <property name="linker_post_build_command" default="&quot;$(ToolChainDir)/$(GCCPREFIX:)objcopy&quot; &quot;$(RelTargetPath)&quot; &quot;$(PostLinkOutputFilePath)&quot; -Oihex"/>
+  <property name="linker_post_build_command_output_file" default="$(OutDir)/$(ProjectName).hex"/>
+</options>

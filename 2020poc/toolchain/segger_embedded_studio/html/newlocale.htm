@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>newlocale</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">locale_t </span><span class="rwt-code-function">newlocale</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">category_mask</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">,</span>
+                   <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">base</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>newlocale</b> creates a new locale object or modifies an existing one.
+  If the base argument is <b>NULL</b>, a new locale object is created.</p><p><b>category_mask</b> specifies the locale categories to be set or modified.
+  Values for <b>category_mask</b> are constructed by a bitwise-inclusive OR
+  of the symbolic constants <b>LC_CTYPE_MASK</b>, <b>LC_NUMERIC_MASK</b>, <b>LC_TIME_MASK</b>,
+  <b>LC_COLLATE_MASK</b>, <b>LC_MONETARY_MASK</b>, and <b>LC_MESSAGES_MASK</b>.</p><p>For each category with the corresponding bit set in <b>category_mask</b>, the data
+  from the locale named by <b>locale</b> is used. In the case of modifying an existing
+  locale object, the data from the locale named by <b>locale</b> replaces the existing
+  data within the locale object. If a completely new locale object is created,
+  the data for all sections not requested by <b>category_mask</b> are taken from the
+  default locale.</p><p>The locales &lsquo;C&rsquo; and &lsquo;POSIX&rsquo; are equivalent and defined for all settings
+  of <b>category_mask</b>:</p><p>If <b>locale</b> is <b>NULL</b>, then the &lsquo;C&rsquo; locale is used. If <b>locale</b> is an empty
+  string, <b>newlocale</b> will use the default locale.</p><p>If <b>base</b> is <b>NULL</b>, the current locale is used. If <b>base</b> is <b>LC_GLOBAL_LOCALE</b>,
+  the global locale is used.</p><p>If <b>mask</b> is <b>LC_ALL_MASK</b>, <b>base</b> is ignored.</p><h5>Note</h5><p>POSIX.1-2008 does not specify whether the locale object pointed to by <b>base</b>
+    is modified or whether it is freed and a new locale object created.</p><h5>Implementation</h5><p>The category mask <b>LC_MESSAGES_MASK</b> is not implemented as POSIX messages
+  are not implemented.
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE CrossStudio_Group_Values>
+<propertyGroups>
+  <group group="Build Options" short="External Compiler" long="Select build options for an external compiler" name="BUILD_OPTIONS" default="None">
+    <groupEntry name="ARM CC">
+      <property name="build_generic_options_file_name" value="$(StudioDir)/targets/ARMCC_build_options.xml" />
+    </groupEntry>
+    <groupEntry name="ARM CLANG">
+      <property name="build_generic_options_file_name" value="$(StudioDir)/targets/ARMCLANG_build_options.xml" />
+    </groupEntry>
+    <groupEntry name="ARM GNU">
+      <property name="build_generic_options_file_name" value="$(StudioDir)/targets/ARMGNU_build_options.xml" />
+    </groupEntry>
+    <groupEntry name="IAR">
+      <property name="build_generic_options_file_name" value="$(StudioDir)/targets/IAR_build_options.xml" />
+    </groupEntry>
+    <groupEntry name="RV32 GNU">
+      <property name="build_generic_options_file_name" value="$(StudioDir)/targets/RV32GNU_build_options.xml" />
+    </groupEntry>
+    <groupEntry name="None">
+      <property name="build_generic_options_file_name" value="" />
+    </groupEntry>
+  </group>
+</propertyGroups>

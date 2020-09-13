@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Debug Options</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h2>Debugger</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Command Arguments<br/><small><tt>debug_command_arguments</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The command arguments passed to the executable. This property will have macro expansion applied to it.</td></tr>
+<tr><td>DABORT Handler Name<br/><small><tt>dabortHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the dabort handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>Debug Additional Projects<br/><small><tt>debug_dependent_projects</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The debugger will load (if not already loaded by Load Additional Projects) and debug the specified additional projects.</td></tr>
+<tr><td>Debug Symbols File[0]<br/><small><tt>external_debug_symbols_file_name</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the debug symbols file. This property will have macro expansion applied to it. If it is not defined then the main load file is used.</td></tr>
+<tr><td>Debug Symbols File[1]<br/><small><tt>external_debug_symbols_file_name1</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the debug symbols file. This property will have macro expansion applied to it. If it is not defined then the main load file is used.</td></tr>
+<tr><td>Debug Symbols File[2]<br/><small><tt>external_debug_symbols_file_name2</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the debug symbols file. This property will have macro expansion applied to it. If it is not defined then the main load file is used.</td></tr>
+<tr><td>Debug Symbols File[3]<br/><small><tt>external_debug_symbols_file_name3</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the debug symbols file. This property will have macro expansion applied to it. If it is not defined then the main load file is used.</td></tr>
+<tr><td>Debug Symbols Load Address[0]<br/><small><tt>external_debug_symbols_load_address</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The (code) address to be added to the debug symbol (code) addresses.</td></tr>
+<tr><td>Debug Symbols Load Address[1]<br/><small><tt>external_debug_symbols_load_address1</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The (code) address to be added to the debug symbol (code) addresses.</td></tr>
+<tr><td>Debug Symbols Load Address[2]<br/><small><tt>external_debug_symbols_load_address2</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The (code) address to be added to the debug symbol (code) addresses.</td></tr>
+<tr><td>Debug Symbols Load Address[3]<br/><small><tt>external_debug_symbols_load_address3</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The (code) address to be added to the debug symbol (code) addresses.</td></tr>
+<tr><td>Debug Terminal Log File<br/><small><tt>debug_terminal_log_file</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>A file to write the output from the debug terminal to.</td></tr>
+<tr><td>Default debugIO implementation<br/><small><tt>arm_debugIO_Implementation</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The default debugIO implementation.</td></tr>
+<tr><td>Display DCC data<br/><small><tt>arm_display_DCC</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The debugger will display data that is written to the DCC when debugIO is not used.</td></tr>
+<tr><td>Entry Point Symbol<br/><small><tt>debug_entry_point_symbol</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Debugger will start execution at symbol if defined.</td></tr>
+<tr><td>FIQ Handler Name<br/><small><tt>fiqHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the fiq handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>IRQ Handler Name<br/><small><tt>irqHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the irq handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>Ignore .debug_aranges Section<br/><small><tt>debug_ignore_debug_aranges</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The debugger will not use the .debug_aranges section.</td></tr>
+<tr><td>Ignore .debug_frame Section<br/><small><tt>debug_ignore_debug_frame</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>The debugger will not use the .debug_frame section.</td></tr>
+<tr><td>Load Additional Projects<br/><small><tt>debug_load_additional_projects</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>The debugger will load the outputs of the specified additional projects.</td></tr>
+<tr><td>Load Offset<br/><small><tt>debug_load_file_offset</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The offset to add to the load address of the load file.This offset is added to any absolute relocations of symbols (whose address is less than Load Offset Symbol Limit) if the load file contains relocation sections.</td></tr>
+<tr><td>Load Offset Symbol Limit<br/><small><tt>debug_load_file_limit</tt>&nbsp;&ndash;&nbsp;String</small></td><td>If set apply the Load Offset logic to only those symbols that have addresses less than the specified limit.</td></tr>
+<tr><td>Memory Upload Page Size<br/><small><tt>debug_memory_upload_page_size</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The aligned page size the debugger uses when uploading address ranges.</td></tr>
+<tr><td>PABORT Handler Name<br/><small><tt>pabortHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the pabort handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>RTT Control Block Address<br/><small><tt>debug_RTTCB</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The symbol or 0x prefixed address of the RTT control block.</td></tr>
+<tr><td>RTT Enable<br/><small><tt>debug_enable_RTT</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>If enabled the debugger will service RTT input/output in the debug terminal.</td></tr>
+<tr><td>Register Definition File<br/><small><tt>debug_register_definition_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the file containing register definitions.</td></tr>
+<tr><td>Reserved Member Name<br/><small><tt>reservedMember_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The struct reserved member name. Struct members that contain the (case insensitive) string will not be displayed.</td></tr>
+<tr><td>Restrict Memory Access<br/><small><tt>debug_restrict_memory_access</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>If enabled the debugger will only display variables located in the address ranges of the memory map or the sections in the elf file.</td></tr>
+<tr><td>Run To<br/><small><tt>debug_initial_breakpoint</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The initial breakpoint to set</td></tr>
+<tr><td>Run To Control<br/><small><tt>debug_initial_breakpoint_set_option</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specify when the initial breakpoint should be set</td></tr>
+<tr><td>SWI Handler Name<br/><small><tt>swiHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the swi handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>Start Address<br/><small><tt>external_start_address</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to start the externally built executable running from.</td></tr>
+<tr><td>Start From Entry Point Symbol<br/><small><tt>debug_start_from_entry_point_symbol</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>If yes the debugger will start execution from the entry point symbol.If no the debugger will start execution from the core specific location.</td></tr>
+<tr><td>Starting Stack Pointer Value<br/><small><tt>debug_stack_pointer_start</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The symbol or 0x prefixed value to set the stack pointer on start debugging.</td></tr>
+<tr><td>Startup Completion Point<br/><small><tt>debug_startup_completion_point</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Specifies the point in the program where startup is complete. Software breakpoints and debugIO will be enabled after this point has been reached.</td></tr>
+<tr><td>Target Connection<br/><small><tt>debug_target_connection</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the target to connect to for debugging actions.</td></tr>
+<tr><td>Target Device<br/><small><tt>arm_target_device_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the device to connect to. The macro $(Target) is substituted with the Target Processor project property value.</td></tr>
+<tr><td>Thread Maximum<br/><small><tt>debug_threads_max</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The maximum number of threads to display.</td></tr>
+<tr><td>Threads Script File<br/><small><tt>debug_threads_script</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The threads script used by the debugger.</td></tr>
+<tr><td>Type Interpretation File<br/><small><tt>debug_type_file</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies the type interpretation file to use.</td></tr>
+<tr><td>UNDEF handler name<br/><small><tt>undefHandler_name</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The name of the undef handler symbol. Used for backtracing out of exception handlers.</td></tr>
+<tr><td>Working Directory<br/><small><tt>debug_working_directory</tt>&nbsp;&ndash;&nbsp;DirPath</small></td><td>The working directory for a debug session. This property will have macro expansion applied to it.</td></tr>
+</table>
+<h2>GDB Server</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Allow Memory Access During Execution<br/><small><tt>gdb_server_allow_memory_access_during_execution</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether memory can be access while target is running. If set to <i>No</i>, target will be stopped each time memory is accessed.</td></tr>
+<tr><td>Auto Start GDB Server<br/><small><tt>gdb_server_autostart_server</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether a GDB server should be started on connect.</td></tr>
+<tr><td>Connect Timeout<br/><small><tt>gdb_server_connect_timeout</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The length of time in seconds to attempt to connect to server before failing.</td></tr>
+<tr><td>GDB Server Command Line<br/><small><tt>gdb_server_command_line</tt>&nbsp;&ndash;&nbsp;Unknown</small></td><td>The command line to start the gdb server</td></tr>
+<tr><td>Host<br/><small><tt>gdb_server_hostname</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The hostname of the GDB server to connect to.</td></tr>
+<tr><td>Ignore Checksum Errors<br/><small><tt>gdb_server_ignore_checksum_errors</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether an incorrect GDB server checksum causes and error.</td></tr>
+<tr><td>Log File<br/><small><tt>gdb_server_log_file</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>Specifies a file to output a log of GDB server transactions to.</td></tr>
+<tr><td>Port<br/><small><tt>gdb_server_port</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The port number to use to connect to the GDB server.</td></tr>
+<tr><td>Read Timeout<br/><small><tt>gdb_server_read_timeout</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The length of time in seconds to attempt to read from server before failing.</td></tr>
+<tr><td>Register Access<br/><small><tt>gdb_server_register_access</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies how registers are accessed</td></tr>
+<tr><td>Reset and Stop Command<br/><small><tt>gdb_server_reset_command</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The remote GDB server command to use to reset and stop the target.</td></tr>
+<tr><td>Target XML File<br/><small><tt>gdb_server_target_xml_file</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>If specified, points to a target.xml file to use in place of file returned by the GDB server.</td></tr>
+<tr><td>Type<br/><small><tt>gdb_server_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the type of GDB server being connected to. J-Link, OpenOCD, ST-LINK and pyOCD gdb server implementations are currently supported.</td></tr>
+<tr><td>Write Timeout<br/><small><tt>gdb_server_write_timeout</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The length of time in seconds to attempt to write to server before failing.</td></tr>
+</table>
+<h2>J-Link</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional J-Link Options<br/><small><tt>JLinkExecuteCommand</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Specify additional J-Link options to allow enabling or disabling advanced features and fine tuning.<br/> For more information see <a href="https://wiki.segger.com/J-Link_Command_Strings">J-Link Command Strings</a></td></tr>
+<tr><td>Enable Adaptive Clocking<br/><small><tt>adaptive</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Adaptive clocking is enabled.</td></tr>
+<tr><td>Exclude Flash Cache Range<br/><small><tt>JLinkExcludeFlashCacheRange</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Define a memory range that should not be cached by J-Link.<br/>Per default, all areas that J-Link knows to be Flash memory, are cached. This means that it is assumed that the contents of this areas do not change during program execution.<br/>If this assumption does not hold true, typically because the target program modifies the flash content for data storage, then the affected area should be excluded from the cache.<br/>This may slightly reduce the debugging speed.<br/>Syntax: either 'start_address-end_address' or 'address,size'. For example: 0x08000000,0x1000.</td></tr>
+<tr><td>Host Connection<br/><small><tt>Connection</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Defines how to connect the host to the J-Link:<ul><li>"USB": Connect to J-Link via USB</li><li>"USB S/N": Connect to J-Link with specified serial number via USB e.g. USB 174300001</li><li>"IP S/N": Connect to J-Link with specified serial number via IP e.g. IP 174300001</li><li>"IP n.n.n.n port": Connect to J-Link with specified IP address and optional port number e.g. IP 192.168.20.20 19020</li></ul></td></tr>
+<tr><td>JTAG Instruction Register Size Before Target<br/><small><tt>arm_linker_jtag_pad_post_ir</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>Specifies the number of bits in the instruction register before the target (as seen from TDI), which is the number of bits to pad the JTAG instruction register with the BYPASS instruction after the target instruction.</td></tr>
+<tr><td>JTAG Number Of Devices Before Target<br/><small><tt>arm_linker_jtag_pad_post_dr</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>Specifies the number of devices before the target (as seen from TDI), which is the number of bits to pad the JTAG data register.</td></tr>
+<tr><td>Log File<br/><small><tt>JLinkLogFileName</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>The file to output the J-Link log to.</td></tr>
+<tr><td>Script File<br/><small><tt>JLinkScriptFileName</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>The file path of the optional J-Link script file to use.</td></tr>
+<tr><td>Show Log Messages In Output Window<br/><small><tt>showLog</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Display the J-Link log messages to the output window.</td></tr>
+<tr><td>Speed<br/><small><tt>speed</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The required JTAG/SWD clock frequency in kHz (0 to auto-detect best possible).</td></tr>
+<tr><td>Supply Power<br/><small><tt>supplyPower</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The J-Link supplies power to the target.</td></tr>
+<tr><td>Target Interface Type<br/><small><tt>arm_target_interface_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the type of interface the target has. The options are:<ul> <li>JTAG - Use JTAG interface</li> <li>SWD - Use SWD interface</li> <li>cJTAG - Use cJTAG interface</li></ul></td></tr>
+</table>
+<h2>Loader</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Additional Load File Address[0]<br/><small><tt>debug_additional_load_file_address</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to load the additional load file.</td></tr>
+<tr><td>Additional Load File Address[1]<br/><small><tt>debug_additional_load_file_address1</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to load the additional load file.</td></tr>
+<tr><td>Additional Load File Address[2]<br/><small><tt>debug_additional_load_file_address2</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to load the additional load file.</td></tr>
+<tr><td>Additional Load File Address[3]<br/><small><tt>debug_additional_load_file_address3</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to load the additional load file.</td></tr>
+<tr><td>Additional Load File Type[0]<br/><small><tt>debug_additional_load_file_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The file type of the additional load file. The options are <b>Detect, elf, bin, ihex, hex, tihex, srec</b>.</td></tr>
+<tr><td>Additional Load File Type[1]<br/><small><tt>debug_additional_load_file_type1</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The file type of the additional load file. The options are <b>Detect, elf, bin, ihex, hex, tihex, srec</b>.</td></tr>
+<tr><td>Additional Load File Type[2]<br/><small><tt>debug_additional_load_file_type2</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The file type of the additional load file. The options are <b>Detect, elf, bin, ihex, hex, tihex, srec</b>.</td></tr>
+<tr><td>Additional Load File Type[3]<br/><small><tt>debug_additional_load_file_type3</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The file type of the additional load file. The options are <b>Detect, elf, bin, ihex, hex, tihex, srec</b>.</td></tr>
+<tr><td>Additional Load File[0]<br/><small><tt>debug_additional_load_file</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Additional file to load on debug load. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional Load File[1]<br/><small><tt>debug_additional_load_file1</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Additional file to load on debug load. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional Load File[2]<br/><small><tt>debug_additional_load_file2</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Additional file to load on debug load. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Additional Load File[3]<br/><small><tt>debug_additional_load_file3</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Additional file to load on debug load. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Check Load Sections Fit Target Description<br/><small><tt>target_check_load_sections_fit</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether load sections in the program match the memory segments described in the memory map.</td></tr>
+<tr><td>Load ELF Sections<br/><small><tt>debug_load_sections</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The debugger will load ELF sections rather than ELF programs.</td></tr>
+<tr><td>Load File<br/><small><tt>external_build_file_name</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>The name of the main load file. This property will have macro expansion applied to it. If it is not defined then the output filepath of the linker command is used.</td></tr>
+<tr><td>Load File Address<br/><small><tt>external_load_address</tt>&nbsp;&ndash;&nbsp;String</small></td><td>The address to download the main load file to.</td></tr>
+<tr><td>Load File Type<br/><small><tt>external_load_file_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>The file type of the main load file. The options are <b>Detect, elf, bin, ihex, hex, tihex, srec</b>.</td></tr>
+<tr><td>No Load Sections<br/><small><tt>target_loader_no_load_sections</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Names of (loadable) sections not to load.</td></tr>
+</table>
+<h2>Simulator</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Memory Simulation File<br/><small><tt>arm_simulator_memory_simulation_filename</tt>&nbsp;&ndash;&nbsp;ProjFileName</small></td><td>Specifies the dll that simulates the memory system. This property will have macro expansion applied to it.</td></tr>
+<tr><td>Memory Simulation Parameter<br/><small><tt>arm_simulator_memory_simulation_parameter</tt>&nbsp;&ndash;&nbsp;String</small></td><td>Parameter passed to the memory simulation.The format of this is specific to the memory simulation. The default memory simulation takes a list of <b>RX|RWX 'hex start address', 'hex size in bytes', 'default hex word value'</b> for example RX 00000000, 10000000, FFFFFFFF;RWX 10000000, 10000000, CDCDCDCD</td></tr>
+<tr><td>Memory Simulation Parameter Macros<br/><small><tt>arm_simulator_memory_simulation_parameter_macros</tt>&nbsp;&ndash;&nbsp;StringList</small></td><td>Macros to apply to the parameter passed to the memory simulation on creation.</td></tr>
+<tr><td>Stop On Branch .<br/><small><tt>arm_simulator_stop_on_branch_dot</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Stop when the simulator executes a b . instruction.</td></tr>
+<tr><td>Stop On Memory Error<br/><small><tt>arm_simulator_stop_on_read_write</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the simulator behaviour when a memory error occurs.</td></tr>
+<tr><td>Trace Buffer Size<br/><small><tt>arm_simulator_num_trace_entries</tt>&nbsp;&ndash;&nbsp;Integer</small></td><td>The number of trace entries to store.</td></tr>
+</table>
+<h2>Target Script</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>Attach Script<br/><small><tt>target_attach_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the target is attached to.</td></tr>
+<tr><td>Connect Script<br/><small><tt>target_connect_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the target is connected to.</td></tr>
+<tr><td>Debug Begin Script<br/><small><tt>target_debug_begin_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the debugger begins a debug session.</td></tr>
+<tr><td>Debug End Script<br/><small><tt>target_debug_end_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the debugger ends a debug session.</td></tr>
+<tr><td>Disconnect Script<br/><small><tt>target_disconnect_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the target is disconnected from.</td></tr>
+<tr><td>Load Begin Script<br/><small><tt>target_load_begin_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the debugger begins a load.</td></tr>
+<tr><td>Load End Script<br/><small><tt>target_load_end_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the debugger ends a load.</td></tr>
+<tr><td>Reset Script<br/><small><tt>target_reset_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed when the target is reset.</td></tr>
+<tr><td>Target Script File<br/><small><tt>target_script_file</tt>&nbsp;&ndash;&nbsp;FileName</small></td><td>The target script file, the contents of this file are prepended to script project properties before they are executed.</td></tr>
+</table>
+<h2>Target Trace</h2>
+<table width="100%" cellspacing="0" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,*">
+<tr> <td valign="center" bgcolor="#cccccc"><b>Property</b></td> <td valign="center" bgcolor="#cccccc"><b>Description</b></td></tr>
+<tr><td>ITM Stimulus Port To Display<br/><small><tt>arm_target_itm_stimulus_port_display</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>Specifies the ITM Stimulus port to display in the debug terminal -1 disables this</td></tr>
+<tr><td>ITM Stimulus Ports Enable<br/><small><tt>arm_target_itm_stimulus_port_enable</tt>&nbsp;&ndash;&nbsp;IntegerHex</small></td><td>Specifies the ITM Stimulus ports to enable.</td></tr>
+<tr><td>ITM Stimulus Ports Privilege<br/><small><tt>arm_target_itm_stimulus_port_privilege</tt>&nbsp;&ndash;&nbsp;IntegerHex</small></td><td>Specifies the ITM Stimulus ports to enable.</td></tr>
+<tr><td>ITM Timestamping<br/><small><tt>arm_target_itm_timestamping_enable</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies ITM timestamping. The options are:<ul> <li>Disable - disable timestamping</li> <li>Local - use the local timestamp clock</li> <li>Global - use the global timestamp clock</li></ul></td></tr>
+<tr><td>ITM/DWT Data Trace PC<br/><small><tt>arm_target_dwt_data_trace_PC</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to trace the PC on data trace.</td></tr>
+<tr><td>ITM/DWT PC Sampling<br/><small><tt>arm_target_dwt_PC_sampling_enable</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the DWT PC sampling rate.</td></tr>
+<tr><td>ITM/DWT Trace Exceptions<br/><small><tt>arm_target_dwt_trace_exceptions</tt>&nbsp;&ndash;&nbsp;Boolean</small></td><td>Specifies whether to trace exception entry and return.</td></tr>
+<tr><td>MTB RAM Address<br/><small><tt>arm_target_mtb_ram_address</tt>&nbsp;&ndash;&nbsp;IntegerHex</small></td><td>Specifies the MTB RAM Address - note that this must be aligned to the MTB RAM size.</td></tr>
+<tr><td>MTB RAM Size<br/><small><tt>arm_target_mtb_ram_size</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the MTB RAM size in bytes.</td></tr>
+<tr><td>SWO Baud Rate<br/><small><tt>arm_target_trace_SWO_speed</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>Specifies the baud rate of the SWO - zero selects auto detection.</td></tr>
+<tr><td>Trace Clock Speed<br/><small><tt>arm_target_trace_clock_speed</tt>&nbsp;&ndash;&nbsp;IntegerRange</small></td><td>The speed of the trace clock. This is usually the same as the CPU clock and is used to program the prescaler for the SWO</td></tr>
+<tr><td>Trace Initialize Script<br/><small><tt>target_trace_initialize_script</tt>&nbsp;&ndash;&nbsp;JavaScript</small></td><td>The script that is executed to initialize the target trace hardware. When executed this script has the macro $(TraceInterfaceType) expanded with value of the Trace Interface Type property, typically it is EnableTrace("$(TraceInterfaceType)").</td></tr>
+<tr><td>Trace Interface Type<br/><small><tt>arm_target_trace_interface_type</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the type of trace interface the target has. The options are:<ul> <li>SWO - Use asynchronous SWO trace interface.</li> <li>TracePort - Use synchronous parallel trace interface.</li> <li>ETB - Use on-chip embedded trace buffer.</li> <li>MTB - Use on-chip MTB - Cortex-M0+ only.</li> <li>PC Sampling - sample the PC.</li> <li>None</li></ul></td></tr>
+<tr><td>Trace Port Size<br/><small><tt>arm_target_trace_port_size</tt>&nbsp;&ndash;&nbsp;Enumeration</small></td><td>Specifies the trace port size the target has. The options are:<ul> <li>1-bit</li> <li>2-bit</li> <li>4-bit</li> <li>8-bit</li> <li>16-bit</li> <li>24-bit</li> <li>32-bit</li></ul></td></tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

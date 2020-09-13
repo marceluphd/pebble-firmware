@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Project explorer</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Project Explorer</b> is the user interface of the SEGGER Embedded Studio for ARM
+project system.
+It organizes your projects and files and provides access to the commands that
+operate on them. A toolbar at the top of the window offers quick access to commonly used commands
+for the selected project node or the active project. Right-click to reveal a shortcut menu with a larger set of
+commands that will work on the selected project node, ignoring the active project.</p><p>The selected project node determines what operations you can perform.
+For example, the <b>Compile</b> operation will compile a single
+file if a file project node is selected; if a folder project node is selected, each
+of the files in the folder are compiled.</p><p>You can select project nodes by clicking them in the <b>Project Explorer</b>. Additionally, as
+you switch between files in the editor, the selection in the <b>Project Explorer</b> changes to
+highlight the file you're editing.</p><h5>To activate the Project Explorer:</h5><ul><li>Choose <b>View > Project Explorer</b> or press <b>Ctrl+Alt+P</b>.</li></ul><h3>Left-click operations</h3><p>The following operations are available in the <b>Project Explorer</b> with a left-click of the mouse:
+ 
+</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Action</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Single click </td><td valign="top"> Select the node. If the node is already selected and is
+    a solution, project, or folder node, a rename editor appears.
+</td></tr>
+<tr><td valign="top"> Double click </td><td valign="top"> Double-clicking a solution node or folder node will reveal or hide
+    the node's children.  Double-clicking a project node selects it as the active
+    project. Double-clicking a file opens the file with the default editor for that
+    file's type.
+</td></tr></table><h3>Toolbar commands</h3><p>The following buttons are on the toolbar:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="FileNewFile.png"/> </td><td valign="top">
+      Add a new file to the active project using the <b>New File</b> dialog.
+</td></tr>
+<tr><td valign="top"> <img src="ProjectAddExistingItem.png"/> </td><td valign="top">
+      Add existing files to the active project.
+</td></tr>
+<tr><td valign="top"> <img src="images/ActionDelete.png"/> </td><td valign="top">
+      Remove files, folders, projects, and links from the project.
+</td></tr>
+<tr><td valign="top"> <img src="ProjectNewFolder.png"/> </td><td valign="top">
+      Create a new folder in the active project.
+</td></tr>
+<tr><td valign="top"> <img src="images/ProjectBuild.png"/> </td><td valign="top">
+      Menu of build operations.
+</td></tr>
+<tr><td valign="top"> <img src="ActionDisassemble.png"/> </td><td valign="top">
+      Disassemble the active project.
+</td></tr>
+<tr><td valign="top"> <img src="PropertySettings.png"/> </td><td valign="top">
+      Menu of <b>Project Explorer</b> options.
+</td></tr>
+<tr><td valign="top"> <img src="ViewProperties.png"/> </td><td valign="top">
+      Display the properties dialog for the selected item.
+</td></tr></table><h3>Shortcut menu commands</h3><p>The shortcut menu, displayed by right-clicking, contains the commands listed below.</p><h5>For solutions:</h5><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Item</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Build and Batch Build </td><td valign="top">
+     Build all projects under the solution in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Rebuild and Batch Rebuild </td><td valign="top">
+     Rebuild all projects under the solution in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Clean and Batch Clean </td><td valign="top">
+     Remove all output and intermediate build files for the projects under the solution in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Export Build and Batch Export Build </td><td valign="top">
+     Create an editor with the build commands for the projects under the solution in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Add New Project </td><td valign="top">
+     Add a new project to the solution.
+</td></tr>
+<tr><td valign="top"> Add Existing Project </td><td valign="top">
+    Create a link from an existing solution to this solution.
+</td></tr>
+<tr><td valign="top"> Paste </td><td valign="top">
+    Paste a copied project into the solution.
+</td></tr>
+<tr><td valign="top"> Remove </td><td valign="top">
+    Remove the link to another solution from the solution.
+</td></tr>
+<tr><td valign="top"> Rename </td><td valign="top">
+    Rename the solution node.
+</td></tr>
+<tr><td valign="top"> Source Control Operations </td><td valign="top">
+    Source-control operations on the project file and recursive operations
+    on all files in the solution.
+</td></tr>
+<tr><td valign="top"> Edit Solution As Text </td><td valign="top">
+    Create an editor containing the project file.
+</td></tr>
+<tr><td valign="top"> Save Solution As </td><td valign="top">
+    Change the filename of the project file&mdash;note that the saved
+    project file is not reloaded.
+</td></tr>
+<tr><td valign="top"> Properties </td><td valign="top">
+    Show the <b>Properties</b> dialog with the solution node selected.
+</td></tr></table><h5>For projects:</h5><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Item</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Build and Batch Build </td><td valign="top">
+    Build the project in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Rebuild and Batch Rebuild </td><td valign="top">
+    Reuild the project in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Clean and Batch Clean </td><td valign="top">
+    Remove all output and intermediate build files for the project in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Export Build and Batch Export Build </td><td valign="top">
+    Create an editor with the build commands for the project in the current or batch build configuration.
+</td></tr>
+<tr><td valign="top"> Link </td><td valign="top">
+    Perform the project node build operation: link for an Executable project type,
+    archive for a Library project type, and the combine command for a Combining
+    project type.
+</td></tr>
+<tr><td valign="top"> Set As Active Project </td><td valign="top">
+    Set the project to be the active project.
+</td></tr>
+<tr><td valign="top"> Debugging Commands </td><td valign="top">
+    For Executable and Externally Built Executable project types, the
+    following debugging operations are available on the project node:
+   <b>Start Debugging</b>, <b>Step Into Debugging</b>, <b>Reset And Debug</b>,
+   <b>Start Without Debugging</b>, <b>Attach Debugger</b>, and <b>Verify</b>.
+</td></tr>
+<tr><td valign="top"> Memory-Map Commands </td><td valign="top">
+    For Executable project types that don't have memory-map files
+    in the project and have the memory-map file project option set, there
+    are commands to view the memory-map file and to import it
+    into the project.
+</td></tr>
+<tr><td valign="top"> Section-Placement Commands </td><td valign="top">
+    For Executable project types that don't have section-placement files
+    in the project but have the section-placement file project option set, there
+    are commands to view the section-placement file and to import it
+    into the project.
+</td></tr>
+<tr><td valign="top"> Target Processor </td><td valign="top">
+    For Executable and Externally Built Executable project types that have a Target
+    Processor option group, the selected target can be changed.
+</td></tr>
+<tr><td valign="top"> Add New File </td><td valign="top">
+    Add a new file to the project.
+</td></tr>
+<tr><td valign="top"> Add Existing File </td><td valign="top">
+    Add an existing file to the project.
+</td></tr>
+<tr><td valign="top"> New Folder </td><td valign="top">
+    Create a new folder in the project.
+</td></tr>
+<tr><td valign="top"> Cut </td><td valign="top">
+    Cut the project from the solution.
+</td></tr>
+<tr><td valign="top"> Copy </td><td valign="top">
+    Copy the project from the solution.
+</td></tr>
+<tr><td valign="top"> Paste </td><td valign="top">
+    Paste a copied folder or file into the project.
+</td></tr>
+<tr><td valign="top"> Remove </td><td valign="top">
+    Remove the project from the solution.
+</td></tr>
+<tr><td valign="top"> Rename </td><td valign="top">
+    Rename the project.
+</td></tr>
+<tr><td valign="top"> Source Control Operations </td><td valign="top">
+    Source-control, recursive operations on all files in the project.
+</td></tr>
+<tr><td valign="top"> Find in Project Files </td><td valign="top">
+    Run <b>Find in Files</b> in the project directory.
+</td></tr>
+<tr><td valign="top"> Properties </td><td valign="top">
+    Show the <b>Project Manager</b> dialog and select the project node. 
+</td></tr></table><h5>For folders:</h5><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Item</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Add New File </td><td valign="top">
+    Add a new file to the folder.
+</td></tr>
+<tr><td valign="top"> Add Existing File </td><td valign="top">
+    Add an existing file to the folder.
+</td></tr>
+<tr><td valign="top"> New Folder </td><td valign="top">
+    Create a new folder in the folder.
+</td></tr>
+<tr><td valign="top"> Cut </td><td valign="top">
+    Cut the folder from the project or folder.
+</td></tr>
+<tr><td valign="top"> Copy </td><td valign="top">
+    Copy the folder from the project or folder.
+</td></tr>
+<tr><td valign="top"> Paste </td><td valign="top">
+    Paste a copied folder or file into the folder.
+</td></tr>
+<tr><td valign="top"> Remove </td><td valign="top">
+    Remove the folder from the project or folder.
+</td></tr>
+<tr><td valign="top"> Rename </td><td valign="top">
+    Rename the folder.
+</td></tr>
+<tr><td valign="top"> Source Control Operations </td><td valign="top">
+    Source-control recursive operations on all files in the folder.
+</td></tr>
+<tr><td valign="top"> Compile </td><td valign="top">
+    Compile each file in the folder.
+</td></tr>
+<tr><td valign="top"> Properties </td><td valign="top">
+    Show the properties dialog with the folder node selected.
+</td></tr></table><h5>For files:</h5><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Item</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Open </td><td valign="top">
+    Edit the file with the default editor for the file's type.
+</td></tr>
+<tr><td valign="top"> Open With </td><td valign="top">
+    Edit the file with a selected editor. You can choose from the
+    <b>Binary Editor</b>, <b>Text Editor</b>, and <b>Web Browser</b>.
+</td></tr>
+<tr><td valign="top"> Select in File Explorer </td><td valign="top">
+    Create a operating system file system window with the file selected.
+</td></tr>
+<tr><td valign="top"> Compile </td><td valign="top">
+    Compile the file.
+</td></tr>
+<tr><td valign="top"> Export Build </td><td valign="top">
+    Create an editor window containing the commands to compile the file in the active build configuration.
+</td></tr>
+<tr><td valign="top"> Exclude From Build </td><td valign="top">
+    Set the <b>Exclude From Build</b> option to <b>Yes</b> for this project
+    node in the active build configuration.
+</td></tr>
+<tr><td valign="top"> Disassemble </td><td valign="top">
+    Disassemble the output file of the compile into an editor window.
+</td></tr>
+<tr><td valign="top"> Preprocess </td><td valign="top">
+    Run the C preprocessor on the file and show the output in an editor window.
+</td></tr>
+<tr><td valign="top"> Cut </td><td valign="top">
+    Cut the file from the project or folder.
+</td></tr>
+<tr><td valign="top"> Copy </td><td valign="top">
+    Copy the file from the project or folder.
+</td></tr>
+<tr><td valign="top"> Remove </td><td valign="top">
+    Remove the file from the project or folder.
+</td></tr>
+<tr><td valign="top"> Import </td><td valign="top">
+    Import the file into the project.
+</td></tr>
+<tr><td valign="top"> Source Control Operations </td><td valign="top">
+    Source-control operations on the file.
+</td></tr>
+<tr><td valign="top"> Properties </td><td valign="top">
+    Show the properties dialog with the file node selected.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

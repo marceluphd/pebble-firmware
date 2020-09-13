@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Package Description file format</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Package-description files are XML files used by SEGGER Embedded Studio to describe
+a support package, its contents, and any dependencies it has on other 
+packages.</p><p>Each package file must contain one <tt>package</tt> element that
+describes the package. Optionally, the <tt>package</tt> element can contain
+a collection of <tt>file</tt>, <tt>history</tt>, and <tt>documentation</tt> elements
+to be used by SEGGER Embedded Studio for documentation purposes.</p><p>The filename of the package-description file should match that of the
+package and end in "<i>_package.xml</i>".</p><p>Below is an example of two package-description files. The first is
+for a base chip-support package for the LPC2000; the
+second is for a board-support package dependent on the first:</p><h5>Philips_LPC2000_package.xml</h5>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">!DOCTYPE </span><span class="rwt-code-attribute">CrossStudio_Package_Description_File</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">package </span><span class="rwt-code-attribute">cpu_manufacturer</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Philips</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> cpu_family</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> version</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">1.1</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> ses_versions</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">8:1-</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> author</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">SEGGER</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(TargetsDir)/Philips_LPC210X/arm_target_Philips_LPC210X.htm</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000 Support Package Documentation</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(TargetsDir)/Philips_LPC210X/Loader.emProject</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000 Loader Application Solution</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">group </span><span class="rwt-code-attribute">title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">System Files</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(TargetsDir)/Philips_LPC210X/Philips_LPC210X_Startup.s</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000 Startup Code</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(TargetsDir)/Philips_LPC210X/Philips_LPC210X_Target.js</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000 Target Script</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">group</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">history</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">version </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">1.1</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">      </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">Corrected LPC21xx header files and memory maps to include GPIO ports 2 and 3.</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">      </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">Modified loader memory map so that .libmem sections will be placed correctly.</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">version</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">version </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">1.0</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">      </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">Initial Release.</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">description</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">version</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">history</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">documentation</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">section </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Supported Targets</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">      </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">p</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">This CPU support package supports the following LPC2000 targets:</span>
+<span class="rwt-code-text">        </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">ul</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2103</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2104</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2105</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2106</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2131</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2132</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2134</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2136</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">          </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">LPC2138</span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">li</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">        </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">ul</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">      </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">p</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">section</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">documentation</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">package</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><h5>CrossFire_LPC2138_package.xml</h5>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">!DOCTYPE </span><span class="rwt-code-attribute">CrossStudio_Package_Description_File</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">package </span><span class="rwt-code-attribute">cpu_manufacturer</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Philips</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> cpu_family</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2000</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> cpu_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">LPC2138</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> board_manufacturer</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Rowley Associates</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> board_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">CrossFire LPC2138</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> dependencies</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Philips_LPC2000</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> version</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">1.0</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(SamplesDir)/CrossFire_LPC2138/CrossFire_LPC2138.emProject</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">CrossFire LPC2138 Samples Solution</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">file </span><span class="rwt-code-attribute">file_name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(SamplesDir)/CrossFire_LPC2138/ctl/ctl.emProject</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> title</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">CrossFire LPC2138 CTL Samples Solution</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">package</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><h3>Package elements</h3><p>The <tt>package</tt> element describes the support package, its contents, and any
+dependencies it has on other packages. Valid attributes for this element are:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Attribute</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>author</tt> </td><td valign="top"> The author of the package.
+</td></tr>
+<tr><td valign="top"> <tt>board_manufacturer</tt> </td><td valign="top"> The manufacturer of the board supported by the package <i>(if omitted, CPU manufacturer will be used)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>board_name</tt> </td><td valign="top"> The name of the specific board supported by the package <i>(only required for board-support packages)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>company_name</tt> </td><td valign="top"> The name of the company to group the package under in the package dialogs. <i>(if omitted, the Board/CPU manufacturer will be used)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>cpu_family</tt> </td><td valign="top"> The family name of the CPU supported by the package <i>(optional)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>cpu_manufacturer</tt> </td><td valign="top"> The manufacturer of the CPU supported by the package.
+</td></tr>
+<tr><td valign="top"> <tt>cpu_name</tt> </td><td valign="top"> The name of the specific CPU supported by the package <i>(may be omitted if the CPU family is specified)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>ses_versions</tt> </td><td valign="top"> A string describing which version of SEGGER Embedded Studio supports the package <i>(optional)</i>. The format of the string is <i>target_id_number:version_range_string</i>.
+</td></tr>
+<tr><td valign="top"> <tt>description</tt> </td><td valign="top"> A description of the package <i>(optional)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>dependencies</tt> </td><td valign="top"> A semicolon-separated list of packages the package requires to be installed in order to work.
+</td></tr>
+<tr><td valign="top"> <tt>installation_directory</tt> </td><td valign="top"> The directory in which the package should be installed <i>(optional - if undefined, defaults to "$(PackagesDir)")</i>.
+</td></tr>
+<tr><td valign="top"> <tt>title</tt> </td><td valign="top"> A short description of the package <i>(optional)</i>.
+</td></tr>
+<tr><td valign="top"> <tt>version</tt> </td><td valign="top"> The package version number.</td></tr></table><h3>File elements</h3><p>The <tt>file</tt> element is used by SEGGER Embedded Studio for documentation
+purposes by adding links to files of interest within the package such as example
+project files and documentation.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Attribute</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>file_name</tt> </td><td valign="top"> The file path of the file.
+</td></tr>
+<tr><td valign="top"> <tt>title</tt> </td><td valign="top"> A description of the file.
+</td></tr></table><p>Optionally, <tt>file</tt> elements can be grouped into
+categories using the <tt>group</tt> element.</p><h3>Group elements</h3><p>The <tt>group</tt> element is used for categorizing
+files described by <tt>file</tt> elements into a particular group.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Attribute</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>title</tt> </td><td valign="top"> Title of the group.
+</td></tr></table><h3>History elements</h3><p>The <tt>history</tt> element is used to hold a description of 
+the package's version history.</p><p>The <tt>history</tt> element should contain a 
+collection of <tt>version</tt> elements.</p><h3>Version element</h3><p>The <tt>version</tt> element is used to hold the
+description of a particular version of the package. </p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Attribute</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>name</tt> </td><td valign="top"> The name of the version being described.
+</td></tr></table><p>The <tt>version</tt> element should contain a collection
+of <tt>description</tt> elements.</p><h3>Description elements</h3><p>Each <tt>description</tt> element contains text that describes a
+feature of the package version.</p><h3>Documentation elements</h3><p>The <tt>documentation</tt> element is used to 
+provide arbitrary documentation for the package. </p><p>The <tt>documentation</tt> element should contain a
+collection of one or more <tt>section</tt> elements.</p><h3>Section elements</h3><p>The <tt>section</tt> element contains package documentation
+in XHTML format.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Attribute</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>name</tt> </td><td valign="top"> The title of the documentation section.
+</td></tr></table><h3>target_id_number</h3><p>The following table lists the possible target ID numbers: </p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Target</b> </td><td> <b>ID</b>
+</td></tr>
+<tr><td> ARM    </td><td valign="top"> 8
+</td></tr>
+<tr><td valign="top"> RISC-V </td><td valign="top"> 20
+</td></tr></table><h3>version_range_string</h3><p>The <tt>version_range_string</tt> can be any of the following:</p><ul><li><i>version_number</i>:&nbsp;&nbsp;The package will only work on <i>version_number</i>.
+</li>
+<li><i>version_number-</i>:&nbsp;&nbsp;The package will work on <i>version_number</i> or any future version.
+</li>
+<li><i>-version_number</i>:&nbsp;&nbsp;The package will work on <i>version_number</i> or any earlier version.
+</li>
+<li><i>low_version_number-high_version_number</i>:&nbsp;&nbsp;The package will work on <i>low_version_number</i>, <i>high_version_number</i> or any version in between.</li></ul> 
+    </div>
+  </body>
+</html>

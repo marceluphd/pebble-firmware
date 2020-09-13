@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>BinaryFile</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following table lists the BinaryFile object's member functions.
+</p><table width="100%" cellspacing="0" cellpadding="2" bgcolor="#f0f0f0" style="MultiHeadingTable" border="1" fm_widths="1.7in,2.8in">
+<tr>
+<td valign="center"><b>BinaryFile.crc32(offset, length)</b> returns the CRC-32 checksum of an address range <i>length</i> bytes long, starting at <i>offset</i>. This function computes a CRC-32 checksum on a block of data using the standard CRC-32 polynomial (0x04C11DB7) with an initial value of 0xFFFFFFFF. Note that this implementation doesn't reflect the input or the output and the result is inverted.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.length()</b> returns the length of the binary file in bytes.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.load(path)</b> loads binary file from <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.peekBytes(offset, length)</b> returns byte array containing <i>length</i> bytes peeked from <i>offset</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.peekUint32(offset, littleEndian)</b> returns a 32-bit word peeked from <i>offset</i>. The <i>littleEndian</i> argument specifies the endianness of the access, if true or undefined it will be little endian, otherwise it will be big endian.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.pokeBytes(offset, byteArray)</b> poke byte array <i>byteArray</i> to <i>offset</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.pokeUint32(offset, value, littleEndian)</b> poke a <i>value</i> to 32-bit word located at <i>offset</i>. The <i>littleEndian</i> argument specifies the endianness of the access, if true or undefined it will be little endian, otherwise it will be big endian.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.resize(length, fill)</b> resizes the binary image to <i>length</i> bytes. If the operation extends the size, the binary image will be padded with bytes of value <i>fill</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.save(path)</b> saves binary file to <i>path</i>.</td>
+</tr>
+<tr>
+<td valign="center"><b>BinaryFile.saveRange(path, offset, length)</b> saves part of the binary file to <i>path</i>. The <i>offset</i> argument specifies the byte offset to start from. The <i>length</i> argument specifies the maximum number of bytes that should be saved.</td>
+</tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

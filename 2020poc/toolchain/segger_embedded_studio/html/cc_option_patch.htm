@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>-patch (Run patch command)</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Syntax</h5><p><b>-patch</b> <i>cmd</i></p><h5>Description</h5><p>The <b>-patch</b> option instructs the compiler driver to run the <b>cmd</b> after the link but before the creation of 
+the additional output file. The macro <b>$(TargetPath)</b> is expanded to the full path of the linked executable.</p><h5>Example</h5><p>This example will run the command <b>mypatch</b> replacing <b>$(TargetPath)</b> with <b>myoutput</b>.elf</p>
+<pre class="rwt-code">-patch "mypatch $(TargetPath)" -o myoutput.elf -Fbin </pre><p>The <b>mypatch</b> command can modify <b>myoutput</b>.elf before the creation of the myouput.bin.</p> 
+    </div>
+  </body>
+</html>

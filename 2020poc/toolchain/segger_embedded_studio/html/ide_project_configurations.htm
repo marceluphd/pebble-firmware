@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Creating variants using configurations</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>SEGGER Embedded Studio provides a facility to build projects in various configurations.
+Project configurations are used to create different software builds for your
+projects.</p><p>A configuration defines a set of project options.
+For example, the output of a compilation can be put into different
+directories, dependent upon the configuration. When you
+create a solution, some default project configurations are created.</p><h3>Build configurations and their uses</h3><p>Configurations are typically used to differentiate debug builds from release
+builds. For example, the compiler options for debug builds will differ from those of a
+release build: a debug build will set options so the project can be
+debugged easily, whereas a release build will enable optimization to reduce
+program size or to increase its speed. Configurations have other uses; for example,
+you can use configurations to produce variants of software, such as custom libraries
+for several different hardware variants.</p><p>Configurations inherit project options from other configurations. This provides
+a single point of change for definitions common to several configurations.
+A particular project option can be overridden in a particular configuration to provide
+configuration-specific settings.</p><p>When a solution is created, two configurations are generated &mdash; <b>Debug</b> and
+<b>Release</b> &mdash; and you can create additional configurations by choosing
+<b>Build > Build Configurations</b>. Before you build, ensure that the appropriate
+configuration is set using <b>Build > Set Active Build Configuration</b>
+or, alternatively, the <b>Active Configuration</b> combo box in the <b>Project Explorer</b>.</p><h4>Selecting a configuration</h4><p>To set the configuration that affects your building and debugging, use
+the combo box in the <b>Project Explorer</b> or select <b>Build > Set Active Build Configuration</b></p><h4>Creating a configuration</h4><p>To create your own configurations, select <b>Build > Build Configurations</b>
+to invoke the <b>Configurations</b> dialog. The <b>New</b> button
+will produce a dialog allowing you to name your configuration. You can now specify
+the existing configurations from which your new configuration will inherit values.</p><h4>Deleting a configuration</h4><p>You can delete a configuration by selecting it and clicking the <b>Remove</b>
+button. This deletion cannot be undone or canceled, so beware.</p><h4>Private configurations</h4><p>Some configurations are defined purely for inheriting and, as
+such, should not appear in the <b>Build</b> combo box. When you select a configuration in
+the <b>Configuration</b> dialog, you can choose to hide that configuration.</p> 
+    </div>
+  </body>
+</html>

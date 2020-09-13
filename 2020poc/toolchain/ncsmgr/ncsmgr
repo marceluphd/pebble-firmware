@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+unset baseDir
+
+# this converts Windows paths to more sensible ones
+toPosixPath() {
+    local path="${1//\\/\/}"
+    echo "/${path/:}"
+}
+
+# this converts POSIX paths to less sensible ones
+toWindowsPath() {
+    local path="$*"
+    if [ "${path:1:1}" = ":" ] ; then
+        echo $path
+    else
+        local str="${path//\//\\}"
+        local drive="${path:1:1}"
+        echo "${str/\\?/${drive}\:}"
+    fi
+}
+
+
+case $(uname -s) in
+    Linux)
+        isLinux=1
+
+        echo "This script currently only supports Windows and maxOS platform."
+        echo "For creating toolchain environment on Linux, please refer to"
+        echo
+        echo "https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/index.html"
+        echo
+        exit
+        ;;
+
+    Darwin)
+        isMac=1
+        ;;
+
+    *)
+        isWindows=1
+
+        # this setting ensures that ln is able to create soft links on windows
+        export MSYS=winsymlinks:nativestrict
+
+        # in git-bash environment we rely on EXEPATH
+        baseDir="$(toPosixPath "${EXEPATH}")"
+        # remove bin if bash was invoked directly
+        baseDir="${baseDir/\/bin/}"
+        # remove single / to avoid // later on
+        [ "${baseDir}" = "/" ] && baseDir=""
+
+        if [ ! -f "${baseDir}/ncsmgr/manifest.env" ] ; then
+            # otherwise (development environment) relative to current script path
+            baseDir="$(dirname "$(dirname "$(realpath "$0")")")"
+        fi
+
+        downloadDir="${baseDir}/download"
+        binDir="${baseDir}/opt/bin"
+
+        pyDir="${binDir}"
+
+        # WARNING: note the path inherited from calling shell, this might cause issues
+        export PATH="${binDir}":"${binDir}/Scripts":"${PATH}"
+        export PYTHONPATH="${pyDir}":"${pyDir}/lib":"${pyDir}/Lib/site-packages"
+        ;;
+esac
+
+mgrDir="$(dirname $0)"
+logfile="${mgrDir}/ncsmgr.log"
+
+log() {
+    echo ${*} | tee -a "${logfile}"
+}
+
+error() {
+    log $1
+    exit 1
+}
+
+pass() {
+    log "done"
+}
+
+fail() {
+    error "failed"
+}
+
+remove() {
+    log -n "Removing $1 ..."
+    rm -rf "$1" >>"${logfile}" 2>>"${logfile}" && pass || fail
+}
+
+pushdir() {
+    pushd "$1" >/dev/null
+}
+
+popdir() {
+    popd >/dev/null
+}
+
+checkRequiredTools() {
+    [ ! "${isWindows}" ] && return
+    for req in 7z curl sed unix2dos ; do
+        which ${req} 2>>"${logfile}" >/dev/null || error "${req} is required for this script"
+    done
+}
+checkRequiredTools
+
+loadManifest() {
+    manifest="${mgrDir}/manifest.env"
+    source "${manifest}" 2>>"${logfile}" || error "Failed to source ${manifest}"
+    baseDir="${baseDir=/opt/nordic/ncs/${ncs_tag}/toolchain}"
+}
+loadManifest
+
+progname=$(basename $0)
+subcommand=$1
+
+case ${subcommand} in
+    ""|-h|--help)
+        echo "Usage: ${progname} <subcommand>"
+        echo
+        echo "Subcommands:"
+        echo "    install    installs a toolchain"
+        echo "    info       lists installed toolchains and tools in current"
+        echo "    pack       creates a zip package of a toolchain"
+        echo "    unpack     unpacks a zip package of a toolchain"
+        echo "    init-ncs   wraps west init && update"
+        echo "    pyfix      removes absolute python path from .exe module wrappers"
+        echo
+        exit 0
+        ;;
+    *)
+        shift
+        . "${mgrDir}/ncsmgr_${subcommand}.sh" $@
+        exitcode=$?
+        if [ ${exitcode} = 127 ]; then
+            echo "Error: '$subcommand' is not a known subcommand." >&2
+            echo "    Run '$progname --help' for a list of known subcommands." >&2
+        fi
+        exit ${exitcode}
+        ;;
+esac
+

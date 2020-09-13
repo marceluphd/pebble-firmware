@@ -1,0 +1,3 @@
+[console_scripts]
+gitlint = gitlint.cli:cli
+

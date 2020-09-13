@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Dependencies and build order</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>You can set up dependency relationships between projects using the <b>Project Dependencies</b>
+dialog. Project dependencies make it possible to build
+solutions in the correct order and, where the target permits, to load
+and delete applications and libraries in the correct order. A typical usage
+of project dependencies is to make an executable project dependent upon a library
+executable. When you elect to build the executable, the build system will
+ensure that the library it depends upon is up to date. In the case of a
+dependent library, the output file of the library build is supplied as an
+input to the executable build, so you don't have to worry about it.</p><p>Project dependencies are stored as project options and, as such, can be defined
+differently based upon the selected configuration. You almost always want project
+dependencies to be independent of the configuration, so the <b>Project Dependencies</b>
+dialog selects the <b>Common</b> configuration by default.</p><h5>To make one project dependent upon another:</h5><ol><li> Choose <b>Project > Project Dependencies</b>.
+  </li>
+<li> From the <b>Project</b> dropdown, select the target project that depends
+    upon other projects.
+  </li>
+<li> In the <b>Depends Upon</b> list box, select the projects the target
+    project depends upon and deselect the projects it does not depend upon.</li></ol><p>Some items in the <b>Depends Upon</b> list box may be dimmed, indicating
+that a circular dependency would result if any of those projects were selected.
+In this way, SEGGER Embedded Studio prevents you from constructing circular dependencies using the
+<b>Project Dependencies</b> dialog.</p><p>If your target supports loading multiple projects, the <b>Build Order</b>
+also reflects the order in which projects are loaded onto the target.
+Projects will load, in order, from top to bottom. Generally, libraries
+need to be loaded before the applications that use them, and you can ensure
+this happens by making the application dependent upon the library. With
+this dependency set, the library gets built and loaded
+before the application does.</p><p>Applications are deleted from a target in reverse of their build order; in this way,
+applications are removed before the libraries on which they depend.</p> 
+    </div>
+  </body>
+</html>

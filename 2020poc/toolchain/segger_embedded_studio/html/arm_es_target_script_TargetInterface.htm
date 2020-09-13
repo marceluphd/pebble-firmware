@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>TargetInterface</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following table lists the TargetInterface object's member functions.
+</p><table width="100%" cellspacing="0" cellpadding="2" bgcolor="#f0f0f0" style="MultiHeadingTable" border="1" fm_widths="1.7in,2.8in">
+<tr>
+<td valign="center"><b>TargetInterface.crc32(address, length)</b> reads a block of bytes from target memory starting at address for length bytes, generates a crc32 on the block of bytes and returns it.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.delay(ms)</b> waits for ms milliseconds</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.error(message)</b> terminates execution of the script and outputs a target interface error message to the target log.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.executeFunction(address, parameter, timeout)</b> calls a function at address with the parameter and returns the function result. The timeout is in milliseconds.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.expandMacro(string)</b> returns the string with macros expanded.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.findByte(address, length, byte)</b> returns the index of the byte in the specified target memory range.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.findNotByte(address, length, byte)</b> returns the index of the byte that isn't in the specified target memory range.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.getProjectProperty(savename)</b> returns the value of the savename project property.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.getTargetProperty(savename)</b> returns the value of the savename target property.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.go()</b> allows the target to run.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.isStopped()</b> returns true if the target is stopped.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.message(message)</b> outputs a target interface message to the target log.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekBinary(address, length, filename)</b> reads a block of bytes from target memory starting at address for length bytes and writes them to filename.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekByte(address)</b> reads a byte of target memory from address and returns it.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekBytes(address, length)</b> reads a block of bytes from target memory starting at address for length bytes and returns the result as an array containing the bytes read.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekMultUint16(address, length)</b> reads length unsigned 16-bit integers from target memory starting at address and returns them as an array.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekMultUint32(address, length)</b> reads length unsigned 32-bit integers from target memory starting at address and returns them as an array.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekUint16(address)</b> reads a 16-bit unsigned integer from target memory from address and returns it.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekUint32(address)</b> reads a 32-bit unsigned integer from target memory from address and returns it.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.peekWord(address)</b> reads a word as an unsigned integer from target memory from address and returns it.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeBinary(address, filename)</b> reads a block of bytes from filename and writes them to target memory starting at address.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeByte(address, data)</b> writes the byte data to address in target memory.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeBytes(address, data)</b> writes the array data containing 8-bit data to target memory at address.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeMultUint16(address, data)</b> writes the array data containing 16-bit data to target memory at address.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeMultUint32(address, data)</b> writes the array data containing 32-bit data to target memory at address.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeUint16(address, data)</b> writes data as a 16-bit value to address in target memory.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeUint32(address, data)</b> writes data as a 32-bit value to address in target memory.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.pokeWord(address, data)</b> writes data as a word value to address in target memory.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.readBinary(filename)</b> reads a block of bytes from filename and returns them in an array.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.reset()</b> resets the target.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.resetAndStop()</b> resets and stops the target.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.runFromAddress(address, timeout)</b> start the target executing at address and waits for a breakpoint to be hit. The timeout is in milliseconds.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.runFromToAddress(from, to, timeout)</b> start the target executing at address from and waits for the breakpoint to be hit. The timeout is in milliseconds.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.runToAddress(address, timeout)</b> sets a breakpoint at address, starts the target executing and waits for the breakpoint to be hit. The timeout is in milliseconds.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.setTargetProperty(savename)</b> set the value of the savename target property.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.stop()</b> stops the target.</td>
+</tr>
+<tr>
+<td valign="center"><b>TargetInterface.writeBinary(array, filename)</b> write the bytes in array to filename.</td>
+</tr>
+</table>
+ 
+    </div>
+  </body>
+</html>

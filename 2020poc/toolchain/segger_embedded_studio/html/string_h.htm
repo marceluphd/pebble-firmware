@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>&lt;string.h></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h3>Overview</h3><p>The header file &lt;string.h> defines functions that operate on 
+  arrays that are interpreted as null-terminated strings.</p><p>Various methods are used for determining the lengths of the arrays, but in 
+  all cases a <b>char *</b> or <b>void *</b> argument points to the initial (lowest 
+  addressed) character of the array. If an array is accessed beyond the end of 
+  an object, the behavior is undefined.</p><p>Where an argument declared as <b>size_t</b> <i>n</i> specifies the length of an array 
+  for a function, <i>n</i> can have the value zero on a call to that function. 
+  Unless explicitly stated otherwise in the description of a particular function, 
+  pointer arguments must have valid values on a call with a zero size. On such 
+  a call, a function that locates a character finds no occurrence, a function 
+  that compares two character sequences returns zero, and a function that copies 
+  characters copies zero characters.</p><h3>API Summary</h3><table width="100%" cellspacing="0" cellpadding="2" bgcolor="#f0f0f0" style="MultiHeadingTable" border="0" fm_widths="1.1in,*">
+<tr bgcolor="#cccccc"><td valign="center" colspan="2" style="CellTitle"><b>Copying functions</b></td></tr>
+<tr><td valign="center"><a href="memccpy.htm" style="Heading">memccpy</a></td>                            <td width="100%">Copy memory with specified terminator (POSIX extension)</td></tr>
+<tr><td valign="center"><a href="memcpy.htm" style="Heading">memcpy</a></td>                            <td width="100%">Copy memory</td></tr>
+<tr><td valign="center"><a href="memcpy_fast.htm" style="Heading">memcpy_fast</a></td>                            <td width="100%">Copy memory</td></tr>
+<tr><td valign="center"><a href="memmove.htm" style="Heading">memmove</a></td>                            <td width="100%">Safely copy overlapping memory</td></tr>
+<tr><td valign="center"><a href="mempcpy.htm" style="Heading">mempcpy</a></td>                            <td width="100%">Copy memory (GNU extension)</td></tr>
+<tr><td valign="center"><a href="strcat.htm" style="Heading">strcat</a></td>                            <td width="100%">Concatenate strings</td></tr>
+<tr><td valign="center"><a href="strcpy.htm" style="Heading">strcpy</a></td>                            <td width="100%">Copy string</td></tr>
+<tr><td valign="center"><a href="strdup.htm" style="Heading">strdup</a></td>                            <td width="100%">Duplicate string (POSIX extension)</td></tr>
+<tr><td valign="center"><a href="strlcat.htm" style="Heading">strlcat</a></td>                            <td width="100%">Copy string up to a maximum length with terminator (BSD extension)</td></tr>
+<tr><td valign="center"><a href="strlcpy.htm" style="Heading">strlcpy</a></td>                            <td width="100%">Copy string up to a maximum length with terminator (BSD extension)</td></tr>
+<tr><td valign="center"><a href="strncat.htm" style="Heading">strncat</a></td>                            <td width="100%">Concatenate strings up to maximum length</td></tr>
+<tr><td valign="center"><a href="strncpy.htm" style="Heading">strncpy</a></td>                            <td width="100%">Copy string up to a maximum length</td></tr>
+<tr><td valign="center"><a href="strndup.htm" style="Heading">strndup</a></td>                            <td width="100%">Duplicate string (POSIX extension)</td></tr>
+<tr bgcolor="#cccccc"><td valign="center" colspan="2" style="CellTitle"><b>Comparison functions</b></td></tr>
+<tr><td valign="center"><a href="memcmp.htm" style="Heading">memcmp</a></td>                            <td width="100%">Compare memory</td></tr>
+<tr><td valign="center"><a href="strcasecmp.htm" style="Heading">strcasecmp</a></td>                            <td width="100%">Compare strings ignoring case (POSIX extension)</td></tr>
+<tr><td valign="center"><a href="strcmp.htm" style="Heading">strcmp</a></td>                            <td width="100%">Compare strings</td></tr>
+<tr><td valign="center"><a href="strncasecmp.htm" style="Heading">strncasecmp</a></td>                            <td width="100%">Compare strings up to a maximum length ignoring case (POSIX extension)</td></tr>
+<tr><td valign="center"><a href="strncmp.htm" style="Heading">strncmp</a></td>                            <td width="100%">Compare strings up to a maximum length</td></tr>
+<tr bgcolor="#cccccc"><td valign="center" colspan="2" style="CellTitle"><b>Search functions</b></td></tr>
+<tr><td valign="center"><a href="memchr.htm" style="Heading">memchr</a></td>                            <td width="100%">Search memory for a character</td></tr>
+<tr><td valign="center"><a href="strcasestr.htm" style="Heading">strcasestr</a></td>                            <td width="100%">Find first case-insensitive occurrence of a string within string</td></tr>
+<tr><td valign="center"><a href="strchr.htm" style="Heading">strchr</a></td>                            <td width="100%">Find character within string</td></tr>
+<tr><td valign="center"><a href="strcspn.htm" style="Heading">strcspn</a></td>                            <td width="100%">Compute size of string not prefixed by a set of characters</td></tr>
+<tr><td valign="center"><a href="strncasestr.htm" style="Heading">strncasestr</a></td>                            <td width="100%">Find first case-insensitive occurrence of a string within length-limited string</td></tr>
+<tr><td valign="center"><a href="strnchr.htm" style="Heading">strnchr</a></td>                            <td width="100%">Find character in a length-limited string</td></tr>
+<tr><td valign="center"><a href="strnlen.htm" style="Heading">strnlen</a></td>                            <td width="100%">Calculate length of length-limited string (POSIX extension)</td></tr>
+<tr><td valign="center"><a href="strnstr.htm" style="Heading">strnstr</a></td>                            <td width="100%">Find first occurrence of a string within length-limited string</td></tr>
+<tr><td valign="center"><a href="strpbrk.htm" style="Heading">strpbrk</a></td>                            <td width="100%">Find first occurrence of characters within string</td></tr>
+<tr><td valign="center"><a href="strrchr.htm" style="Heading">strrchr</a></td>                            <td width="100%">Find last occurrence of character within string</td></tr>
+<tr><td valign="center"><a href="strsep.htm" style="Heading">strsep</a></td>                            <td width="100%">Break string into tokens (4.4BSD extension)</td></tr>
+<tr><td valign="center"><a href="strspn.htm" style="Heading">strspn</a></td>                            <td width="100%">Compute size of string prefixed by a set of characters</td></tr>
+<tr><td valign="center"><a href="strstr.htm" style="Heading">strstr</a></td>                            <td width="100%">Find first occurrence of a string within string</td></tr>
+<tr><td valign="center"><a href="strtok.htm" style="Heading">strtok</a></td>                            <td width="100%">Break string into tokens</td></tr>
+<tr><td valign="center"><a href="strtok_r.htm" style="Heading">strtok_r</a></td>                            <td width="100%">Break string into tokens, reentrant version (POSIX extension)</td></tr>
+<tr bgcolor="#cccccc"><td valign="center" colspan="2" style="CellTitle"><b>Miscellaneous functions</b></td></tr>
+<tr><td valign="center"><a href="memset.htm" style="Heading">memset</a></td>                            <td width="100%">Set memory to character</td></tr>
+<tr><td valign="center"><a href="strerror.htm" style="Heading">strerror</a></td>                            <td width="100%">Decode error code</td></tr>
+<tr><td valign="center"><a href="strlen.htm" style="Heading">strlen</a></td>                            <td width="100%">Calculate length of string</td></tr>
+</table> 
+    </div>
+  </body>
+</html>

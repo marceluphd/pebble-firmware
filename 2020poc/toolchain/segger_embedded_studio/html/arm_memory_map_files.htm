@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Section Placement</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Section placement files map program sections used in your program
+into the memory spaces defined in the memory map or in the <b>Memory Segments</b>
+project option. For instance, it's
+common for code and read-only data to be programmed into non-volatile
+flash memory, whereas read-write data needs to be mapped onto either
+internal or external RAM.</p><p>Memory map files are provided in the CPU support package you are using
+and are referenced in executable projects by the <b>Memory Map File</b>
+project option.  Section-placement files are provided in the base
+SEGGER Embedded Studio for ARM distribution.</p><p>The memory segments defined in the section placement files have
+macro-expandable names which can be defined using the <b>Section Placement Macros</b>
+project option.</p><p>Some of the section placement files have a macro-expandable start attribute
+in the first program section. You can use this to reserve space at the beginning
+of the memory segment.</p><h3>ARM section placement</h3><p>The following placement files are supplied for ARM targets:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>File</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>flash_placement.xml</tt>
+    </td><td valign="top"> Single FLASH segment with internal RAM segment and optional external
+      RAM segment.
+</td></tr>
+<tr><td valign="top"> <tt>flash_run_text_from_ram_placement.xml</tt>
+    </td><td valign="top"> Single FLASH segment with internal RAM segment and optional external
+      RAM segments. Text section is copied from FLASH to RAM.
+</td></tr>
+<tr><td valign="top"> <tt>internal_sram_placement.xml</tt>
+    </td><td valign="top"> Single internal RAM segment.
+</td></tr>
+<tr><td valign="top"> <tt>multi_flash_placement.xml</tt>
+    </td><td valign="top"> Two FLASH segments with internal RAM segment and optional external
+      RAM segment.
+</td></tr>
+<tr><td valign="top"> <tt>sram_placement.xml</tt>
+    </td><td valign="top"> Internal RAM segment and optional external RAM segment.
+</td></tr>
+<tr><td valign="top"> <tt>tcm_placement.xml</tt>
+    </td><td valign="top"> Data and Instruction tightly coupled memory segments.
+</td></tr></table><h3>Cortex-M section placement</h3><p>The following placement files are supplied for Cortex-M targets:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>File</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>flash_placement.xml</tt>
+    </td><td valign="top"> Two FLASH segments and two RAM segments.
+</td></tr>
+<tr><td valign="top"> <tt>flash_placement_tcm.xml</tt>
+    </td><td valign="top"> One FLASH segments, two RAM segments, Data and Instruction tightly coupled memory segments.
+</td></tr>
+<tr><td valign="top"> <tt>flash_placement2.xml</tt>
+    </td><td valign="top"> One FLASH segment and two RAM segments.
+</td></tr>
+<tr><td valign="top"> <tt>flash_to_ram_placement.xml</tt>
+    </td><td valign="top"> One FLASH segment and one RAM segment. Text section is copied from FLASH to RAM.
+</td></tr>
+<tr><td valign="top"> <tt>flash_to_ram_placement_tcm.xml</tt>
+    </td><td valign="top"> One FLASH segment, two RAM segments, Data and Instruction tightly coupled memory segments. 
+      Text section is copied from FLASH to RAM.
+</td></tr>
+<tr><td valign="top"> <tt>flash_to_ram_placement2.xml</tt>
+    </td><td valign="top"> One FLASH segment and two RAM segments. Text section is copied from FLASH to RAM.
+</td></tr>
+<tr><td valign="top"> <tt>flash_to_tcm_placement.xml</tt>
+    </td><td valign="top"> Two FLASH segments, two RAM segments, Data and Instruction tightly coupled memory segments.
+</td></tr>
+<tr><td valign="top"> <tt>ram_placement.xml</tt>
+    </td><td valign="top"> Two RAM segments.
+</td></tr>
+<tr><td valign="top"> <tt>tcm_placement.xml</tt>
+    </td><td valign="top"> Data and Instruction tightly coupled memory segments.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

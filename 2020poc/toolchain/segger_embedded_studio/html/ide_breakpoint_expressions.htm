@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Breakpoint expressions</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The debugger can set breakpoints by evaluating simple C-like expressions.
+ 
+Note that the exact capabilities offered by the hardware to assist in
+data breakpointing will vary from target to target; please refer to the
+particular target interface you are using and the capabilities of your
+target silicon for exact details.
+ 
+The simplest expression supported is a symbol name. If the symbol name is a function, a 
+breakpoint occurs when the first instruction of the symbol is about to be executed. 
+If the symbol name is a variable, a breakpoint occurs when the symbol has been
+accessed; this is termed a <i>data breakpoint</i>. For example, the expression
+<tt>x</tt> will breakpoint when <i>x</i> is accessed. You can use a debug expression
+(see <a href="ide_debug_expressions.htm">Debug expressions</a>) as a breakpoint expression. For example,
+<tt>x[4]</tt> will breakpoint when element 4 of array <i>x</i> is accessed, and <tt>@sp</tt>
+will breakpoint when the <i>sp</i> register is accessed.</p><p>Data breakpoints can be specified, using the <b>==</b> operator, to occur when a
+symbol is accessed with a specific value. The expression <tt>x == 4</tt> will breakpoint when <i>x</i> is
+accessed and its value is 4. The operators &lt;, >=, >;, >=, ==, and != can
+be used similarly. For example, <tt>@sp &lt;= 0x1000</tt> will breakpoint when register <b>sp</b> is 
+accessed and its value is less than or equal to 0x1000.</p><p>You can use the operator &lsquo;&amp;&rsquo; to mask the value you wish to break on.
+For example, <tt>(x &amp; 1) == 1</tt> will breakpoint when <i>x</i> is accessed
+and has an odd value.</p><p>You can use the operator &lsquo;&amp;&amp;&rsquo; to combine comparisons. For example&hellip;</p>
+<pre class="rwt-code"><span class="rwt-code-operator">(</span><span class="rwt-code-text">x </span><span class="rwt-code-operator">>=</span><span class="rwt-code-text"> </span><span class="rwt-code-literal">2</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;&amp;</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-text">x </span><span class="rwt-code-operator">&lt;=</span><span class="rwt-code-text"> </span><span class="rwt-code-literal">14</span><span class="rwt-code-operator">)</span></pre><p>&hellip;will breakpoint when <i>x</i> is accessed and its value is between 2 and 14.</p><p>You can specify an arbitrary memory range using an array cast expression.
+For example, <tt>(char[256])(0x1000)</tt> will breakpoint when the memory
+region 0x1000&ndash;0x10FF is accessed.</p><p>You can specify an inverse memory range using the <b>!</b> operator. For example
+<tt>!(char[256])(0x1000)</tt> will breakpoint when memory outside the range
+0x1000&ndash;0x10FF is accessed.</p> 
+    </div>
+  </body>
+</html>

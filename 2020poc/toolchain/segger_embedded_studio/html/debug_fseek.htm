@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>debug_fseek</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">debug_fseek</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">DEBUG_FILE </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">stream</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-text">offset</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">origin</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>debug_fseek</b> sets the file position for the <b>stream</b>. A subsequent 
+  read or write will access data at that position. The <b>origin</b> can be one 
+  of:</p><ul><li><b>0</b> sets the position to <b>offset</b> bytes from the beginning of the file.
+  </li>
+<li><b>1</b> sets the position to <b>offset</b> bytes relative to the current position.
+  </li>
+<li><b>2</b> sets the position to <b>offset</b> bytes from the end of the file.</li></ul><p>Note that for text files <b>offset</b> must be zero. 
+  
+  <b>debug_fseek</b> returns zero on success, non-zero on error.
+</p> 
+    </div>
+  </body>
+</html>

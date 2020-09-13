@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Building without a SEGGER Embedded Studio project file</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>To use <b>emBuild</b> without a SEGGER Embedded Studio project, specify the
+name of an installed project template, the name of the project, and the files
+to build. For example:</p>
+<pre class="rwt-code">emBuild -config &hellip; -template LM3S_EXE -project myproject -file main.c </pre><p>Or, instead of a template, you can specify a project type:</p>
+<pre class="rwt-code">emBuild -config &hellip; -type "Library" -project myproject -file main.c </pre><p>You can specify project properties with the <b>-property</b> option:</p>
+<pre class="rwt-code">emBuild &hellip; -property Target=LM3S811 </pre> 
+    </div>
+  </body>
+</html>

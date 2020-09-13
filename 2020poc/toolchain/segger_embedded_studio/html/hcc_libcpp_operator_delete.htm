@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>operator delete</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5>
+<pre>void operator delete(void *ptr) throw();</pre>
+<pre>void operator delete[](void *ptr) throw();</pre>
+<h5>Description</h5>
+<p><b>operator delete</b> deallocates space of an object.</p>
+<p><b>operator delete</b> will do nothing if <b>ptr</b> is null. If <b>ptr</b>
+is not null then it should have been returned from a call to <b>operator new</b>.</p>
+<p><b>operator delete[]</b> has the same behaviour as <b>operator delete</b> but is used
+for array deallocation.</p>
+<h5>Portability</h5>
+<p>Standard C++.</p>
+ 
+    </div>
+  </body>
+</html>

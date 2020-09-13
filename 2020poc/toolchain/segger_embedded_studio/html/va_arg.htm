@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>va_arg</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">type </span><span class="rwt-code-function">va_arg</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">va_list </span><span class="rwt-code-text">ap</span><span class="rwt-code-operator">,</span>
+            <span class="rwt-code-text">type</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>va_arg</b> expands to an expression that has the specified type and the 
+  value of the <b>type</b> argument. The <b>ap</b> parameter must have been initialized 
+  by <b>va_start</b> or <b>va_copy</b>, without an intervening invocation of <b>va_end</b>. 
+  You can create a pointer to a <b>va_list</b> and pass that pointer to another 
+  function, in which case the original function may make further use of the original 
+  list after the other function returns.</p><p>Each invocation of the <b>va_arg</b> macro modifies <b>ap</b> so that the 
+  values of successive arguments are returned in turn. The parameter type must 
+  be a type name such that the type of a pointer to an object that has the specified 
+  type can be obtained simply by postfixing a <b>*</b> to <b>type</b>. </p><p>If there is no actual next argument, or if type is not compatible with the 
+  type of the actual next argument (as promoted according to the default argument 
+  promotions), the behavior of <b>va_arg</b> is undefined, except for the following 
+  cases:
+  
+  </p><ul><li>one type is a signed integer type, the other type is the corresponding unsigned 
+  integer type, and the value is representable in both types;</li></ul><ul><li>one type is pointer to <b>void</b> and the other is a pointer to a character type.</li></ul><p>The first invocation of the <b>va_arg</b> macro after that of the <b>va_start</b>
+  macro returns the value of the argument after that specified by <b>parmN</b>. 
+  Successive invocations return the values of the remaining arguments in succession. 
+</p> 
+    </div>
+  </body>
+</html>

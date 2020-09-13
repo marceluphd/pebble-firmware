@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>CVS provider</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The CVS source-control provider has been tested with CVSNT 2.5.03. The CVS source-control
+provider uses the CVS <tt>rls</tt> command to browse the repository&mdash;this
+command is implemented in CVS 1.12 but usage of &lsquo;.&rsquo; as the root of the module
+name is not supported.</p><h3>Provider-specific options</h3><p>The following environment options are supported:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Property</b>           </td><td> <b>Description</b>
+</td></tr>
+<tr><td> CVSROOT               </td><td valign="top"> The CVSROOT value to access the repository.
+</td></tr>
+<tr><td valign="top"> Edit/Unedit Supported </td><td valign="top"> If <b>Yes</b>, <b>Check Out</b> and <b>Undo Check Out</b> commands
+                           are supported.  Any check-out operation will issue the
+                           <tt>cvs edit</tt> command; any check-in or undo-check-out
+                           operation will issue the <tt>cvs unedit</tt> command;
+                           the status operation will issue the <tt>cvs ss</tt> command.
+</td></tr>
+<tr><td valign="top"> Executable            </td><td valign="top"> The path to the <tt>cvs</tt> executable.
+</td></tr>
+<tr><td valign="top"> Login/Logout Required </td><td valign="top"> If <b>Yes</b>, <b>Connect</b> will issue the <tt>cvs login</tt> command.
+</td></tr></table><h3>Connecting to the source-control system</h3><p>When connecting to source control, the provider checks if the local root is in CVS control. If this
+is the case, the local and remote root will be set accordingly. If the local root is not in CVS
+control after you have set the remote root, a <tt>cvs checkout -l -d</tt> command will be issued to
+make the local root CVS controlled. This command will also copy any files in the remote root
+to the local root.</p><h3>Source-control operations</h3><p>The SEGGER Embedded Studio for ARM source-control operations have been implemented using CVS
+commands. There are no multiple-file operations, each operation is done on a single file and committed
+as part of the operation.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Operation</b>          </td><td> <b>Command</b>
+</td></tr>
+<tr><td> Get Status            </td><td valign="top"> <tt>cvs status</tt> and optional <tt>cvs editors</tt> for local
+                           directories in CVS control.
+                           <tt>cvs rls -e</tt> for directories in the repository.
+</td></tr>
+<tr><td valign="top"> Add To Source Control </td><td valign="top"> <tt>cvs add</tt> for each directory not in CVS control.
+                           <tt>cvs add</tt> for the file.
+                           <tt>cvs commit</tt> for the file and directories.
+</td></tr>
+<tr><td valign="top"> Get Latest            </td><td valign="top"> <tt>cvs update -l -d</tt> for each directory not in CVS control.
+                           <tt>cvs update</tt> to merge the local file.
+                           <tt>cvs update -C</tt> to overwrite the local file.
+</td></tr>
+<tr><td valign="top"> Check Out             </td><td valign="top"> Optional <tt>cvs update -C</tt> to get the latest version.
+                           <tt>cvs edit</tt> to lock the file.
+</td></tr>
+<tr><td valign="top"> Undo Check Out        </td><td valign="top"> <tt>cvs unedit</tt> to unlock the file.
+                           Optional <tt>cvs update</tt> to get the latest version.
+</td></tr>
+<tr><td valign="top"> Check In              </td><td valign="top"> <tt>cvs commit</tt> for the file.
+</td></tr>
+<tr><td valign="top"> Source Control Explorer </td><td valign="top">
+                           <tt>cvs rls -e</tt> with a remote root starting with &lsquo;.&rsquo;.
+                           <tt>cvs import</tt> to create directories in the repository.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

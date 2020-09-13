@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>debug_loadsymbols</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-function">debug_loadsymbols</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">filename</span><span class="rwt-code-operator">,</span>
+                       <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">address</span><span class="rwt-code-operator">,</span>
+                       <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">breaksymbol</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>debug_loadsymbols</b> instructs the debugger to load the debugging symbols in the file denoted
+  by <b>filename</b>. The <b>filename</b> is a (macro expanded) host PC filename which is relative 
+  to the debugger working directory. The <b>address</b> is the load address which is required for 
+  debugging position independent executables, supply <b>NULL</b> for regular executables. 
+  The <b>breaksymbol</b> is the name of a symbol in the filename to set a temporary breakpoint 
+  on or <b>NULL</b>.
+</p> 
+    </div>
+  </body>
+</html>

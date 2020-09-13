@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Memory window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Memory</b> window shows the contents of the connected target's memory areas and
+allows the memory to be edited. SEGGER Embedded Studio provides four memory windows, you
+can configure each memory window to display different memory ranges.</p><p>The <b>Memory</b> window has a toolbar and a data display/edit area</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Field/Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <i>Address</i> </td><td valign="top"> Address to display. This can be a numeric value or a debug expression.
+</td></tr>
+<tr><td valign="top"> <i>Size</i> </td><td valign="top"> Number of bytes to display. This can be a number or a debug expression. If unspecified, the number of bytes required to fill the window will be automatically calculated.
+</td></tr>
+<tr><td valign="top"> <i>Columns</i> </td><td valign="top"> Number of columns to display. If unspecified, the number of columns required to fill the window will be automatically calculated.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase2.png"/> </td><td valign="top"> Select binary display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase8.png"/> </td><td valign="top"> Select octal display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase10.png"/> </td><td valign="top"> Select unsigned decimal display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewSigned.png"/> </td><td valign="top"> Select signed decimal display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase16.png"/> </td><td valign="top"> Select hexadecimal display <i>(default)</i>.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewWidth8.png"/> </td><td valign="top"> Select byte display <i>(default)</i>.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewWidth16.png"/> </td><td valign="top"> Select 2-byte display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewWidth32.png"/> </td><td valign="top"> Select 4-byte display.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewDataAndText.png"/> </td><td valign="top"> Display both data and text <i>(default)</i>.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewDataOnly.png"/> </td><td valign="top"> Display data only.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewTextOnly.png"/> </td><td valign="top"> Display text only.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewFromAddressAscending.png"/> </td><td valign="top"> Display an incrementing address range that starts from the selected address <i>(default)</i>.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewFromAddressDescending.png"/> </td><td valign="top"> Display a decrementing address range that starts from the selected address.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewToAddressAscending.png"/> </td><td valign="top"> Display an incrementing address range that ends at the selected address.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewToAddressDescending.png"/> </td><td valign="top"> Display a decrementing address range that ends at the selected address.
+</td></tr>
+<tr><td valign="top"> <img src="images/Refresh.png"/> </td><td valign="top"> Evaluate the address and size expressions, and update the <b>Memory</b> window.
+</td></tr></table><h3>Using the memory window</h3><p>The memory window does not show the complete address space of the target,
+instead you must enter both the address and the number of bytes to
+display. You can specify the address and size using numeric values
+or <a href="ide_debug_expressions.htm">debug expressions</a>
+which enable you to position the memory display at the address of a variable
+or at the value of a register. You can also specify whether you want the
+expressions to be evaluated each time the memory window is updated,
+or you can re-evaluate them yourself with the press of a button. Memory
+windows update each time your program stops on a breakpoint, after a
+single step and whenever you traverse the call stack. If any values that
+were previously displayed have changed, they are highlighted in red.</p><h5>To activate the first Memory window:</h5><ul><li>Choose <b>View > Memory > Memory 1</b> or press <b>Ctrl+T, M, 1</b>.</li></ul><p>Other register windows can be similarly activated.</p><h4>Using the mouse</h4><p>You can move the memory window's edit cursor by clicking on a data or text entry.</p><p>The vertical scroll bar can be used to modify the address being viewed by clicking
+the up and down buttons, the page up and down areas or using the vertical scroll
+wheel when the scroll bar is at it's furthest extent. Holding down the <b>Shift</b>
+key while scrolling will prevent the address being modified.</p><h4>Using the keyboard</h4><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.1in,3.9in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Keystroke</b>          </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <b>Up</b>                </td><td valign="top"> Move the cursor up one line, or if the cursor is on the first line, move the address up one line.
+</td></tr>
+<tr><td valign="top"> <b>Down</b>              </td><td valign="top"> Move the cursor down one line, or if the cursor is on the last line, move the address down line line.
+</td></tr>
+<tr><td valign="top"> <b>Left</b>              </td><td valign="top"> Move the cursor left one character.
+</td></tr>
+<tr><td valign="top"> <b>Right</b>             </td><td valign="top"> Move the cursor right one character.
+</td></tr>
+<tr><td valign="top"> <b>Home</b>              </td><td valign="top"> Move the cursor to the first entry.
+</td></tr>
+<tr><td valign="top"> <b>End</b>               </td><td valign="top"> Move the cursor to the last entry.
+</td></tr>
+<tr><td valign="top"> <b>PageUp</b>            </td><td valign="top"> Move the cursor up one page, or if the cursor is on first page, move the address up one page.
+</td></tr>
+<tr><td valign="top"> <b>PageDown</b>          </td><td valign="top"> Move the cursor down one page, or if the cursor is on the last page, move the address down one page.
+</td></tr>
+<tr><td valign="top"> <b>Ctrl+E</b>           </td><td valign="top"> Toggle the cursor between data and text editing.
+</td></tr></table><h4>Editing memory</h4><p>To edit memory, simply move the cursor to the data or text entry you want to modify and start typing. The memory entry will be written and read back as you type.</p><h4>Shortcut menu commands</h4><p>The shortcut menu contains the following commands:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Action</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Access Memory By Display Width </td><td valign="top">
+    Access memory in terms of the display width.
+</td></tr>
+<tr><td valign="top"> Address Order </td><td valign="top">
+    Specify whether the address range shown uses <b>Address</b> as the start or end address and whether addresses should increment or decrement.
+</td></tr>
+<tr><td valign="top"> Auto Evaluate </td><td valign="top">
+    Re-evaluate <b>Address</b> and <b>Size</b> each time the <b>Memory</b>
+    window is updated.
+</td></tr>
+<tr><td valign="top"> Auto Refresh </td><td valign="top"> Specify how frequently the memory window should automatically refresh.
+</td></tr>
+<tr><td valign="top"> Export To Binary Editor </td><td valign="top">
+    Create a binary editor with the current <b>Memory</b> window contents.
+</td></tr>
+<tr><td valign="top"> Save As </td><td valign="top">
+    Save the current <b>Memory</b> window contents to a file. Supported file formats are
+    <b>Binary File</b>, <b>Motorola S-Record File</b>, <b>Intel Hex File</b>,
+    <b>TI Hex File</b>, and <b>Hex File</b>.
+</td></tr>
+<tr><td valign="top"> Load From </td><td valign="top">
+    Load the current <b>Memory</b> window from a file. Supported file formats are
+    <b>Binary File</b>, <b>Motorola S-Record File</b>, <b>Intel Hex File</b>,
+    <b>TI Hex File</b>, and <b>Hex File</b>.
+</td></tr></table><h4>Display formats</h4><p>You can set the <b>Memory</b> window to display 8-bit, 16-bit, and 32-bit values that
+are formatted as hexadecimal, decimal, unsigned decimal, octal, or binary. You
+can also specify how many columns to display.</p><h4>Saving memory contents</h4><p>You can save the displayed contents of the memory window to a file in various
+formats. Alternatively, you can export the contents to a binary editor to work
+on them.</p><p>You can save the displayed memory values as a binary file, Motorola S-record
+file, Intel hex file, or a Texas Instruments TXT file.</p><h5>To save the current state of memory to a file:</h5><ul><li>Select the start address and number of bytes to save by editing the
+    <b>Start Address</b> and <b>Size</b> fields in the <b>Memory</b> window toolbar.
+  </li>
+<li>Right-click the main memory display.
+  </li>
+<li>From the shortcut menu, select <b>Save As</b>, then choose the format from the
+    submenu.</li></ul><h5>To export the current state of memory to a binary editor:</h5><ul><li>Select the start address and number of bytes to save by editing the
+    <b>Start Address</b> and <b>Size</b> fields in the <b>Memory</b> window toolbar.
+  </li>
+<li>Right-click the main memory display.
+  </li>
+<li>Choose <b>Export to Binary Editor</b> from the shortcut menu.</li></ul><p>Note that subsequent modifications in the binary editor will not modify memory
+in the target.</p><h4>Copying to clipboard</h4><p>You can copy the contents of the memory window to the clipboard as text.
+If an address range is selected, the data or text of the selected range
+will be copied to the clipboard depending on whether the selection has
+been made in the data or text view. If no address range is selected, the
+current memory window view will be copied to the clipboard.</p> 
+    </div>
+  </body>
+</html>

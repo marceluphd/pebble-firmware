@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Implementing mutual exclusion in the C library</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio for ARM C library ships as standard with callouts to functions that
+provide thread-safety in a multithreaded application.  If your application
+has a single thread of execution, the default implementation of these functions
+does nothing and your application will run without modification.</p><p>If your application is intended for a multithreaded environment and you wish
+to use the SEGGER Embedded Studio for ARM C library, you must implement the following locking
+functions:</p><ul><li><b>__heap_lock</b> and <b>__heap_unlock</b> to provide thread-safety for all heap
+  operations such as <b>malloc</b>, <b>free</b>, and <b>realloc</b>.
+</li>
+<li><b>__printf_lock</b> and <b>__printf_unlock</b> to provide thread-safety for
+  <b>printf</b> and relatives.
+</li>
+<li><b>__scanf_lock</b> and <b>__scanf_unlock</b> to provide thread-safety for
+  <b>scanf</b> and relatives.
+</li>
+<li><b>__debug_io_lock</b> and <b>__debug_io_unlock</b> to provide thread-safety
+  for semi-hosting support in the SEGGER Embedded Studio I/O function.</li></ul><p>If you use a third-party RTOS with the SEGGER Embedded Studio for ARM C library, you will need to
+use whatever your RTOS provides for mutual exclusion, typically a semaphore,
+a mutex, or an event set.</p> 
+    </div>
+  </body>
+</html>

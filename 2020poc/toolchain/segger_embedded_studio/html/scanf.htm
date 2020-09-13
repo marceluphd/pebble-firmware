@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>scanf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">scanf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">format</span><span class="rwt-code-operator">,</span>
+          <span class="rwt-code-operator">...);</span>
+</pre><h5>Description</h5><p><b>scanf</b> reads input from the standard input stream under control 
+  of the string pointed to by <b>format</b> that specifies the admissible 
+  input sequences and how they are to be converted for assignment, using
+  subsequent arguments as pointers to the objects to receive the converted
+  input.</p><p>If there are insufficient arguments for the format, the behavior is undefined. 
+  If the format is exhausted while arguments remain, the excess arguments are 
+  evaluated but are otherwise ignored.</p><p><b>scanf</b> returns the value of the macro <b>EOF</b> if an input failure occurs
+  before any conversion. Otherwise, <b>scanf</b> returns the number of input
+  items assigned, which can be fewer than provided for, or even zero, in the
+  event of an early matching failure.</p><h5>Formatted input control strings</h5><p>The format is composed of zero or more directives: one or more white-space 
+  characters, an ordinary character (neither <b>%</b> nor a white-space
+  character), or a conversion specification.</p><p>Each conversion specification is introduced by the character <b>%</b>. 
+  After the <b>%</b>, the following appear in sequence:</p><ul><li>An optional assignment-suppressing character <b>*</b>.
+  </li>
+<li>An optional nonzero decimal integer that specifies the maximum field width 
+    (in characters).
+  </li>
+<li>An optional length modifier that specifies the size of the receiving object.
+  </li>
+<li>A conversion specifier character that specifies the type of conversion 
+    to be applied.</li></ul><p>The formatted input function executes each directive of the format in turn. 
+  If a directive fails, the function returns. Failures are described as input 
+  failures (because of the occurrence of an encoding error or the unavailability 
+  of input characters), or matching failures (because of inappropriate input).</p><p>A directive composed of white-space character(s) is executed by reading input 
+  up to the first non-white-space character (which remains unread), or until no 
+  more characters can be read.</p><p>A directive that is an ordinary character is executed by reading the next characters 
+  of the stream. If any of those characters differ from the ones composing the 
+  directive, the directive fails and the differing and subsequent characters remain 
+  unread. Similarly, if end-of-file, an encoding error, or a read error prevents 
+  a character from being read, the directive fails.</p><p>A directive that is a conversion specification defines a set of matching input 
+  sequences, as described below for each specifier. A conversion specification 
+  is executed in the following steps:</p><ul><li>Input white-space characters (as specified by the <b>isspace</b> function) 
+    are skipped, unless the specification includes a <b>[</b>, <b>c</b>, or <b>n</b> 
+    specifier.
+ </li>
+<li>An input item is read from the stream, unless the specification includes 
+    an n specifier. An input item is defined as the longest sequence of input 
+    characters which does not exceed any specified field width and which is, or 
+    is a prefix of, a matching input sequence. The first character, if any, after 
+    the input item remains unread. If the length of the input item is zero, the 
+    execution of the directive fails; this condition is a matching failure unless
+    end-of-file, an encoding error, or a read error prevented input from the stream, 
+    in which case it is an input failure.
+  </li>
+<li>Except in the case of a <b>%</b> specifier, the 
+    input item (or, in the case of a %n directive, the count of input characters) 
+    is converted to a type appropriate to the conversion specifier. If the input 
+    item is not a matching sequence, the execution of the directive fails: this 
+    condition is a matching failure. Unless assignment suppression was indicated 
+    by a <b>*</b>, the result of the conversion is 
+    placed in the object pointed to by the first argument following the format 
+    argument that has not already received a conversion result. If this object 
+    does not have an appropriate type, or if the result of the conversion cannot 
+    be represented in the object, the behavior is undefined.</li></ul><h5>Length modifiers</h5><p>The length modifiers and their meanings are:</p><dl><dt>&lsquo;hh&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;, 
+    or &lsquo;n&rsquo; conversion specifier applies to an argument with type pointer
+    to <b>signed char</b> or pointer to <b>unsigned char</b>.
+  </dd>
+<dt>&lsquo;h&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;, 
+    or &lsquo;n&rsquo; conversion specifier applies to an  argument with type pointer
+    to <b>short int</b> or <b>unsigned short int</b>.
+  </dd>
+<dt>&lsquo;l&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;,
+    or &lsquo;n&rsquo; conversion specifier applies to an argument with type pointer
+    to <b>long int</b> or <b>unsigned long int</b>; that a following &lsquo;e&rsquo;, &lsquo;E&rsquo;, 
+    &lsquo;f&rsquo;, &lsquo;F&rsquo;, &lsquo;g&rsquo;, or &lsquo;G&rsquo; conversion specifier applies to an argument
+    with type pointer to <b>double</b>. Some library variants do not
+    support the &lsquo;l&rsquo; length modifier in order to reduce code and data space
+    requirements; please ensure that you have selected the correct library in
+    the <b>Printf Integer Support</b> property of the project if you use this
+    length modifier. 
+  </dd>
+<dt>&lsquo;ll&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;, 
+    or &lsquo;n&rsquo; conversion specifier applies to an argument with type pointer to
+    <b>long long int</b> or <b>unsigned long long int</b>.  Some library
+    variants do not support the &lsquo;ll&rsquo; length modifier in order to reduce code
+    and data space requirements; please  ensure that you have selected the correct
+    library in the <b>Printf Integer Support</b> property of the project if you use
+    this length modifier.</dd></dl><p>If a length modifier appears with any conversion specifier other than as specified 
+  above, the behavior is undefined. Note that the C99 length modifiers &lsquo;j&rsquo;, 
+  &lsquo;z&rsquo;, &lsquo;t&rsquo;, and  &lsquo;L&rsquo; are not supported.</p><h5>Conversion specifiers</h5><dl><dt>&lsquo;d&rsquo;
+  </dt>
+<dd>Matches an optionally signed decimal integer, whose format is the same as 
+    expected for the subject sequence of the <b>strtol</b> function with the value 
+    10 for the <b>base</b> argument. The corresponding argument must be a pointer 
+    to signed integer.
+  </dd>
+<dt>&lsquo;i&rsquo;
+  </dt>
+<dd>Matches an optionally signed integer, whose format is the same as expected 
+    for the subject sequence of the <b>strtol</b> function with the value zero 
+    for the <b>base</b> argument. The corresponding argument must be a pointer 
+    to signed integer.
+  </dd>
+<dt>&lsquo;o&rsquo;
+  </dt>
+<dd>Matches an optionally signed octal integer, whose format is the same as 
+    expected for the subject sequence of the <b>strtol</b> function with the value 
+    18 for the <b>base</b> argument. The corresponding argument must be a pointer 
+    to signed integer.
+  </dd>
+<dt>&lsquo;u&rsquo;
+  </dt>
+<dd>Matches an optionally signed decimal integer, whose format is the same as 
+    expected for the subject sequence of the <b>strtoul</b> function with the 
+    value 10 for the <b>base</b> argument. The corresponding argument must be 
+    a pointer to unsigned integer.
+  </dd>
+<dt>&lsquo;x&rsquo;
+  </dt>
+<dd>Matches an optionally signed hexadecimal integer, whose format is the same 
+    as expected for the subject sequence of the <b>strtoul</b> function with the 
+    value 16 for the <b>base</b> argument. The corresponding argument must be 
+    a pointer to unsigned integer.
+  </dd>
+<dt>&lsquo;e&rsquo;, &lsquo;f&rsquo;, &lsquo;g&rsquo;
+  </dt>
+<dd>Matches an optionally signed floating-point number whose format is the same 
+    as expected for the subject sequence of the <b>strtod</b> function. The corresponding 
+    argument shall be a pointer to floating. Some library variants 
+    do not support the &lsquo;e&rsquo;, &lsquo;f&rsquo; and &lsquo;F&rsquo; conversion specifiers in order to 
+    reduce code and data space requirements; please ensure that you have selected 
+    the correct library in the <b>Scanf Floating Point Support</b> property of 
+    the project if you use these conversion specifiers.
+  </dd>
+<dt>&lsquo;c&rsquo;
+  </dt>
+<dd>Matches a sequence of characters of exactly the number specified by the 
+    field width (one if no field width is present in the directive). The corresponding 
+    argument must be a pointer to the initial element of a character array large 
+    enough to accept the sequence. No null character is added. 
+  </dd>
+<dt>&lsquo;s&rsquo;
+  </dt>
+<dd>Matches a sequence of non-white-space characters The corresponding argument 
+    must be a pointer to the initial element of a character array large enough 
+    to accept the sequence and a terminating null character, which will be added 
+    automatically.
+  </dd>
+<dt>&lsquo;[&rsquo;
+  </dt>
+<dd>Matches a nonempty sequence of characters from a set of expected characters 
+    (the <i>scanset</i>). The corresponding argument must be a pointer to the 
+    initial element of a character array large enough to accept the sequence and 
+    a terminating null character, which will be added automatically. The conversion 
+    specifier includes all subsequent characters in the format string, up to and 
+    including the matching right bracket &lsquo;]&rsquo;. The characters between the brackets
+    (the <i>scanlist</i>) compose the scanset, unless the character after the left
+    bracket is a circumflex &lsquo;^&rsquo;, in which case the scanset contains all characters
+    that do not appear in the scanlist between the circumflex and the right bracket.
+    If the conversion specifier begins with &lsquo;[]&rsquo; or&lsquo;[^]&rsquo;, 
+    the right bracket character is in the scanlist and the next following right 
+    bracket character is the matching right bracket that ends the specification; 
+    otherwise the first following right bracket character is the one that ends 
+    the specification. If a &lsquo;-&rsquo; character is in 
+    the scanlist and is not the first, nor the second where the first character 
+    is a &lsquo;^&rsquo;, nor the last character, it is treated 
+    as a member of the scanset. Some library variants do not support 
+    the &lsquo;[&rsquo; conversion specifier in order to reduce 
+    code and data space requirements; please ensure that you have selected the 
+    correct library in the <b>Scanf Classes Supported</b> property of the project 
+    if you use this conversion specifier.
+  </dd>
+<dt>&lsquo;p&rsquo;
+  </dt>
+<dd>Reads a sequence output by the corresponding &lsquo;%p&rsquo; 
+    formatted output conversion. The corresponding argument must be a pointer 
+    to a pointer to <b>void</b>.
+  </dd>
+<dt>&lsquo;n&rsquo;
+  </dt>
+<dd>No input is consumed. The corresponding argument shall be a pointer to signed 
+    integer into which is to be written the number of characters read from the 
+    input stream so far by this call to the formatted input function. Execution 
+    of a &lsquo;%n&rsquo; directive does not increment the 
+    assignment count returned at the completion of execution of the fscanf function. 
+    No argument is converted, but one is consumed. If the conversion specification 
+    includes an assignment-suppressing character or a field width, the behavior 
+    is undefined.
+  </dd>
+<dt>&lsquo;%&rsquo;
+  </dt>
+<dd>Matches a single &lsquo;%&rsquo; character; no conversion 
+    or assignment occurs.</dd></dl><p>Note that the C99 width modifier &lsquo;l&rsquo; used in conjunction with the
+  &lsquo;c&rsquo;, &lsquo;s&rsquo;, and &lsquo;[&rsquo; conversion specifiers is not supported and nor
+  are the conversion specifiers &lsquo;a&rsquo; and &lsquo;A&rsquo;.</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Subversion provider</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The Subversion source-control provider has been tested with SVN 1.4.3.</p><h3>Provider-specific options</h3><p>The following environment options are supported:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Property</b>    </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Executable     </td><td valign="top"> The path to the <tt>svn</tt> executable.
+</td></tr>
+<tr><td valign="top"> Lock Supported </td><td valign="top"> If <b>Yes</b>, check out and undo check out operations are supported. Check out will
+                    issue the <tt>svn lock</tt> command; check in and undo check out will issue
+                    the <tt>svn unlock</tt> command.
+</td></tr>
+<tr><td valign="top"> Authentication </td><td valign="top"> Selects whether authentication (user name and password) is sent with every command.
+</td></tr>
+<tr><td valign="top"> Show Updates   </td><td valign="top"> Selects whether the update (<tt>-u</tt> flag) is sent with status requests in order
+                    to show that new versions are available in the repository.  Note that this requires
+                    a live connection to the repository: if you are working without a network connection
+                    to your repository, you can disable this switch and continue to enjoy source control
+                    status information in the <b>Project Explorer</b> and <b>Pending Changes</b> windows.
+</td></tr></table><h3>Connecting to the source-control system</h3><p>When connecting to source control, the provider checks if the local root is in SVN control. If this
+is the case, the local and remote root will be set accordingly. If the local root is not in SVN
+control after you have set the remote root, a <tt>svn checkout -N</tt> command will be issued to
+make the local root SVN controlled. This command will also copy any files in the remote root
+to the local root.</p><p>The user name and password you enter will be supplied with each svn command the provider issues.</p><h3>Source control operations</h3><p>The SEGGER Embedded Studio for ARM source-control operations are implemented using Subversion
+commands. Mapping SEGGER Embedded Studio for ARM source-control operations to Subversion source-control
+operations is straightforward:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Operation</b>          </td><td> <b>Command</b>
+</td></tr>
+<tr><td> Commit                </td><td valign="top"> <tt>svn commit</tt> for the file, with optional comment.
+</td></tr>
+<tr><td valign="top"> Update                </td><td valign="top"> <tt>svn update</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Revert                </td><td valign="top"> <tt>svn revert</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Resolved              </td><td valign="top"> <tt>svn resolved</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Lock                  </td><td valign="top"> <tt>svn lock</tt> for each file, with optional comment.
+</td></tr>
+<tr><td valign="top"> Unlock                </td><td valign="top"> <tt>svn unlock</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Add                   </td><td valign="top"> <tt>svn add</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Remove                </td><td valign="top"> <tt>svn remove</tt> for each file.
+</td></tr>
+<tr><td valign="top"> Source Control Explorer
+                         </td><td valign="top"> <tt>svn list</tt> with a remote root.
+                           <tt>svn mkdir</tt> to create directories in the repository.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

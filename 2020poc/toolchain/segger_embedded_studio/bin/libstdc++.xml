@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Types>
+
+  <List Name="deque&lt;*,*&gt;"
+        Condition="((_Deque_base&lt;$(T0), $(T1) &gt;*)HEAD)._M_impl._M_start._M_last!=CURRENT"
+        Head="((_Deque_base&lt;$(T0), $(T1) &gt;*)HEAD)._M_impl._M_start._M_cur"
+        Data="(*($(T0)*)CURRENT)"
+        Next="CURRENT+sizeof($(T0))"/>
+
+  <Expr Name="_Deque_iterator&lt;*,*,*&gt;" 
+        Expr="*(($(T)*)&amp;$(E))._M_cur"/>
+
+  <Expr Name="reverse_iterator&lt;*&gt;" 
+        Expr="$(E).current"/>
+
+  <List Name="list&lt;*,*&gt;"
+        Condition="HEAD!=CURRENT"
+        Head="(*(_List_node_base*)HEAD)._M_next"
+        Data="(($(T0))(*(_List_node&lt;$(T0)&gt;*)CURRENT)._M_storage)"       
+        Next="(*(_List_node&lt;$(T0)&gt;*)CURRENT)._M_next"/>
+
+  <Expr Name="_List_iterator&lt;*&gt;"
+        Expr="(($(T0))(*(_List_node&lt;$(T0)&gt;*)($(E)._M_node))._M_storage)"/>
+
+  <Expr Name="_List_const_iterator&lt;*&gt;"
+        Expr="(($(T0))(*(_List_node&lt;$(T0)&gt;*)($(E)._M_node))._M_storage)"/>
+
+  <RBTree Name="map&lt;*,*,*,*&gt;"
+        Condition="(&amp;((*($(T) *)HEAD)._M_t._M_impl._M_header))!=CURRENT"
+        Head="((*($(T) *)HEAD)._M_t._M_impl._M_header)._M_left"
+        Data="(($(T0))(*(_Rb_tree_node&lt;std::pair&lt;$(T0), $(T1)&gt; &gt;*)CURRENT)._M_storage)"
+        Left="(*(_Rb_tree_node_base*)CURRENT)._M_left"
+        Right="(*(_Rb_tree_node_base*)CURRENT)._M_right"
+        Parent="(*(_Rb_tree_node_base*)CURRENT)._M_parent"/>
+
+  <Expr Name="_Rb_tree_iterator&lt;*&gt;"
+        Expr="(($(T0))(*(_Rb_tree_node&lt;$(T0)&gt;*)(($(T)*)&amp;$(E))._M_node)._M_storage)"/>
+
+  <Expr Name="_Rb_tree_const_iterator&lt;*&gt;"
+        Expr="(($(T0))(*(_Rb_tree_node&lt;$(T0)&gt;*)(($(T)*)&amp;$(E))._M_node)._M_storage)"/>
+
+  <List Name="queue&lt;*,*&gt;"
+        Condition="(($(T1)*)HEAD)._M_impl._M_finish._M_cur!=CURRENT"
+        Head="(($(T1)*)HEAD)._M_impl._M_start._M_cur"
+        Data="(*($(T0)*)CURRENT)"
+        Next="CURRENT+sizeof($(T0))"/>
+
+  <RBTree Name="set&lt;*,*,*&gt;"
+        Condition="(&amp;((*($(T) *)HEAD)._M_t._M_impl._M_header))!=CURRENT"
+        Head="((*($(T) *)HEAD)._M_t._M_impl._M_header)._M_left"
+        Data="(($(T0))(*(_Rb_tree_node&lt;$(T0)&gt;*)CURRENT)._M_storage)"
+        Left="(*(_Rb_tree_node_base*)CURRENT)._M_left"
+        Right="(*(_Rb_tree_node_base*)CURRENT)._M_right"
+        Parent="(*(_Rb_tree_node_base*)CURRENT)._M_parent"/>
+
+  <List Name="stack&lt;*,*&gt;"
+        Condition="(($(T1)*)HEAD)._M_impl._M_finish._M_cur!=CURRENT"
+        Head="(($(T1)*)HEAD)._M_impl._M_start._M_cur"
+        Data="(*($(T0)*)CURRENT)"
+        Next="CURRENT+sizeof($(T0))"/>
+
+  <String Name="string"
+        Data="*(($(T) *)HEAD)._M_dataplus._M_p"/>
+
+  <List Name="vector&lt;*,*&gt;"
+        Condition="((_Vector_base&lt;$(T0), $(T1) &gt;*)HEAD)._M_impl._M_finish!=CURRENT"
+        Head="((_Vector_base&lt;$(T0), $(T1) &gt;*)HEAD)._M_impl._M_start"        
+        Data="(*($(T0)*)CURRENT)"
+        Next="CURRENT+sizeof($(T0))"/>
+
+  <!--
+  <List Name="VeryBasicArray&lt;*&gt;"
+        Head="(($(T)*)HEAD).m_pData"        
+        Data="(*($(T0)*)CURRENT)"
+        Length="(($(T)*)HEAD).m_Count"
+        Next="CURRENT+sizeof($(T0))"/>
+  -->
+
+</Types>

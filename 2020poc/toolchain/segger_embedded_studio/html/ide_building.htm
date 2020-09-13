@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Building your application</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>SEGGER Embedded Studio builds your application using the resources and build rules
+it finds in your solution.</p><p>When SEGGER Embedded Studio builds your application, it tries to avoid building files
+that have not changed since they were last built. It does this by comparing
+the modification dates of the generated files with the modification dates of
+the dependent files together with the modification dates of the project options that
+pertain to the build. But if you are copying files, sometimes the modification
+dates may not be updated when the file is copied&mdash;in this instance, it
+is wise to use the <b>Rebuild</b> command rather than the <b>Build</b> command.</p><p>You can see the build rationale SEGGER Embedded Studio currently is using by setting the
+<b>Environment Options > Building > Show Build Information</b> environment option. To see the build
+commands themselves, set the <b>Environment Options > Building > Echo Build Command</b> environment option.</p><p>You may have a solution that contains several interdependent projects.
+Typically, you might have several executable projects and some library projects.
+The <b>Project Dependencies</b> dialog specifies the dependencies between
+projects and to see the effect of those dependencies on the solution build
+order. Note that dependencies can be set on a per-configuration basis, but the
+default is for dependencies to be defined in the <b>Common</b> configuration.</p><p>You will also notice that a new folder titled <b>Dependencies</b> has appeared in the
+<b>Project Explorer</b>. This folder contains the list of newly generated files and
+the files from which they were generated. To see if one of files can be decoded and displayed
+in the editor, right-click the file to see if the <b>View</b>
+command is available on the shortcut menu.</p><p>If you have the <b>Symbols</b> window open, it will be updated with the symbol
+and section information of all executable files built in the solution.</p><p>To generalize your builds, you can define macro values that are substituted when
+the project options are used. These macro values can be defined globally
+at the solution and project level, and can be defined on a per-configuration
+basis.</p><p>The combination of configurations, project options with inheritance, dependencies,
+and macros provides a very powerful build-management system. However, such
+systems can become complicated. To understand the implications
+of changing build settings, right-click a node in the <b>Project Explorer</b> and
+select <b>Options</b> to view a dialog that shows which macros and project options
+apply to that project node.</p><h5>To build all projects in the solution:</h5><ol><li> Choose <b>Build > Build Solution</b> or press <b>Shift+F7</b>.</li></ol><p>&mdash;or&mdash;</p><ol><li> Right-click the solution in the <b>Project Explorer</b> window.
+  </li>
+<li> Choose <b>Build</b> from the shortcut menu.</li></ol><h5>To build a single project:</h5><ol><li> Select the required project in the <b>Project Explorer</b>.
+  </li>
+<li> Choose <b>Build > Build</b> or press <b>F7</b>.</li></ol><p>&mdash;or&mdash;</p><ol><li> Right-click the project in the <b>Project Explorer</b>.
+  </li>
+<li> Choose <b>Build</b>.</li></ol><h5>To compile a single file:</h5><ol><li> In the <b>Project Explorer</b>, click to select the source file to compile.
+  </li>
+<li> Choose <b>Build > Compile</b> or press <b>Ctrl+F7</b>.</li></ol><p>&mdash;or&mdash;</p><ol><li> In the <b>Project Explorer</b>, right-click the source file to compile.
+  </li>
+<li> Choose <b>Compile</b> from the shortcut menu.</li></ol><h3>Correcting errors after building</h3><p>The results of a build are recorded in a <b>Build Log</b> that is displayed in
+the <b>Output</b> window. Errors are highlighted in red, warnings are highlighted
+in yellow. Double-clicking an error, warning, or note will move the insertion
+point to the line of source code that triggered that log entry.</p><p>You can move forward and backward through errors using <b>Search > Next Location</b>
+and <b>Search > Next Location</b>.</p><p>When you build a single project in a single configuration, the <b>Transcript</b> will
+display the memory used by the application and a summary for each memory area.</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SEGGER Embedded Studio</title>
+    <link rel="stylesheet" href="rwt/styles/w3.css"/>
+    <link rel="stylesheet" href="rwt/styles/font-awesome.min.css"/>
+    <link rel="stylesheet" href="rwt/styles/theme.css"/>
+    <style type="text/css">
+    </style>
+    <script src="rwt/scripts/jquery-latest.js" > </script>
+    <script>
+
+function doAccept()
+{
+  studio.closeWindow(1)
+}
+
+function doDecline()
+{
+  studio.closeWindow(0)
+}
+
+$(document).keypress(function(e) {
+  if(e.altKey) {
+    if (e.which == 97) doAccept();
+    if (e.which == 100) doDecline();
+    //if (e.which == 114) window.location.href = $( "#linkrequest" ).attr('href');
+  }
+});
+
+$(document).ready(function() {
+  var ESTitle = "SEGGER Embedded Studio V" + studio.getStudioVersion();
+  document.title = ESTitle;
+});
+
+    </script>
+  </head>
+  <body>
+    <div class="w3-top w3-amber">
+      <h4><img src="images/shield_1_yellow_32.png"class="w3-image w3-margin-left w3-margin-right">No license for commercial use of Embedded Studio PRO</h4>
+    </div>
+    <div class="w3-container">
+      <div class="w3-content w3-panel  w3-small">
+        <h4>&nbsp;</h4>
+        <div id="nolicense">
+          <p>
+          The current project uses the Embedded Studio PRO software libraries.
+          </p>
+          <p>
+          Embedded Studio could not find a license for commercial use on this computer.<br />
+          If you would like to evaluate the software libraries or use it for educational or other non-commercial purposes, you are welcome to do so by clicking Continue.
+          </p>
+          <p>
+          (By clicking Continue, I confirm that I am not located in (or a national resident of) any embargoed country listed in the following document: <a href="http://www.bafa.de/SharedDocs/Downloads/DE/Aussenwirtschaft/afk_embargo_uebersicht_laenderbezogene_embargos.pdf?__blob=publicationFile&v=2">Embargoed countries</a>. 
+          In addition, I confirm that I am not listed on the following European Union Denied Party/Person Lists: <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:32002R0881">Council Regulation (EC) No 881/2002, Council Regulation (EC) No 2580/2001</a>.)
+          </p>
+          <p style="padding-top: 8px;">
+            <b>Would you like to use Embedded Studio PRO for commercial purposes?</b><br />
+            Once you finish evaluation and decide to use the Embedded Studio PRO libraries for your commercial purposes you have to purchase a license.
+          </p>
+          <p>
+            <i class="fa fa-arrow-right w3-text-green"></i> <a href="es_license.htm">Read the License Agreement</a><br />
+            <i class="fa fa-arrow-right w3-text-green"></i> <a href="https://www.segger.com/purchase/pricing/">Buy a License</a>
+          </p>
+        </div>
+        <div class="w3-padding-32">
+        </div>
+      </div>
+    </div>
+    <div class="w3-bottom w3-light-grey">
+        <div class="w3-panel">
+          <div class="w3-right">
+            <span class="w3-btn w3-round w3-white w3-border w3-medium" onclick="studio.closeWindow(1);">Continue</span>
+            <span class="w3-btn w3-round w3-white w3-border w3-medium" onclick="studio.closeWindow(0);">Close</span>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

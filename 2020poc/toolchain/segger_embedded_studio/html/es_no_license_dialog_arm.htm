@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SEGGER Embedded Studio</title>
+    <link rel="stylesheet" href="rwt/styles/w3.css"/>
+    <link rel="stylesheet" href="rwt/styles/font-awesome.min.css"/>
+    <link rel="stylesheet" href="rwt/styles/theme.css"/>
+    <style type="text/css">
+    </style>
+    <script src="rwt/scripts/jquery-latest.js" > </script>
+    <script>
+
+function doAccept()
+{
+  studio.closeWindow(1)
+}
+
+function doDecline()
+{
+  studio.closeWindow(0)
+}
+
+$(document).keypress(function(e) {
+  if(e.altKey) {
+    if (e.which == 97) doAccept();
+    if (e.which == 100) doDecline();
+    //if (e.which == 114) window.location.href = $( "#linkrequest" ).attr('href');
+  }
+});
+
+$(document).ready(function() {
+  var expired = studio.getActiveLicenseExpirationDateString();
+  var licenseString = studio.getActiveLicenseString();
+  var ESTitle = "SEGGER Embedded Studio V" + studio.getStudioVersion();
+  if (expired != "") {  // License has expired
+      document.title = ESTitle + " - " + licenseString;
+      $("#expired").css("display", 'block');
+      $("#nolicense").css("display", 'none');
+      $("#expiredheader").css("display", 'block');
+      $("#nolicenseheader").css("display", 'none');
+      $("#section1").html(expired);
+      $("#section2").html("You may still use Embedded Studio free of charge without a license renewal, without code size or time limit, for any of the following purposes:");
+      $("#section3").html("");
+      $("#section4").html("For a license renewal please visit our <a href='https://www.segger.com/purchase/pricing/'>our purchase website <i class='fa fa-external-link w3-small'></i></a> or contact your local SEGGER distributor.");
+  } else {  // There is no license
+      document.title = ESTitle;
+      $("#expired").css("display", 'none');
+      $("#nolicense").css("display", 'block');
+      $("#expiredheader").css("display", 'none');
+      $("#nolicenseheader").css("display", 'block');
+      $("#section1").html("No license for commercial use has been found.");
+      $("#section2").html("You may still use Embedded Studio free of charge without purchasing a commercial license, without code size or time limit, for any of the following purposes:");
+      $("#section3").html("");
+      $("#section4").html("To purchase a commercial license for SEGGER Embedded Studio please visit <a href='https://www.segger.com/purchase/pricing/'>our purchase website <i class='fa fa-external-link w3-small'></i></a> or contact your local SEGGER distributor.");
+    }
+});
+
+    </script>
+  </head>
+  <body>
+    <div id="expiredheader">
+      <div class="w3-top w3-amber">
+        <h4><img src="images/shield_1_yellow_32.png"class="w3-image w3-margin-left w3-margin-right">Your license has expired</h4>
+      </div>
+    </div>
+    <div id="nolicenseheader">
+      <div class="w3-top w3-amber">
+        <h4><img src="images/shield_1_yellow_32.png"class="w3-image w3-margin-left w3-margin-right">No commercial-use license detected</h4>
+      </div>
+    </div>
+    <div class="w3-container">
+      <div class="w3-content w3-panel  w3-small">
+        <h4>&nbsp;</h4>
+        <div id="expired" style="display: none">
+          <p>
+            Your license has expired and may only be used with older versions of SEGGER Embedded Studio released before <span id="section1"></span>. To use the current version, please renew your license.
+          </p>
+          <p>
+            You may still use Embedded Studio free of charge without a license renewal, without code size or time limit, for educational or other non-commercial purposes. In this case, click Continue.
+          </p>
+          <p>
+            Using Embedded Studio for any commercial purpose, especially if the generated executable shall be used in a product that is for sale, requires a commercial license.
+          </p>
+          <p>
+            In case of doubt and for detailed information on what you may and may not do without a commercial license, read the <a href="es_license.htm">License Agreement</a>. 
+          </p>
+          <p>
+            For a license renewal please visit our <a href="https://www.segger.com/purchase/pricing/">our purchase website <i class="fa fa-external-link w3-small"></i></a> or contact your local SEGGER distributor.
+          </p>
+        </div>
+        <div id="nolicense" style="display: none">
+          <p>
+          Embedded Studio could not find a commercial-use license on this computer or any attached J-Link.<br />
+          If you would like to evaluate this software or use it for educational or other non-commercial purposes, you are welcome to do so by clicking Continue.<br />
+          If you do have a commercial-use license, but that license is temporarily unavailable, please continue to use Embedded Studio as if it were present and click Continue.
+          </p>
+          <p style="padding-top: 8px;">
+            <b>Are you using Embedded Studio with a Nordic Semiconductor device?</b><br />
+            You can use Embedded Studio free of charge for any project using <a href="https://www.nordicsemi.com">Nordic Semiconductor <i class="fa fa-external-link w3-small"></i></a> devices.
+          </p>
+          <p>
+            <i class="fa fa-arrow-circle-o-right w3-medium w3-text-green"></i> <a href="http://license.segger.com/Nordic.cgi">Activate Your Free License</a>
+          </p>
+          <p style="padding-top: 8px;">
+            <b>Would you like to use Embedded Studio for commercial purposes?</b><br />
+            Once you finish evaluation and decide to use Embedded Studio for your commercial purposes you have to purchase a license.
+          </p>
+          <p>
+            <i class="fa fa-arrow-right w3-text-green"></i> <a href="es_license.htm">Read the License Agreement</a><br />
+            <i class="fa fa-arrow-right w3-text-green"></i> <a href="https://www.segger.com/purchase/pricing/">Buy a License</a>
+          </p>
+        </div>
+        <div class="w3-padding-32">
+        </div>
+      </div>
+    </div>
+    <div class="w3-bottom w3-light-grey">
+        <div class="w3-panel">
+          <div class="w3-right">
+            <span class="w3-btn w3-round w3-white w3-border w3-medium" onclick="studio.closeWindow(1);">Continue</span>
+            <span class="w3-btn w3-round w3-white w3-border w3-medium" onclick="studio.closeWindow(0);">Close</span>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

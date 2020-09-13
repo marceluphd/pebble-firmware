@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Property Groups file format</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio project system provides a means to create new properties that 
+change a number of project property settings and can also set C pre-processor definitions when selected. 
+Such properties are called <i>property groups</i> and are defined in a property-groups file. The property-group
+file to use for a project is defined by the <b>Property Groups File</b> property. These
+files usually define target-specific properties and are structured using XML syntax to enable simple 
+construction and parsing.</p><p>The first entry of the property groups file defines the XML document type, which is 
+used to validate the file format:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">!DOCTYPE </span><span class="rwt-code-attribute">CrossStudio_Group_Values</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The next entry is the <tt>propertyGroups</tt> element, which is used to group a set of property groups
+ entries into an XML hierarchy:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">propertyGroups</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">grouphdots</span>
+<span class="rwt-code-attribute">  &#8286;</span>
+<span class="rwt-code-attribute">  &lt;grouphdots</span>
+<span class="rwt-code-attribute">&lt;/propertyGroups</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>Each group has the name of the group (attribute <tt>name</tt>), the name of the options category
+(attribute <tt>group</tt>), short (attribute <tt>short</tt>) and long (attribute <tt>long</tt>) help 
+descriptions, and a default value (attribute <tt>default</tt>). For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">group </span><span class="rwt-code-attribute">short</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Target Processor</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> group</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Build Options</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> short</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Target Processor</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">  long</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Select a set of target options</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Target</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> default</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">STR912FW44</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>Each group has a number of <tt>groupEntry</tt> elements that define the enumerations of the group.</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">group&hellip;\</span><span class="rwt-code-keyword">></span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">groupEntry</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text">  &hellip;</span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">groupEntry</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">group</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>Each <tt>groupEntry</tt> has the name of the entry (attribute <tt>name</tt>), e.g.:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">groupEntry </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">STR910FW32</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>A <tt>groupEntry</tt> has the property values and C pre-processor definitions that are set when the <tt>groupEntry</tt> 
+is selected; they are specified with <tt>property</tt> and <tt>cdefine</tt> elements. For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">groupEntry</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">cdefine</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property</span><span class="rwt-code-keyword">></span><span class="rwt-code-text">&hellip;</span>
+<span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">groupEntry</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>A <tt>property</tt> element has the property's name (attribute <tt>name</tt>), its value (attribute <tt>value</tt>),
+and an optional configuration (attribute <tt>configuration</tt>):</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">property </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">linker_memory_map_file</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">  value</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">$(StudioDir)/targets/ST_STR91x/ST_STR910FM32_MemoryMap.xml</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>A <tt>cdefine</tt> element has the C preprocessor name (attribute <tt>name</tt>) and its value (attribute <tt>value</tt>):</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">cdefine </span><span class="rwt-code-attribute">value</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">STR910FM32</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">TARGET_PROCESSOR</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre> 
+    </div>
+  </body>
+</html>

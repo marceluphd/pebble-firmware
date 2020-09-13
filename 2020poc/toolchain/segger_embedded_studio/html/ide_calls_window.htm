@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Call Stack window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Call Stack</b> window displays the list of function calls
+(stack frames) that were active when program execution halted.
+When execution halts, SEGGER Embedded Studio populates the call-stack window from
+the active (currently executing) task. For simple, single-threaded applications
+not using the SEGGER Embedded Studio for ARM tasking library, there is only a single task; but for
+multi-tasking programs that use the SEGGER Embedded Studio for ARM Tasking Library, there may
+be any number of tasks. SEGGER Embedded Studio updates the <b>Call Stack</b> window
+when you change the active task in the <b>Threads</b> window.</p><p>The <b>Call Stack</b> window has a toolbar and a
+main call-stack display.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="ActionGoToSource.png"/> </td><td valign="top">
+    Move the insertion point to where the call was made to the selected frame.
+</td></tr>
+<tr><td valign="top"> <img src="CurrentFrameIndicator.png"/> </td><td valign="top">
+    Set the debugger context to the selected stack frame.
+</td></tr>
+<tr><td valign="top"> <img src="images/DebugFrameDown.png"/> </td><td valign="top">
+    Move the debugger context down one stack to the called function.
+</td></tr>
+<tr><td valign="top"> <img src="images/DebugFrameUp.png"/> </td><td valign="top">
+    Move the debugger context up one stack to the calling function.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserColumns.png"/> </td><td valign="top">
+    Select the fields to display for each entry in the call stack.
+</td></tr>
+<tr><td valign="top"> <img src="images/DebugShowNextStatement.png"/> </td><td valign="top">
+    Set the debugger context to the most recent stack frame and move
+    the insertion point to the currently executing statement.
+</td></tr></table><p>The main part of the <b>Call Stack</b> window displays each unfinished
+function call (active stack frame) at the point when program execution halted.
+The most recent stack frame is displayed at the bottom of the list and the
+oldest is displayed at the top of the list.</p><p>SEGGER Embedded Studio displays these icons to the left of each function name:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Icon</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="CurrentLineIndicator.png"/> </td><td valign="top">
+    Indicates the stack frame of the current task.
+</td></tr>
+<tr><td valign="top"> <img src="CurrentFrameIndicator.png"/> </td><td valign="top">
+    Indicates the stack frame selected for the debugger context.
+</td></tr>
+<tr><td valign="top"> <img src="BreakpointActive.png"/> </td><td valign="top">
+    Indicates that a breakpoint is active and when the function
+      returns to its caller.
+</td></tr></table><p>These icons can be overlaid to show, for instance, the debugger context and
+a breakpoint on the same stack frame.</p><h3>Showing the call-stack window</h3><h5>To activate the Call Stack window:</h5><ul><li>Choose <b>View > Call Stack</b> or press <b>Ctrl+Alt+S</b>.</li></ul><h3>Configuring the call-stack window</h3><p>Each entry in the <b>Call Stack</b> window displays the function
+name and, additionally, parameter names, types, and values. You can configure
+the <b>Call Stack</b> window to show varying amounts of information for
+each stack frame. By default, SEGGER Embedded Studio displays all information.</p><h5>To show or hide a field:</h5><ol><li> On the <b>Call Stack</b> toolbar, click the <b>Options</b> button on the far right.
+  </li>
+<li> Select the fields to show, and deselect the ones that should be hidden.</li></ol><h3>Changing the debugger context</h3><p>You can select the stack frame for the debugger context from the <b>Call Stack</b> window.</p><h5>To move the debugger context to a specific stack frame:</h5><ul><li>In the <b>Call Stack</b> window, double-click the stack frame to move to.</li></ul><p>&mdash;or&mdash;</p><ul><li>In the <b>Call Stack</b> window, select the stack frame to move to.
+  </li>
+<li>On the <b>Call Stack</b> window's toolbar, click the <b>Switch To Frame</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>In the <b>Call Stack</b> window, right-click the stack frame to move to.
+  </li>
+<li>Choose <b>Switch To Frame</b> from the shortcut menu.</li></ul><p>The debugger moves the insertion point to the statement where the call was made. If
+there is no debug information for the statement at the call location, SEGGER Embedded Studio
+opens a disassembly window at the instruction.</p><h5>To move the debugger context up one stack frame:</h5><ul><li>On the <b>Call Stack</b> window's toolbar, click the <b>Up One Stack Frame</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Debug Location</b> toolbar, click the <b>Up One Stack Frame</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>Press <b>Alt+-</b>.</li></ul><p>The debugger moves the insertion point to the statement where the call was made. If
+there is no debug information for the statement at the call location, SEGGER Embedded Studio
+opens a disassembly window at the instruction.</p><h5>To move the debugger context down one stack frame:</h5><ul><li>On the <b>Call Stack</b> window's toolbar, click the <b>Down One Stack Frame</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Debug Location</b> toolbar, click the <b>Down One Stack Frame</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>Press <b>Alt++</b>.</li></ul><p>The debugger moves the insertion point to the statement where the call was made. If
+there is no debug information for the statement at the call location, SEGGER Embedded Studio
+opens a disassembly window at the instruction.</p><h3>Setting a breakpoint on a return to a function</h3><h5>To set a breakpoint on return to a function:</h5><ul><li>In the <b>Call Stack</b> window, click the stack frame on the
+    function to stop at on return.
+  </li>
+<li>On the <b>Build</b> toolbar, click the <b>Toggle Breakpoint</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>In the <b>Call Stack</b> window, click the stack frame on the
+      function to stop at on return.
+  </li>
+<li>Press <b>F9</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>In the <b>Call Stack</b> window, right-click the function to
+    stop at on return.
+  </li>
+<li>Choose <b>Toggle Breakpoint</b> from the shortcut menu.</li></ul> 
+    </div>
+  </body>
+</html>

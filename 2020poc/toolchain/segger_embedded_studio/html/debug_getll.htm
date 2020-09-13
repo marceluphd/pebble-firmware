@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>debug_getll</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">debug_getll</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">ll</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>debug_getll</b> reads a long long from the <b>Debug</b> <b>Terminal</b>. If the number 
+  starts with <b>0x</b> it is interpreted as a hexadecimal number, if 
+  it starts with <b>0</b> it is interpreted as an octal number, if it 
+  starts with <b>0b</b> it is interpreted as a binary number, otherwise 
+  it is interpreted as a decimal number. The number is written to the long long
+  object pointed to by <b>ll</b>.</p><p><b>debug_getll</b> returns zero on success or -1 on error.
+</p> 
+    </div>
+  </body>
+</html>

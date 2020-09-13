@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>strtoull</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">unsigned</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">strtoull</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">nptr</span><span class="rwt-code-operator">,</span>
+                                <span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">**</span><span class="rwt-code-text">endptr</span><span class="rwt-code-operator">,</span>
+                                <span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">base</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>strtoull</b> converts the initial portion of the string pointed to by <b>nptr</b>
+  to a <b>long int</b> representation.</p><p>First, <b>strtoull</b> decomposes the input string into three parts: an initial,
+  possibly empty, sequence of white-space characters (as specified by <a href="isspace.htm">isspace</a>),
+  a subject sequence resembling an integer represented in some radix determined
+  by the value of <b>base</b>, and a final string of one or more unrecognized
+  characters, including the terminating null character of the input string. <b>strtoull</b>
+  then attempts to convert the subject sequence to an integer, and return the
+  result.</p><p>When converting, no integer suffix (such as U, L, UL, LL, ULL) is allowed.</p><p>If the value of <b>base</b> is zero, the expected form of the subject sequence
+  is an optional plus or minus sign followed by an integer constant.</p><p>If the value of <b>base</b> is between 2 and 36 (inclusive), the expected form
+  of the subject sequence is an optional plus or minus sign followed by a sequence
+  of letters and digits representing an integer with the radix specified by <b>base</b>.
+  The letters from a (or A) through z (or Z) represent the values 10 through 35;
+  only letters and digits whose ascribed values are less than that of <b>base</b>
+  are permitted.</p><p>If the value of <b>base</b> is 16, the characters &lsquo;0x&rsquo; or &lsquo;0X&rsquo; may optionally
+  precede the sequence of letters and digits, following the optional sign.</p><p>The subject sequence is defined as the longest initial subsequence of the input
+  string, starting with the first non-white-space character, that is of the expected
+  form. The subject sequence contains no characters if the input string is empty
+  or consists entirely of white space, or if the first non-white-space character
+  is other than a sign or a permissible letter or digit.</p><p>If the subject sequence has the expected form and the value of <b>base</b>
+  is zero, the sequence of characters starting with the first digit is interpreted
+  as an integer constant. If the subject sequence has the expected form and the
+  value of <b>base</b> is between 2 and 36, it is used as the base for conversion.</p><p>If the subject sequence begins with a minus sign, the value resulting from
+  the conversion is negated.</p><p>A pointer to the final string is stored in the object pointed to by <b>endptr</b>,
+  provided that <b>endptr</b> is not a null pointer.</p><p>If the subject sequence is empty or does not have the expected form, no conversion
+  is performed, the value of <b>nptr</b> is stored in the object pointed to by
+  <b>endptr</b>, provided that <b>endptr</b> is not a null pointer.</p><p><b>strtoull</b> returns the converted value, if any. If no conversion could
+  be performed, zero is returned. If the correct value is outside the range of
+  representable values, <a href="LLONG_MAX.htm">LLONG_MAX</a> or <a href="ULLONG_MAX.htm">ULLONG_MAX</a> is returned according
+  to the sign of the value, if any, and the value of the macro <b>ERANGE</b> is
+  stored in <a href="errno.htm">errno</a>.
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Symbol browser window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Symbol Browser</b> shows useful information about your linked application
+and complements the information displayed in the <b>Project Explorer</b> window. You
+can select different ways to filter and group the information in the <b>Symbol Browser</b>
+to provide an at-a-glance overview of your application. You
+can use the <b>Symbol Browser</b> to <i>drill down</i> to see the size and location of each part
+of your program. The way symbols are sorted
+and grouped is saved between runs; so, when you rebuild an application, SEGGER Embedded Studio
+automatically updates the <b>Symbol Browser</b> so you can see the effect of your changes
+on the memory layout of your program.</p><h3>User interface</h3><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="SymbolBrowserGroupBySourceFile.png"/> </td><td valign="top">
+     Group symbols by source filename.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserGroupByType.png"/> </td><td valign="top">
+     Group symbols by symbol type (equates, functions, labels, sections, and variables).
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserGroupBySection.png"/> </td><td valign="top">
+     Group symbols by the section where they are defined.
+</td></tr>
+<tr><td valign="top"> <img src="images/ActionGoToDefinition.png"/> </td><td valign="top">
+     Move the insertion point to the statement that defined the symbol.
+</td></tr>
+<tr><td valign="top"> <img src="PropertySettings.png"/> </td><td valign="top">
+     Select columns to display.
+</td></tr></table><p>The main part of the <b>Symbol Browser</b> displays each symbol (both
+external and static) that is linked into an application. SEGGER Embedded Studio displays
+the following icons to the left of each symbol:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Icon</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="SymbolBrowserPrivateEquate.png"/> </td><td valign="top">
+    <i>Private Equate</i>  A private symbol not defined relative
+    to a section.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserPublicEquate.png"/> </td><td valign="top">
+    <i>Public Equate</i>  A public symbol that is not defined relative to a section.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserPrivateFunction.png"/> </td><td valign="top">
+    <i>Private Function</i>  A private function symbol.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserPublicFunction.png"/> </td><td valign="top">
+    <i>Public Function</i>  A public function symbol.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserPrivateLabel.png"/> </td><td valign="top">
+    <i>Private Label</i>  A private data symbol, defined relative to a section.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserPublicLabel.png"/> </td><td valign="top">
+    <i>Public Label</i>  A public data symbol, defined relative to a section.
+</td></tr>
+<tr><td valign="top"> <img src="SymbolBrowserSection.png"/> </td><td valign="top">
+    <i>Section</i>  A program section.
+</td></tr></table><h3>Choosing what to show</h3><h5>To activate the Symbol Browser window:</h5><ul><li>Choose <b>View > Symbol Browser</b> or press <b>Ctrl+Alt+Y</b>.</li></ul><p>You can choose to display the following fields for each symbol:</p><ul><li><i>Value</i>:&nbsp;&nbsp;The value of the symbol. For labels, code, and data symbols, this will be
+    the address of the symbol. For absolute or symbolic equates, this will be
+    the value of the symbol.
+</li>
+<li><i>Range</i>:&nbsp;&nbsp;The range of addresses the code or data item covers. For code symbols that
+    correspond to high-level functions, the range is the range of addresses used
+    for that function's code. For data addresses that correspond to high-level
+    <b>static</b> or <b>extern</b> variables, the range is
+    the range of addresses used to store that data item. These ranges are only
+    available if the corresponding source file was compiled with debugging information
+    turned on: if no debugging information is available, the range will simply
+    be the first address of the function or data item.
+</li>
+<li><i>Size</i>:&nbsp;&nbsp;The size, in bytes, of the code or data item. The <b>Size</b>
+    column is derived from the <b>Range</b> of the symbol: if the symbol
+    corresponds to a high-level code or data item and has a range, <b>Size</b>
+    is calculated as the difference between the start and end addresses of the range.
+    If a symbol has no range, the size column is blank.
+</li>
+<li><i>Section</i>:&nbsp;&nbsp;The section in which the symbol is defined. If the symbol is not defined
+    within a section, the <b>Section</b> column is blank.
+</li>
+<li><i>Type</i>:&nbsp;&nbsp;The high-level type for the data or code item. If the source file that defines
+    the symbol is compiled with debugging information turned off, type information
+    is not available and the <b>Type</b> column is blank.
+</li>
+<li><i>Frame Size</i>:&nbsp;&nbsp;The amount of stack space used by a call to the function symbol. If the source file 
+    that defines the symbol is compiled with debugging information turned off, frame size information
+    is not available and the <b>Type</b> column is blank.</li></ul><p>Initially the <b>Range</b> and <b>Size</b> columns are shown in the <b>Symbol Browser</b>.
+To select which columns to display, use the <b>Field Chooser</b> button on
+the <b>Symbol Browser</b> toolbar.</p><h5>To select the fields to display:</h5><ol><li> Click the <b>Field Chooser</b> button on the <b>Symbol Browser</b>
+      toolbar.
+  </li>
+<li> Select the fields you wish to display and deselect the fields you
+      wish to hide.</li></ol><h3>Organizing and sorting symbols</h3><p>When you group symbols by section, each symbol is grouped underneath the section
+in which it is defined. Symbols that are absolute or are not defined within
+a section are grouped beneath &lsquo;(No Section)&rsquo;.</p><h5>To group symbols by section:</h5><ol><li> On the <b>Symbol Browser</b> toolbar, click the arrow next to
+    the <b>Cycle Grouping</b> button.
+  </li>
+<li> From the pop-up menu, choose <b>Group By Section</b>.</li></ol><p>The <b>Cycle Grouping</b> icon will change to indicate
+that the <b>Symbol Browser</b> is grouping symbols by section.</p><p>When you group symbols by type, each
+symbol is classified as one of the following:</p><ul><li>An <i>Equate</i> has an absolute value and is not defined
+  as relative to, or inside, a section.
+</li>
+<li>A <i>Function</i> is defined by a high-level
+  code sequence.
+</li>
+<li>A <i>Variable</i> is defined by a high-level data declaration.
+</li>
+<li>A <i>Label</i> is defined by an assembly language
+  module. <i>Label</i> is also used when high-level modules are compiled
+  with debugging information turned off.</li></ul><p>When you group symbols by source file, each symbol is grouped underneath the
+source file in which it is defined. Symbols that are absolute, are
+not defined within
+a source file, or are compiled without debugging information, are grouped
+beneath &lsquo;(Unknown)&rsquo;.</p><h5>To group symbols by type:</h5><ol><li> On the <b>Symbol Browser</b> toolbar, click the arrow next to
+    the <b>Cycle Grouping</b> button.
+  </li>
+<li> Choose <b>Group By Type</b> from the pop-up menu.</li></ol><p>The <b>Cycle Grouping</b> icon will change to indicate
+that the <b>Symbol Browser</b> is grouping symbols by type.</p><h5>To group symbols by source file:</h5><ol><li> On the <b>Symbol Browser</b> toolbar, click the arrow next to
+    the <b>Cycle Grouping</b> button.
+  </li>
+<li> Choose <b>Group By Source File</b>.</li></ol><p>The <b>Cycle Grouping</b> icon will change to indicate
+that the <b>Symbol Browser</b> is grouping symbols by source file.</p><p>When you sort symbols alphabetically, all symbols are displayed in a single
+list in alphabetical order.</p><h5>To list symbols alphabetically:</h5><ol><li> On the <b>Symbol Browser</b> toolbar, click the arrow next to
+    the <b>Cycle Grouping</b> button.
+  </li>
+<li> Choose <b>Sort Alphabetically</b>.</li></ol><p>The <b>Cycle Grouping</b> icon will change to indicate
+that the <b>Symbol Browser</b> is grouping symbols alphabetically.</p><h3>Filtering and finding symbols</h3><p>When you're dealing with big projects with hundreds, or even thousands,
+of symbols, a way to filter those symbols in order to isolate just the
+ones you need is very useful. The <b>Symbol Browser</b>'s toolbar provides an editable <i>combo</i>box} you can use to specify the symbols you'd like
+displayed. You can type &lsquo;*&rsquo; to match a sequence of zero or
+more characters and &lsquo;?&rsquo; to match exactly one character.</p><p>The symbols are filtered and redisplayed as you type into the combo box.
+Typing  the first few characters of a symbol name  is usually enough to narrow
+the display to the symbol you need. <i>Note:</i> the C compiler
+prefixes all high-level language symbols with an underscore character, so the
+variable <tt>extern int u</tt> or the function <tt>void fn(void)</tt> have low-level
+symbol names <tt>_u</tt> and <tt>_fn</tt>. The <b>Symbol Browser</b> uses the low-level symbol
+name when displaying and filtering, so you must type the leading underscore to
+match high-level symbols.</p><h5>To display symbols that start with a common prefix:</h5><ul><li>Type the desired prefix text into the combo box, optionally followed by
+    a "<b>*</b>".</li></ul><p>For instance, to display all symbols that start with "<b>i2c_</b>",
+type "<b>i2c_</b>" and all matching symbols are displayed&mdash;you
+don't need to add a trailing "<b>*</b>" in this
+case, because it is implied.</p><h5>To display symbols that end with a common suffix:</h5><ul><li>Type &lsquo;*&rsquo; into the combo box, followed by the required suffix.</li></ul><p>For instance, to display all symbols that end in &lsquo;_data&rsquo;,
+type &lsquo;*_data&rsquo; and all matching symbols are displayed&mdash;in
+this case, the leading &lsquo;*&rsquo; is required.</p><p>When you have found the symbol you're interested in and your source files
+have been compiled with debugging information turned on, you can jump to
+a symbol's definition using the <b>Go To Definition</b> button.</p><h5>To jump to the definition of a symbol:</h5><ol><li> Select the symbol from the list of symbols.
+  </li>
+<li> On the <b>Symbol Browser</b> toolbar, click <b>Go To Definition</b>.</li></ol><p>&mdash;or&mdash;</p><ol><li> Right-click the symbol in the list of symbols.
+  </li>
+<li> Choose <b>Go To Definition</b> from the shortcut menu.</li></ol><h3>Watching symbols</h3><p>If a symbol's range and type is known, you can add it to the most recently
+opened <b>Watch</b> window or <b>Memory</b> window.</p><h5>To add a symbol to the Watch window:</h5><ol><li> In the <b>Symbol Browser</b>, right-click the symbol you wish
+    to add to the <b>Watch</b> window.
+  </li>
+<li> On the shortcut menu, choose <b>Add To Watch</b>.</li></ol><h5>To add a symbol to the Memory window:</h5><ol><li> In the <b>Symbol Browser</b>, right-click the symbol you wish
+    to add to the <b>Memory</b> window.
+  </li>
+<li> Choose <b>Locate Memory</b> from the shortcut menu.</li></ol><h3>Using size information</h3><p>Here are a few common ways to use the <b>Symbol Browser</b>:</p><h5>What function uses the most code space? What requires the most data space?</h5><ol><li> Choose <b>View > Symbol Browser</b> or press <b>Ctrl+Alt+Y</b>.
+  </li>
+<li> In the <b>Grouping</b> button menu on the <b>Symbol Browser</b> toolbar, select <b>Group By Type</b>.
+  </li>
+<li> Ensure the <b>Size</b> field is checked in the <b>Field Chooser</b> button's menu.
+  </li>
+<li> Ensure that the filter on the <b>Symbol Browser</b> toolbar is empty.
+  </li>
+<li> Click on the <b>Size</b> field in the header to sort by data size.
+  </li>
+<li> The sizes of variables and of functions are shown in separate lists.</li></ol><h5>What's the overall size of my application?</h5><ol><li> Choose <b>View > Symbol Browser</b> or press <b>Ctrl+Alt+Y</b>.
+  </li>
+<li> In the <b>Grouping</b> button menu on the <b>Symbol Browser</b> toolbar, select <b>Group By Section</b>.
+  </li>
+<li> Ensure the <b>Range</b> and <b>Size</b> fields are checked in the <b>Field Chooser</b> button's menu.
+  </li>
+<li> Read the section sizes and ranges of each section in the application.</li></ol> 
+    </div>
+  </body>
+</html>

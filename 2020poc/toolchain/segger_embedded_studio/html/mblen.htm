@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mblen</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mblen</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+          <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>mblen</b> determines the number of bytes contained in the multi-byte
+  character pointed to by <b>s</b> in the current locale.</p><p>If <b>s</b> is a null pointer, <b>mblen</b> returns a nonzero or zero value, if multi-byte
+  character encodings, respectively, do or do not have state-dependent encodings</p><p>If <b>s</b> is not a null pointer, <b>mblen</b> either returns 0 (if <b>s</b> points to the
+  null character), or returns the number of bytes that are contained in the
+  multi-byte character (if the next <b>n</b> or fewer bytes form a valid multi-byte
+  character), or returns &#8722;1 (if they do not form a valid multi-byte
+  character).</p><h5>Note</h5><p>Except that the conversion state of the <b>mbtowc</b> function is not
+  affected, it is equivalent to</p>
+<pre class="rwt-code"><span class="rwt-code-function">mbtowc</span><span class="rwt-code-operator">((</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*)</span><span class="rwt-code-literal">0</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">);</span><span class="rwt-code-text"> </span></pre><h5>Note</h5><p>It is guaranteed that no library function in the Standard C library
+  calls <b>mblen</b>.</p><h5>See Also</h5><p><a href="mblen_l.htm">mblen_l</a>, <a href="mbtowc.htm">mbtowc</a>
+</p> 
+    </div>
+  </body>
+</html>

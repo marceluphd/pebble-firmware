@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>scalbn</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-function">scalbn</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-text">x</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">exp</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>scalbn</b> multiplies a floating-point number by an integral power 
+  of <b>DBL_RADIX</b>.</p><p>As floating-point arithmetic conforms to IEC 60559, <b>DBL_RADIX</b> 
+  is 2 and <b>scalbn</b> is (in this implementation) identical to <b>ldexp</b>.</p><p><b>scalbn</b> returns <b>x</b> * <b>DBL_RADIX</b>^<b>exp</b>.</p><p>If the result overflows, <b>errno</b> is set to <b>ERANGE</b> and <b>scalbn</b> returns <b>HUGE_VAL</b>. </p><p>If <b>x</b> is &#8734; or NaN, <b>scalbn</b> returns <b>x</b>. <br/>
+  If the result overflows, <b>scalbn</b> returns &#8734;.</p><h5>See Also</h5><p>ldexp
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1031 @@
+<keyboard>
+  <keyscheme name="Default">
+    <item name="FileOpenFromSolution">
+      <key>Shift+Alt+O</key>
+    </item>
+    <item name="FileOpenFile">
+      <key>Ctrl+O</key>
+    </item>
+    <item name="FileOpenSolution">
+      <key>Ctrl+Shift+O</key>
+    </item>
+    <item name="FileClose">
+      <key>Ctrl+F4</key>
+    </item>
+    <item name="FileSave">
+      <key>Ctrl+S</key>
+    </item>
+    <item name="FileSaveAs">
+      <key>Ctrl+K, A</key>
+    </item>
+    <item name="FileSaveCopyAs">
+      <key>Ctrl+K, Y</key>
+    </item>
+    <item name="FileSaveAndClose">
+      <key>Ctrl+K, D</key>
+    </item>
+    <item name="FileSaveAll">
+      <key>Ctrl+Shift+S</key>
+    </item>
+    <item name="FileNewBlankFile">
+      <key>Ctrl+K, Ctrl+N</key>
+    </item>
+    <item name="FilePrint">
+      <key>Ctrl+K, P</key>
+    </item>
+    <item name="FilePrintPreview">
+      <key>Ctrl+K, Ctrl+P</key>
+    </item>
+    <item name="FilePageSetup">
+      <key>Ctrl+K, Shift+P</key>
+    </item>
+    <item name="EditSolutionAsText">
+      <key>Ctrl+P, O</key>
+    </item>
+    <item name="EditFindInProject">
+      <key>Alt+Shift+U</key>
+    </item>
+    <item name="EditFindInSolution">
+      <ifnot host_os="macos">
+        <key>Alt+U</key>
+      </ifnot>
+      <alt>Alt+Shift+S</alt>
+    </item>
+    <item name="EditFindInDocument">
+      <ifnot host_os="macos">
+        <key>Ctrl+Shift+F3</key>
+      </ifnot>
+      <alt>Alt+Shift+D</alt>
+    </item>
+    <item name="ToolFindInFiles">
+      <key>Ctrl+Shift+F</key>
+      <alt>Shift+Search</alt>
+    </item>
+    <item name="ToolReplaceInFiles">
+      <key>Ctrl+Shift+H</key>
+    </item>
+    <item name="EditSetArgument0">
+      <key>Ctrl+L, 0</key>
+    </item>
+    <item name="EditSetArgument1">
+      <key>Ctrl+L, 1</key>
+      <alt>Ctrl+1</alt>
+    </item>
+    <item name="EditSetArgument2">
+      <key>Ctrl+L, 2</key>
+      <alt>Ctrl+2</alt>
+    </item>
+    <item name="EditSetArgument3">
+      <key>Ctrl+L, 3</key>
+      <alt>Ctrl+3</alt>
+    </item>
+    <item name="EditSetArgument4">
+      <key>Ctrl+L, 4</key>
+      <alt>Ctrl+4</alt>
+    </item>
+    <item name="EditSetArgument5">
+      <key>Ctrl+L, 5</key>
+      <alt>Ctrl+5</alt>
+    </item>
+    <item name="EditSetArgument6">
+      <key>Ctrl+L, 6</key>
+      <alt>Ctrl+6</alt>
+    </item>
+    <item name="EditSetArgument7">
+      <key>Ctrl+L, 7</key>
+      <alt>Ctrl+7</alt>
+    </item>
+    <item name="EditSetArgument8">
+      <key>Ctrl+L, 8</key>
+      <alt>Ctrl+8</alt>
+    </item>
+    <item name="EditSetArgument9">
+      <key>Ctrl+L, 9</key>
+      <alt>Ctrl+9</alt>
+    </item>
+    <item name="EditUndo">
+      <key>Ctrl+Z</key>
+      <alt>Alt+Backspace</alt>
+    </item>
+    <item name="EditRedo">
+      <key>Ctrl+Y</key>
+      <alt>Alt+Shift+Backspace</alt>
+    </item>
+    <item name="EditUndoAll">
+      <key>Ctrl+K, Ctrl+Z</key>
+    </item>
+    <item name="EditRedoAll">
+      <key>Ctrl+K, Ctrl+Y</key>
+    </item>
+    <item name="EditCut">
+      <key>Ctrl+X</key>
+      <alt>Shift+Del</alt>
+    </item>
+    <item name="EditCutAppend">
+      <key>Ctrl+Shift+X</key>
+    </item>
+    <item name="EditCopy">
+      <key>Ctrl+C</key>
+      <alt>Ctrl+Ins</alt>
+    </item>
+    <item name="EditCopyAppend">
+      <key>Ctrl+Shift+C</key>
+    </item>
+    <item name="EditPaste">
+      <key>Ctrl+V</key>
+      <alt>Shift+Ins</alt>
+    </item>
+    <item name="EditPasteAsNewDocument">
+      <key>Alt+Shift+V</key>
+    </item>
+    <item name="EditDelete">
+      <key>Del</key>
+    </item>
+    <item name="EditDeleteWord">
+      <key>Ctrl+K, T</key>
+    </item>
+    <item name="EditDeleteStartOfLine">
+      <key>Ctrl+Shift+Backspace</key>
+      <alt>Ctrl+K, Backspace</alt>
+    </item>
+    <item name="EditDeleteEndOfLine">
+      <key>Ctrl+Shift+Del</key>
+      <alt>Ctrl+K, Ctrl+K</alt>
+    </item>
+    <item name="EditCycleClipboardRing">
+      <key>Ctrl+Shift+V</key>
+    </item>
+    <item name="EditInsertFile">
+      <key>Ctrl+K, Ctrl+I</key>
+    </item>
+    <item name="EditShowSuggestions">
+      <key>Ctrl+J</key>
+    </item>
+    <item name="EditSelectAll">
+      <key>Ctrl+A</key>
+    </item>
+    <item name="EditSelectWord">
+      <key>Ctrl+Q, T</key>
+    </item>
+    <item name="EditSelectLine">
+      <key>Ctrl+F8</key>
+    </item>
+    <item name="EditUppercase">
+      <key>Ctrl+Shift+U</key>
+    </item>
+    <item name="EditLowercase">
+      <key>Ctrl+U</key>
+    </item>
+    <item name="EditCamelcase">
+      <key>Ctrl+K, Ctrl+Shift+U</key>
+    </item>
+    <item name="EditSplitcase">
+      <key>Ctrl+K, Ctrl+U</key>
+    </item>
+    <item name="EditUppercaseHex">
+      <key>Ctrl+K, Ctrl+H</key>
+    </item>
+    <item name="EditDeleteTrailingWhitespace">
+      <key>Ctrl+K, W</key>
+    </item>
+    <item name="EditExpandHex">
+      <key>Ctrl+K, Ctrl+X</key>
+    </item>
+    <item name="EditFormat">
+      <key>Ctrl+K, Ctrl+F</key>
+    </item>
+    <item name="EditColumnTidy">
+      <key>Ctrl+K, L</key>
+    </item>
+    <item name="EditJoinLines">
+      <key>Ctrl+K, J</key>
+    </item>
+    <item name="EditJoinLinesWithoutSpace">
+      <key>Ctrl+K, Shift+J</key>
+    </item>
+    <item name="EditComment">
+      <key>Ctrl+/</key>
+    </item>
+    <item name="EditUncomment">
+      <key>Ctrl+Shift+/</key>
+    </item>
+    <item name="EditToggleVisibleWhitespace">
+      <key>Ctrl+Shift+8</key>
+    </item>
+    <item name="EditToggleColumnGuide">
+      <key>Ctrl+K, G</key>
+    </item>
+    <item name="EditDuplicateLine">
+      <key>Ctrl+D</key>
+    </item>
+    <item name="EditMatchDelimiter">
+      <key>Ctrl+]</key>
+    </item>
+    <item name="EditMatchDelimiterExtend">
+      <key>Ctrl+Shift+]</key>
+    </item>
+    <item name="EditScrollToTop">
+      <key>Ctrl+Q, Home</key>
+    </item>
+    <item name="EditScrollToBottom">
+      <key>Ctrl+Q, End</key>
+    </item>
+    <item name="EditFind">
+      <key>Ctrl+F</key>
+    </item>
+    <item name="EditFindIncremental">
+      <key>Ctrl+I</key>
+    </item>
+    <item name="EditFindMethod">
+      <key>Ctrl+M</key>
+    </item>
+    <item name="EditFindSymbol">
+      <key>Alt+Y</key>
+    </item>
+    <item name="EditFindInclude">
+      <key>Ctrl+Shift+M</key>
+    </item>
+    <item name="EditReplace">
+      <key>Ctrl+H</key>
+    </item>
+    <item name="EditFindNext">
+      <key>F3</key>
+    </item>
+    <item name="EditFindPrev">
+      <key>Shift+F3</key>
+    </item>
+    <item name="EditFindNextSelected">
+      <key>Ctrl+F3</key>
+    </item>
+    <item name="EditFindMarkAll">
+      <key>Alt+Shift+F3</key>
+    </item>
+    <item name="EditFindReferences">
+      <key>Alt+R</key>
+      <alt>Shift+Alt+F</alt>
+    </item>
+    <item name="EditEscape">
+      <key>Esc, Esc</key>
+    </item>
+    <item name="EditGoToLine">
+      <key>Ctrl+G</key>
+      <alt>Ctrl+Q, G</alt>
+    </item>
+    <item name="EditGoToDefinition">
+      <key>Alt+G</key>
+      <alt>F12</alt>
+    </item>
+    <item name="EditGoToDeclaration">
+      <key>Shift+Alt+G</key>
+    </item>
+    <item name="EditGoToHeader">
+      <ifnot host_os="macos">
+        <key>Alt+L</key>
+      </ifnot>
+    </item>
+    <item name="EditGoToHeaderOpposite">
+      <key>Shift+Alt+L</key>
+    </item>
+    <item name="EditFindNextFunction">
+      <key>Ctrl+PgDown</key>
+    </item>
+    <item name="EditFindPrevFunction">
+      <key>Ctrl+PgUp</key>
+    </item>
+    <item name="WindowMoveOpposite">
+      <key>Alt+O</key>
+    </item>
+    <item name="HTMLBold">
+      <key>Ctrl+L, B</key>
+      <alt>Meta+B</alt>
+    </item>
+    <item name="HTMLItalic">
+      <key>Ctrl+L, I</key>
+      <alt>Meta+I</alt>
+    </item>
+    <item name="HTMLUnderline">
+      <key>Ctrl+L, U</key>
+      <alt>Meta+U</alt>
+    </item>
+    <item name="HTMLSuperscript">
+      <key>Ctrl+L, Up</key>
+    </item>
+    <item name="HTMLSubscript">
+      <key>Ctrl+L, Down</key>
+    </item>
+    <item name="HTMLBulletList">
+      <key>Ctrl+L, L</key>
+    </item>
+    <item name="HTMLNumberedList">
+      <key>Ctrl+L, N</key>
+    </item>
+    <item name="HTMLListItem">
+      <key>Ctrl+L, M</key>
+    </item>
+    <item name="HTMLHorizontalLine">
+      <key>Ctrl+L, -</key>
+    </item>
+    <item name="HTMLHeading1">
+      <key>Ctrl+L, H, 1</key>
+      <alt>Meta+1</alt>
+    </item>
+    <item name="HTMLHeading2">
+      <key>Ctrl+L, H, 2</key>
+      <alt>Meta+2</alt>
+    </item>
+    <item name="HTMLHeading3">
+      <key>Ctrl+L, H, 3</key>
+      <alt>Meta+3</alt>
+    </item>
+    <item name="HTMLHeading4">
+      <key>Ctrl+L, H, 4</key>
+      <alt>Meta+4</alt>
+    </item>
+    <item name="HTMLHeading5">
+      <key>Ctrl+L, H, 5</key>
+      <alt>Meta+5</alt>
+    </item>
+    <item name="HTMLHeading6">
+      <key>Ctrl+L, H, 6</key>
+      <alt>Meta+6</alt>
+    </item>
+    <item name="MacroStartRecording">
+      <key>Ctrl+Shift+R</key>
+    </item>
+    <item name="MacroPlayRecording">
+      <key>Ctrl+Shift+P</key>
+    </item>
+    <item name="ViewRefresh">
+      <alt>Refresh</alt>
+    </item>
+    <item name="ViewProperties">
+      <key>Alt+Return</key>
+    </item>
+    <item name="ViewFullScreen">
+      <key>Alt+Shift+Return</key>
+    </item>
+    <item name="ViewToggleDocks">
+      <key>Shift+Esc</key>
+    </item>
+    <item name="ProjectAddNewFile">
+      <key>Ctrl+N</key>
+    </item>
+    <item name="ProjectAddLinkToSolution">
+      <key>Ctrl+Shift+D</key>
+    </item>
+    <item name="ProjectExplorerCollapseSolutions">
+      <key>Ctrl+P, S</key>
+    </item>
+    <item name="ProjectExplorerCollapseProjects">
+      <key>Ctrl+P, J</key>
+    </item>
+    <item name="ProjectExplorerCollapseFolders">
+      <key>Ctrl+P, F</key>
+    </item>
+    <item name="ProjectExplorerCollapseFiles">
+      <key>Ctrl+P, I</key>
+    </item>
+    <item name="ProjectExplorerCollapseAll">
+      <key>Ctrl+P, -</key>
+    </item>
+    <item name="ProjectExplorerExpandAll">
+      <key>Ctrl+P, =</key>
+    </item>
+    <item name="ProjectAddExistingItem">
+      <key>Ctrl+P, A</key>
+    </item>
+    <item name="ToggleProjectSourceControlFilter">
+      <key>Ctrl+P, Ctrl+K</key>
+    </item>
+    <item name="FileNewProject">
+      <key>Ctrl+Shift+N</key>
+    </item>
+    <item name="BuildFindConfiguration">
+      <key>Ctrl+Shift+B</key>
+    </item>
+    <item name="TargetFindConnection">
+      <key>Ctrl+Shift+T</key>
+    </item>
+    <item name="ProjectFindProject">
+      <key>Ctrl+Shift+J</key>
+    </item>
+    <item name="ProjectLoadAndInstall">
+      <key>F8</key>
+    </item>
+    <item name="BuildShowLog">
+      <key>Ctrl+B, Ctrl+T</key>
+    </item>
+    <item name="SourceControlShowLog">
+      <key>Ctrl+R, Ctrl+T</key>
+    </item>
+    <item name="BuildBuildSolution">
+      <key>Shift+F7</key>
+    </item>
+    <item name="BuildRebuildSolution">
+      <key>Alt+Shift+F7</key>
+    </item>
+    <item name="BuildBuildProject">
+      <key>F7</key>
+    </item>
+    <item name="BuildRebuildProject">
+      <key>Alt+F7</key>
+    </item>
+    <item name="BuildCompile">
+      <key>Ctrl+F7</key>
+    </item>
+    <item name="BuildCancelBuild">
+      <key>Ctrl+.</key>
+    </item>
+    <item name="BuildAndDebug">
+      <key>Ctrl+T, F5</key>
+    </item>
+    <item name="BuildAndRun">
+      <key>Ctrl+T, Ctrl+F5</key>
+    </item>
+    <item name="EditLocateNext">
+      <key>F4</key>
+    </item>
+    <item name="EditLocatePrev">
+      <key>Shift+F4</key>
+    </item>
+    <item name="EditFindFixmeTags">
+      <key>Ctrl+Q, X</key>
+    </item>
+    <item name="EditFindAttentionTags">
+      <key>Ctrl+Q, A</key>
+    </item>
+    <item name="EditFindLintTags">
+      <key>Ctrl+Q, L</key>
+    </item>
+    <item name="OpenProjectDirectory">
+      <key>Ctrl+Q, F, J</key>
+    </item>
+    <item name="OpenPackagesDirectory">
+      <key>Ctrl+Q, F, P</key>
+    </item>
+    <item name="OpenSamplesDirectory">
+      <key>Ctrl+Q, F, S</key>
+    </item>
+    <item name="OpenStudioDirectory">
+      <key>Ctrl+Q, F, U</key>
+    </item>
+    <item name="OpenTargetsDirectory">
+      <key>Ctrl+Q, F, T</key>
+    </item>
+    <item name="OpenStudioUserDirectory">
+      <key>Ctrl+Q, F, D</key>
+    </item>
+
+    <item name="FileSelectInExplorer">
+      <key>Ctrl+Q, E</key>
+    </item>
+    <item name="Tool.Disassembler">
+      <key>Ctrl+K, Ctrl+V</key>
+    </item>
+    <item name="Tool.CodeEditor">
+      <key>Ctrl+L, Ctrl+O</key>
+    </item>
+    <item name="ToolCheckSyntax">
+      <key>Ctrl+Q, Ctrl+Y</key>
+    </item>
+    <item name="ToolTidyDocument">
+      <key>Ctrl+Q, Ctrl+T</key>
+    </item>
+    <item name="ToolOptions">
+      <key>Alt+,</key>
+    </item>
+    <item name="NewFileComparison">
+      <key>Ctrl+K, F</key>
+    </item>
+    <item name="HelpF1Help">
+      <key>F1</key>
+    </item>
+    <item name="EditSelectBlockExtendLeft">
+      <key>Alt+Shift+Left</key>
+    </item>
+    <item name="EditSelectBlockExtendRight">
+      <key>Alt+Shift+Right</key>
+    </item>
+    <item name="EditSelectBlockExtendUp">
+      <key>Alt+Shift+Up</key>
+    </item>
+    <item name="EditSelectBlockExtendDown">
+      <key>Alt+Shift+Down</key>
+    </item>
+    <item name="Waypoint.Forward">
+      <key>Alt+Right</key>
+      <alt>Forward</alt>
+    </item>
+    <item name="Waypoint.Back">
+      <key>Alt+Left</key>
+      <alt>Back</alt>
+    </item>
+    <item name="Waypoint.SnapPoint">
+      <key>Alt+K</key>
+    </item>
+    <item name="BookmarkToggle">
+      <key>Ctrl+F2</key>
+    </item>
+    <item name="BookmarkNext">
+      <key>Alt+F2</key>
+    </item>
+    <item name="BookmarkPrev">
+      <key>Alt+Shift+F2</key>
+    </item>
+    <item name="BookmarkFirst">
+      <key>Ctrl+Q, Alt+F2</key>
+    </item>
+    <item name="BookmarkLast">
+      <key>Ctrl+Q, Alt+Shift+F2</key>
+    </item>
+    <item name="BookmarkClearAll">
+      <key>Ctrl+K, Alt+F2</key>
+    </item>
+    <item name="BookmarkNextInDocument">
+      <key>F2</key>
+    </item>
+    <item name="BookmarkPrevInDocument">
+      <key>Shift+F2</key>
+    </item>
+    <item name="BookmarkFirstInDocument">
+      <key>Ctrl+Q, F2</key>
+    </item>
+    <item name="BookmarkLastInDocument">
+      <key>Ctrl+Q, Shift+F2</key>
+    </item>
+    <item name="BookmarkClearAllInDocument">
+      <key>Ctrl+K, F2</key>
+    </item>
+    <item name="BookmarkClear">
+      <key>Ctrl+K, 0</key>
+    </item>
+    <item name="BookmarkSet1">
+      <key>Ctrl+K, 1</key>
+    </item>
+    <item name="BookmarkSet2">
+      <key>Ctrl+K, 2</key>
+    </item>
+    <item name="BookmarkSet3">
+      <key>Ctrl+K, 3</key>
+    </item>
+    <item name="BookmarkSet4">
+      <key>Ctrl+K, 4</key>
+    </item>
+    <item name="BookmarkSet5">
+      <key>Ctrl+K, 5</key>
+    </item>
+    <item name="BookmarkSet6">
+      <key>Ctrl+K, 6</key>
+    </item>
+    <item name="BookmarkSet7">
+      <key>Ctrl+K, 7</key>
+    </item>
+    <item name="BookmarkSet8">
+      <key>Ctrl+K, 8</key>
+    </item>
+    <item name="BookmarkSet9">
+      <key>Ctrl+K, 9</key>
+    </item>
+    <item name="BookmarkGoTo1">
+      <key>Ctrl+Q, 1</key>
+    </item>
+    <item name="BookmarkGoTo2">
+      <key>Ctrl+Q, 2</key>
+    </item>
+    <item name="BookmarkGoTo3">
+      <key>Ctrl+Q, 3</key>
+    </item>
+    <item name="BookmarkGoTo4">
+      <key>Ctrl+Q, 4</key>
+    </item>
+    <item name="BookmarkGoTo5">
+      <key>Ctrl+Q, 5</key>
+    </item>
+    <item name="BookmarkGoTo6">
+      <key>Ctrl+Q, 6</key>
+    </item>
+    <item name="BookmarkGoTo7">
+      <key>Ctrl+Q, 7</key>
+    </item>
+    <item name="BookmarkGoTo8">
+      <key>Ctrl+Q, 8</key>
+    </item>
+    <item name="BookmarkGoTo9">
+      <key>Ctrl+Q, 9</key>
+    </item>
+    <item name="ScriptRun">
+      <key>Ctrl+F6</key>
+    </item>
+    <item name="EditorNext">
+      <if host_os="macos">
+        <key>Meta+Tab</key>
+      </if>
+      <ifnot host_os="macos">
+        <key>Ctrl+Tab</key>
+      </ifnot>
+    </item>
+    <item name="EditorPrev">
+      <if host_os="macos">
+        <key>Meta+Shift+Tab</key>
+      </if>
+      <ifnot host_os="macos">
+        <key>Ctrl+Shift+Tab</key>
+      </ifnot>
+    </item>
+    <item name="EditorNextTab">
+      <key>Alt+PgDown</key>
+    </item>
+    <item name="EditorPrevTab">
+      <key>Alt+PgUp</key>
+    </item>
+    <item name="EditMoveSelectedLineDown">
+      <key>Alt+Down</key>
+    </item>
+    <item name="EditMoveSelectedLineUp">
+      <key>Alt+Up</key>
+    </item>
+    <item name="WindowNext">
+      <key>F6</key>
+    </item>
+    <item name="WindowPrev">
+      <key>Shift+F6</key>
+    </item>
+    <item name="WindowSwitchPrev">
+      <key>Alt+Z</key>
+    </item>
+    <item name="WindowCloseFocused">
+      <key>Ctrl+W</key>
+    </item>
+    <item name="WindowCloseAll">
+      <key>Ctrl+Shift+F4</key>
+    </item>
+    <item name="WindowCloseAllUnedited">
+      <key>Ctrl+K, Ctrl+F4</key>
+    </item>
+    <item name="WindowCloseOtherWindows">
+      <key>Ctrl+K, F4</key>
+    </item>
+    <item name="DebugDownloadActive">
+      <key>Ctrl+T, L</key>
+    </item>
+    <item name="DebugResetActive">
+      <key>Ctrl+Alt+F5</key>
+    </item>
+    <item name="Debug.Restart">
+      <key>Ctrl+Shift+F5</key>
+      <alt>Ctrl+T, Ctrl+R</alt>
+    </item>
+    <item name="DebugAttachActive">
+      <key>Ctrl+T, H</key>
+    </item>
+    <item name="DebugVerifyActive">
+      <key>Ctrl+T, V</key>
+    </item>
+    <ifnot STUDIO_NAME="SEGGER Embedded Studio">
+      <item name="DebugExecuteActive">
+        <key>Ctrl+F5</key>
+      </item>
+    </ifnot>
+    <item name="Debug.Break">
+      <key>Ctrl+.</key>
+      <if STUDIO_NAME="SEGGER Embedded Studio">
+        <alt>Ctrl+F5</alt>
+      </if>
+    </item>
+    <item name="Debug.SwitchDebugMode">
+      <key>Ctrl+F11</key>
+    </item>
+    <item name="Debug.Continue">
+      <key>F5</key>
+    </item>
+    <item name="Debug.Go">
+      <key>F5</key>
+    </item>
+    <item name="Debug.Stop">
+      <key>Shift+F5</key>
+    </item>
+    <item name="Debug.StepInto">
+      <key>F11</key>
+    </item>
+    <item name="Debug.StepOver">
+      <key>F10</key>
+    </item>
+    <item name="Debug.StepOut">
+      <key>Shift+F11</key>
+    </item>
+    <item name="Debug.AutoStep">
+      <key>Alt+F11</key>
+    </item>
+    <item name="Debug.RunToCursor">
+      <key>Ctrl+F10</key>
+      <alt>Ctrl+T, Ctrl+H</alt>
+    </item>
+    <item name="Debug.ShowNextStatement">
+      <key>Alt+*</key>
+      <alt>Ctrl+T, Ctrl+X</alt>
+    </item>
+    <item name="Debug.FrameUp">
+      <key>Ctrl+T, Up</key>
+    </item>
+    <item name="Debug.FrameDown">
+      <key>Ctrl+T, Down</key>
+    </item>
+    <item name="Debug.SetNextStatement">
+      <key>Shift+F10</key>
+      <alt>Ctrl+T, .</alt>
+    </item>
+    <item name="DebugAddToWatch">
+      <key>Ctrl+T, Ctrl+W</key>
+    </item>
+    <item name="DebugQuickWatch">
+      <key>Shift+F9</key>
+    </item>
+    <item name="DebugLocateMemory">
+      <key>Ctrl+T, Y</key>
+    </item>
+    <if STUDIO_NAME="SEGGER Embedded Studio">
+      <item name="DebugStartOzone">
+        <key>Alt+F5</key>
+      </item>
+    </if>
+    <item name="BreakpointDelete">
+      <key>Ctrl+B, 0</key>
+    </item>
+    <item name="BreakpointDeleteAll">
+      <key>Ctrl+Shift+F9</key>
+    </item>
+    <item name="BreakpointNewDataBreakpoint">
+      <key>Ctrl+B, D</key>
+    </item>
+    <item name="BreakpointNewFunctionBreakpoint">
+      <key>Ctrl+B, F</key>
+    </item>
+    <item name="BreakpointNewSourceCodeBreakpoint">
+      <key>Ctrl+B, S</key>
+    </item>
+    <item name="BreakpointEnableAll">
+      <key>Ctrl+B, N</key>
+    </item>
+    <item name="BreakpointDisableAll">
+      <key>Ctrl+B, X</key>
+    </item>
+    <item name="BreakpointToggle">
+      <key>F9</key>
+      <alt>Ctrl+B, Ctrl+B</alt>
+    </item>
+    <item name="BreakpointToggleEnable">
+      <key>Ctrl+F9</key>
+    </item>
+    <item name="BreakpointGoToNext">
+      <key>Alt+F9</key>
+    </item>
+    <item name="BreakpointGoToPrev">
+      <key>Alt+Shift+F9</key>
+    </item>
+    <item name="BreakpointNew">
+      <key>Ctrl+K, F9</key>
+    </item>
+    <item name="SourceControlSetup">
+      <key>Ctrl+R, O</key>
+    </item>
+    <item name="SourceControlDisconnect">
+      <key>Ctrl+R, D</key>
+    </item>
+    <item name="SourceControlRefresh">
+      <key>Ctrl+R, E</key>
+    </item>
+    <item name="FocusPendingChangesWindow">
+      <key>Ctrl+R, Ctrl+R</key>
+    </item>
+    <xitem name="SourceControlRepositoryExplorer">
+      <key>Ctrl+R, X</key>
+    </xitem>
+    <item name="SourceControlAddRecursive">
+      <key>Ctrl+R, A</key>
+    </item>
+    <item name="SourceControlRemoveRecursive">
+      <key>Ctrl+R, R</key>
+    </item>
+    <item name="SourceControlResolvedRecursive">
+      <key>Ctrl+R, S</key>
+    </item>
+    <item name="SourceControlCommitRecursive">
+      <key>Ctrl+R, C</key>
+      <alt>Ctrl+R, I</alt>
+    </item>
+    <item name="SourceControlUpdateRecursive">
+      <key>Ctrl+R, U</key>
+    </item>
+    <item name="SourceControlRevertRecursive">
+      <key>Ctrl+R, V</key>
+    </item>
+    <item name="SourceControlLockRecursive">
+      <key>Ctrl+R, L</key>
+    </item>
+    <item name="SourceControlUnlockRecursive">
+      <key>Ctrl+R, N</key>
+    </item>
+    <item name="SourceControlCompare">
+      <key>Ctrl+R, P</key>
+    </item>
+    <item name="ViewToggleDockTitles">
+      <key>Meta+H</key>
+    </item>
+    <item name="EditInsertHardTab">
+      <key>Ctrl+K, Tab</key>
+    </item>
+<if platform="ARM,AVR,MAXQ,MAXQ30,MSP430">
+    <item name="FocusDebugTerminalWindow">
+      <key>Ctrl+Alt+D</key>
+    </item>
+</if>
+    <item name="DebugCycleCounterReset">
+      <key>Ctrl+T, Z</key>
+    </item>
+    <item name="FocusDashboard">
+      <key>Ctrl+Q, D</key>
+    </item>
+    <item name="FocusProjectExplorerWindow">
+      <key>Ctrl+Alt+P</key>
+      <alt>Ctrl+P, Ctrl+P</alt>
+    </item>
+    <item name="FocusMemoryUsageWindow">
+      <key>Ctrl+Alt+Z</key>
+    </item>
+    <item name="FocusCalcpadWindow">
+      <key>Alt+=</key>
+    </item>
+    <item name="FocusPropertiesWindow">
+      <key>Ctrl+Alt+Enter</key>
+    </item>
+    <item name="FocusTerminalEmulatorWindow">
+      <key>Ctrl+Alt+M</key>
+    </item>
+    <item name="FocusClipboardRingWindow">
+      <key>Ctrl+Alt+C</key>
+    </item>
+    <item name="FocusOutputWindow">
+      <key>Ctrl+Alt+O</key>
+      <ifnot host_os="macos">
+        <alt>Alt+2</alt>
+      </ifnot>
+    </item>
+    <item name="FocusFindWindow">
+      <key>Ctrl+Alt+F</key>
+    </item>
+    <item name="FocusScriptWindow">
+      <key>Ctrl+Alt+J</key>
+    </item>
+    <item name="FocusSymbolBrowserWindow">
+      <key>Ctrl+Alt+Y</key>
+    </item>
+    <item name="FocusBreakpointsWindow">
+      <key>Ctrl+Alt+B</key>
+    </item>
+    <item name="FocusExecutionProfileWindow">
+      <key>Ctrl+T, P</key>
+    </item>
+    <item name="FocusExecutionTraceWindow">
+      <key>Ctrl+T, T</key>
+    </item>
+    <item name="FocusOutlineWindow">
+      <key>Ctrl+Alt+U</key>
+    </item>
+    <item name="OutlineWindowStructureView">
+      <key>Ctrl+'</key>
+    </item>
+    <item name="OutlineWindowPreviewView">
+      <key>Ctrl+\</key>
+    </item>
+    <item name="FocusProjectFilter">
+      <key>Ctrl+;</key>
+    </item>
+    <item name="FocusLocalsWindow">
+      <key>Ctrl+Alt+L</key>
+      <ifnot host_os="macos">
+        <alt>Alt+4</alt>
+      </ifnot>
+    </item>
+    <item name="FocusDisassemblyWindow">
+      <key>Ctrl+F12</key>
+      <ifnot host_os="macos">
+        <alt>Alt+8</alt>
+      </ifnot>
+    </item>
+    <item name="FocusGlobalsWindow">
+      <key>Ctrl+Alt+G</key>
+    </item>
+    <item name="FocusWatch1Window">
+      <key>Ctrl+T, W, 1</key>
+      <ifnot host_os="macos">
+        <alt>Alt+3</alt>
+      </ifnot>
+    </item>
+    <item name="FocusWatch2Window">
+      <key>Ctrl+T, W, 2</key>
+    </item>
+    <item name="FocusWatch3Window">
+      <key>Ctrl+T, W, 3</key>
+    </item>
+    <item name="FocusWatch4Window">
+      <key>Ctrl+T, W, 4</key>
+    </item>
+    <item name="FocusRegisters1Window">
+      <key>Ctrl+T, R, 1</key>
+      <ifnot host_os="macos">
+        <alt>Alt+5</alt>
+      </ifnot>
+    </item>
+    <item name="FocusRegisters2Window">
+      <key>Ctrl+T, R, 2</key>
+    </item>
+    <item name="FocusRegisters3Window">
+      <key>Ctrl+T, R, 3</key>
+    </item>
+    <item name="FocusRegisters4Window">
+      <key>Ctrl+T, R, 4</key>
+    </item>
+    <item name="FocusThreadsWindow">
+      <key>Ctrl+Alt+H</key>
+      <ifnot host_os="macos">
+        <alt>Alt+9</alt>
+      </ifnot>
+    </item>
+    <item name="FocusCallsWindow">
+      <key>Ctrl+Alt+S</key>
+      <ifnot host_os="macos">
+        <alt>Alt+7</alt>
+      </ifnot>
+    </item>
+    <item name="ShowFrameBufferWindow">
+      <key>Ctrl+T, Q</key>
+    </item>
+    <item name="FocusMemory1Window">
+      <key>Ctrl+T, M, 1</key>
+      <ifnot host_os="macos">
+        <alt>Alt+6</alt>
+      </ifnot>
+    </item>
+    <item name="FocusMemory2Window">
+      <key>Ctrl+T, M, 2</key>
+    </item>
+    <item name="FocusMemory3Window">
+      <key>Ctrl+T, M, 3</key>
+    </item>
+    <item name="FocusMemory4Window">
+      <key>Ctrl+T, M, 4</key>
+    </item>
+    <item name="FocusBookmarksWindow">
+      <key>Ctrl+Alt+K</key>
+    </item>
+    <!--
+    <item name="FocusWaypointsWindow">
+      <key>Ctrl+Alt+W</key>
+    </item>
+    <item name="FocusFavoritesWindow">
+      <key>Ctrl+Alt+V</key>
+    </item>
+    <item name="FocusTasksWindow">
+      <key>Ctrl+Alt+A</key>
+    </item>
+    <item name="FocusErrorsWindow">
+      <key>Ctrl+Alt+E</key>
+    </item>
+    -->
+    <item name="FocusSourceNavigatorWindow">
+      <key>Ctrl+Alt+N</key>
+    </item>
+    <item name="FocusHelpContentsWindow">
+      <key>Ctrl+Alt+F1</key>
+    </item>
+    <if STUDIO_NAME="CrossStudio">
+      <if platform="ARM,AVR,MAXQ,MAXQ30,MSP430">
+        <item name="FocusTargetsWindow">
+          <key>Ctrl+Alt+T</key>
+          <alt>Ctrl+T, Ctrl+T</alt>
+        </item>
+      </if>
+    </if>
+    <item name="TargetConnectSelected">
+      <key>Ctrl+T, C</key>
+    </item>
+    <item name="TargetDisconnectConnected">
+      <key>Ctrl+T, D</key>
+    </item>
+    <item name="TargetReconnectConnected">
+      <key>Ctrl+T, E</key>
+    </item>
+    <item name="TargetResetConnected">
+      <key>Ctrl+T, S</key>
+    </item>
+    <item name="EraseAllConnected">
+      <key>Ctrl+T, K</key>
+    </item>
+    <item name="BlankCheckAllConnected">
+      <key>Ctrl+T, B</key>
+    </item>
+    <item name="FindUsingGoogle">
+      <key>Ctrl+Shift+G</key>
+    </item>
+  </keyscheme>
+</keyboard>

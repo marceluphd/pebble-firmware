@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Solutions and projects</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>To develop a product using SEGGER Embedded Studio, you must understand the concepts of <i>projects</i> and <i>solutions</i>.</p><ul><li>A <i>project</i> contains and organizes everything you need to create a single application or a library.</li></ul><ul><li>A <i>solution</i> is a collection of projects and configurations.</li></ul><p>Organizing your projects into a solution allows you to build all the projects in a solution with a
+single keystroke, and to load them onto the target ready for debugging.</p><p>In your SEGGER Embedded Studio for ARM project, you&hellip;</p><ul><li>&hellip;organize build-system inputs for building a product.
+</li>
+<li>&hellip;add information about items in the project, and their relationships, to assist you in the development process.</li></ul><p>Projects in a solution can reside in the same or different directories.
+Project directories are always relative to the directory of the solution file,
+which enables you to more-easily move or share project-file hierarchies.</p><p>The <b>Project Explorer</b> organizes your projects and files, and
+provides quick access to the commands that operate on them. A toolbar at the
+top of the window offers quick access to commonly used commands.</p><h3>Solutions</h3><p>When you have created a solution, it is stored in a project file. Project files
+are text files, with the file extension <b>emProject</b>, that contain an XML description
+of your project. See <a href="ide_project_file_format.htm">Project file format</a> for a description of the
+project-file format.</p><h3>Projects</h3><p>The projects you create within a solution have a <i>project type</i> SEGGER Embedded Studio
+uses to determine how to build the project. The project type is selected when
+you use the <b>New Project</b> dialog. The available project types
+depend on the SEGGER Embedded Studio for ARM variant you are using, but the following
+are present in most SEGGER Embedded Studio for ARM variants:</p><ul><li><i>Executable</i>:&nbsp;&nbsp;&mdash; a program that can be loaded and executed.
+</li>
+<li><i>Externally Built Executable</i>:&nbsp;&nbsp;&mdash; an executable that
+    is not built by the SEGGER Embedded Studio for ARM internal build process.
+</li>
+<li><i>Library</i>:&nbsp;&nbsp;&mdash; a group of object files collected
+    into a single file (sometimes called an <i>archive</i>).
+</li>
+<li><i>Externally Built Library</i>:&nbsp;&nbsp;&mdash; a library that
+    is not built by the SEGGER Embedded Studio for ARM internal build process.
+</li>
+<li><i>Object File</i>:&nbsp;&nbsp;&mdash; the result of a single compilation.
+</li>
+<li><i>Staging</i>:&nbsp;&nbsp;&mdash; a project that will apply a user-defined
+  command to each file in a project.
+</li>
+<li><i>Combining</i>:&nbsp;&nbsp;&mdash; a project that can be used to apply a
+  user-defined command when any files in a project have changed.</li></ul><h3>Project options and configurations</h3><p>Project options are attached to project nodes. They are usually used
+in the build process, for example, to define C preprocessor symbols. You can assign
+different values to the same project option, based on a configuration: for example,
+you can assign one value to a C preprocessor symbol for release build and a different 
+value for a debug build.</p><h3>Folders and Dynamic Folders</h3><p>Projects can contain <i>folders,</i> which are used to group related files.
+Automated grouping uses the files' extensions to, for example, put all .c files in one folder, etc. Grouping also can be
+done manually by explicitly creating a file within a folder. Note that these project folders do not
+map onto directories in the file system, they are used solely to structure the display of
+content shown in the <b>Project Explorer</b>.</p><p>Projects can also contain <i>dynamic folders</i> which will can show the directories and files contained in the
+file system in the project explorer. You can specify if the dynamic folder is recursive and use wildcards to 
+include and exclude files.</p><h3>Source files</h3><p><i>Source files</i> are all the files used to build a product. These include source code files and also
+section-placement files, memory-map files, and script files.  All the source
+files you use for a particular product, or for a suite of related products, are managed in a SEGGER Embedded Studio project. A project
+can also contain files that are not directly used by SEGGER Embedded Studio to build a product
+but contain information you use during development, such as documentation.
+You edit source files during development using SEGGER Embedded Studio's built-in text
+editor, and you organize files into a target (described next) to define the build-system inputs
+for creating the product.</p><p>The source files of your project can be placed in folders or directly
+in the project. Ideally, the paths to files placed in a project should be relative to the project
+directory, but at times you might want to refer to a file in
+an absolute location and this is supported by the project system.</p><p>When you add a file to a project, the project system detects whether the file is in the
+project directory. If a file is not in the project directory, the project system
+tries to make a relative path from the file to the project directory. If the file isn't relative
+to the project directory, the project system detects whether the file is relative to the
+<b>$(StudioDir)</b> directory; if so, the
+filename is defined using <b>$(StudioDir)</b>. If a file is not relative to the project directory
+or to <b>$(StudioDir)</b>, the full, absolute pathname is used.</p><p>The project system will allow (with a warning) duplicate files to be put into a project.</p><p>The project system uses a file's extension to determine the appropriate
+build action to perform on the file:</p><ul><li>A file with the extension <b>.c</b> will be compiled by a C compiler.
+</li>
+<li>A file with the extension <b>.cpp</b> or <b>.cxx</b> will be compiled by
+    a C++ compiler.
+</li>
+<li>A file with the extension <b>.s</b> or <b>.asm</b> will be compiled by an assembler.
+</li>
+<li>A file with the object-file extension <b>.o</b> will be linked.
+</li>
+<li>A file with the library-file extension <b>.a</b> will be linked.
+</li>
+<li>A file with the extension <b>.xml</b> will be opened and its file type
+  determined by the XML document type.
+</li>
+<li>Files with other file extensions will not be compiled or linked.</li></ul><p>You can modify this behavior by setting a file's <b>File Type</b> project option
+with the <b>Common</b> configuration selected,
+which enables files with non-standard extensions to be compiled by the project
+system.</p><h3>Externally Built Executables</h3><p>You can use an external build process for <b>Externally Built Executable</b> project types by
+setting the <b>Build Command</b> project option, for example to <b>make target</b>. Alternatively
+you can set command lines for specific build steps to compile/assemble and link. When you create
+an <b>Externally Built Executable</b> project type configurations will be created that create command
+lines for a variety of external tool chains.</p><h3>Solution links</h3><p>You can create links to existing project files from a solution, which enables
+you to create hierarchical builds. For example, you could have a solution that
+builds a library together with a stub test driver executable. You can link
+to that solution from your current solution by right-clicking the solution node of the <b>Project Explorer</b>
+and selecting <b>Add Existing Project</b>. Your current solution can then use the library built by
+the other project.</p><h3>Session files</h3><p>When you exit SEGGER Embedded Studio for ARM, details of your current session are
+stored in a <i>session file</i>. Session files are text files, with the file extension
+<b>emSession</b>, that contain details such as which files you have opened in the editor
+and what breakpoints you have set in the <b>Breakpoint</b> window.</p> 
+    </div>
+  </body>
+</html>

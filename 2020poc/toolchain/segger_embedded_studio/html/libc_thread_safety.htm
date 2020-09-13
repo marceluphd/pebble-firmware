@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Thread safety in the SEGGER Embedded Studio for ARM library</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>In the SEGGER Embedded Studio for ARM C library:</p><ul><li>some functions are inherently thread-safe, for example <b>strcmp</b>.
+</li>
+<li>some functions, such as <b>malloc</b>, are not thread-safe by default
+but can be made thread-safe by implementing appropriate lock functions.
+</li>
+<li>other functions are only thread-safe if passed appropriate
+arguments, for example <b>tmpnam</b>.
+</li>
+<li>some functions are never thread-safe, for example <b>setlocale</b>.</li></ul><p>We define how the functions in the C library can be made thread-safe
+if needed.  If you use a third-party library in a multi-threaded system
+and combine it with the SEGGER Embedded Studio for ARM C library, you will need to ensure
+that the third-party library can be made thread-safe in just the same
+way that the SEGGER Embedded Studio for ARM C library can be made thread-safe.</p> 
+    </div>
+  </body>
+</html>

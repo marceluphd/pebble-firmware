@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Debugger Type Interpretation file format</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>SEGGER Embedded Studio debugger type interpretation files are used by the debugger
+to provide list and string displays of C++ template container types. The files 
+are structured using XML syntax for its simple construction and parsing.</p><p>Consider the following C++ template type</p>
+<pre class="rwt-code"><span class="rwt-code-keyword">template</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&lt;</span><span class="rwt-code-keyword">class</span><span class="rwt-code-text"> </span><span class="rwt-code-text">_Type</span><span class="rwt-code-operator">></span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">class</span><span class="rwt-code-text"> </span><span class="rwt-code-text">VeryBasicArray</span>
+<span class="rwt-code-operator">{</span>
+<span class="rwt-code-keyword">private</span><span class="rwt-code-operator">:</span>
+    <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">m_Count</span><span class="rwt-code-operator">;</span>
+    <span class="rwt-code-text">_Type </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">m_pData</span><span class="rwt-code-operator">;</span><span class="rwt-code-text"> </span>
+<span class="rwt-code-keyword">public</span><span class="rwt-code-operator">:</span>
+    <span class="rwt-code-function">VeryBasicArray</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">count</span><span class="rwt-code-operator">)</span>
+        <span class="rwt-code-operator">:</span><span class="rwt-code-text"> </span><span class="rwt-code-function">m_Count</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">count</span><span class="rwt-code-operator">)</span>
+       <span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-function">m_pData</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">new</span><span class="rwt-code-text"> </span><span class="rwt-code-text">_Type</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">count</span><span class="rwt-code-operator">])</span>
+    <span class="rwt-code-operator">{</span>
+    <span class="rwt-code-operator">}</span>
+<span class="rwt-code-operator">}</span>
+
+<span class="rwt-code-text">VeryBasicArray</span><span class="rwt-code-operator">&lt;</span><span class="rwt-code-keyword">int</span><span class="rwt-code-operator">></span><span class="rwt-code-text"> </span><span class="rwt-code-function">basicArray</span><span class="rwt-code-operator">(</span><span class="rwt-code-literal">5</span><span class="rwt-code-operator">);</span></pre><p>To display a variable of this type as a list the type interpretation file contains the following
+entry</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">List </span><span class="rwt-code-attribute">Name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">VeryBasicArray&amp;lt;*&amp;gt;</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">        Head</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">(($(T)*)HEAD).m_pData</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute">        </span>
+<span class="rwt-code-attribute">        Data</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">(*($(T0)*)CURRENT)</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">        Length</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">(($(T)*)HEAD).m_Count</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">        Next</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">CURRENT+sizeof($(T0))</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The <b>Name</b> attribute is used to match the template type name note that the <b>&amp;lt</b> and <b>&amp;gt</b> xml entities
+are used to match the template argument. </p><p>When an entry has been matched the head of the list is located by evaluating the debugger expression
+in the <b>Head</b> attribute. The debugger expressions can contain macros that refer to the matched template
+type and will use the symbols <b>HEAD</b> and <b>CURRENT</b>. </p><p>The macro <b>$(T)</b> refers to the instantiated template type, for the above example <b>$(T)=VeryBasicArray&lt;int></b>. </p><p>The template arguments are referred to using macros <b>$(T0)</b>, for the above example <b>$(T0)=int</b>. </p><p>The symbol <b>HEAD</b> is the address of the variable being displayed, for the above example if the variable <b>basicArray</b> 
+is allocated at address <b>0x20004000</b> then the <b>Head</b> expression </p>
+<pre class="rwt-code">  <span class="rwt-code-operator">((</span><span class="rwt-code-text">VeryBasicArray</span><span class="rwt-code-operator">&lt;</span><span class="rwt-code-keyword">int</span><span class="rwt-code-operator">>*)</span><span class="rwt-code-literal">0x20004000</span><span class="rwt-code-operator">).</span><span class="rwt-code-text">m_pData</span></pre><p>will be evaluated by the debugger, note that the . operator and the -> operator are equivalent in debugger expressions.</p><p>To display an element the debugger will evaluate the <b>Data</b> expression. This expression contains the symbol <b>CURRENT</b> 
+which is the address of the element to display, for the above example the first element is at the address <b>basicArray.m_pData</b>
+which is allocated at address <b>0x20008000</b> then the <b>Data</b> expression</p>
+<pre class="rwt-code">  <span class="rwt-code-operator">(*(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-operator">*)</span><span class="rwt-code-literal">0x20008000</span><span class="rwt-code-operator">)</span></pre><p>will be evaluated by the debugger.</p><p>To increment the <b>CURRENT</b> symbol the <b>Next</b> expression</p>
+<pre class="rwt-code">  <span class="rwt-code-literal">0x20008000</span><span class="rwt-code-operator">+</span><span class="rwt-code-keyword">sizeof</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-operator">)</span></pre><p>will be evaluated by the debugger.</p><p>Before the <b>CURRENT</b> symbol is incremented the debugger needs to check if it is at the end of list. The can be done either 
+as a <b>Condition</b> expression or as a <b>Length</b> expression</p>
+<pre class="rwt-code">  <span class="rwt-code-operator">((</span><span class="rwt-code-text">VeryBasicArray</span><span class="rwt-code-operator">&lt;</span><span class="rwt-code-keyword">int</span><span class="rwt-code-operator">>*)</span><span class="rwt-code-literal">0x20004000</span><span class="rwt-code-operator">).</span><span class="rwt-code-text">m_Count</span></pre><p>The <b>String</b> display is simpler than the <b>List</b> display since the characters are contiguous and optionally
+null terminated. The <b>Data</b> and <b>Length</b> expressions are supported, for example</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">String </span><span class="rwt-code-attribute">Name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">string</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">        Data</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">*(($(T) *)HEAD)._M_start_of_storage._M_data</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/>
+<span class="rwt-code-attribute">        Length</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">(($(T) *)HEAD)._M_finish-(($(T) *)HEAD)._M_start_of_storage._M_data</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>is used to display STLPort std::string types.</p> 
+    </div>
+  </body>
+</html>

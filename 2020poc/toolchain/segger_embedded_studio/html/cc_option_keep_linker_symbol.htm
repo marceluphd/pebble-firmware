@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>-K (Keep linker symbol)</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Syntax</h5><p><b>-K</b><i>name</i></p><h5>Description</h5><p>The linker removes unused code and data from the output file. This 
+process is called <i>deadstripping</i>. To prevent the linker from deadstripping 
+unreferenced code and data you wish to keep, you must use the <b>-K</b> command
+line option to force inclusion of symbols.</p><h5>Example</h5><p>If you have a C function, <b>contextSwitch</b> that must be kept in the output 
+file (and which the linker will normally remove), you can force its inclusion 
+using:</p>
+<pre class="rwt-code">-KcontextSwitch </pre> 
+    </div>
+  </body>
+</html>

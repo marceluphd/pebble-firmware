@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>wcrtomb_l</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">wcrtomb_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+                 <span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">wc</span><span class="rwt-code-operator">,</span>
+                 <span class="rwt-code-text">mbstate_t </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">ps</span><span class="rwt-code-operator">,</span>
+                 <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><p>If <b>s</b> is a null pointer, <b>wcrtomb_l</b> function is equivalent to the call
+  <tt>wcrtomb_l(buf, L'\0', ps, loc)</tt> where <b>buf</b> is an internal buffer.</p><p>If <b>s</b> is not a null pointer, <b>wcrtomb_l</b> determines the number of bytes needed
+  to represent the multibyte character that corresponds to the wide character given
+  by <b>wc</b>, and stores the multibyte character representation in the array whose first
+  element is pointed to by <b>s</b>. At most <b>MB_CUR_MAX</b> bytes are stored.  If <b>wc</b> is
+  a null wide character, a null byte is stored; the resulting state described is
+  the initial conversion state.</p><p><b>wcrtomb_l</b> returns the number of bytes stored in the array object. When <b>wc</b> is
+  not a valid wide character, an encoding error occurs: <b>wcrtomb_l</b> stores the value
+  of the macro <b>EILSEQ</b> in <b>errno</b> and returns <tt>(size_t)(-1)</tt>; the conversion
+  state is unspecified.
+</p> 
+    </div>
+  </body>
+</html>

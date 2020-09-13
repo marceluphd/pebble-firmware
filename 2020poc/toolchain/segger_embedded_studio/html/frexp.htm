@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>frexp</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-function">frexp</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-text">x</span><span class="rwt-code-operator">,</span>
+             <span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">exp</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>frexp</b> breaks a floating-point number into a normalized fraction 
+  and an integral power of 2.</p><p><b>frexp</b> stores power of two in the <b>int</b> object 
+  pointed to by <b>exp</b> and returns the value <b>x</b>, 
+  such that <b>x</b> has a magnitude in the interval [1/2, 1) or zero, 
+  and value equals <b>x</b> * 2^<b>exp</b>.</p><p>If <b>x</b> is zero, both parts of the result are zero.</p><p>If <b>x</b> is &#8734; or NaN, <b>frexp</b> returns <b>x</b> and stores zero into 
+  the int object pointed to by <b>exp</b>.
+</p> 
+    </div>
+  </body>
+</html>

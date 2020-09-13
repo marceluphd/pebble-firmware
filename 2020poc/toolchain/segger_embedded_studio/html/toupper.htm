@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>toupper</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">toupper</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">c</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>toupper</b> converts a lowercase letter to a corresponding uppercase letter.
+  
+  If the argument <tt>is</tt> a character for which <b>islower</b> is true and there are
+  one or more corresponding characters, as specified by the current locale, for
+  which <b>isupper</b> is true, <b>toupper</b> returns one of the corresponding
+  characters (always the same one for any given locale); otherwise, the argument
+  is returned unchanged.
+  
+  Note that even though <b>islower</b> can return true for some characters, <b>toupper</b>
+  may return that lowercase character unchanged as there are no corresponding
+  uppercase characters in the locale.
+</p> 
+    </div>
+  </body>
+</html>

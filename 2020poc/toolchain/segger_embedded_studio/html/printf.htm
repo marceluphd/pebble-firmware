@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>printf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">printf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">format</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-operator">...);</span>
+</pre><h5>Description</h5><p><b>printf</b> writes to the standard output stream using <b>putchar</b>, under 
+  control of the string pointed to by <b>format</b> that specifies how subsequent 
+  arguments are converted for output.</p><p>If there are insufficient arguments for the format, the behavior is undefined. 
+  If the format is exhausted while arguments remain, the excess arguments are 
+  evaluated but are otherwise ignored.</p><p><b>printf</b> returns the number of characters transmitted, or a negative value 
+  if an output or encoding error occurred.</p><h5>Formatted output control strings</h5><p>The format is composed of zero or more directives: ordinary characters (not 
+  &lsquo;%&rsquo;, which are copied unchanged to the output 
+  stream; and conversion specifications, each of which results in fetching zero 
+  or more subsequent arguments, converting them, if applicable, according to the 
+  corresponding conversion specifier, and then writing the result to the output 
+  stream.</p><p>Each conversion specification is introduced by the character &lsquo;%&rsquo;. 
+  After the &lsquo;%&rsquo; the following appear in sequence:</p><ul><li>Zero or more <i>flags</i> (in any order) that modify the meaning of the 
+    conversion specification.
+  </li>
+<li>An optional <i>minimum field width</i>. If the converted value has fewer 
+    characters than the field width, it is padded with spaces (by default) on 
+    the left (or right, if the left adjustment flag has been given) to the field 
+    width. The field width takes the form of an asterisk &lsquo;*&rsquo; or a decimal
+    integer.
+  </li>
+<li>An optional precision that gives the minimum number of digits to appear 
+    for the &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, and &lsquo;X&rsquo; conversions, the number
+    of digits to appear after the decimal-point character for &lsquo;e&rsquo;,
+    &lsquo;E&rsquo;, &lsquo;f&rsquo;, and &lsquo;F&rsquo; conversions, the maximum number of significant
+    digits for the &lsquo;g&rsquo; and &lsquo;G&rsquo; conversions, or the maximum number 
+    of bytes to be written for &lsquo;s&rsquo; conversions. The precision takes 
+    the form of a period &lsquo;.&rsquo; followed either by an asterisk &lsquo;*&rsquo;
+    or by an optional decimal integer; if only the period is specified,
+    the precision is taken as zero. If a precision appears with any other
+    conversion specifier, the behavior is undefined.
+  </li>
+<li>An optional length modifier that specifies the size of the argument.
+  </li>
+<li>A conversion specifier character that specifies the type of conversion 
+    to be applied.</li></ul><p>As noted above, a field width, or precision, or both, may be indicated by 
+  an asterisk. In this case, an int argument supplies the field width or precision. 
+  The arguments specifying field width, or precision, or both, must appear (in 
+  that order) before the argument (if any) to be converted. A negative field width 
+  argument is taken as a &lsquo;-&rsquo; flag followed by a positive field width. A negative
+  precision argument is taken as if the precision were omitted.</p><p>Some library variants do not support width and precision specifiers 
+  in order to reduce code and data space requirements; please ensure that you 
+  have selected the correct library in the <b>Printf Width/Precision Support</b>
+  property of the project if you use these.</p><h5>Flag characters</h5><p>The flag characters and their meanings are:</p><dl><dt>&lsquo;-&rsquo;
+  </dt>
+<dd>The result of the conversion is left-justified within the field. The default, 
+    if this flag is not specified, is that the result of the conversion is left-justified 
+    within the field.
+  </dd>
+<dt>&lsquo;+&rsquo;
+  </dt>
+<dd>The result of a signed conversion <i>always</i> begins with a plus or minus 
+    sign. The default, if this flag is not specified, is that it begins with a 
+    sign only when a negative value is converted.
+  </dd>
+<dt><i>space</i>
+  </dt>
+<dd>If the first character of a signed conversion is not a sign, or if a signed 
+    conversion results in no characters, a space is prefixed to the result. If 
+    the space and &lsquo;+&rsquo; flags both appear, the space 
+    flag is ignored.
+  </dd>
+<dt>&lsquo;#&rsquo;
+  </dt>
+<dd>The result is converted to an <i>alternative form</i>. For &lsquo;o&rsquo; 
+    conversion, it increases the precision, if and only if necessary,
+    to force the first digit of the result to be a zero (if the value
+    and precision are both zero, a single &lsquo;0&rsquo; is printed). For &lsquo;x&rsquo;
+    or &lsquo;X&rsquo; conversion, a nonzero result has &lsquo;0x&rsquo; or &lsquo;0X&rsquo;
+    prefixed to it. For &lsquo;e&rsquo;, &lsquo;E&rsquo;, &lsquo;f&rsquo;, &lsquo;F&rsquo;, &lsquo;g&rsquo;, and &lsquo;G&rsquo;
+    conversions, the result of converting a floating-point number always
+    contains a decimal-point character, even if no digits follow it.
+    (Normally, a decimal-point character appears in the result 
+    of these conversions only if a digit follows it.) For &lsquo;g&rsquo; 
+    and &lsquo;F&rsquo; conversions, trailing zeros are not removed from the
+    result. As an extension, when used in &lsquo;p&rsquo; conversion, the results
+    has &lsquo;#&rsquo; prefixed to it. For other conversions, the behavior
+    is undefined. 
+  </dd>
+<dt>&lsquo;0&rsquo;
+  </dt>
+<dd>For &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;, &lsquo;e&rsquo;, &lsquo;E&rsquo;, &lsquo;f&rsquo;,
+    &lsquo;F&rsquo;, &lsquo;g&rsquo;, and &lsquo;G&rsquo; conversions, leading zeros (following any
+    indication of sign or base) are used to pad to the field width
+    rather than performing space padding, except when converting an
+    infinity or NaN. If the &lsquo;0&rsquo; and &lsquo;-&rsquo; flags both appear, the &lsquo;0&rsquo; 
+    flag is ignored. For &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, and &lsquo;X&rsquo; 
+    conversions, if a precision is specified, the &lsquo;0&rsquo;  flag is
+    ignored. For other conversions, the behavior is undefined.</dd></dl><h5>Length modifiers</h5><p>The length modifiers and their meanings are:</p><dl><dt>&lsquo;hh&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, 
+    &lsquo;o&rsquo;, &lsquo;u&rsquo;, 
+    &lsquo;x&rsquo;, or &lsquo;X&rsquo; 
+    conversion specifier applies to a <b>signed char</b> or <b>unsigned char</b>
+    argument (the argument will have been promoted according to the integer promotions, 
+    but its value will be converted to <b>signed char</b> or <b>unsigned char</b>
+    before printing); or that a following &lsquo;n&rsquo; conversion specifier applies 
+    to a pointer to a <b>signed char</b> argument.
+  </dd>
+<dt>&lsquo;h&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, 
+    &lsquo;o&rsquo;, &lsquo;u&rsquo;, 
+    &lsquo;x&rsquo;, or &lsquo;X&rsquo; 
+    conversion specifier applies to a <b>short int</b> or <b>unsigned short int</b>
+    argument (the argument will have been promoted according to the integer
+    promotions, but its value is converted to <b>short int</b> or <b>unsigned short int</b>
+    before printing); or that a following &lsquo;n&rsquo; conversion specifier applies 
+    to a pointer to a <b>short int</b> argument.
+  </dd>
+<dt>&lsquo;l&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, or &lsquo;X&rsquo; 
+    conversion specifier applies to a <b>long int</b> or <b>unsigned long int</b> 
+    argument; that a following &lsquo;n&rsquo; conversion specifier applies to a pointer
+    to a <b>long int</b> argument; or has no effect on a following &lsquo;e&rsquo;, &lsquo;E&rsquo;, 
+    &lsquo;f&rsquo;, &lsquo;F&rsquo;, &lsquo;g&rsquo;, or &lsquo;G&rsquo; conversion specifier. Some
+    library variants do not support the &lsquo;l&rsquo; length modifier in order to
+    reduce code and data space requirements; please ensure that you have
+    selected the correct library in the <b>Printf Integer Support</b> property
+    of the project if you use this length modifier.
+  </dd>
+<dt>&lsquo;ll&rsquo;
+  </dt>
+<dd>Specifies that a following &lsquo;d&rsquo;, &lsquo;i&rsquo;, &lsquo;o&rsquo;, &lsquo;u&rsquo;,  &lsquo;x&rsquo;, or &lsquo;X&rsquo; 
+    conversion specifier applies to a <b>long long int</b> or <b>unsigned long long int</b>
+    argument; that a following &lsquo;n&rsquo; conversion specifier applies to a
+    pointer to a <b>long long int</b> argument.  Some library
+    variants do not support the &lsquo;ll&rsquo; length modifier in order to reduce
+    code and data space requirements; please ensure that you have selected
+    the correct library in the <b>Printf Integer Support</b> property of the
+    project if you use this length modifier.</dd></dl><p>If a length modifier appears with any conversion specifier other than as specified 
+  above, the behavior is undefined. Note that the C99 length modifiers &lsquo;j&rsquo;, 
+  &lsquo;z&rsquo;, &lsquo;t&rsquo;, and &lsquo;L&rsquo; are not supported.</p><h5>Conversion specifiers</h5><p>The conversion specifiers and their meanings are:</p><dl><dt>&lsquo;d&rsquo;, &lsquo;i&rsquo;
+  </dt>
+<dd>The argument is converted to signed decimal in the style [-]<i>dddd</i>.
+    The precision specifies the minimum number of digits to appear; if the value
+    being converted can be represented in fewer digits, it is expanded with leading 
+    spaces. The default precision is one. The result of converting a zero
+    value with a precision of zero is no characters.
+  </dd>
+<dt>&lsquo;o&rsquo;, &lsquo;u&rsquo;, &lsquo;x&rsquo;, &lsquo;X&rsquo;
+  </dt>
+<dd>The unsigned argument is converted to unsigned octal for &lsquo;o&rsquo;, 
+    unsigned decimal for &lsquo;u&rsquo;, or unsigned hexadecimal notation for
+    &lsquo;x&rsquo; or &lsquo;X&rsquo; in the style <i>dddd</i> the letters &lsquo;abcdef&rsquo; are used
+    for &lsquo;x&rsquo; conversion and the letters &lsquo;ABCDEF&rsquo; for &lsquo;X&rsquo; conversion.
+    The precision specifies the minimum number of digits to appear; if the
+    value being converted can be represented in fewer digits, it is expanded 
+    with leading spaces. The default precision is one. The result of converting 
+    a zero value with a precision of zero is no characters.
+  </dd>
+<dt>&lsquo;f&rsquo;, &lsquo;F&rsquo;
+  </dt>
+<dd>A double argument representing a floating-point number is converted to decimal 
+    notation in the style [-]<i>ddd.ddd</i>, where the number of digits after
+    the decimal-point character is equal to the precision specification. If the 
+    precision is missing, it is taken as 6; if the precision is zero and the &lsquo;#&rsquo; 
+    flag is not specified, no decimal-point character appears. If a decimal-point 
+    character appears, at least one digit appears before it. The value is rounded 
+    to the appropriate number of digits. A double argument representing an infinity 
+    is converted to &lsquo;inf&rsquo;. A double argument representing a NaN is converted to
+    &lsquo;nan&rsquo;. The &lsquo;F&rsquo; conversion specifier produces &lsquo;INF&rsquo; or &lsquo;NAN&rsquo; instead of
+    &lsquo;inf&rsquo; or &lsquo;nan&rsquo;, respectively. Some library variants do not
+    support the &lsquo;f&rsquo; and &lsquo;F&rsquo; conversion specifiers in order to reduce code and
+    data space requirements; please ensure that you have selected the correct library
+    in the <b>Printf Floating Point Support</b> property of the project if you use
+    these conversion specifiers.
+  </dd>
+<dt>&lsquo;e&rsquo;, &lsquo;E&rsquo;
+  </dt>
+<dd>A double argument representing a floating-point number is converted in the 
+    style [-]<i>d.ddd</i>e&plusmn;<i>dd</i>, where there is one digit (which is
+    nonzero if the argument is nonzero) before the decimal-point character and the
+    number of digits after it is equal to the precision; if the precision is
+    missing, it is taken as 6; if the precision is zero and the &lsquo;#&rsquo; flag is not
+    specified, no decimal-point character appears. The value is rounded to the
+    appropriate number of digits. The &lsquo;E&rsquo; conversion specifier produces a number
+    with &lsquo;E&rsquo; instead of &lsquo;e&rsquo; introducing the exponent. The exponent always
+    contains at least two digits, and only as many more digits as necessary to
+    represent the exponent. If the value is zero, the exponent is zero. A double
+    argument representing an infinity is converted to &lsquo;inf&rsquo;. A double argument
+    representing a NaN is converted to &lsquo;nan&rsquo;. The &lsquo;E&rsquo; conversion specifier
+    produces &lsquo;INF&rsquo; or &lsquo;NAN&rsquo; instead of &lsquo;inf&rsquo; or &lsquo;nan&rsquo;, respectively.
+    Some library variants do not support the &lsquo;f&rsquo; and &lsquo;F&rsquo; 
+    conversion specifiers in order to reduce code and data space requirements; 
+    please ensure that you have selected the correct library in the <b>Printf </b>    Floating Point Support} property of the project if you use these conversion 
+    specifiers.
+  </dd>
+<dt>&lsquo;g&rsquo;, &lsquo;G&rsquo;
+  </dt>
+<dd>A double argument representing a floating-point number is converted in
+    style &lsquo;f&rsquo; or &lsquo;e&rsquo; (or in style &lsquo;F&rsquo; or &lsquo;e&rsquo; in the case of a &lsquo;G&rsquo;
+    conversion specifier), with the precision specifying the number of
+    significant digits. If the precision is zero, it is taken as one. The style
+    used depends on the value converted; style &lsquo;e&rsquo; (or &lsquo;E&rsquo;) is used only if
+    the exponent resulting from such a conversion is less than -4 or greater
+    than or equal to the precision. Trailing zeros are removed from the
+    fractional portion of the result unless the &lsquo;#&rsquo; flag is specified; a
+    decimal-point character appears only if it is followed by a digit. A double
+    argument representing an infinity is converted to &lsquo;inf&rsquo;. A double
+    argument representing a NaN is converted to &lsquo;nan&rsquo;. The &lsquo;G&rsquo; conversion
+    specifier produces &lsquo;INF&rsquo; or &lsquo;NAN&rsquo; instead of &lsquo;inf&rsquo; or &lsquo;nan&rsquo;,
+    respectively. Some library variants do not support the &lsquo;f&rsquo;
+    and &lsquo;F&rsquo; conversion specifiers in order to reduce code and data space
+    requirements; please ensure that you have selected the correct library in
+    the <b>Printf Floating Point Support</b> property of the project if you use
+    these conversion specifiers.
+  </dd>
+<dt>&lsquo;c&rsquo;
+  </dt>
+<dd>The argument is converted to an <b>unsigned char</b>, and the resulting 
+    character is written.
+  </dd>
+<dt>&lsquo;s&rsquo;
+  </dt>
+<dd>The argument is be a pointer to the initial element of an array of character 
+    type. Characters from the array are written up to (but not including) the 
+    terminating null character. If the precision is specified, no more than that 
+    many characters are written. If the precision is not specified or is greater 
+    than the size of the array, the array must contain a null character.
+  </dd>
+<dt>&lsquo;p&rsquo;
+  </dt>
+<dd>The argument is a pointer to <b>void</b>. The value of the pointer is converted 
+    in the same format as the &lsquo;x&rsquo; conversion specifier 
+    with a fixed precision of 2*<b>sizeof</b>(<b>void</b> *).
+  </dd>
+<dt>&lsquo;n&rsquo;
+  </dt>
+<dd>The argument is a pointer to a signed integer into which is <i>written</i>
+    the number of characters written to the output stream so far by the call to 
+    the formatting function. No argument is converted, but one is consumed. If 
+    the conversion specification includes any flags, a field width, or a precision, 
+    the behavior is undefined.
+  </dd>
+<dt>&lsquo;%&rsquo;
+  </dt>
+<dd>A &lsquo;%&rsquo; character is written. No argument is converted.</dd></dl><p>Note that the C99 width modifier &lsquo;l&rsquo; used in conjunction with the &lsquo;c&rsquo; and &lsquo;s&rsquo; 
+  conversion specifiers is not supported and nor are the conversion specifiers 
+  &lsquo;a&rsquo; and &lsquo;A&rsquo;.
+</p> 
+    </div>
+  </body>
+</html>

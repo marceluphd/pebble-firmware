@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>operator new</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5>
+<pre>void *operator new(size_t size) throw();</pre>
+<pre>void *operator new[](size_t size) throw();</pre>
+<h5>Description</h5>
+<p><b>operator new</b> allocates space for an object whose size is specified by <b>size</b> 
+  and whose value is indeterminate.</p>
+<p><b>operator new</b> returns a null pointer if the space for the object cannot be 
+  allocated from free memory; if space for the object can be allocated, <b>operator new</b> 
+  returns a pointer to the start of the allocated space.</p>
+<p><b>operator new[]</b> has the same behaviour as <b>operator new</b> but is used
+for array allocation.</p>
+<h5>Portability</h5>
+<p>The implementation is not standard. The standard C++ implementation should throw an 
+exception if memory allocation fails.
+</p>
+ 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Breakpoints window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Breakpoints</b> window manages the list of currently set breakpoints
+on the solution. Using the <b>Breakpoints</b> window, you can:</p><ul><li>Enable, disable, and delete existing breakpoints.
+</li>
+<li>Add new breakpoints.
+</li>
+<li>Show the status of existing breakpoints.</li></ul><p>Breakpoints are stored in the session file, so they will be remembered each
+time you work on a particular project. When running in the debugger, you can
+set breakpoints on assembly code addresses. These low-level breakpoints appear
+in the <b>Breakpoints</b> window for the duration of the debug run but are not saved
+when you stop debugging.</p><p>When a breakpoint is reached, the matching breakpoint is highlighted in
+the <b>Breakpoints</b> window.</p><h3>Breakpoints window layout</h3><p>The <b>Breakpoints</b> window has a toolbar and a
+main breakpoint display.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="DebugBreakpointNew.png"/> </td><td valign="top"> Create a new breakpoint using the <b>New Breakpoint</b> dialog.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointToggleEnable.png"/> </td><td valign="top"> Toggle the selected breakpoint between enabled and disabled states.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointDelete.png"/> </td><td valign="top"> Remove the selected breakpoint.
+</td></tr>
+<tr><td valign="top"> <img src="ActionGoToSource.png"/> </td><td valign="top"> Move the insertion point to the statement where the selected breakpoint is set.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointDeleteAll.png"/> </td><td valign="top"> Delete all breakpoints.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointDisableAll.png"/> </td><td valign="top"> Disable all breakpoints.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointEnableAll.png"/> </td><td valign="top"> Enable all breakpoints.
+</td></tr>
+<tr><td valign="top"> <img src="DebugBreakpointNewGroup.png"/> </td><td valign="top"> Create a new breakpoint group and makes it active.
+</td></tr></table><p>The main part of the <b>Breakpoints</b> window shows what breakpoints
+are set and the state they are in. You can organize breakpoints
+into folders, called <i>breakpoint groups</i>.</p><p>SEGGER Embedded Studio displays these icons to the left of each breakpoint:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Icon</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="BreakpointActive.png"/> </td><td valign="top"> <b>Enabled breakpoint</b>  An enabled
+      breakpoint will stop your program running when the breakpoint condition
+      is met.
+</td></tr>
+<tr><td valign="top"> <img src="BreakpointInactive.png"/> </td><td valign="top"> <b>Disabled breakpoint</b>  A disabled breakpoint
+      will not stop the program when execution passes through it.
+</td></tr>
+<tr><td valign="top"> <img src="BreakpointInvalid.png"/> </td><td valign="top"> <b>Invalid breakpoint</b>  An invalid breakpoint
+      is one where the breakpoint cannot be set; for example, no executable
+      code is associated with the source code line where the breakpoint is set or
+      the processor does not have enough hardware breakpoints.
+</td></tr></table><h3>Showing the Breakpoints window</h3><h5>To activate the Breakpoints window:</h5><ul><li>Choose <b>Breakpoints > Breakpoints</b> or press <b>Ctrl+Alt+B</b>.</li></ul><h3>Managing single breakpoints</h3><p>You can manage breakpoints in the <b>Breakpoint</b> window.</p><h5>To delete a breakpoint:</h5><ul><li>In the <b>Breakpoints</b> window, click the breakpoint to delete.
+  </li>
+<li>From the <b>Breakpoints</b> window toolbar, click the <b>Delete</b>    Breakpoint} button.</li></ul><h5>To edit a breakpoint:</h5><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint to
+    edit.
+  </li>
+<li>Choose <b>Edit Breakpoint</b> from the shortcut menu.
+  </li>
+<li>Edit the breakpoint in the <b>New Breakpoint</b> dialog.</li></ul><ul><li>To toggle the enabled state of a breakpoint:</li></ul><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint to
+    enable or disable.
+  </li>
+<li>Choose <b>Enable/Disable Breakpoint</b> from the shortcut menu.</li></ul><p>&mdash;or&mdash;</p><ul><li>In the <b>Breakpoints</b> window, click the breakpoint to enable
+    or disable.
+  </li>
+<li>Press <b>Ctrl+F9</b>.</li></ul><h3>Breakpoint groups</h3><p>Breakpoints are divided into <i>breakpoint groups</i>. You can use breakpoint
+groups to specify sets of breakpoints that are applicable to a particular project
+in the solution or for a particular debug scenario. Initially, there is a single
+breakpoint group, named <i>Default</i>, to which all new breakpoints are added.</p><h5>To create a new breakpoint group:</h5><ul><li>From the <b>Breakpoints</b> window toolbar, click the
+    <b>New Breakpoint Group</b> button.</li></ul><p>&mdash;or&mdash;</p><ul><li>From the <b>Debug</b> menu, choose <b>Breakpoints</b>
+    then <b>New Breakpoint Group</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>Right-click anywhere in the <b>Breakpoints</b> window.
+  </li>
+<li>Choose <b>New Breakpoint Group</b> from the shortcut menu.</li></ul><p>In the <b>New Breakpoint Group</b> dialog, enter the name of the
+breakpoint group.</p><p>When you create a breakpoint, it is added to the active breakpoint group.</p><h5>To make a group the active group:</h5><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint group to
+    make active.
+  </li>
+<li>Choose <b>Set as Active Group</b> from the shortcut menu.</li></ul><h5>To delete a breakpoint group:</h5><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint group
+    to delete.
+  </li>
+<li>Choose <b>Delete Breakpoint Group</b> from the shortcut menu.</li></ul><p>You can enable all breakpoints within a group at once.</p><h5>To enable all breakpoints in a group:</h5><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint group
+    to enable.
+  </li>
+<li>Choose <b>Enable Breakpoint Group</b> from the shortcut menu.</li></ul><p>You can disable all breakpoints within a group at once.</p><h5>To disable all breakpoints in a group:</h5><ul><li>In the <b>Breakpoints</b> window, right-click the breakpoint group
+    to disable.
+  </li>
+<li>Choose <b>Disable Breakpoint Group</b> from the shortcut menu.</li></ul><h3>Managing all breakpoints</h3><p>You can delete, enable, or disable all breakpoints at once.</p><h5>To delete all breakpoints:</h5><ul><li>Choose <b>Breakpoints > Clear All Breakpoints</b> or press <b>Ctrl+Shift+F9</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Breakpoints</b> window toolbar, click the <b>Delete All Breakpoints</b> button.</li></ul><h5>To enable all breakpoints:</h5><ul><li>Choose <b>Breakpoints > Enable All Breakpoints</b> or press <b>Ctrl+B, N</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Breakpoints</b> window toolbar, click the <b>Enable All Breakpoints</b> button.</li></ul><h5>To disable all breakpoints:</h5><ul><li>Choose <b>Breakpoints > Disable All Breakpoints</b> or press <b>Ctrl+B, X</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>On the <b>Breakpoints</b> window toolbar, click the <b>Disable All Breakpoints</b> button.</li></ul> 
+    </div>
+  </body>
+</html>

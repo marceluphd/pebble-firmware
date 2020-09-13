@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Register window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Register</b> windows show the values of both CPU registers and the processor's
+special function or peripheral registers. Because microcontrollers are becoming
+very highly integrated, it's not unusual for them to have hundreds of
+special function registers or peripheral registers, so SEGGER Embedded Studio provides
+four register windows. You can configure each register window to display one
+or more register groups for the processor being debugged.</p><p>A <b>Register</b> window has a toolbar and a main data display.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="PropertySettings.png"/> </td><td valign="top">
+    Display the CPU, special function register, and peripheral register groups.
+</td></tr>
+<tr><td valign="top"> <img src="GenericChip.png"/> </td><td valign="top">
+    Display the CPU registers.
+</td></tr>
+<tr><td valign="top"> <img src="GenericChipGhost.png"/> </td><td valign="top">
+    Hide the CPU registers.
+</td></tr>
+<tr><td valign="top"> <img src="images/EditGoTo.png"/> </td><td valign="top">
+    Force-read a register, ignoring the access attribute of the register.
+</td></tr>
+<tr><td valign="top"> <img src="WebRefresh.png"/> </td><td valign="top">
+    Update the selected register group.
+</td></tr>
+<tr><td valign="top"> <img src="DebugLocateMemory.png"/> </td><td valign="top">
+    Set the active memory window to the address and size of the selected register group.
+</td></tr></table><h3>Using the registers window</h3><p>Both CPU registers and special function registers are shown in the main part
+of the <b>Registers</b> window. When the program stops at a breakpoint, or is stepped,
+the <b>Registers</b> windows update to show the current values of the
+registers. Items that have changed since they were previously displayed
+are highlighted in red.</p><h5>To activate the first register window:</h5><ul><li>Choose <b>View > Registers > Registers 1</b> or press <b>Ctrl+T, R, 1</b>.</li></ul><p>Other register windows can be similarly activated.</p><h4>Displaying CPU registers</h4><p>The values of the CPU registers displayed in the <b>Registers</b> window depend up
+upon the selected context. The selected context can be:</p><ul><li>The register state the CPU stopped in.
+  </li>
+<li>The register state when a function call occurred using the Call
+    Stack window.
+  </li>
+<li>The register state of the currently selected thread using the the <b>Threads</b>
+    window.
+  </li>
+<li>The register state you supplied with the <b>Debug > Locate</b>
+    operation.</li></ul><h5>To display a group of CPU registers:</h5><ul><li>On the <b>Registers</b> window toolbar, click the <b>Groups</b> button.
+  </li>
+<li>From the pop-up menu, select the register groups to display and deselect
+    the ones to hide.</li></ul><p>You can deselect all CPU register groups to allow more space in the display
+for special function  registers or peripheral registers. So, for instance, you can have
+one register window showing the CPU registers and other register windows showing
+different peripheral registers.</p><h4>Displaying special function or peripheral registers</h4><p>The <b>Registers</b> window shows the set of register groups defined
+in the memory-map file the application was built with. If there is
+no memory-map file associated with a project, the <b>Registers</b> window will show
+only the CPU registers.</p><h5>To display a special function or peripheral register:</h5><ul><li>On the <b>Registers</b> toolbar, click the <b>Groups</b> button.
+  </li>
+<li>From the pop-up menu, select the register groups to display and deselect
+    the ones to hide.</li></ul><h3>Changing display format</h3><p>When you select a register in the main part of the display, the display-format
+button highlighted on the <b>Registers</b> window toolbar changes to show the item's
+display format.</p><h5>To change the display format of a register:</h5><ul><li>Right-click the item to change.
+  </li>
+<li>From the shortcut menu, choose the desired display format.</li></ul><p>&mdash;or&mdash;</p><ul><li>Click the item to change.
+  </li>
+<li>On the <b>Registers</b> window toolbar, select the desired display format.</li></ul><h3>Modifying register values</h3><h5>To modify the value of a register:</h5><ul><li>Click the value of the register to modify.
+  </li>
+<li>Enter the new value for the register. Prefix hexadecimal numbers with <b>0x</b>,
+    binary numbers with <b>0b</b>, and octal numbers with <b>0</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>Right-click the value of the register to modify.
+  </li>
+<li>From the shortcut menu, choose one of the commands to modify the register
+    value.</li></ul><p>Modifying the saved register value of a function or thread may not be supported.</p> 
+    </div>
+  </body>
+</html>

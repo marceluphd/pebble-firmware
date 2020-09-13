@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>towlower_l</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">wint_t </span><span class="rwt-code-function">towlower_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">wint_t </span><span class="rwt-code-text">c</span><span class="rwt-code-operator">,</span>
+                  <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>towlower_l</b> converts an uppercase letter to a corresponding lowercase letter
+  in locale <b>loc</b>.</p><p>If the argument <b>c</b> is a wide character for which <b>iswupper_l</b> is true and there
+  are one or more corresponding wide characters, in the locale <b>loc</b>, for
+  which <b>iswlower_l</b> is true, <b>towlower_l</b> returns one (and always the same one for any
+  given locale) of the corresponding wide characters; otherwise, <b>c</b> is
+  returned unchanged.
+</p> 
+    </div>
+  </body>
+</html>

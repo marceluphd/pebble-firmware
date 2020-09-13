@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Using the header generator</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>For each register definition in the memory map file a corresponding
+<b>#define</b> is generated in the header file. The <b>#define</b> is named
+the same as the register name and is defined as a volatile pointer to the address.</p><p>The type of the pointer is derived from the size of the register. A four-byte
+register generates an unsigned long pointer. A two-byte register generates
+an unsigned short pointer.  A one-byte register will generates an unsigned char pointer.</p><p>If a register definition in the memory map file has bitfields then preprocessor
+symbols are generated for each bitfield. Each bitfield will have two preprocessor
+symbols generated, one representing the mask and one defining the start bit
+position. The bitfield preprocessor symbol names are formed by prepending the
+register name to the bitfield name. The mask definition has <b>_MASK</b> appended to
+it and the start definition has <b>_BIT</b> appended to it.</p><p>For example consider the following definitions in the the file <b>memorymap.xml</b>.</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">RegisterGroup </span><span class="rwt-code-attribute">start</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">0xFFFFF000</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">AIC</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">Register </span><span class="rwt-code-attribute">start</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">+0x00</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> size</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">4</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">AIC_SMR0</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">BitField </span><span class="rwt-code-attribute">size</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">3</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">PRIOR</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> start</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">0</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">BitField </span><span class="rwt-code-attribute">size</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">2</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">SRCTYPE</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> start</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">5</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">/></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;/</span><span class="rwt-code-markup">Register</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  ...</span>
+<span class="rwt-code-text"/></pre><p>We can generate the header file associated with this file using:</p>
+<pre class="rwt-code">mkhdr memorymap.xml memorymap.h </pre><p>This generates the following definitions in the file <b>memorymap.h</b>.</p>
+<pre class="rwt-code"><span class="rwt-code-control">#define</span><span class="rwt-code-text"> </span><span class="rwt-code-function">AIC_SMR0 </span><span class="rwt-code-operator">(*(</span><span class="rwt-code-keyword">volatile</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">unsigned</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">long</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*)</span><span class="rwt-code-literal">0xFFFFF000</span><span class="rwt-code-operator">)</span>
+<span class="rwt-code-control">#define</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_PRIOR_MASK </span><span class="rwt-code-literal">0x7</span>
+<span class="rwt-code-control">#define</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_PRIOR_BIT </span><span class="rwt-code-literal">0</span>
+<span class="rwt-code-control">#define</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_MASK </span><span class="rwt-code-literal">0x60</span>
+<span class="rwt-code-control">#define</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_BIT </span><span class="rwt-code-literal">5</span></pre><p>These definitions can be used in the following way in a C/C++ program:</p><h6>Reading a register</h6>
+<pre class="rwt-code"><span class="rwt-code-keyword">unsigned</span><span class="rwt-code-text"> </span><span class="rwt-code-text">r </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0</span><span class="rwt-code-operator">;</span></pre><h6>Writing a register</h6>
+<pre class="rwt-code"><span class="rwt-code-text">AIC_SMR0 </span><span class="rwt-code-operator">=</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-text">priority </span><span class="rwt-code-operator">&lt;&lt;</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_PRIOR_BIT</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">|</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-text">srctype </span><span class="rwt-code-operator">&lt;&lt;</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_BIT</span><span class="rwt-code-operator">);</span></pre><h6>Reading a bitfield</h6>
+<pre class="rwt-code"><span class="rwt-code-keyword">unsigned</span><span class="rwt-code-text"> </span><span class="rwt-code-text">srctype </span><span class="rwt-code-operator">=</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-text">AIC_SMR0 </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_MASK</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">>></span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_BIT</span><span class="rwt-code-operator">;</span></pre><h6>Writing a bitfield</h6>
+<pre class="rwt-code"><span class="rwt-code-text">AIC_SMR0 </span><span class="rwt-code-operator">=</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-text">AIC_SMR0 </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">~</span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_MASK</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">|</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">((</span><span class="rwt-code-text">srctype </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_MASK</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&lt;&lt;</span><span class="rwt-code-text"> </span><span class="rwt-code-text">AIC_SMR0_SRCTYPE_BIT</span><span class="rwt-code-operator">);</span></pre> 
+    </div>
+  </body>
+</html>

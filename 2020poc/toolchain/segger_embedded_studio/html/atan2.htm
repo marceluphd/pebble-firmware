@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>atan2</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-function">atan2</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-text">y</span><span class="rwt-code-operator">,</span>
+             <span class="rwt-code-keyword">double</span><span class="rwt-code-text"> </span><span class="rwt-code-text">x</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>atan2</b> returns the value, in radians, of the inverse circular tangent 
+  of <b>y</b> divided by <b>x</b> using the signs of <b>x</b> and <b>y</b> to 
+  compute the quadrant of the return value. The principal value lies in the interval 
+  [&#8722;&#960;, +&#960;] radians. 
+ 
+  If <b>x</b> = <b>y</b> = 0, <b>errno</b> is set to <b>EDOM</b> and <b>atan2</b> returns <b>HUGE_VAL</b>. </p><p><b>atan2</b>(<b>x</b>, NaN) is NaN. <br/>
+  <b>atan2</b>(NaN, <b>x</b>) is NaN. <br/>
+  <b>atan2</b>(&plusmn;0, +(anything but NaN)) is &plusmn;0. <br/>
+  <b>atan2</b>(&plusmn;0, &#8722;(anything but NaN)) is &plusmn;&#960;. <br/>
+  <b>atan2</b>(&plusmn;(anything but 0 and NaN), 0) is &plusmn;&#189;&#960;. <br/>
+  <b>atan2</b>(&plusmn;(anything but &#8734; and NaN), +&#8734;) is &plusmn;0. <br/>
+  <b>atan2</b>(&plusmn;(anything but &#8734; and NaN), &#8722;&#8734;) is &plusmn;&#960;. <br/>
+  <b>atan2</b>(&plusmn;&#8734;, +&#8734;) is &plusmn;&#188;&#960;. <br/>
+  <b>atan2</b>(&plusmn;&#8734;, &#8722;&#8734;) is &plusmn;&#190;&#960;. <br/>
+  <b>atan2</b>(&plusmn;&#8734;, (anything but 0, NaN, and &#8734;)) is &plusmn;&#189;&#960;.
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>-F (Set output format)</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Syntax</h5><p><b>-F</b><i>fmt</i></p><h5>Description</h5><p>The <b>-F</b> option instructs the compiler driver to generate an additional output file in
+the format <i>fmt</i>. The compiler driver supports the following formats:</p><ul><li><b>-Fbin</b> &mdash; Create a .bin file
+</li>
+<li><b>-Fhex</b> &mdash; Create a .hex file
+</li>
+<li><b>-Fsrec</b> &mdash; Create a .srec file</li></ul><p>The compiler driver will always output a <b>.elf</b> file as specified with the <b>-o</b> option. 
+The name of the additional output file is the same as the <b>.elf</b> file with the file extension
+changed.</p><p>For example</p>
+<pre class="rwt-code">cc file.c -o file.elf -Fbin </pre><p>will generate the files <b>file.elf</b> and <b>file.bin</b>.</p> 
+    </div>
+  </body>
+</html>

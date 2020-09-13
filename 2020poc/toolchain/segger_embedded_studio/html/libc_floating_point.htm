@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Floating point</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The SEGGER Embedded Studio for ARM C library uses IEEE floating point format as specified
+by the ISO 60559 standard with restrictions.</p><p>This library favors code size and execution speed above absolute precision. 
+It is suitable for applications that need to run quickly and not consume precious 
+resources in limited environments. The library does not implement features
+rarely used by simple applications: floating point exceptions, rounding modes,
+and subnormals.</p><p>NaNs and infinities are supported and correctly generated. The only rounding
+mode supported is round-to-nearest.  Subnormals are always flushed to a
+correctly-signed zero.  The mathematical functions use stable approximations
+and do their best to cater ill-conditioned inputs.</p> 
+    </div>
+  </body>
+</html>

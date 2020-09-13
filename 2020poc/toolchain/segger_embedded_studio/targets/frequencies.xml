@@ -1,0 +1,295 @@
+<group short="Oscillator Frequency" group="Build Options" long="Select your target's oscillator frequency." name="oscillator_frequency" default="10MHz">
+  <groupEntry name="No Oscillator">
+    <cdefine value="0" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="0" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="32kHz">
+    <cdefine value="32000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="32000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="32.768kHz">
+    <cdefine value="32768" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="32768" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="40kHz">
+    <cdefine value="40000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="40000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="60kHz">
+    <cdefine value="60000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="60000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="60.005kHz">
+    <cdefine value="60005" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="60005" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="65.536kHz">
+    <cdefine value="65536" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="65536" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="75kHz">
+    <cdefine value="75000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="75000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="76.79kHz">
+    <cdefine value="76790" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="76790" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="76.8kHz">
+    <cdefine value="76800" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="76800" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="76.81kHz">
+    <cdefine value="76810" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="76810" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="77.5kHz">
+    <cdefine value="77500" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="77500" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="77.503kHz">
+    <cdefine value="77503" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="77503" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="96kHz">
+    <cdefine value="96000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="96000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="100kHz">
+    <cdefine value="100000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="100000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="1.544MHz">
+    <cdefine value="1544000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="1544000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="1.8432MHz">
+    <cdefine value="1843200" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="1843200" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="2MHz">
+    <cdefine value="2000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="2000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="2.048MHz">
+    <cdefine value="2048000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="2048000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="2.4576MHz">
+    <cdefine value="2457600" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="2457600" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="3.072MHz">
+    <cdefine value="3072000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="3072000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="3.2768MHz">
+    <cdefine value="3276800" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="3276800" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="3.579545MHz">
+    <cdefine value="3579545" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="3579545" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="3.6864MHz">
+    <cdefine value="3686400" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="3686400" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="3.932160MHz">
+    <cdefine value="3932160" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="3932160" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="4MHz">
+    <cdefine value="4000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="4000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="4.096MHz">
+    <cdefine value="4096000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="4096000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="4.194304MHz">
+    <cdefine value="4194304" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="4194304" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="4.433618MHz">
+    <cdefine value="4433618" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="4433618" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="4.9152MHz">
+    <cdefine value="4915200" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="4915200" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="5MHz">
+    <cdefine value="5000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="5000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="5.068MHz">
+    <cdefine value="5068000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="5068000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="6MHz">
+    <cdefine value="6000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="6000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="6.144MHz">
+    <cdefine value="6144000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="6144000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="6.5536MHz">
+    <cdefine value="6553600" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="6553600" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="7.3728MHz">
+    <cdefine value="7372800" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="7372800" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="7.5MHz">
+    <cdefine value="7500000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="7500000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="8MHz">
+    <cdefine value="8000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="8000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="8.192MHz">
+    <cdefine value="8192000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="8192000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="9.8304MHz">
+    <cdefine value="9830400" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="9830400" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="10MHz">
+    <cdefine value="10000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="10000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="10.0543478MHz">
+    <cdefine value="10054347" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="10054347" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="10.240MHz">
+    <cdefine value="10240000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="10240000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="11MHz">
+    <cdefine value="11000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="11000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="11.0592MHz">
+    <cdefine value="11059200" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="11059200" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="11.2896MHz">
+    <cdefine value="11289600" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="11289600" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="12MHz">
+    <cdefine value="12000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="12000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="12.288MHz">
+    <cdefine value="12288000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="12288000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="12.352MHz">
+    <cdefine value="12352000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="12352000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="13.5MHz">
+    <cdefine value="13500000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="13500000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="14.31818MHz">
+    <cdefine value="14318180" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="14318180" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="14.7456MHz">
+    <cdefine value="14745600" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="14745600" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="15.36MHz">
+    <cdefine value="15360000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="15360000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="16MHz">
+    <cdefine value="16000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="16000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="16.384MHz">
+    <cdefine value="16384000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="16384000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="16.6666MHz">
+    <cdefine value="166666000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="166666000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="17.734475MHz">
+    <cdefine value="17734475" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="17734475" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="18MHz">
+    <cdefine value="18000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="18000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="18.432MHz">
+    <cdefine value="18432000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="18432000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="19.6608MHz">
+    <cdefine value="19660800" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="19660800" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="19.44MHz">
+    <cdefine value="19440000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="19440000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="20MHz">
+    <cdefine value="20000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="20000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="22.1184MHz">
+    <cdefine value="22118400" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="22118400" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="24MHz">
+    <cdefine value="24000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="24000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="24.576MHz">
+    <cdefine value="24576000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="24576000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="25MHz">
+    <cdefine value="25000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="25000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="25.175MHz">
+    <cdefine value="25175000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="25175000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="26MHz">
+    <cdefine value="26000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="26000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="27MHz">
+    <cdefine value="27000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="27000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="28.322MHz">
+    <cdefine value="28322000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="28322000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="28.63636MHz">
+    <cdefine value="28636360" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="28636360" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="29.498928MHz">
+    <cdefine value="29498928" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="29498928" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="30MHz">
+    <cdefine value="30000000" name="OSCILLATOR_CLOCK_FREQUENCY" />
+    <property value="30000000" name="arm_target_loader_parameter" />
+  </groupEntry>
+  <groupEntry name="Other" />
+</group>

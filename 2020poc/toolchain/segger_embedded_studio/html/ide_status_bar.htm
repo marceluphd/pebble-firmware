@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Status bar</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>At the bottom of the window, the status bar contains useful information about
+the current editor, build status, and debugging environment. The status bar
+is divided into two regions: one contains a set of fixed panels and the
+other is used for messages.</p><h5>The message area</h5><p>The leftmost part of the status bar is a message area used for things
+such as status tips, progress information, warnings, errors, and other notifications.</p><h5>Status bar panels</h5><p>You can show or hide the following panels on the status bar:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Panel</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> Target device status </td><td valign="top">
+      Displays the connected target interface. When connected, this panel contains
+      the selected target interface's name and, if applicable, the processor to which
+      the target interface is connected. The LED icon flashes green when a program
+      is running, is solid red when stopped at a breakpoint, and is yellow when
+      connected to a target but not running a program. Double-clicking this panel displays
+      the <b>Targets</b> pane, and right-clicking it invokes the <b>Target</b> shortcut menu.
+</td></tr>
+<tr><td valign="top"> Cycle count panel </td><td valign="top">
+      Displays the number of processor cycles used by the executing program.
+      This panel is only visible if the connected target supports performance
+      counters that can report the total number of cycles executed. Double-clicking
+      this panel resets the cycle counter to zero, and right-clicking it
+      brings up the <b>Cycle Count</b> shortcut menu.
+</td></tr>
+<tr><td valign="top"> Insert/overwrite status </td><td valign="top">
+      Indicates whether the current editor is in insert or overwrite mode.
+      In overwrite mode, the panel displays "OVR"; in insert mode, the
+      panel displays "INS".
+</td></tr>
+<tr><td valign="top"> Read-only status </td><td valign="top">
+      Indicates whether the editor is in read-only mode. If the editor is editing
+      a read-only file or is in read-only mode, the panel display "R/O"; if
+      the editor is in read-write mode, the panel displays "R/W".
+</td></tr>
+<tr><td valign="top"> Build status </td><td valign="top">
+      Indicates the success or failure of the last build. If the last build
+      completed without errors or warnings, the build status pane contains
+      <b>Built OK</b>; otherwise, it contains the number of errors and warnings
+      reported. If there were errors, double-clicking this panel displays the
+      <b>Build Log</b> in the <b>Output</b> pane.
+</td></tr>
+<tr><td valign="top"> Caret position </td><td valign="top">
+      Indicates the insertion position position in the editor window. For text files,
+      the <b>caret position</b> pane displays the line number and column number of the
+      insertion point in the active window; when editing binary files, it displays the
+      address being edited.
+</td></tr>
+<tr><td valign="top"> Time panel </td><td valign="top">
+      Displays the current time.
+</td></tr></table><h3>Configuring the status bar panels</h3><p>To configure which panels are shown on the status bar:</p><ul><li>Choose <b>View > Status Bar</b>.
+  </li>
+<li>From the status bar menu, select the panels to display and
+    deselect the ones you want hidden.</li></ul><p>&mdash;or&mdash;</p><ul><li>Right-click the status bar.
+  </li>
+<li>From the status bar menu, select the panels to display and
+    deselect the ones you want to hide.</li></ul><h5>To show or hide the status bar:</h5><ul><li>Choose <b>View > Status Bar</b>.
+  </li>
+<li>From the status bar menu, select or deselect the <b>Status Bar</b> item.</li></ul><p>You can choose to hide or display the <i>size grip</i> when SEGGER Embedded Studio's main
+window is not maximized. (The size grip is never shown in full-screen
+mode or when maximized.)</p><h5>To show or hide the size grip</h5><ul><li>Choose <b>View > Status Bar</b>.
+  </li>
+<li>From the status bar menu, select or deselect the <b>Size Grip</b> item.</li></ul> 
+    </div>
+  </body>
+</html>

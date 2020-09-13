@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Showing differences between files</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>To show the differences between the file in the project and the version checked into
+source control, do the following:</p><ol><li> In the <b>Project Explorer</b>, right-click the file.
+  </li>
+<li> From the shortcut menu, choose <b>Source Control > Show Differences</b>.</li></ol><p>You can use an external diff tool in preference to the built-in
+SEGGER Embedded Studio for ARM diff tool. To define the diff command line SEGGER Embedded Studio for ARM generates, choose
+<b>Tools > Options > Source Control > Diff Command Line</b>. The command line
+is defined as a list of strings to avoid problems with spaces in arguments.
+The diff command line can contain the following macros:</p><ul><li><i>$(localfile)</i>:&nbsp;&nbsp;The filename of the file in the project.
+</li>
+<li><i>$(remotefile)</i>:&nbsp;&nbsp;The filename of the latest version of the file in source control.
+</li>
+<li><i>$(localname)</i>:&nbsp;&nbsp;A display name for $(localfile).
+</li>
+<li><i>$(remotename)</i>:&nbsp;&nbsp;A display name for $(remotefile).</li></ul> 
+    </div>
+  </body>
+</html>

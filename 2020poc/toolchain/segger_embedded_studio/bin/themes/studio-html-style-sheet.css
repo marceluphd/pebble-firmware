@@ -1,0 +1,114 @@
+body
+{
+  color: $(TextColor);
+  font-size: 13px;
+}
+
+table
+{
+  background: $(BorderColor) !important;
+  border-collapse: collapse; 
+  box-shadow: none !important;
+  font-size: 13px;
+}
+
+tr
+{
+  background: $(HighlightBackgroundColor) !important;
+}
+
+td
+{
+  border: 1px solid $(BorderColor) !important;
+}
+
+a:active, a:link, a:visited
+{
+  color: $(LinkColor);
+}
+
+#rwt-content h1, #rwt-content h2
+{
+  text-shadow: none;
+}
+
+#rwt-content pre
+{
+  background: $(HighlightBackgroundColor);
+  box-shadow: none;
+  border: 1px solid $(BorderColor);
+}
+
+::-webkit-scrollbar
+{
+  width: 13px;
+  height: 13px;
+  background: $(EditorBackgroundColor);
+}
+
+::-webkit-scrollbar-track
+{
+  background: $(BackgroundColor);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: $(BorderColor);
+  border: 1px solid $(BackgroundColor);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-corner
+{
+  background: $(EditorBackgroundColor);
+}
+
+::-webkit-scrollbar-button:vertical:decrement
+{
+  background-image: url($(ThemeIconDir)/UpArrow.png);
+  background-repeat: no-repeat;
+  background-position: 2px 7px, 0 0;
+}
+
+::-webkit-scrollbar-button:vertical:decrement:hover
+{
+  background-image: url($(ThemeIconDir)/UpArrowHover.png);
+}
+
+::-webkit-scrollbar-button:vertical:increment
+{
+  background-image: url($(ThemeIconDir)/DownArrow.png);
+  background-repeat: no-repeat;
+  background-position: 2px 5px, 0 0;
+}
+
+::-webkit-scrollbar-button:vertical:increment:hover
+{
+  background-image: url($(ThemeIconDir)/DownArrowHover.png);
+}
+
+::-webkit-scrollbar-button:horizontal:decrement
+{
+  background-image: url($(ThemeIconDir)/LeftArrow.png);
+  background-repeat: no-repeat;
+  background-position: 6px 2px, 0 0;
+}
+
+::-webkit-scrollbar-button:horizontal:decrement:hover
+{
+  background-image: url($(ThemeIconDir)/LeftArrowHover.png);
+}
+
+::-webkit-scrollbar-button:horizontal:increment
+{
+  background-image: url($(ThemeIconDir)/RightArrow.png);
+  background-repeat: no-repeat;
+  background-position: 5px 2px, 0 0;
+}
+
+::-webkit-scrollbar-button:horizontal:increment:hover
+{
+  background-image: url($(ThemeIconDir)/RightArrowHover.png);
+}
+

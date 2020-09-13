@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>powf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-function">powf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-text">x</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-keyword">float</span><span class="rwt-code-text"> </span><span class="rwt-code-text">y</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>powf</b> computes <b>x</b> raised to the power <b>y</b>. </p><p>If <b>x</b> &lt; 0 and <b>y</b> &#8804; 0, <b>errno</b>.
+  is set to <b>EDOM</b> and <b>powf</b> returns &#8722;<b>HUGE_VALF</b>.
+  If <b>x</b> &#8804; 0 and <b>y</b> is not an integer value, <b>errno</b> is set to <b>EDOM</b> 
+  and <b>pow</b> returns &#8722;<b>HUGE_VALF</b>.</p><p>If <b>y</b> = 0, <b>powf</b> returns 1. <br/>
+  If <b>y</b> = 1, <b>powf</b> returns <b>x</b>. <br/>
+  If <b>y</b> = NaN, <b>powf</b> returns NaN. <br/>
+  If <b>x</b> = NaN and <b>y</b> is anything other than 0, <b>powf</b> returns NaN. <br/>
+  If <b>x</b> &lt; &#8722;1 or 1 &lt; <b>x</b>, and <b>y</b> = +&#8734;, <b>powf</b> returns +&#8734;. <br/>
+  If <b>x</b> &lt; &#8722;1 or 1 &lt; <b>x</b>, and <b>y</b> = &#8722;&#8734;, <b>powf</b> returns 0. <br/>
+  If &#8722;1 &lt; <b>x</b> &lt; 1 and <b>y</b> = +&#8734;, <b>powf</b> returns +0. <br/>
+  If &#8722;1 &lt; <b>x</b> &lt; 1 and <b>y</b> = &#8722;&#8734;, <b>powf</b> returns +&#8734;. <br/>
+  If <b>x</b> = +1 or <b>x</b> = &#8722;1 and <b>y</b> = +&#8734; or <b>y</b> = &#8722;&#8734;, <b>powf</b> returns NaN. <br/>
+  If <b>x</b> = +0 and <b>y</b> > 0 and <b>y</b> &#8800; NaN, <b>powf</b> returns +0. <br/>
+  If <b>x</b> = &#8722;0 and <b>y</b> > 0 and <b>y</b> &#8800; NaN or <b>y</b> not an odd integer, <b>powf</b> returns +0. <br/>
+  If <b>x</b> = +0 and <b>y</b>  and <b>y</b> &#8800; NaN, <b>powf</b> returns +&#8734;. <br/>
+  If <b>x</b> = &#8722;0 and <b>y</b> > 0 and <b>y</b> &#8800; NaN or <b>y</b> not an odd integer, <b>powf</b> returns +&#8734;. <br/>
+  If <b>x</b> = &#8722;0 and <b>y</b> is an odd integer, <b>powf</b> returns &#8722;0. <br/>
+  If <b>x</b> = +&#8734; and <b>y</b> > 0 and <b>y</b> &#8800; NaN, <b>powf</b> returns +&#8734;. <br/>
+  If <b>x</b> = +&#8734; and <b>y</b> &lt; 0 and <b>y</b>  &#8800; NaN, <b>powf</b> returns +0. <br/>
+  If <b>x</b> = &#8722;&#8734;, <b>powf</b> returns <b>powf</b>(&#8722;0, <b>y</b>) <br/>
+  If <b>x</b> &lt; 0 and <b>x</b> &#8800; &#8734; and <b>y</b> is a non-integer, <b>powf</b> returns NaN. <br/>
+</p> 
+    </div>
+  </body>
+</html>

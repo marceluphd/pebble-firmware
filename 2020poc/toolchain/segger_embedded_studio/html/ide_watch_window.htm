@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Watch window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Watch</b> window provides a means to evaluate expressions and to display the results
+of those expressions. Typically, expressions are just the name of a variable
+to be displayed, but they can be considerably more complex; see <a href="ide_debug_expressions.htm">Debug expressions</a>.
+<i>Note:</i> expressions are always evaluated when your program
+stops, so the expression you are watching is the one that is in scope of the
+stopped program position.</p><p>The <b>Watch</b> window is divided into a toolbar and the main data display.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="images/ViewBase2.png"/> </td><td valign="top">
+    Display the selected item in binary.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase8.png"/> </td><td valign="top">
+    Display the selected item in octal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase10.png"/> </td><td valign="top">
+    Display the selected item in decimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase16.png"/> </td><td valign="top">
+    Display the selected item in hexadecimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewSigned.png"/> </td><td valign="top">
+    Display the selected item as a signed decimal.
+</td></tr>
+<tr><td valign="top"> <img src="ViewAscii.png"/> </td><td valign="top">
+    Display the selected item as a character or Unicode character.
+</td></tr>
+<tr><td valign="top"> <img src="DebugLocateMemory.png"/> </td><td valign="top">
+    Set the range displayed in the active <b>Memory</b> window to
+    span the memory allocated to the selected item.
+</td></tr>
+<tr><td valign="top"> <img src="images/ActionDelete.png"/> </td><td valign="top">
+    Remove the selected watch item.
+</td></tr>
+<tr><td valign="top"> <img src="DebugDeleteAllWatches.png"/> </td><td valign="top">
+    Remove all the watches.
+</td></tr></table><p>Right-clicking a watch item shows a shortcut menu with
+commands that are not available from the toolbar.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="ViewString.png"/> </td><td valign="top">
+     View pointer or array as a null-terminated string.
+</td></tr>
+<tr><td valign="top"> <img src="ViewArray.png"/> </td><td valign="top">
+    View pointer or array as an array.
+</td></tr>
+<tr><td valign="top"> <img src="ViewValue.png"/> </td><td valign="top">
+    View pointer value.
+</td></tr>
+<tr><td valign="top"> <img src="ActionZero.png"/> </td><td valign="top">
+    Set watch value to zero.
+</td></tr>
+<tr><td valign="top"> <img src="ActionOne.png"/> </td><td valign="top">
+    Set watch value to one.
+</td></tr>
+<tr><td valign="top"> <img src="ActionIncrement.png"/> </td><td valign="top">
+    Increment watched variable by one.
+</td></tr>
+<tr><td valign="top"> <img src="ActionDecrement.png"/> </td><td valign="top">
+    Decrement watched variable by one.
+</td></tr>
+<tr><td valign="top"> <img src="ActionNegate.png"/> </td><td valign="top">
+    Negated watched variable.
+</td></tr>
+<tr><td valign="top"> <img src="ActionInvert.png"/> </td><td valign="top">
+    Invert watched variable.
+</td></tr>
+<tr><td valign="top"> <img src="ViewProperties.png"/> </td><td valign="top">
+    View the properties of the watch value.
+</td></tr></table><p>You can view details of the watched item using the <b>Properties</b> dialog.</p><dl><dt>Filename
+  </dt>
+<dd>The filename context of the watch item.
+</dd>
+<dt>Line number
+  </dt>
+<dd>The line number context of the watch item.
+</dd>
+<dt>(Name)
+  </dt>
+<dd>The name of the watch item.
+</dd>
+<dt>Address
+  </dt>
+<dd>The address or register of the watch item.
+</dd>
+<dt>Expression
+  </dt>
+<dd>The debug expression of the watch item.
+</dd>
+<dt>Previous Value
+  </dt>
+<dd>The previous watch value.
+</dd>
+<dt>Size In Bytes
+  </dt>
+<dd>The size of the watch item in bytes.
+</dd>
+<dt>Type
+  </dt>
+<dd>The type of the watch item.
+</dd>
+<dt>Value
+  </dt>
+<dd>The value of the watch item.</dd></dl><h3>Using the Watch window</h3><p>Each expression appears as a row in the display. Each row contains the expression
+and its value. If the value of an expression is structured (for example, an array),
+you can open the structure to see its contents.</p><p>The display updates each time the debugger locates to source code. So it
+will update each time your program stops on a breakpoint, or single steps, and
+whenever you traverse the call stack. Items that have changed since they
+were previously displayed are highlighted in red.</p><h5>To activate the Watch window:</h5><ul><li>Choose <b>View > Watch > Watch 1</b> or press <b>Ctrl+T, W, 1</b>.</li></ul><p>You can show other <b>Watch</b> windows similarly.</p><p>You can add a new expression to be watched by clicking and typing into the last entry
+in the <b>Watch</b> window. You can change an expression by clicking its
+entry and editing its contents.</p><p>When you select a variable in the main part of the display, the display format
+button highlighted on the <b>Watch</b> window toolbar changes to show the item's
+display format.</p><h5>To change the display format of an expression:</h5><ul><li>Right-click the item to change.
+  </li>
+<li>From the shortcut menu, choose the desired display format.</li></ul><p>&mdash;or&mdash;</p><ul><li>Click the item to change.
+  </li>
+<li>On the <b>Watch</b> window toolbar, select the desired display format.</li></ul><p>The selected display format will then be used for all subsequent displays and
+will be preserved after the debug session stops.</p><p>For C programs, the interpretation of pointer types can be changed by right-clicking
+and selecting from the shortcut menu. A pointer can be interpreted as:</p><ul><li>a null-terminated ASCII string
+  </li>
+<li>an array
+  </li>
+<li>an integer
+  </li>
+<li>dereferenced</li></ul><h5>To modify the value of an expression:</h5><ul><li>Click the value of the local variable to modify.
+  </li>
+<li>Enter the new value of the local variable. Prefix hexadecimal numbers with
+    <b>0x</b>, binary numbers with <b>0b</b>, and octal numbers with <b>0</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>Right-click the value of the local variable to modify.
+  </li>
+<li>From the shortcut menu, choose one of the commands to modify the variable's
+    value.</li></ul> 
+    </div>
+  </body>
+</html>

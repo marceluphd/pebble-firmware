@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Regular expressions</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The editor can search and replace text using <i>regular expressions</i>. A regular
+expression is a string that uses special characters to describe and reference
+patterns of text. The regular expression system used by the editor is modeled
+on Perl's regexp language. For more information on regular expressions, see
+<i>Mastering Regular Expressions</i>, Jeffrey E F Freidl, ISBN 0596002890.</p><h3>Summary of special characters</h3><p>The following table summarizes the special characters the SEGGER Embedded Studio
+editor supports</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1in,4in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Pattern</b>   </td><td> <b>Description</b>
+</td></tr>
+<tr><td> \d          </td><td valign="top"> Match a numeric character.
+</td></tr>
+<tr><td valign="top"> \D          </td><td valign="top"> Match a non-numeric character.
+</td></tr>
+<tr><td valign="top"> \s          </td><td valign="top"> Match a whitespace character.
+</td></tr>
+<tr><td valign="top"> \S          </td><td valign="top"> Match a non-whitespace character.
+</td></tr>
+<tr><td valign="top"> \w          </td><td valign="top"> Match a word character.
+</td></tr>
+<tr><td valign="top"> \W          </td><td valign="top"> Match a non-word character.
+</td></tr>
+<tr><td valign="top"> [<i>c</i>]      </td><td valign="top"> Match set of characters; e.g., [ch] matches characters c or h. A range
+                  can be specified using the &lsquo;-&rsquo; character; e.g., &lsquo;[0-27-9]&rsquo; matches if the character
+                  is 0, 1, 2, 7 8, or 9. A range can be negated using the &lsquo;^&rsquo; character; e.g.,
+                  &lsquo;[^a-z]&rsquo; matches if the character is anything other than a lowercase alphabetic
+                  character.
+</td></tr>
+<tr><td valign="top"> \<i>c</i>      </td><td valign="top"> Match the literal character <i>c</i>. For example, you would use &lsquo;\\*&rsquo; to match the character &lsquo;*&rsquo;.
+</td></tr>
+<tr><td valign="top"> \a          </td><td valign="top"> Match ASCII bell character (ASCII code 7).
+</td></tr>
+<tr><td valign="top"> \f          </td><td valign="top"> Match ASCII form feed character (ASCII code 12).
+</td></tr>
+<tr><td valign="top"> \t          </td><td valign="top"> Match ASCII horizontal tab character (ASCII code 9).
+</td></tr>
+<tr><td valign="top"> \v          </td><td valign="top"> Match ASCII vertical tab character.
+</td></tr>
+<tr><td valign="top"> \x<i>hhhh</i>  </td><td valign="top"> Match Unicode character specified by hexadecimal number <i>hhhh</i>.
+</td></tr>
+<tr><td valign="top"> .            </td><td valign="top"> Match any character.
+</td></tr>
+<tr><td valign="top"> *            </td><td valign="top"> Match zero or more occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> +            </td><td valign="top"> Match one or more occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> ?            </td><td valign="top"> Match zero or one occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> {<i>n</i>}      </td><td valign="top"> Match <i>n</i> occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> {<i>n</i>,}     </td><td valign="top"> Match at least <i>n</i> occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> {,<i>m</i>}     </td><td valign="top"> Match at most <i>m</i> occurrences of the preceding expression.
+</td></tr>
+<tr><td valign="top"> {<i>n</i>,<i>m</i>}</td><td valign="top">Match at least <i>n</i> and at most <i>m</i> occurrences of the preceding
+                expression.
+</td></tr>
+<tr><td valign="top"> ^            </td><td valign="top"> Beginning of line.
+</td></tr>
+<tr><td valign="top"> $            </td><td valign="top"> End of line.
+</td></tr>
+<tr><td valign="top"> \b          </td><td valign="top"> Word boundary.
+</td></tr>
+<tr><td valign="top"> \B          </td><td valign="top"> Non-word boundary.
+</td></tr>
+<tr><td valign="top"> (<i>e</i>)      </td><td valign="top"> Capture expression <i>e</i>.
+</td></tr>
+<tr><td valign="top"> \<i>n</i>      </td><td valign="top"> Back-reference to <i>n</i>th captured text.
+</td></tr></table><h5>Examples</h5><p>The following regular expressions can be used with the editor's search-and-replace
+operations. To use the regular expression mode, the <b>Use regular expression</b>
+checkbox must be set in the search-and-replace dialog. Once enabled, regular
+expressions can be used in the <b>Find what</b> search string. The <b>Replace With</b>
+strings can use the "<i>n</i>" back-reference string to reference
+any captured strings.</p><table width="100%" cellspacing="2" cellpadding="2" cols="3" bgcolor="#f0f0f0" border="0" fm_widths="1in,1in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>"Find what"</b> </td><td> <b>"Replace With"</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> u\w.d      </td><td valign="top">                </td><td valign="top"> Search for any-length string containing one or more
+                                  word characters beginning with the character &lsquo;u&rsquo; and
+                                  ending in the character &lsquo;d&rsquo;.
+</td></tr>
+<tr><td valign="top"> ^.*;$       </td><td valign="top">                 </td><td valign="top"> Search for any lines ending in a semicolon.
+</td></tr>
+<tr><td valign="top"> (typedef.+\s+)(\S+); </td><td valign="top"> \1TEST_\2; </td><td valign="top"> Find C type definition and insert the string &lsquo;TEST&rsquo; onto the
+                 beginning of the type name.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

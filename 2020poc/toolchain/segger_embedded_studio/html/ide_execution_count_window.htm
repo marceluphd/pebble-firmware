@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Execution Profile window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Execution Profile</b> window shows a list of source locations and the number
+of times those source locations have been executed.  This window is only
+available for targets that support the collection of jump trace information.</p><h5>To activate the Execution Profile window:</h5><ul><li>Choose <b>View > More Debug Windows > Execution Profile</b> or press <b>Ctrl+T, P</b>.</li></ul><p>The count value displayed is the number of times the first instruction of
+the source code location has been executed. The source locations displayed are
+target dependent: they could represent each statement of the program or each
+jump target of the program. If however the debugger is in intermixed or disassembly
+mode then the count values will be displayed on a per instruction basis.</p><p>The execution counts window is updated each time your program stops and the
+window is visible so if you have this window displayed then single stepping
+may be slower than usual.</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>vsscanf</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">vsscanf</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+            <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">format</span><span class="rwt-code-operator">,</span>
+            <span class="rwt-code-text">__va_list </span><span class="rwt-code-text">arg</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>vsscanf</b> reads input from the string <b>s</b> under
+  control of the string pointed to by <b>format</b> that specifies
+  the  admissible input sequences and how they are to be converted for assignment,
+  using subsequent arguments as pointers to the objects to receive the converted
+  input. Before calling <b>vsscanf</b>, <b>arg</b> must be initialized by the <b>va_start</b>
+  macro (and possibly subsequent <b>va_arg</b> calls). <b>vsscanf</b> does not invoke the
+  <b>va_end</b> macro.</p><p>If there are insufficient arguments for the format, the behavior is undefined.</p><p><b>vsscanf</b> returns the value of the macro <b>EOF</b> if an input failure occurs before
+  any conversion. Otherwise, <b>vsscanf</b> returns the number of input items
+  assigned, which can be fewer than provided for, or even zero, in the event of
+  an early matching failure.</p><h5>Note</h5><p><b>vsscanf</b> is equivalent to <b>sscanf</b> with the variable argument list replaced
+  by <b>arg</b>.
+</p> 
+    </div>
+  </body>
+</html>

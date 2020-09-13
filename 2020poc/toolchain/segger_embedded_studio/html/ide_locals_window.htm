@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Locals window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Locals</b> window displays a list of all variables that are in scope of the
+selected stack frame in the <b>Call Stack</b>.</p><p>The <b>Locals</b> window has a toolbar and a main data display.</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.5in,3.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Button</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="images/ViewBase2.png"/>  </td><td valign="top"> Display the selected item in binary.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase8.png"/>  </td><td valign="top"> Display the selected item in octal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase10.png"/> </td><td valign="top"> Display the selected item in decimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewBase16.png"/> </td><td valign="top"> Display the selected item in hexadecimal.
+</td></tr>
+<tr><td valign="top"> <img src="images/ViewSigned.png"/> </td><td valign="top"> Display the selected item as a signed decimal.
+</td></tr>
+<tr><td valign="top"> <img src="ViewAscii.png"/>  </td><td valign="top"> Display the selected item as a character or Unicode character.
+</td></tr>
+<tr><td valign="top"> <img src="DebugLocateMemory.png"/> </td><td valign="top"> Set the range displayed in the active <b>Memory</b> window to
+      span the memory allocated to the selected item.
+</td></tr>
+<tr><td valign="top"> <img src="EditSortAscending.png"/> </td><td valign="top"> Sort variables alphabetically by name.
+</td></tr>
+<tr><td valign="top"> <img src="SortNumericAscending.png"/> </td><td valign="top"> Sort variables numerically by address or register
+      number (default).
+</td></tr></table><h3>Using the Locals window</h3><p>The <b>Locals</b> window shows the local variables of the active function when the
+debugger is stopped. The contents of the <b>Locals</b> window changes when you use
+the <b>Debug Location</b> toolbar items or select a new frame in the <b>Call Stack</b>
+window. When the program stops at a breakpoint, or is stepped, the <b>Locals</b> window
+updates to show the active stack frame. Items that have changed
+since they were previously displayed are highlighted in red.</p><h5>To activate the Locals window:</h5><ul><li>Choose <b>View > Locals</b> or press <b>Ctrl+Alt+L</b>.</li></ul><p>When you select a variable in the main part of the display, the display-format
+button highlighted on the <b>Locals</b> window toolbar changes to show the selected item's
+display format.</p><h5>To change the display format of a local variable:</h5><ul><li>Right-click the item to change.
+  </li>
+<li>From the shortcut menu, choose the desired display format.</li></ul><p>&mdash;or&mdash;</p><ul><li>Click the item to change.
+  </li>
+<li>On the <b>Locals</b> window toolbar, select the desired display format.</li></ul><h5>To modify the value of a local variable:</h5><ul><li>Click the value of the local variable to modify.
+  </li>
+<li>Enter the new value for the local variable. Prefix hexadecimal numbers with
+    <b>0x</b>, binary numbers with <b>0b</b>, and octal numbers with <b>0</b>.</li></ul><p>&mdash;or&mdash;</p><ul><li>Right-click the value of the local variable to modify.
+  </li>
+<li>From the shortcut menu, select one of the commands to modify
+     the local variable's value.</li></ul> 
+    </div>
+  </body>
+</html>

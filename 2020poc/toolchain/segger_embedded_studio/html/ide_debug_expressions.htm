@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Debug expressions</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The debugger can evaluate simple expressions that can be displayed 
+in the <b>Watch</b> window or as a tool-tip in the code editor.</p><p>The simplest expression is an identifier the debugger tries to interpret 
+in the following order:</p><ul><li>an identifier that exists in the scope of the current context.
+</li>
+<li>the name of a global identifier in the program of the current context.</li></ul><p>Numbers can be used in expressions. Hexadecimal numbers must
+be prefixed with <tt>0x</tt>.</p><p>Registers can be referenced by prefixing the register name with <tt>@</tt>.</p><p>The standard C and C++ operators <tt>!</tt>, <tt>~</tt>, <tt>*</tt>, <tt>/</tt>,
+<tt>%</tt>, <tt>+</tt>, <tt>-</tt>, <tt>>></tt>, <tt>&lt;&lt;</tt>, <tt>&lt;</tt>, <tt>&lt;=</tt>,  <tt>></tt>, <tt>>=</tt>,
+<tt>==</tt>, <tt>|</tt>, <tt>&amp;</tt>, <tt>^</tt>, <tt>&amp;&amp;</tt>, and <tt>||</tt> are supported on numeric
+types.</p><p>The standard assignment operators <tt>=</tt>, <tt>+=</tt>, <tt>-=</tt>, <tt>*=</tt>,
+<tt>/=</tt>, <tt>%=</tt>, <tt>>></tt>, <tt>>>=</tt>, <tt>&lt;&lt;=</tt>, <tt>&amp;=</tt>, <tt>|=</tt>, <tt>^=</tt> are
+supported on numeric types.</p><p>The array subscript operator &lsquo;[]&rsquo; is supported on array and pointer types.</p><p>The structure access operator &lsquo;.&rsquo; is supported on structured types (this also
+works on pointers to structures), and -> works similarly.</p><p>The dereference operator (prefix &lsquo;*&rsquo;) is supported on pointers, the
+address-of (prefix &lsquo;&amp;&rsquo;) and <b>sizeof</b> operators are supported.</p><p>The <tt>addressof(</tt><i>filename</i><tt>, </tt><i>linenumber</i><tt>)</tt> operator will
+return the address of the specified source code line number.</p><p>Function calling with parameters and return results.</p><p>Casting to basic pointer types is supported. For example, (unsigned char *)0x300 
+can be used to display the memory at a given location.</p><p>Casting to basic array types is supported. For example, (unsigned char[256])0x100
+can be used to reference a memory region.</p><p>Operators have the precedence and associativity one expects of a 
+C-like programming language.</p> 
+    </div>
+  </body>
+</html>

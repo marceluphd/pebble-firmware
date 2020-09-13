@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Section Placement file format</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>SEGGER Embedded Studio section-placement files are structured using XML syntax to enable simple 
+construction and parsing.</p><p>The first entry of the project file defines the XML document type 
+  used to validate the file format:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">!DOCTYPE </span><span class="rwt-code-attribute">Linker_Placement_File</span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>The next entry is the <tt>Root</tt> element. There can only be one <tt>Root</tt> element 
+in a memory map file:</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">Root </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Flash Placement</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>A <tt>Root</tt> element has a <tt>name</tt> attribute.  Every element in a section-placement
+file has a <tt>name</tt> attribute. Each name should be unique within its hierarchy level. 
+Within a <tt>Root</tt> element, there are <tt>MemorySegment</tt> elements. These correspond
+to memory regions defined in a memory map file that will be used in
+conjunction with the section-placement file when linking a program. For example:</p>
+<pre class="rwt-code"><span class="rwt-code-text"> </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">Root </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">Flash Placement</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">MemorySegment </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">FLASH</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p>A <tt>MemorySegment</tt> contains <tt>ProgramSection</tt> elements that represent program sections created
+by the C/C++ compiler and assembler. The order of <tt>ProgramSection</tt> elements within a <tt>MemorySegment</tt>
+element represents the order in which the sections will be placed when linking a program. The
+first <tt>ProgramSection</tt> will be placed first and the last one will be placed last.</p>
+<pre class="rwt-code"><span class="rwt-code-text"/><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">Root </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">My Board</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"> </span><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">  </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">MemorySegment </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">FLASH</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text">    </span><span class="rwt-code-keyword">&lt;</span><span class="rwt-code-markup">ProgramSection </span><span class="rwt-code-attribute">name</span><span class="rwt-code-disassembly">=</span><span class="rwt-code-attribute"/><span class="rwt-code-disassembly">"</span><span class="rwt-code-literal">.text</span><span class="rwt-code-disassembly">"</span><span class="rwt-code-attribute"/><span class="rwt-code-keyword">></span><span class="rwt-code-text"/>
+<span class="rwt-code-text"/></pre><p><tt>ProgramSection</tt> elements have the following attributes:</p><ul><li><i>address_symbol</i>:&nbsp;&nbsp;A symbolic name for the start address of the section.
+</li>
+<li><i>alignment</i>:&nbsp;&nbsp;The required alignment of the program section; a decimal number specifying the byte alignment.
+</li>
+<li><i>end_symbol</i>:&nbsp;&nbsp;A symbolic name for the end address of the section.
+</li>
+<li><i>fill</i>:&nbsp;&nbsp;The optional value used to fill unspecified regions of memory, a hexadecimal number with a 0x prefix.  
+</li>
+<li><i>inputsections</i>:&nbsp;&nbsp;An expression describing the input sections to be placed in this section.
+  If you omit this (recommended) and the section name isn't one of <b>.text</b>, <b>.dtors</b>, 
+  <b>.ctors</b>, <b>.data</b>, <b>.rodata</b>, or <b>.bss</b>, then the equivalent input section of 
+  <b>*(.name .name.*)</b> is supplied to the linker.
+</li>
+<li><i>keep</i>:&nbsp;&nbsp;If <b>Yes</b>, the section will be kept even if none of the symbols are referenced by the rest of the program.
+</li>
+<li><i>load</i>:&nbsp;&nbsp;If <b>Yes</b>, the section is loaded. If <b>No</b>, the section isn't loaded.
+</li>
+<li><i>place_from_segment_end</i>:&nbsp;&nbsp;If <b>Yes</b>, this section and following sections will be placed at the end of the segment. Please note that this will only succeed if the section and all following sections have a fixed size specified with the <b>size</b> attribute. 
+</li>
+<li><i>runin</i>:&nbsp;&nbsp;This specifies the name of the section to copy this section to. Multiple sections can be specified separated by a semicolon, the first section that exists will be used.
+</li>
+<li><i>runoffset</i>:&nbsp;&nbsp;This specifies an offset from the load address that the section will be run from.
+</li>
+<li><i>size</i>:&nbsp;&nbsp;The optional size of the program section in bytes, a hexadecimal number with a 0x prefix.
+</li>
+<li><i>size_symbol</i>:&nbsp;&nbsp;A symbolic name for the size of the section.
+</li>
+<li><i>start</i>:&nbsp;&nbsp;The optional start address of the program section, a hexadecimal number with a 0x prefix.</li></ul><p>When a section placement file is used for linking it is preprocessed using the (as yet undocumented)
+SEGGER Embedded Studio for ARM XML preprocessor.</p> 
+    </div>
+  </body>
+</html>

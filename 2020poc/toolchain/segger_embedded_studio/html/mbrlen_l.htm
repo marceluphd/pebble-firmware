@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mbrlen_l</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mbrlen_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-text">mbstate_t </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">ps</span><span class="rwt-code-operator">,</span>
+                <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><h5>Note</h5><p><b>mbrlen_l</b> function is equivalent to the call:</p>
+<pre class="rwt-code"><span class="rwt-code-function">mbrtowc_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">NULL</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">ps </span><span class="rwt-code-operator">!=</span><span class="rwt-code-text"> </span><span class="rwt-code-text">NULL </span><span class="rwt-code-operator">?</span><span class="rwt-code-text"> </span><span class="rwt-code-text">ps </span><span class="rwt-code-operator">:</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">internal</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span><span class="rwt-code-text"> </span></pre><p>where <b>internal</b> is the <b>mbstate_t</b> object for the <b>mbrlen</b> function,
+  except that the expression designated by <b>ps</b> is evaluated only once.
+</p> 
+    </div>
+  </body>
+</html>

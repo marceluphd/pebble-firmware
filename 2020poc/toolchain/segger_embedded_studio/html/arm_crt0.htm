@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Startup code</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The following section describes the role of the C runtime-startup code, <b>crt0.s</b> (and
+the Cortex-M/Thumb equivalent <b>thumb_crt0.s</b>).</p><p>When you create a new project to produce an executable file using a target-specific
+project template, the <b>crt0.s/thumb_crt0.s</b> file is added to the project.
+Initially, a shared version of this file is added to the project.
+If you want to modify this file, right-click it in the <b>Project Explorer</b>
+and then select <b>Import</b> from the shortcut menu to copy the file to your
+project directory.</p><p>The entry point of the C runtime-startup code is <b>_start</b>. In a typical
+system, this will be called by the target-specific startup code after it has
+initialized the target.</p><p>The C runtime carries out the following actions:</p><ul><li>Initialize the stacks.
+</li>
+<li>If required, copy the contents of the <b>.data</b> (initialized data)
+  section from non-volatile memory.
+</li>
+<li>If required, copy the contents of the <b>.fast</b> section from
+  non-volatile memory to SRAM.
+</li>
+<li>Initialize the <b>.bss</b> section to zero.
+</li>
+<li>Initialize the heap.
+</li>
+<li>Call constructors.
+</li>
+<li>If compiled with <b>FULL_LIBRARY</b>, get the command line from the host
+  using <b>debug_getargs</b> and set registers to supply <b>argc</b> and <b>argv</b>
+  to <b>main</b>.
+</li>
+<li>Call the <b>main</b> entry point.</li></ul><p>On return from <b>main</b> or when <b>exit</b> is called&hellip;
+ 
+</p><ul><li>If compiled with <b>FULL_LIBRARY</b>, call destructors.
+</li>
+<li>If compiled with <b>FULL_LIBRARY</b>, call <b>atexit</b> functions.
+</li>
+<li>If compiled with <b>FULL_LIBRARY</b>, call <b>debug_exit</b> while
+  supplying the return result from <b>main</b>.
+</li>
+<li>Wait in exit loop.</li></ul><h3>Program sections</h3><p>The following program sections are used for the C runtime in 
+section-placement files:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Section name</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> .vectors   </td><td valign="top"> The exception vector table.
+</td></tr>
+<tr><td valign="top"> .init      </td><td valign="top"> Startup code that runs before the call to the application's <b>main</b> function.
+</td></tr>
+<tr><td valign="top"> .ctors     </td><td valign="top"> Static constructor function table.
+</td></tr>
+<tr><td valign="top"> .dtors     </td><td valign="top"> Static destructor function table.
+</td></tr>
+<tr><td valign="top"> .text      </td><td valign="top"> The program code.
+</td></tr>
+<tr><td valign="top"> .fast      </td><td valign="top"> Code to copy from flash to RAM for fast execution.
+</td></tr>
+<tr><td valign="top"> .data      </td><td valign="top"> The initialized static data.
+</td></tr>
+<tr><td valign="top"> .bss       </td><td valign="top"> The zeroed static data.
+</td></tr>
+<tr><td valign="top"> .rodata    </td><td valign="top"> The read-only constants and literals of the program.
+</td></tr>
+<tr><td valign="top"> .ARM.exidx </td><td valign="top"> The C++ exception table.
+</td></tr>
+<tr><td valign="top"> .tbss      </td><td valign="top"> Thread local storage zero'd data followed by
+</td></tr>
+<tr><td valign="top"> .tdata     </td><td valign="top"> Thread local storage initialised data.
+</td></tr></table><h3>Stacks</h3><p>ARM and Cortex-A/Cortex-R devices have six separate stacks. The position and size of these stacks are
+specified in the project's section-placement or memory-map file by the
+following program sections:</p><table width="100%" cellspacing="2" cellpadding="2" cols="3" bgcolor="#f0f0f0" border="0" fm_widths="2in,2in,1in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Section name</b> </td><td> <b>Linker size symbol</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>.stack</tt>     </td><td valign="top"> <tt>__STACKSIZE__</tt>      </td><td valign="top"> System and User mode stack.
+</td></tr>
+<tr><td valign="top"> <tt>.stack_svc</tt> </td><td valign="top"> <tt>__STACKSIZE_SVC__</tt>  </td><td valign="top"> Supervisor mode stack
+</td></tr>
+<tr><td valign="top"> <tt>.stack_irq</tt> </td><td valign="top"> <tt>__STACKSIZE_IRQ__</tt>  </td><td valign="top"> IRQ mode stack
+</td></tr>
+<tr><td valign="top"> <tt>.stack_fiq</tt> </td><td valign="top"> <tt>__STACKSIZE_FIQ__</tt>  </td><td valign="top"> FIQ mode stack
+</td></tr>
+<tr><td valign="top"> <tt>.stack_abt</tt> </td><td valign="top"> <tt>__STACKSIZE_ABT__</tt>  </td><td valign="top"> Abort mode stack
+</td></tr>
+<tr><td valign="top"> <tt>.stack_und</tt> </td><td valign="top"> <tt>__STACKSIZE_UND__</tt>  </td><td valign="top"> Undefined mode stack
+</td></tr></table><p>Cortex-M devices have the following stacks and linker symbol stack sizes
+are defined:</p><table width="100%" cellspacing="2" cellpadding="2" cols="3" bgcolor="#f0f0f0" border="0" fm_widths="2in,2in,1in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Section name</b> </td><td> <b>Linker size symbol</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <tt>.stack</tt>         </td><td valign="top"> <tt>__STACKSIZE__</tt>          </td><td valign="top"> Main stack.
+</td></tr>
+<tr><td valign="top"> <tt>.stack_process</tt> </td><td valign="top"> <tt>__STACKSIZE_PROCESS__</tt>  </td><td valign="top"> Process stack.
+</td></tr></table><p>The <b>crt0.s/thumb_crt0.s</b> startup code references these sections and initializes each of the
+stack-pointer registers to point to the appropriate location. To change
+the location in memory of a particular stack, the section should be moved to
+the required position in the section-placement or memory-map file.</p><p>Should your application not require one or more of these stacks,
+you can remove those sections from the memory-map file or set the size to 0 and
+remove the initialization code from the <tt>crt0.s/thumb_crt0.s</tt> file.</p><h3>The .data section</h3><p>The <b>.data</b> section contains the initialized data. If the run address is
+different from the load address, as it would be in a flash-based application in
+order to allow the program to run from reset, the <tt>crt0.s/thumb_crt0.s</tt> startup code will copy
+the <b>.data</b> section from the load address to the run address before
+calling the <b>main</b> entry point.</p><h3>The .fast section</h3><p>For performance reasons, it is a common requirement for embedded systems to
+run critical code from fast memory; the <b>.fast</b> section can be used to
+simplify this. If the <b>.fast</b> section's run address is different from the
+load address, the <tt>crt0.s/thumb_crt0.s</tt> startup code will copy the <b>.fast</b> section from
+the load address to the run address before calling the <b>main</b> entry point.</p><h3>The .bss Section</h3><p>The <b>.bss</b> section contains the zero-initialized data. The startup
+code in <tt>crt0.s/thumb_crt0.s</tt> references the <b>.bss</b> section and sets its
+contents to zero.</p><h3>The heap</h3><p>The position and size of the heap is specified in the project's section-placement
+or memory-map file by the <b>.heap</b> program section.</p><p>The startup code in <tt>crt0.s/thumb_crt0.s</tt> references this section and initializes the heap. To
+change the position of the heap, the section should be moved to the required
+position in the section-placement or memory-map file.</p><p>There is a <b>Heap Size</b> linker project option you can modify 
+in order to alter the heap size. For compatibility with earlier
+versions of SEGGER Embedded Studio, you can also specify the heap size using the heap
+section's <b>Size</b> attribute in the section-placement or memory-map file.</p><p>Should your application not require the heap functions, you can remove the heap
+section from the memory-map file or set the size to zero and remove the
+heap-initialization code from the <tt>crt0.s/thumb_crt0.s</tt> file.</p> 
+    </div>
+  </body>
+</html>

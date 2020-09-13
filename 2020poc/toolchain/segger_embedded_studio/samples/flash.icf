@@ -1,0 +1,28 @@
+define symbol _intvec_start__ = 0x00000000;
+/*-Memory Regions-*/
+define symbol _region_ROM_start__ = 0x00000000;
+define symbol _region_ROM_end__   = 0x0000FFFF;
+define symbol _region_RAM_start__ = 0x20000000;
+define symbol _region_RAM_end__   = 0x20001FFF;
+/*-Sizes-*/
+define symbol _size_cstack__ = 0x400;
+define symbol _size_heap__   = 0x200;
+
+define memory mem with size = 4G;
+define region ROM_region   = mem:[from _region_ROM_start__   to _region_ROM_end__];
+define region RAM_region   = mem:[from _region_RAM_start__   to _region_RAM_end__];
+
+define block CSTACK    with alignment = 8, size = _size_cstack__   { };
+define block HEAP      with alignment = 8, size = _size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:_intvec_start__ { readonly section .intvec };
+
+place in ROM_region   { readonly };
+place in RAM_region   { readwrite,
+                        block CSTACK, block HEAP };
+
+export symbol _region_RAM_start__;
+export symbol _region_RAM_end__;

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Code Outline Window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Code Outline</b> window shows the structure of the text of the focused code editor. 
+For C and C++ documents the top level symbols and types are displayed, for XML documents
+the nodes are displayed. For C and C++ documents the <b>Preview</b> tab can display documentation
+on the top level symbols and types. The defacto standard doxygen commands are supported for example:</p>
+<pre class="rwt-code"><span class="rwt-code-comment">/**</span>
+<span class="rwt-code-comment"> * \brief Convert a given full parsed comment to an XML document.</span>
+<span class="rwt-code-comment"> *</span>
+<span class="rwt-code-comment"> * A Relax NG schema for the XML can be found in comment-xml-schema.rng file</span>
+<span class="rwt-code-comment"> * inside clang source tree.</span>
+<span class="rwt-code-comment"> *</span>
+<span class="rwt-code-comment"> * \param Comment a \c CXComment_FullComment AST node.</span>
+<span class="rwt-code-comment"> *</span>
+<span class="rwt-code-comment"> * \returns string containing an XML document.</span>
+<span class="rwt-code-comment"> */</span>
+<span class="rwt-code-text">CINDEX_LINKAGE </span><span class="rwt-code-text">CXString </span><span class="rwt-code-function">clang_FullComment_getAsXML</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">CXComment </span><span class="rwt-code-text">Comment</span><span class="rwt-code-operator">);</span></pre> 
+    </div>
+  </body>
+</html>

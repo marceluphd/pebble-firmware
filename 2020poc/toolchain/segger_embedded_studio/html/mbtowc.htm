@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mbtowc</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mbtowc</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">pwc</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+           <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>mbtowc</b> converts a single multi-byte character to a wide
+  character in the current locale.</p><p>If <b>s</b> is a null pointer, <b>mbtowc</b> returns a nonzero value if multi-byte
+  character encodings are state-dependent in the current locale, and zero otherwise.</p><p>If <b>s</b> is not null and the object that <b>s</b> points to is a
+  wide-character null character, <b>mbtowc</b> returns 0.</p><p>If <b>s</b> is not null and the object that  points to forms a valid
+  multi-byte character, <b>mbtowc</b> returns the length in bytes of the
+  multi-byte character.</p><p>If the object that  points to does not form a valid multi-byte
+  character within the first <b>n</b> characters, it returns &#8722;1.</p><h5>See Also</h5><p><a href="mbtowc_l.htm">mbtowc_l</a>
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Building with a SEGGER Embedded Studio project file</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>You can specify a SEGGER Embedded Studio project file:
+ 
+</p><h5>Syntax</h5><p><b>emBuild</b> [<i>options</i>&hellip;] <i>project-file</i></p><p>You must specify a configuration to build using <b>-config.</b> For instance:</p>
+<pre class="rwt-code">emBuild -config "V5T Thumb LE Release" arm.emProject </pre><p>The above example uses the configuration <b>V5T Thumb LE Release</b> to
+build all projects in the solution contained in <b>arm.emProject</b>.</p><p>To build a specific project that is in a solution, you can
+specify it using the <b>-project</b> option. For example:</p>
+<pre class="rwt-code">emBuild -config "V5T Thumb LE Release" -project "libm" libc.emProject </pre><p>This example will use the configuration <b>V5T Thumb LE Release</b> to build
+the project <b>libm</b> that is contained in <b>libc.emProject</b>.</p><p>If your project file imports other project files (using the &lt;import&hellip;> mechanism),
+when denoting projects you must specify the solution names as a comma-separated
+list in parentheses after the project name:</p>
+<pre class="rwt-code">emBuild -config "V5T Thumb LE Release" -project "libc(C Library)" arm.emProject </pre><p><b>libc(C Library)</b> specifies the <b>libc</b> project 
+in the <b>C Library</b> solution that has been imported by the project file <b>arm.emProject</b>.</p><p>To build a specific solution that has been imported
+from other project files, you can use the <b>-solution</b> option.
+This option takes the solution names as a comma-separated list. For example:</p>
+<pre class="rwt-code">emBuild -config "ARM Debug" -solution "ARM Targets,EB55" arm.emProject </pre><p>In this example, <b>ARM Targets,EB55</b> specifies the <b>EB55</b> solution imported by
+the <b>ARM Targets</b> solution, which was itself imported by the project file <b>arm.emProject</b>.</p><p>You can do a batch build using the <b>-batch</b> option:</p>
+<pre class="rwt-code">emBuild -config "ARM Debug" -batch libc.emProject </pre><p>This will build the projects in <b>libc.emProject</b> that are marked for batch build in the 
+configuration <b>ARM Debug</b>.</p><p>By default, a <i>make-style</i> build will be done&mdash;i.e., the dates of input files are checked 
+against the dates of output files, and the build is avoided if the output is up to date. You
+can force a complete build by using the <b>-rebuild</b> option. Alternatively, to remove all
+output files, use the <b>-clean</b> option.</p><p>To see the commands being used in the build, use the <b>-echo</b> option. To
+also see why commands are being executed, use the <b>-verbose</b> option. You can see what
+commands will be executed, without executing them, by using the <b>-show</b> option.</p> 
+    </div>
+  </body>
+</html>

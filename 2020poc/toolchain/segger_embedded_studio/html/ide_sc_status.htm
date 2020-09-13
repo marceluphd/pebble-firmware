@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>File source-control status</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Determining the source-control status of a file can be expensive for large
+repositories, so SEGGER Embedded Studio for ARM updates the source-control status in the background.
+Priority is given to items that are displayed.</p><p>A file will be in one of the following states:</p><ul><li><i>Clean</i>:&nbsp;&nbsp;The file is in source control and matches the tip revision.
+</li>
+<li><i>Not Controlled</i>:&nbsp;&nbsp;The file is not in source control.
+</li>
+<li><i>Conflicted</i>:&nbsp;&nbsp;The file is in conflict with changes made to the repository.
+</li>
+<li><i>Locked</i>:&nbsp;&nbsp;The file is locked.
+</li>
+<li><i>Update Available</i>:&nbsp;&nbsp;The file is older than the most-recent version in source control.
+</li>
+<li><i>Added</i>:&nbsp;&nbsp;The file is scheduled to be added to the repository.
+</li>
+<li><i>Removed</i>:&nbsp;&nbsp;The file is scheduled to be removed from the repository.</li></ul><p>If the file has been modified, its status is displayed in red in the
+<b>Project Explorer</b>. Note that if a file is not under the local root,
+it will not have a source-control status.</p><p>You can reset any stored source-control file status by choosing <b>VCS > Refresh</b>.</p> 
+    </div>
+  </body>
+</html>

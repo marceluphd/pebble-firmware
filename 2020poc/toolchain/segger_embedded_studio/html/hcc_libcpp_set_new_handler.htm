@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>set_new_handler</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5>
+<pre>typedef void (*new_handler)();</pre>
+<pre>new_handler set_new_handler(new_handler) throw();</pre>
+<h5>Description</h5>
+<p><b>set_new_handler</b> establishes a <b>new_handler</b> function.</p>
+<p><b>set_new_handler</b> establishes a <b>new_handler</b> function that is 
+called when <b>operator new</b> fails to allocate the requested memory. If the
+<b>new_handler</b> function returns then <b>operator new</b> will attempt to allocate
+the memory again. The <b>new_handler</b> function can throw an exception to 
+implement standard C++ behaviour for memory allocation failure.</p>
+<h5>Portability</h5>
+<p>Standard C++.
+</p>
+ 
+    </div>
+  </body>
+</html>

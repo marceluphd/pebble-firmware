@@ -1,0 +1,38 @@
+<!DOCTYPE CrossStudio_Group_Values>
+<propertyGroups>
+  <group
+    page="Debugging"
+    group="Debugger Options"
+    short="RTOS Awareness"
+    long="Select the thread script used for the RTOS plugin"
+    name="THREAD_SCRIPT"
+    default="None">
+    <groupEntry name="ChibiOS">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/ChibiOSPlugin.js" />
+    </groupEntry>
+    <groupEntry name="embOS">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/embOSPlugin.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS ARM">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_ARM.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS CA9">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_CA9.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS CM0">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_CM0.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS CM3">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_CM3.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS CM4">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_CM4.js" />
+    </groupEntry>
+    <groupEntry name="FreeRTOS CM7">
+      <property name="debug_threads_script" value="$(StudioDir)/samples/FreeRTOSPlugin_CM7.js" />
+    </groupEntry>
+    <groupEntry name="None">
+      <property name="debug_threads_script" value="" />
+    </groupEntry>
+  </group>
+</propertyGroups>

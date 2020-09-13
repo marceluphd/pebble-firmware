@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Project options</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>For solutions, projects, folders, and files, project options can be defined that
+are used by the project system in the build process. These project options can
+be viewed and modified by using the <b>Options</b> dialog in conjunction with the
+<b>Project Explorer</b>.</p><p>Some project options are only applicable to a given item type. For example, linker
+project options are only applicable to a project that builds an executable file.
+However, other project options can be applied either at the file, project, or solution
+project node. For example, a compiler project option can be applied to a solution,
+project, or individual file. By setting a project option at the solution level, you
+enable all files of the solution to use that project option's value.</p><h3>Unique project options</h3><p>A unique project option has <i>one</i> value. When a build is done, the value of a
+unique project option is the first one defined in the project hierarchy. For example,
+the <b>Treat Warnings As Errors</b> project option could be set to <b>Yes</b> at the
+solution level, which would then be applicable to every file in the solution
+that is compiled, assembled, and linked. You can then selectively define project 
+options for other project items. For example, a particular source file may have
+warnings you decide are allowable, so you set the <b>Treat Warnings As Errors</b>
+to <b>No</b> for that particular file.</p>
+<pre class="rwt-code">solution &mdash; <b>Treat Warnings As Errors = Yes</b>
+    project1 &mdash; Treat Warnings As Errors = Yes
+        file1 &mdash; Treat Warnings As Errors = Yes
+        file2 &mdash;<b> Treat Warnings As Errors = No</b>
+    project2 &mdash;<b> Treat Warnings As Errors = No</b>
+        file1 &mdash; Treat Warnings As Errors = No
+        file2 &mdash; <b>Treat Warnings As Errors = Yes</b></pre><p>In the above example, the files will be compiled with these
+values for <b>Treat Warnings As Errors</b>:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ project1/file1 </td><td> Yes
+</td></tr>
+<tr><td> project1/file2 </td><td valign="top"> No
+</td></tr>
+<tr><td valign="top"> project2/file1 </td><td valign="top"> No
+</td></tr>
+<tr><td valign="top"> project2/file2 </td><td valign="top"> Yes
+</td></tr></table><h3>Aggregate project options</h3><p>An aggregating project option collects all the values defined for it
+in the project hierarchy. For example, when a C file is compiled, the <b>Preprocessor Definitions</b>
+project option will take all the values defined at the file, project,
+and solution levels.</p>
+<pre class="rwt-code">solution &mdash; <b>Preprocessor Definitions = SolutionDef</b>
+    project1 &mdash; Preprocessor Definitions =
+        file1 &mdash; Preprocessor Definitions =
+        file2 &mdash;<b> Preprocessor Definitions = File1Def</b>
+    project2 &mdash; <b>Preprocessor Definitions = ProjectDef</b>
+        file1 &mdash; Preprocessor Definitions =
+        file2 &mdash; <b>Preprocessor Definitions = File2Def</b></pre><p>In the above example, the files will be compiled with these preprocessor definitions:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ project1/file1 </td><td> SolutionDef
+</td></tr>
+<tr><td> project1/file2 </td><td valign="top"> SolutionDef, File1Def
+</td></tr>
+<tr><td valign="top"> project2/file1 </td><td valign="top"> SolutionDef, ProjectDef
+</td></tr>
+<tr><td valign="top"> project2/file2 </td><td valign="top"> SolutionDef, ProjectDef, File2Def
+</td></tr></table> 
+    </div>
+  </body>
+</html>

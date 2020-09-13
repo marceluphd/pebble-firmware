@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>va_start</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">void</span><span class="rwt-code-text"> </span><span class="rwt-code-function">va_start</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">va_list </span><span class="rwt-code-text">ap</span><span class="rwt-code-operator">,</span>
+              <span class="rwt-code-text">paramN</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>va_start</b> initializes <b>ap</b> for subsequent use by the <b>va_arg</b> 
+  and <b>va_end</b> macros.</p><p>The parameter <b>parmN</b> is the identifier of the last fixed parameter in 
+  the variable parameter list in the function definition (the one just before 
+  the '<b>,</b> ...<b>').</b></p><p>The behaviour of <b>va_start</b> and <b>va_arg</b> is undefined if the parameter 
+  <b>parmN</b> is declared with the <b>register</b> storage class, with a function 
+  or array type, or with a type that is not compatible with the type that results 
+  after application of the default argument promotions.</p><p><b>va_start</b> must be invoked before any access to the unnamed arguments.</p><p><b>va_start</b> and <b>va_copy</b> must not be invoked to reinitialize <b>ap</b>
+  without an intervening invocation of the <b>va_end</b> macro for the same <b>ap</b>.
+</p> 
+    </div>
+  </body>
+</html>

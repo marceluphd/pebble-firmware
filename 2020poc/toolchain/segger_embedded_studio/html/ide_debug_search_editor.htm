@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Debug file search editor</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>When a program is built with debugging enabled, the debugging information contains
+the paths and filenames of all the source files for the program
+in order to allow the debugger to find them.  If a program or library linked
+into the program is on a different machine than the one on which it was
+compiled, or if the source files were moved after the program was compiled,
+the debugger will not be able to find the source files.</p><p>In this situation, the simplest way to help SEGGER Embedded Studio find the source
+files is to add the directory containing the source files to one of its source-file
+search paths. Alternatively, if SEGGER Embedded Studio cannot find a source file,
+it will prompt you for its location and will record its new location in the source-file
+map.</p><h3>Debug source-file search paths</h3><p>Debug's source-file search paths can be used to help the debugger locate
+source files that are no longer located where they were at compile
+time. When a source file cannot be found, the search-path directories will
+be checked, in turn, to see if they contain the source file. SEGGER Embedded Studio maintains
+two debug source-file search paths:</p><ul><li><i>Project-session search path</i>:&nbsp;&nbsp;This path is for
+  the current project session and does not apply to all projects.
+</li>
+<li><i>The global search path</i>:&nbsp;&nbsp;This system-wide path 
+  applies to all projects.</li></ul><p>The project-session search path is checked before the global search path.</p><h5>To edit the debug search paths:</h5><ul><li>Choose <b>Debug > Options > Search Paths</b>.</li></ul><h3>Debug source file map</h3><p>If a source file cannot be found while debugging and the debugger has to
+prompt the user for its location, the results are stored in the debug source
+file map. The debug source file map simply correlates, or <i>maps</i>, the original
+pathnames to the new locations. When a file cannot be found at its original
+location or in the debug search paths, the debug source file map is checked
+to see if a new location has been recorded for the file or if the user has
+specified that the file does not exist. Each project session maintains its
+own source file map, the map is not shared by all projects.</p><h5>To view the debug source file map:</h5><ul><li>Choose <b>Debug > Options > Search Paths</b>.</li></ul><h5>To remove individual entries from the debug source file map:</h5><ul><li>Choose <b>Debug > Options > Search Paths</b>.
+  </li>
+<li>Right-click the mapping to delete.
+  </li>
+<li>Choose <b>Delete Mapping</b> from the shortcut menu.</li></ul><h5>To remove all entries from the debug source file map:</h5><ul><li>Choose <b>Debug > Options > Search Paths</b>.
+  </li>
+<li>Right-click any mapping.
+  </li>
+<li>Choose <b>Delete All Mappings</b> from the shortcut menu.</li></ul> 
+    </div>
+  </body>
+</html>

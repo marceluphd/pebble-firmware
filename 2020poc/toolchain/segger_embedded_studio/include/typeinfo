@@ -1,0 +1,88 @@
+// **********************************************************************
+// *                    SEGGER Microcontroller GmbH                     *
+// *                        The Embedded Experts                        *
+// **********************************************************************
+// *                                                                    *
+// *            (c) 2014 - 2020 SEGGER Microcontroller GmbH             *
+// *            (c) 2001 - 2020 Rowley Associates Limited               *
+// *                                                                    *
+// *           www.segger.com     Support: support@segger.com           *
+// *                                                                    *
+// **********************************************************************
+// *                                                                    *
+// * All rights reserved.                                               *
+// *                                                                    *
+// * Redistribution and use in source and binary forms, with or         *
+// * without modification, are permitted provided that the following    *
+// * conditions are met:                                                *
+// *                                                                    *
+// * - Redistributions of source code must retain the above copyright   *
+// *   notice, this list of conditions and the following disclaimer.    *
+// *                                                                    *
+// * - Neither the name of SEGGER Microcontroller GmbH                  *
+// *   nor the names of its contributors may be used to endorse or      *
+// *   promote products derived from this software without specific     *
+// *   prior written permission.                                        *
+// *                                                                    *
+// * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND             *
+// * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,        *
+// * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF           *
+// * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE           *
+// * DISCLAIMED.                                                        *
+// * IN NO EVENT SHALL SEGGER Microcontroller GmbH BE LIABLE FOR        *
+// * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           *
+// * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  *
+// * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;    *
+// * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF      *
+// * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT          *
+// * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  *
+// * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH   *
+// * DAMAGE.                                                            *
+// *                                                                    *
+// **********************************************************************
+
+#ifndef __typeinfo_H
+#define __typeinfo_H
+
+#include <exception>
+
+namespace std {
+
+class type_info
+{
+public:
+    virtual ~type_info();
+    bool operator==(const type_info& __arg) const throw() { return __type_name == __arg.__type_name; }
+    bool operator!=(const type_info& __arg) const throw() { return !operator==(__arg); }
+    bool before(const type_info& __arg) const throw() { return __type_name < __arg.__type_name; }
+    const char* name() const throw() { return __type_name; }
+
+protected:
+    const char *__type_name;
+};
+
+class bad_cast
+    : public exception
+{
+public:
+    bad_cast() throw();
+    virtual ~bad_cast() throw();
+    bad_cast(const bad_cast&) throw();
+    bad_cast& operator=(const bad_cast&) throw();
+    virtual const char* what() const throw();
+};
+
+class bad_typeid
+    : public exception
+{
+public:
+    bad_typeid() throw();
+    virtual ~bad_typeid() throw();
+    bad_typeid(const bad_typeid&) throw();
+    bad_typeid& operator=(const bad_typeid&) throw();
+    virtual const char* what() const throw();
+};
+
+}  // std
+
+#endif

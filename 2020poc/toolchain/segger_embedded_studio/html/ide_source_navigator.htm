@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Source navigator window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>One of the best ways to find your way around your source code is using the
+<b>Source Navigator</b>. It parses the active project's source code
+and organizes classes, functions, and variables in various ways.</p><h5>To activate the Source Navigator:</h5><ul><li>Choose <b>View > Source Navigator</b> or press <b>Ctrl+Alt+N</b>.</li></ul><p>The main part of the <b>Source Navigator</b> window provides an overview of
+your application's functions, classes, and variables.</p><p>SEGGER Embedded Studio displays these icons to the left of each object:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="0.5in,4.5in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Icon</b>                                        </td><td> <b>Description</b>
+</td></tr>
+<tr><td> <img src="SourceBrowserNamespaceIcon.png"/>     </td><td valign="top"> A C or C++ structure or a C++ namespace.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserPublicClassIcon.png"/>   </td><td valign="top"> A C++ class.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserPrivateFunction.png"/>   </td><td valign="top"> A C++ member function declared <tt>private</tt> or a function declared with <tt>static</tt> linkage.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserProtectedFunction.png"/> </td><td valign="top"> A C++ member function declared <tt>protected</tt>.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserPublicFunction.png"/>    </td><td valign="top"> A C++ member function declared <tt>public</tt> or a function declared with <tt>extern</tt> linkage.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserPrivateVariable.png"/>   </td><td valign="top"> A C++ member variable declared <tt>private</tt> or a variable declared with <tt>static</tt> linkage.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserProtectedVariable.png"/> </td><td valign="top"> A C++ member variable declared <tt>protected</tt>.
+</td></tr>
+<tr><td valign="top"> <img src="SourceBrowserPublicVariable.png"/>    </td><td valign="top"> A C++ member variable declared <tt>public</tt> or a variable declared with <tt>extern</tt> linkage.
+</td></tr></table><h3>Re-parsing after editing</h3><p>The <b>Source Navigator</b> does not update automatically, only when you ask it to.
+To parse source files manually, click the <b>Refresh</b> button on the
+<b>Source Navigator</b> toolbar.</p><p>SEGGER Embedded Studio re-parses all files in the active project, and any dependent project,
+and updates the <b>Source Navigator</b> with the changes. Parsing progress is
+shown as a progress bar in the in the <b>Source Navigator</b> window.  Errors
+and warnings detected during parsing are sent to the Source Navigator Log
+in the <b>Output</b> window&mdash;you can show the log quickly by clicking the
+<b>Show Source Navigator Log</b> tool button on the <b>Source Navigator</b> toolbar.</p><h3>Setting indexing threads</h3><p>You can configure how many threads SEGGER Embedded Studio launches to index your project.</p><h5>To set the number of threads launched when indexing a project:</h5><ul><li>Choose <b>View > Source Navigator</b> or press <b>Ctrl+Alt+N</b>.
+  </li>
+<li>Click the <b>Options</b> dropdown button at the right of the toolbar.
+  </li>
+<li>Move the slider to select the number of threads to launch.</li></ul><p>Increasing the number of threads will complete indexing faster,
+but may reduce the responsiveness of SEGGER Embedded Studio when editing, for example.
+You should choose a setting that you are comfortable with for your PC.
+By default, SEGGER Embedded Studio launches 16 threads to index the project and is
+a good compromise for a desktop quad-core PC.</p><h3>Sorting and grouping</h3><p>You can group objects by their type; that is, whether they are classes, functions,
+namespaces, structures, or variables. Each object is placed into a folder according
+to its type.</p><h5>To group objects by type:</h5><ol><li> On the <b>Source Navigator</b> toolbar, click the arrow to the right of
+    the <b>Cycle Grouping</b> button.
+  </li>
+<li> Choose <b>Group By Type</b></li></ol> 
+    </div>
+  </body>
+</html>

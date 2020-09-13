@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Execution Trace window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The trace window displays historical information on the instructions executed
+by the target. </p><h5>To activate the Trace window:</h5><ul><li>Choose <b>View > More Debug Windows > Execution Trace</b> or press <b>Ctrl+T, T</b>.</li></ul><p>The type and number of the trace entries depends upon the
+target that is connected when gathering trace information. Some targets may
+trace all instructions, others may trace jump instructions, and some may trace
+modifications to variables. You'll find the trace capabilities of your target
+on the shortcut menu.</p><p>Each entry in the trace window has a unique number, and the lower the number
+the earlier the trace. You can click on the header to show earliest to latest
+or the latest to earliest trace entries. If a trace entry can have source
+code located to it then double-clicking the trace entry will show the appropriate
+source display.</p><p>Some targets may provide timing information which will be displayed in the
+ticks column.</p><p>The trace window is updated each time the debugger stops when it is visible
+so single stepping is likely to be slower if you have this window displayed.</p> 
+    </div>
+  </body>
+</html>

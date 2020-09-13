@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Configurations and project options</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Project options are defined for a configuration so you can have different
+values for a project option for different builds. A given configuration can inherit
+the project options of other configurations. When the project system requires a project option
+value, it checks for the existence of the project option value in the current configuration
+and then in the set of inherited configurations. You can specify the set of inherited configurations
+using the <b>Configurations</b> dialog.</p><p>A special configuration named <b>Common</b> is always inherited
+by a configuration. The <b>Common</b> configuration allows you to set project options
+that will apply to all configurations you create. If you are modifying a project option of your project, you
+almost certainly want each configuration to inherit it,
+so ensure that the <b>Common</b> configuration is selected.</p><p>If the project option is unique, the build system will use the one defined for
+the particular configuration. If the project option isn't defined for this configuration,
+the build system uses an arbitrary one from the set of inherited configurations.</p><p>If the option is still undefined, the build system uses the value for
+the <b>Common</b> configuration. If it is still undefined, the build system tries
+to find the value in the next higher level of the project hierarchy.</p>
+<pre class="rwt-code">solution [Common] &mdash; Preprocessor Definitions = CommonSolutionDef <br/>
+solution [Debug] &mdash; Preprocessor Definitions = DebugSolutionDef <br/>
+solution [Release] &mdash; Preprocessor Definitions = ReleaseSolutionDef <br/>
+    project1 - Preprocessor Definitions = <br/>
+        file1 - Preprocessor Definitions = <br/>
+        file2 [Common] &mdash; Preprocessor Definitions = CommonFile1Def <br/>
+        file2 [Debug] &mdash; Preprocessor Definitions = DebugFile1Def <br/>
+    project2 [Common] &mdash; Preprocessor Definitions = ProjectDef <br/>
+        file1 &mdash; Preprocessor Definitions = <br/>
+        file2 [Common] - Preprocessor Definitions = File2Def</pre><p>In the above example, the files will be compiled with these preprocessor
+definitions when in <b>Debug</b> configuration&hellip;</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>File</b> </td><td> <b>Setting</b>
+</td></tr>
+<tr><td> project1/file1   </td><td valign="top"> CommonSolutionDef, DebugSolutionDef
+</td></tr>
+<tr><td valign="top"> project1/file2   </td><td valign="top"> CommonSolutionDef, DebugSolutionDef,CommonFile1Def, DebugFile1Def
+</td></tr>
+<tr><td valign="top"> project2/file1   </td><td valign="top"> CommonSolutionDef, DebugSolutionDef, ProjectDef
+</td></tr>
+<tr><td valign="top"> project2/file2   </td><td valign="top"> ComonSolutionDef, DebugSolutionDef, ProjectDef, File2Def
+</td></tr></table><p>&hellip;and the files will be compiled with these <b>Preprocessor Definitions</b> when in <b>Release</b> configuration:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="2in,3in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>File</b> </td><td> <b>Setting</b>
+</td></tr>
+<tr><td> project1/file1 </td><td valign="top"> CommonSolutionDef, ReleaseSolutionDef
+</td></tr>
+<tr><td valign="top"> project1/file2 </td><td valign="top"> CommonSolutionDef, ReleaseSolutionDef, CommonFile1Def
+</td></tr>
+<tr><td valign="top"> project2/file1 </td><td valign="top"> CommonSolutionDef, ReleaseSolutionDef, ProjectDef
+</td></tr>
+<tr><td valign="top"> project2/file2 </td><td valign="top"> ComonSolutionDef, ReleaseSolutionDef, ProjectDef, File2Def
+</td></tr></table> 
+    </div>
+  </body>
+</html>

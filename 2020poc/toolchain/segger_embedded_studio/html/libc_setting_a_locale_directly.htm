@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Setting a locale directly</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Although we support <b>setlocale</b> in its full generality, most likely
+you'll want to set a locale once and forget about it.  You can do that
+by including the locale in your application and writing to the instance
+variables that hold the underlying locale data for the SEGGER Embedded Studio for ARM C
+library.</p><p>For instance, you might wish to use Czech locale with a UTF codeset:</p>
+<pre class="rwt-code"><span class="rwt-code-keyword">static</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__RAL_locale_t </span><span class="rwt-code-text">cz_locale </span><span class="rwt-code-operator">=</span>
+<span class="rwt-code-operator">{</span>
+  <span class="rwt-code-literal">"cz_CZ.utf8"</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">__RAL_cs_CZ_locale</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">__RAL_codeset_utf8</span>
+<span class="rwt-code-operator">};</span></pre><p>You can install this directly into the locale without using <b>setlocale</b>:</p>
+<pre class="rwt-code"><span class="rwt-code-text">__RAL_global_locale</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">__category</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">LC_COLLATE</span><span class="rwt-code-operator">]</span><span class="rwt-code-text">  </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">cz_locale</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-text">__RAL_global_locale</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">__category</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">LC_CTYPE</span><span class="rwt-code-operator">]</span><span class="rwt-code-text">    </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">cz_locale</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-text">__RAL_global_locale</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">__category</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">LC_MONETARY</span><span class="rwt-code-operator">]</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">cz_locale</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-text">__RAL_global_locale</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">__category</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">LC_NUMERIC</span><span class="rwt-code-operator">]</span><span class="rwt-code-text">  </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">cz_locale</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-text">__RAL_global_locale</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">__category</span><span class="rwt-code-operator">[</span><span class="rwt-code-text">LC_TIME</span><span class="rwt-code-operator">]</span><span class="rwt-code-text">     </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">cz_locale</span><span class="rwt-code-operator">;</span></pre> 
+    </div>
+  </body>
+</html>

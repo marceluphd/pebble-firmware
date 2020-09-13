@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <link rel="STYLESHEET" type="text/css" href="styles/default.css" />
+    <script>
+
+function
+initialise()
+{
+  if (!top.frames[1].foldLinkNav)
+    {
+      /* Try again later if other frames have not loaded yet */
+      setTimeout("initialise()", 100);
+      return;
+    }
+  top.frames[1].foldLinkNav.setNavigationWindow(window);
+  initialised = true;
+}
+
+    </script>
+  </head>
+  <body onload="initialise();" >
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
+      <tr valign="top" >
+        <td>
+          <div id="topmenu" >
+            <a target="_top" href="http://www.segger.com/index.html" >SEGGER Home</a> | <a target="_top" href="http://www.segger.com/sitemap.html" >Site Map</a> 
+          </div>
+        </td>
+      </tr>
+      <tr valign="top" >
+        <td>
+          <div id="logo" >
+            SEGGER Embedded Studio Online Documentation
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div id="navigation" >
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" >
+              <tr>
+                <td valign="top" align="left" >
+                  <div id="nav_breadcrumb" >
+                  </div>
+                </td>
+                <td valign="top" height="32" align="right" >
+                  <ul id="nav_button_menu" >
+                    <li title="Previous Page" id="nav_button_prev" >
+                      <a class="disabled" href="" id="nav_prev" >
+<!-- -->                      </a>
+                    </li>
+                    <li title="Up" id="nav_button_up" >
+                      <a class="disabled" href="" id="nav_up" >
+<!-- -->                      </a>
+                    </li>
+                    <li title="Next Page" id="nav_button_next" >
+                      <a class="disabled" href="" id="nav_next" >
+<!-- -->                      </a>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" >
+              <tr>
+                <td valign="top" align="left" >
+                  <div id="nav_title" />
+                </td>
+                <td valign="top" align="right" >
+                  <form target="doc_content" action="doc_search.htm" >
+                    <input size="15" onblur="if (this.value == '') { this.value = 'Search'; }" value="Search" type="text" onfocus="if (this.value == 'Search') { this.value = ''; }" name="q" />
+                  </form>
+                 </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

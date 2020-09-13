@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Terminal emulator window</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>The <b>Terminal Emulator</b> window contains a basic serial-terminal emulator
+that allows you to receive and transmit data over a serial interface.</p><h5>To activate the Terminal Emulator window:</h5><ul><li>Choose <b>Tools > Terminal Emulator > Terminal Emulator</b> or press <b>Ctrl+Alt+M</b>.</li></ul><h5>To use the terminal emulator:</h5><ol><li> Set the required terminal emulator properties.
+  </li>
+<li> Connect the terminal emulator to the communications port by
+    clicking the button on the toolbar or by selecting
+    <b>Connect</b> from the shortcut menu.</li></ol><p>Once connected, any input in the <b>Terminal Emulator</b> window is sent
+to the communications port and any data received from the communications
+port is displayed on the terminal.</p><p>Connection may be refused if the communication port is in use by another
+application or if the port doesn't exist.</p><h5>To disconnect the terminal emulator:</h5><ol><li> Disconnect the communications port by clicking the <b>Disconnect</b>
+  icon on the toolbar or by right-clicking to select <b>Disconnect</b> from the
+  shortcut menu.</li></ol><p>This will release the communications port for use in other applications.</p><h3>Supported control codes</h3><p>The terminal supports a limited set of control codes:</p><table width="100%" cellspacing="2" cellpadding="2" cols="2" bgcolor="#f0f0f0" border="0" fm_widths="1.1in,3.9in">
+
+<tr bgcolor="#cccccc"><td>
+ <b>Control code</b> </td><td> <b>Description</b>
+</td></tr>
+<tr><td> &lt;BS>       </td><td valign="top"> Backspace
+</td></tr>
+<tr><td valign="top"> &lt;CR>       </td><td valign="top"> Carriage return
+</td></tr>
+<tr><td valign="top"> &lt;LF>       </td><td valign="top"> Linefeed
+</td></tr>
+<tr><td valign="top"> &lt;ESC>[{attr1};...;{attrn}m
+                </td><td valign="top"> Set display attributes. The attributes 2-Dim, 5-Blink, 7-Reverse, and 8-Hidden are not supported.
+</td></tr></table> 
+    </div>
+  </body>
+</html>

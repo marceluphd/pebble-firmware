@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Installing a locale</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>If the locale you request using <b>setlocale</b> is neither &lsquo;C&rsquo; nor
+&lsquo;POSIX&rsquo;, the C library calls the function <b>__user_find_locale</b>
+to find a user-supplied locale.  The standard implementation of
+this function is to return a null pointer which indicates that
+no additional locales are installed and, hence, no locale matches
+the request.</p><p>The prototype for <b>__user_find_locale</b> is:</p>
+<pre class="rwt-code"><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__RAL_locale_t </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">__user_find_locale</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">);</span></pre><p>The parameter <b>locale</b> is the locale to find; the locale name
+is terminated either by a zero character <i>or</i> by a semicolon.
+The locale name, up to the semicolon or zero, is identical to
+the name passed to <b>setlocale</b> when you select a locale.</p><p>Now let's install the Hungarian locale using both UTF-8 and ISO 8859-2
+encodings.  The UTF-8 codecs are included in the SEGGER Embedded Studio for ARM C
+library, but the Hungarian locale and the ISO 8859-2 codec are not.</p><p>You will find the file <b>locale_hu_HU.c</b> in the source directory
+as described in the previous section.  Add this file to your project.</p><p>Although this adds the data needed for the locale, it does not
+make the locale available for the C library: we need to write some code
+for <b>__user_find_locale</b> to return the appropriate locales.</p><p>To create the locales, we need to add the following code and data
+to tie everything together:</p>
+<pre class="rwt-code"><span class="rwt-code-control">#include</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&lt;</span><span class="rwt-code-text">__crossworks</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">h</span><span class="rwt-code-operator">></span>
+
+<span class="rwt-code-keyword">static</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__RAL_locale_t </span><span class="rwt-code-text">hu_HU_utf8 </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">{</span>
+  <span class="rwt-code-literal">"hu_HU.utf8"</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">__RAL_hu_HU_locale</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">__RAL_codeset_utf8</span>
+<span class="rwt-code-operator">};</span>
+
+<span class="rwt-code-keyword">static</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__RAL_locale_t </span><span class="rwt-code-text">hu_HU_iso_8859_2 </span><span class="rwt-code-operator">=</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">{</span>
+  <span class="rwt-code-literal">"hu_HU.iso_8859_2"</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">__RAL_hu_HU_locale</span><span class="rwt-code-operator">,</span>
+  <span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">codeset_iso_8859_2</span>
+<span class="rwt-code-operator">};</span>
+
+<span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__RAL_locale_t </span><span class="rwt-code-operator">*</span>
+<span class="rwt-code-function">__user_find_locale</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">)</span>
+<span class="rwt-code-operator">{</span>
+  <span class="rwt-code-keyword">if</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-function">__RAL_compare_locale_name</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">hu_HU_utf8</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">name</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">==</span><span class="rwt-code-text"> </span><span class="rwt-code-literal">0</span><span class="rwt-code-operator">)</span>
+    <span class="rwt-code-keyword">return</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">hu_HU_utf8</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">else</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">if</span><span class="rwt-code-function"> </span><span class="rwt-code-operator">(</span><span class="rwt-code-function">__RAL_compare_locale_name</span><span class="rwt-code-operator">(</span><span class="rwt-code-text">locale</span><span class="rwt-code-operator">,</span><span class="rwt-code-text"> </span><span class="rwt-code-text">hu_HU_iso_8859_2</span><span class="rwt-code-operator">.</span><span class="rwt-code-text">name</span><span class="rwt-code-operator">)</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">==</span><span class="rwt-code-text"> </span><span class="rwt-code-literal">0</span><span class="rwt-code-operator">)</span>
+    <span class="rwt-code-keyword">return</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">&amp;</span><span class="rwt-code-text">hu_HU_iso_8859_2</span><span class="rwt-code-operator">;</span>
+  <span class="rwt-code-keyword">else</span>
+    <span class="rwt-code-keyword">return</span><span class="rwt-code-text"> </span><span class="rwt-code-literal">0</span><span class="rwt-code-operator">;</span>
+<span class="rwt-code-operator">}</span></pre><p>The function <tt>__RAL_compare_locale_name</tt> matches locale names up to a terminating
+null character, or a semicolon (which is required by the implementation of
+<tt>setlocale</tt> in the C library when setting multiple locales using <tt>LC_ALL</tt>).</p><p>In addition to this, you must provide a buffer, <tt>__user_locale_name_buffer</tt>,
+for locale names encoded by <b>setlocale</b>.  The buffer must be large enough to
+contain five locale names, one for each category.  In the above example, the
+longest locale name is <tt>hu_HU.iso_8859_2</tt> which is 16 characters in length.
+Using this information, buffer must be at least (16+1)&#215;5 = 85 characters
+in size:</p>
+<pre class="rwt-code"><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-text">__user_locale_name_buffer</span><span class="rwt-code-operator">[</span><span class="rwt-code-literal">85</span><span class="rwt-code-operator">];</span></pre> 
+    </div>
+  </body>
+</html>

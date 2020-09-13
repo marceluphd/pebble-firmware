@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Package management</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<p>Additional target-support functions can be added to, and
+removed from, SEGGER Embedded Studio for ARM with <i>packages</i>.</p><p>A SEGGER Embedded Studio for ARM package is an archive file containing a collection of target-support
+files. Installing a package involves copying the files
+it contains to an appropriate destination directory and
+registering the package with SEGGER Embedded Studio for ARM's package system. Keeping target-support
+files separate from the main SEGGER Embedded Studio for ARM installation allows us
+to support new hardware and issue bug fixes for existing hardware-support
+files between SEGGER Embedded Studio for ARM releases, and it allows third parties to develop
+their own support packages.</p><h3>Installing packages</h3><p>Use the <b>Package Manager</b> to automate the download,
+installation, upgrade and removal of packages.</p><h5>To activate the Package Manager:</h5><ul><li>Choose <b>Tools > Manage Packages</b>.</li></ul><p>In some situations, such as using SEGGER Embedded Studio for ARM on a computer without
+Internet access or when you want to install packages that are not on the
+website, you cannot use the <b>Package Manager</b>
+to install packages and it will be necessary to manually install them.</p><h5>To manually install a package:</h5><ol><li> Choose <b>Tools > Manually Install Packages</b>.
+  </li>
+<li> Select one or more package files you want to install.
+  </li>
+<li> Click <b>Open</b> to install the packages.</li></ol><p>Choose <b>Tools > Show Installed Packages</b> to see more information on the
+installed packages.</p><p>The <b>Package Manager</b> window will remove manually installed packages.</p><h3>The package manager</h3><p>The <b>Package Manager</b> manages the support packages installed on
+your system. It lists the available packages,
+shows the installed packages, and allows you to install,
+update, reinstall, and remove them.</p><p><img src="ide_package_manager_window.png"/></p><h5>To activate the Package Manager:</h5><ul><li>Choose <b>Tools > Manage Packages</b>.</li></ul><h3>Filtering the package list</h3><p>By default, the <b>Package Manager</b> lists all available
+and installed packages. You can filter the displayed packages 
+in a number of ways.</p><h5>To filter by package status:</h5><ul><li>Click on the disclosure icon near the top-right corner of the dialog.
+  </li>
+<li>Use the pop-up menu to choose how to filter the list of packages.</li></ul><p>The list-filter choices are:</p><ul><li><b>Display All</b> &mdash; Show all packages irrespective of their status.
+</li>
+<li><b>Display Not Installed</b> &mdash; Show packages that are available but are not currently installed.
+</li>
+<li><b>Display Installed</b> &mdash; Only show packages that are installed.
+</li>
+<li><b>Display Updates</b> &mdash; Only show packages that are installed but are not up-to-date because a newer version is available.</li></ul><p>You can also filter the list of packages by the text
+in the package's title and documentation.</p><h5>To filter packages by keyword:</h5><ul><li>Type the keyword into the <b>Search Packages</b> box at the top-left corner of the dialog.</li></ul><h3>Installing a package</h3><p>The package-installation operation downloads a package
+to <b>$(PackagesDir)/downloads</b>, if it has not been downloaded
+already, and unpacks the files contained within the package
+to their destination directory.</p><h5>To install a package:</h5><ol><li> Choose <b>Tools > Package Manager</b> and set the status filter to <b>Display Not Installed</b>.
+  </li>
+<li> Select the package or packages you wish to install.
+  </li>
+<li> Right-click the selected packages and choose <b>Install Selected Packages</b> from the shortcut menu.
+  </li>
+<li> Click <b>Next</b>; you will be see the actions the <b>Package Manager</b> is about to carry out.
+  </li>
+<li> Click <b>Next</b> and the <b>Package Manager</b> will install the selected packages.
+  </li>
+<li> When installation is complete, click <b>Finish</b> to close the <b>Package Manager</b>.</li></ol><h3>Updating a package</h3><p>The package-update operation first removes existing package files,
+then it downloads the updated package to <b>$(PackagesDir)/downloads</b>
+and unpacks the files contained within the package to their
+destination directory.</p><h5>To update a package:</h5><ol><li> Choose <b>Tools > Package Manager</b> and set the status filter to <b>Display Updates</b>.
+  </li>
+<li> Select the package or packages you wish to update.
+  </li>
+<li> Right-click the selected packages and choose <b>Update Selected Packages</b> from the shortcut menu.
+  </li>
+<li> Click <b>Next</b>; you will see the actions the <b>Package Manager</b> is about to carry out.
+  </li>
+<li> Click <b>Next</b> and the <b>Package Manager</b> will update the package(s).
+  </li>
+<li> When the update is complete, click <b>Finish</b> to close the <b>Package Manager</b>.</li></ol><h3>Removing a package</h3><p>The package-remove operation removes all the files that were extracted
+when the package was installed.</p><h5>To remove a package:</h5><ol><li> Choose <b>Tools > Package Manager</b> and set the status filter to <b>Display Installed</b>.
+  </li>
+<li> Select the package or packages you wish to remove.
+  </li>
+<li> Right-click the selected packages and choose <b>Remove Selected Packages</b> from the shortcut menu.
+  </li>
+<li> Click <b>Next</b>; you will see the actions the <b>Package Manager</b> is about to carry out.
+  </li>
+<li> Click <b>Next</b> and the <b>Package Manager</b> will remove the package(s).
+  </li>
+<li> When the operation is complete, click <b>Finish</b> to close the <b>Package Manager</b>.</li></ol><h3>Reinstalling a package</h3><p>The package-reinstall operation carries out a package-remove operation
+followed by a package-install operation.</p><h5>To reinstall a package:</h5><ol><li> Choose <b>Tools > Package Manager</b> and set the status filter to <b>Display Installed</b>.
+  </li>
+<li> Select the package or packages you wish to reinstall.
+  </li>
+<li> Right-click the packages to reinstall and choose <b>Reinstall Selected Packages</b> from the shortcut menu.
+  </li>
+<li> Click <b>Next</b>; you will see the actions the <b>Package Manager</b> is about to carry out.
+  </li>
+<li> Click <b>Next</b> and the <b>Package Manager</b> will reinstall the packages.
+  </li>
+<li> When the operation is complete, click <b>Finish</b> to close the <b>Package Manager</b>.</li></ol> 
+    </div>
+  </body>
+</html>

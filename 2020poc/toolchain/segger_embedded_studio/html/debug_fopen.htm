@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>debug_fopen</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">DEBUG_FILE </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">debug_fopen</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">filename</span><span class="rwt-code-operator">,</span>
+                        <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">mode</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>debug_fopen</b> opens the <b>filename</b> on the host PC and returns a stream or <b>0</b> if the open fails.
+  The <b>filename</b> is a host PC filename which is opened relative to the debugger working directory.
+  The <b>mode</b> is a string containing one of:</p><ul><li><b>r</b> open file for reading.
+  </li>
+<li><b>w</b> create file for writing.
+  </li>
+<li><b>a</b> open or create file for writing and position at the end of the file.
+  </li>
+<li><b>r</b>+ open file for reading and writing.
+  </li>
+<li><b>w</b>+ create file for reading and writing.
+  </li>
+<li><b>a</b>+ open or create text file for reading and writing and position at the end of the file.</li></ul><p>followed by one of:</p><ul><li><b>t</b> for a text file.
+  </li>
+<li><b>b</b> for a binary file.</li></ul><p><b>debug_fopen</b> returns a stream that can be used to access the file or <b>0</b> if the open fails.
+</p> 
+    </div>
+  </body>
+</html>

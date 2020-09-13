@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>strsep</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-function">strsep</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">**</span><span class="rwt-code-text">stringp</span><span class="rwt-code-operator">,</span>
+             <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">delim</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>strsep</b> locates, in the string referenced by <b>*stringp</b>, the first
+  occurrence of any character in the string <b>delim</b> (or the terminating null character)
+  and replaces it with a null character.  The location of the next character after the
+  delimiter character (or NULL, if the end of the string was reached) is stored
+  in <b>*stringp</b>.  The original value of <b>*stringp</b> is returned. </p><p>An empty field (that is, a character in the string <b>delim</b> occurs as the
+  first character of <b>*stringp</b> can be detected by comparing the location
+  referenced by the returned pointer to the null character.</p><p>If <b>*stringp</b> is initially null, <b>strsep</b> returns null.
+  
+  </p><h5>Note</h5><p><b>strsep</b> is an extension commonly found in Linux and BSD C libraries.
+</p> 
+    </div>
+  </body>
+</html>

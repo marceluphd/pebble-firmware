@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>btowc_l</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-text">wint_t </span><span class="rwt-code-function">btowc_l</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">int</span><span class="rwt-code-text"> </span><span class="rwt-code-text">c</span><span class="rwt-code-operator">,</span>
+               <span class="rwt-code-text">locale_t </span><span class="rwt-code-text">loc</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>btowc_l</b> function determines whether <b>c</b> constitutes a valid
+  single-byte character in the locale <b>loc</b>.  If <b>c</b> is a valid
+  single-byte character, <b>btowc_l</b>  returns the wide character
+  representation of that character</p><p><b>btowc_l</b> returns WEOF if <b>c</b> has the value <b>EOF</b> or if
+  <tt>(unsigned char)c</tt> does not constitute a valid single-byte
+  character in the initial shift state.
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,140 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="rwt/styles/w3.css"/>
+    <link rel="stylesheet" href="rwt/styles/font-awesome.min.css"/>
+    <link rel="stylesheet" href="styles/studio.css"/>
+    <link rel="stylesheet" href="styles/nordic.css"/>
+
+    <script src="rwt/scripts/jquery-latest.js" > </script>
+    <script src="scripts/studio.js" > </script>
+
+    <style type="text/css">
+
+.transparent-btn
+{
+  opacity: 0.75;
+}
+
+.transparent-btn:hover
+{
+  opacity: 1;
+}
+
+.link
+{
+  font-weight: bold;
+  color: blue;
+  cursor: pointer;
+}
+
+    </style>
+
+    <script>
+
+var g_outputConsole;
+var g_currentLogLine;
+var g_maxLogLines = 100;
+var g_numLogLines = 0;
+var g_logging = false;
+
+function processLogText(text)
+{
+  return text.replace(/PC@(0x[0-9a-fA-F]+)/g, "<span class='link' title='Locate to address $1' onclick='studio.debugLocateToPC($1)'>$1</span>")
+}
+
+function appendLogLine()
+{
+  g_currentLogLine = document.createElement("DIV");
+  g_outputConsole.appendChild(g_currentLogLine);
+  g_numLogLines++;
+}
+
+function textAppended(text)
+{
+  var lines = text.split(/\n/g);
+  if (lines.length > 0)
+    {
+      g_currentLogLine.innerHTML += processLogText(lines[0]);
+      for (var i = 1; i < lines.length; i++)
+        {
+          appendLogLine();
+          g_currentLogLine.innerHTML = processLogText(lines[i]);
+        }
+    }
+
+  while (g_numLogLines > g_maxLogLines)
+    {
+      g_outputConsole.removeChild(g_outputConsole.firstElementChild);
+      g_numLogLines--;
+    }
+
+  g_outputConsole.scrollTop = g_outputConsole.scrollHeight;
+}
+
+function clearLog()
+{
+  while (g_outputConsole.firstChild)
+    g_outputConsole.removeChild(g_outputConsole.firstChild);
+  g_numLogLines = 0;
+  appendLogLine();
+}
+
+function toggleLogging()
+{
+  var loggingButton = $('#logging-button');
+  if (g_logging)
+    {
+      loggingButton.text('Start');
+      loggingButton.prop('title', 'Start logging');
+      studio.terminalEmulatorTextAppended.disconnect(textAppended);
+      studio.debugTerminalTextAppended.disconnect(textAppended);
+      g_logging = false;
+    }    
+  else
+    {
+      loggingButton.text('Stop');
+      loggingButton.prop('title', 'Stop logging');
+      studio.terminalEmulatorTextAppended.connect(textAppended);
+      studio.debugTerminalTextAppended.connect(textAppended);
+      g_logging = true;
+    }
+}
+
+function updateMaxLogLines()
+{
+  var maxLogLinesString = studio.getEnvironmentSetting("Nordic/MaxLogLines");
+  if (maxLogLinesString != "")
+    {
+      var newMaxLogLines = parseInt(maxLogLinesString);
+      if (!isNaN(newMaxLogLines))
+        g_maxLogLines = newMaxLogLines;
+    }
+}
+
+function environmentSettingChanged(name)
+{
+  if (name == "Nordic/MaxLogLines")
+    updateMaxLogLines();
+}
+
+$(document).ready(function() {
+  g_outputConsole = $('#console')[0];
+  appendLogLine();
+
+  updateMaxLogLines();
+  studio.environmentSettingChanged.connect(environmentSettingChanged);
+});
+
+    </script>
+
+  </head>
+  <body>
+    <div style="position: fixed; top: 10px; right: 30px">
+      <span id="logging-button" class="w3-btn w3-round w3-white w3-border w3-medium transparent-btn" title="Start logging" onclick="toggleLogging();">Start</span>
+      <span class="w3-btn w3-round w3-white w3-border w3-medium transparent-btn" title="Clear log" onclick="clearLog();">Clear</span>
+    </div>
+    <div id='console' style='overflow:scroll; height:100%; font-family: "Courier New", Courier, monospace'>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>-D (Define macro symbol)</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Syntax</h5><p><b>-D</b><i>name</i> <br/>
+<b>-D</b><i>name</i><b>=</b><i>value</i></p><h5>Description</h5><p>You can define preprocessor macros using the <b>-D</b> option. The macro definitions 
+are passed on to the respective language compiler which is responsible for interpreting 
+the definitions and providing them to the programmer within the language.</p><p>The first form above defines the macro <i>name</i> but without an associated 
+replacement value, and the second defines the same macro with the replacement 
+value <i>value</i>.</p><h5>Example</h5><p>The following defines two macros, <b>SUPPORT_FLOAT</b> with a value 
+of 1 and <b>LITTLE_ENDIAN</b> with no replacement value.</p>
+<pre class="rwt-code">-DSUPPORT_FLOAT=1 -DLITTLE_ENDIAN </pre> 
+    </div>
+  </body>
+</html>

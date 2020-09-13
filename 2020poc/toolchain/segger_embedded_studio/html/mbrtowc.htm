@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>mbrtowc</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="RAL PrepHTML" name="GENERATOR"/>
+    
+    
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses-default.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/ses.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/rwt-doc-page.css"/>
+    <link rel="STYLESHEET" type="text/css" href="./rwt/styles/theme.css"/>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/jquery-latest.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt.js"><!--><-->
+</script>
+    <script type="text/javascript" language="javascript" src="./rwt/scripts/rwt-doc-page.js"><!--><-->
+</script>
+    
+  </head>
+
+  <body>
+    <div id="rwt-content">
+      
+<h5>Synopsis</h5><pre><span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-function">mbrtowc</span><span class="rwt-code-operator">(</span><span class="rwt-code-keyword">wchar_t</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">pwc</span><span class="rwt-code-operator">,</span>
+               <span class="rwt-code-keyword">const</span><span class="rwt-code-text"> </span><span class="rwt-code-keyword">char</span><span class="rwt-code-text"> </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">s</span><span class="rwt-code-operator">,</span>
+               <span class="rwt-code-keyword">size_t</span><span class="rwt-code-text"> </span><span class="rwt-code-text">n</span><span class="rwt-code-operator">,</span>
+               <span class="rwt-code-text">mbstate_t </span><span class="rwt-code-operator">*</span><span class="rwt-code-text">ps</span><span class="rwt-code-operator">);</span>
+</pre><h5>Description</h5><p><b>mbrtowc</b> converts a single multi-byte character to a wide
+  character in the current locale.</p><p>If <b>s</b> is a null pointer, <b>mbrtowc</b> is equivalent to
+  <tt>mbrtowc(NULL, "", 1, ps)</tt>, ignoring <b>pwc</b> and <b>n</b>.</p><p>If <b>s</b> is not null and the object that <b>s</b> points to is a
+  wide-character null character, <b>mbrtowc</b> returns 0.</p><p>If <b>s</b> is not null and the object that  points to forms a valid
+  multi-byte character with a most <b>n</b> bytes, <b>mbrtowc</b> returns the
+  length in bytes of the multi-byte character and stores that wide
+  character to the object pointed to by <b>pwc</b> (if <b>pwc</b> is not null).</p><p>If the object that  points to forms an incomplete, but possibly
+  valid, multi-byte character, <b>mbrtowc</b> returns &#8722;2.
+  
+  If the object that  points to does not form a partial multi-byte
+  character, <b>mbrtowc</b> returns &#8722;1.</p><h5>See Also</h5><p><a href="mbtowc.htm">mbtowc</a>, <a href="mbrtowc_l.htm">mbrtowc_l</a>
+</p> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE Generic_Project_Options>
+<options>
+  <property tool="compiler" name="armcc_cl_optimization_level" type="Enumeration" group="ARMCC Compiler Options" short="Optimization" long="Code optimization" default="None">
+    <enum value="None" option="-O0" />
+    <enum value="Level 1" option="-O1" />
+    <enum value="Level 2" option="-O2" />
+    <enum value="Level 3" option="-O3" />
+    <enum value="Level 1 (time)" option="-O1;-Otime" />
+    <enum value="Level 2 (time)" option="-O2;-Otime" />
+    <enum value="Level 3 (time)" option="-O3;-Otime" />
+  </property>
+  <property tool="compiler" name="armcc_cl_enable_debug_info" type="Enumeration" group="ARMCC Compiler Options" short="Include Debug Information" long="Specifies whether symbolic debug information is generated." default="Yes">
+    <enum value="Yes" option="-g" />
+    <enum value="No" option="" />
+  </property>
+  <property tool="assembler;compiler;linker" name="armcc_cl_cpu" type="Enumeration" group="ARMCC Compiler Options" short="CPU" long="Select the architecture or processor variant" default="Cortex-M3" option="--cpu" values="&#xa;    4;&#xa;    4T;&#xa;    5T;&#xa;    5TE;&#xa;    5TEJ;&#xa;    6-M;&#xa;    6S-M;&#xa;    7-A;&#xa;    7-R;&#xa;    7-M;&#xa;    7E-M;&#xa;    7-A.security;&#xa;    ARM7EJ-S;&#xa;    ARM7TDMI;&#xa;    ARM720T;&#xa;    ARM7TDMI-S;&#xa;    ARM9TDMI;&#xa;    ARM920T;&#xa;    ARM922T;&#xa;    ARM9E-S;&#xa;    ARM926EJ-S;&#xa;    ARM946E-S;&#xa;    ARM966E-S;&#xa;    Cortex-M0;&#xa;    Cortex-M0plus;&#xa;    SC000;&#xa;    Cortex-M1;&#xa;    Cortex-M1.os_extension;&#xa;    Cortex-M1.no_os_extension;&#xa;    Cortex-M3;&#xa;    Cortex-M3-rev0;&#xa;    SC300;&#xa;    Cortex-M4;&#xa;    Cortex-M4.fp.sp;&#xa;    Cortex-M7;&#xa;    Cortex-M7.fp.sp;&#xa;    Cortex-M7.fp.dp;&#xa;    Cortex-R4;&#xa;    Cortex-R4F;&#xa;    Cortex-A5;&#xa;    Cortex-A5.vfp;&#xa;    Cortex-A5.neon;&#xa;    Cortex-A7;&#xa;    Cortex-A7.no_neon;&#xa;    Cortex-A7.no_neon.no_vfp;&#xa;    Cortex-A8;&#xa;    Cortex-A8.no_neon;&#xa;    Cortex-A8NoNEON;&#xa;    Cortex-A9;&#xa;    Cortex-A9.no_neon;&#xa;    Cortex-A9.no_neon.no_vfp;&#xa;    Cortex-A12;&#xa;    Cortex-A12.no_neon.no_vfp;&#xa;    Cortex-A15;&#xa;    Cortex-A15.no_neon;&#xa;    Cortex-A15.no_neon.no_vfp;&#xa;    Cortex-A17;&#xa;    Cortex-A17.no_neon.no_vfp" />
+  <property tool="assembler;compiler;linker" name="armcc_cl_fpu" type="Enumeration" group="ARMCC Compiler Options" short="FPU" long="Select the FPU architecture" default="SoftVFP" option="--fpu" values="&#xa;    VFPv3;&#xa;    VFPv3_FP16;&#xa;    VFPv3_D16;&#xa;    VFPv3_D16_FP16;&#xa;    VFPv2;&#xa;    VFPv4;&#xa;    VFPv4_D16;&#xa;    FPv4-SP;&#xa;    FPv5_D16;&#xa;    FPv5-SP;&#xa;    SoftVFP;&#xa;    SoftVFP+VFPv2;&#xa;    SoftVFP+VFPv3;&#xa;    SoftVFP+VFPv3_FP16;&#xa;    SoftVFP+VFPv3_D16;&#xa;    SoftVFP+VFPv3_D16_FP16;&#xa;    SoftVFP+VFPv4;&#xa;    SoftVFP+VFPv4_D16;&#xa;    SoftVFP+FPv4-SP;&#xa;    SoftVFP+FPv5_D16;&#xa;    SoftVFP+FPv5-SP;&#xa;    None" />
+  <property name="c_system_include_directories" default="$(KEIL_TOOLKIT_DIR)/ARMCC/include" />
+  <property name="external_archive_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/armar&quot; -rs &quot;$(RelTargetPath)&quot; $(Objects)" />
+  <property name="external_assemble_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/armasm&quot; --cpreproc $(AsmOptions) &quot;$(RelInputPath)&quot; -o &quot;$(RelTargetPath)&quot; --diag_style=gnu --brief_diagnostics" />
+  <property name="external_c_compile_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/armcc&quot; -c $(COptions) $(COnlyOptions) $(Defines) $(Includes) &quot;$(RelInputPath)&quot; --depend_single_line --depend=&quot;$(RelDependencyPath)&quot; --depend-format=unix_escaped --diag_style=gnu --brief_diagnostics -o &quot;$(RelTargetPath)&quot;" />
+  <property name="external_cpp_compile_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/armcc&quot; --cpp -c $(COptions) $(CppOnlyOptions) $(Defines) $(Includes) &quot;$(RelInputPath)&quot; --depend_single_line --depend=&quot;$(RelDependencyPath)&quot; --depend-format=unix_escaped --diag_style=gnu --brief_diagnostics -o &quot;$(RelTargetPath)&quot;" />
+  <property name="external_link_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/armlink&quot; $(LinkOptions) $(Objects) -o &quot;$(RelTargetPath)&quot; --list &quot;$(RelMapPath)&quot; --map" />
+  <property name="linker_post_build_command" default="&quot;$(KEIL_TOOLKIT_DIR)/ARMCC/bin/fromelf&quot; --i32 --output=&quot;$(PostLinkOutputFilePath)&quot; &quot;$(RelTargetPath)&quot;" />
+  <property name="linker_post_build_command_output_file" default="$(OutDir)/$(ProjectName).hex" />
+</options>
