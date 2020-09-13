@@ -1,4 +1,0 @@
-#!D:\a\1\s\opt\bin\python.exe
-
-from junit2htmlreport import runner
-runner.start()
