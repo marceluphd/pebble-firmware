@@ -1,0 +1,3 @@
+[submodule "2020poc/zephyr"]
+	path = 2020poc/zephyr
+	url = https://github.com/nrfconnect/sdk-zephyr.git
