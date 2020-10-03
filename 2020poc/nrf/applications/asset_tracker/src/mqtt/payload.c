@@ -36,7 +36,7 @@ int iotex_mqtt_get_devinfo_payload(struct mqtt_payload *output) {
 
     int ret = 0;
     cJSON *root_obj = cJSON_CreateObject();
-    cJSON *vbat_obj = cJSON_CreateNumber(iotex_hal_adc_sample());
+    cJSON *vbat_obj = cJSON_CreateNumber(iotex_modem_get_battery_voltage());
     cJSON *snr_obj = cJSON_CreateNumber(iotex_model_get_signal_quality());
 
     if (!root_obj || !vbat_obj || !snr_obj) {
@@ -192,7 +192,7 @@ bool iotex_mqtt_sampling_data_and_store(uint16_t channel) {
 
     /* Vbatx100 */
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_VBAT)) {
-        buffer[write_cnt++] = (uint8_t)(iotex_hal_adc_sample() * 100);
+        buffer[write_cnt++] = (uint8_t)(iotex_modem_get_battery_voltage() * 100);
     }
 
     /* TODO GPS */
@@ -317,13 +317,12 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
 
     /* Vbat */
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_VBAT)) {
-        cJSON *vbat = cJSON_CreateNumber(iotex_hal_adc_sample());
+        cJSON *vbat = cJSON_CreateNumber(iotex_modem_get_battery_voltage());
 
         if (!vbat || json_add_obj(msg_obj, "VBAT", vbat)) {
             goto out;
         }
     }
-  
     /* TODO GPS */
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_GPS)) {        
         int i = getGPS(&latitude,&longitude);     

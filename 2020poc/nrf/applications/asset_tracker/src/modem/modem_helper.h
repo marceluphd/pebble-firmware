@@ -13,5 +13,6 @@ const char *iotex_modem_get_imei();
 int iotex_model_get_signal_quality();
 const char *iotex_modem_get_clock(iotex_st_timestamp *stamp);
 double iotex_modem_get_clock_raw(iotex_st_timestamp *stamp);
+float iotex_modem_get_battery_voltage(void);
 
 #endif //_IOTEX_MODEM_H_

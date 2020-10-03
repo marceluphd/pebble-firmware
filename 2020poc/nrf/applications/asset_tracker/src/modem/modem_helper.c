@@ -27,15 +27,23 @@ const char *iotex_modem_get_imei() {
 int iotex_model_get_signal_quality() {
 
     enum at_cmd_state at_state;
-    static char snr_ack[32], snr[4];
+    char snr_ack[32], snr[4];
+    char *p=snr_ack;
 
     int err = at_cmd_write("AT+CESQ", snr_ack, 32, &at_state);
 
     if (err) {
         printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
     }
-
-    snprintf(snr, sizeof(snr), "%s", &snr_ack[25]);
+    p = strchr(p, ',') + 1;
+    p = strchr(p, ',') + 1;
+    p = strchr(p, ',') + 1;
+    p = strchr(p, ',') + 1;
+    p = strchr(p, ',') + 1;
+    //snprintf(snr, sizeof(snr), "%s", &snr_ack[25]);
+    snr[0]=p[0];
+    snr[1]=p[1];  
+    snr[2]=0 ;
     return atoi(snr);
 }
 
@@ -137,6 +145,28 @@ double iotex_modem_get_clock_raw(iotex_st_timestamp *stamp) {
     //}
 
     return epoch;
+}
+
+float iotex_modem_get_battery_voltage(void)
+{   
+    enum at_cmd_state at_state;
+    char vbat_ack[32], vbat[5];
+    char *p=vbat_ack;
+
+    int err = at_cmd_write("AT%XVBAT", vbat_ack, 32, &at_state); 
+
+    if (err) {
+        printk("Error when trying to do at_cmd_write: %d, at_state: %d", err, at_state);
+    }
+
+    p = strchr(p, ':') + 1;
+    p++;   
+    for(err=0; err < 4; err++)
+    {
+        vbat[err] = p[err];
+    }
+    vbat[4] = 0;
+    return (atoi(vbat)/(float)1000.0);
 }
 
 
