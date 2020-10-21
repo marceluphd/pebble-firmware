@@ -151,12 +151,18 @@ int getGPS(double *lat, double *lon)
 {
 	gprmc_t rmc;
 	int ret = -1;
+    int intpart;
+    double fractpart; 	
 	if(printit){
 		if(!getRMC(print_buf1,&rmc)){
 		//if(!getRMC("$GNRMC,093153.00,A,3050.68816,N,11448.65818,E,0.074,,220720,,,A,V*12",&rmc)){
-			*lat = rmc.latitude;
-			*lon = rmc.longitude;	
-			ret = 0;
+            intpart= rmc.latitude/100;
+            fractpart=((rmc.latitude/100)-intpart)/0.6;                      
+   			*lat = intpart+fractpart;                      
+            intpart= rmc.longitude/100;
+            fractpart=((rmc.longitude/100)-intpart)/0.6;                        
+   			*lon = intpart+fractpart; 
+   			ret = 0;			
 		}
 		printit = 0;
 	}

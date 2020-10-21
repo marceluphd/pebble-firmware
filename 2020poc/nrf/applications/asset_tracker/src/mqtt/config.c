@@ -200,7 +200,8 @@ void iotex_mqtt_load_config(void) {
 
 		/*  a quick test solution */
 		//__config.bulk_upload_sampling_cnt = 2;		
-        //__config.data_channel|=0x1000;
+        //__config.data_channel=0x1FF7;
+        //printk(" !!! Debug version open all sensors");
         //printk(" __config.data_channel:0x%x\n",  __config.data_channel);
 		//save_mqtt_config();
 

@@ -19,5 +19,6 @@ int iotex_icm42605_get_sensor_data(iotex_storage_icm42605 *icm42605);
 /* For Icm426xxDriver_HL using */
 void inv_icm426xx_sleep_us(uint32_t us);
 uint64_t inv_icm426xx_get_time_us(void);
+struct inv_icm426xx * getICMDriver(void);
 
 #endif

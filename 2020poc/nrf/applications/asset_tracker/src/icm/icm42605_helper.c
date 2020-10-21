@@ -8,6 +8,7 @@
 #include "icm42605_helper.h"
 #include "modem/modem_helper.h"
 #include "nvs/local_storage.h"
+#include "icm426xxActionDetect.h"
 
 
 static struct device *__i2c_dev_icm42605;
@@ -70,6 +71,31 @@ static int iotex_icm42605_configure(uint8_t is_low_noise_mode,
     return rc;
 }
 
+int  rawdataConf(void)
+{
+    return iotex_icm42605_configure((uint8_t)IS_LOW_NOISE_MODE,
+                                     ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
+                                     ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
+                                     ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
+                                     ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
+                                     (uint8_t)TMST_CLKIN_32K);  
+}
+
+int  rawdataDetect(void)
+{
+    int status = 0;
+    uint8_t int_status;    
+    status |= inv_icm426xx_read_reg(&__icm_driver, MPUREG_INT_STATUS, 1, &int_status);
+    if (status) {
+        printk("error rawdata: %d\n",int_status);        
+        return 0;
+    }
+    if (int_status & BIT_INT_STATUS_DRDY) {
+        printk("rawdata detected \n");
+    }
+    return 1;
+}
+
 int iotex_icm42605_init(void)
 {
     int rc = 0;
@@ -113,12 +139,20 @@ int iotex_icm42605_init(void)
 
     printk("ICM42605 WHOAMI value. Got 0x%02x\n", who_am_i);
 
+/*
     return  iotex_icm42605_configure((uint8_t)IS_LOW_NOISE_MODE,
                                      ICM426XX_ACCEL_CONFIG0_FS_SEL_4g,
                                      ICM426XX_GYRO_CONFIG0_FS_SEL_2000dps,
                                      ICM426XX_ACCEL_CONFIG0_ODR_1_KHZ,
                                      ICM426XX_GYRO_CONFIG0_ODR_1_KHZ,
-                                     (uint8_t)TMST_CLKIN_32K);;
+                                     (uint8_t)TMST_CLKIN_32K);
+*/
+    return   icm426xxConfig(ACT_RAW);                                  
+}
+
+struct inv_icm426xx * getICMDriver(void)
+{
+    return &__icm_driver;
 }
 
 void inv_icm42605_format_data(const uint8_t endian, const uint8_t *in, uint16_t *out)

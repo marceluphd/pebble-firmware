@@ -54,9 +54,9 @@ const char *iotex_modem_get_clock(iotex_st_timestamp *stamp) {
     enum at_cmd_state at_state;
     uint32_t YY, MM, DD, hh, mm, ss;
 
-    static char cclk_r_buf[TIMESTAMP_STR_LEN];
+    char cclk_r_buf[TIMESTAMP_STR_LEN];
     static char epoch_buf[TIMESTAMP_STR_LEN];
-    static int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int err = at_cmd_write("AT+CCLK?", cclk_r_buf, sizeof(cclk_r_buf), &at_state);
 
@@ -103,9 +103,9 @@ double iotex_modem_get_clock_raw(iotex_st_timestamp *stamp) {
     enum at_cmd_state at_state;
     uint32_t YY, MM, DD, hh, mm, ss;
 
-    static char cclk_r_buf[TIMESTAMP_STR_LEN];
-    static char epoch_buf[TIMESTAMP_STR_LEN];
-    static int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    char cclk_r_buf[TIMESTAMP_STR_LEN];
+    char epoch_buf[TIMESTAMP_STR_LEN];
+    int daysPerMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int err = at_cmd_write("AT+CCLK?", cclk_r_buf, sizeof(cclk_r_buf), &at_state);
 
