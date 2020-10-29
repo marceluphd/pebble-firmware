@@ -50,6 +50,8 @@ extern "C" {
 #define UI_LED_ON_PERIOD_ERROR		500
 #define UI_LED_OFF_PERIOD_ERROR		500
 
+#define  UI_LED_BLINK_NORMAL    200
+
 #define UI_LED_MAX			50
 
 #define UI_LED_COLOR_OFF		LED_COLOR(0, 0, 0)
@@ -63,7 +65,8 @@ extern "C" {
 #define UI_LED_COLOR_PURPLE		LED_COLOR(UI_LED_MAX, 0, UI_LED_MAX)
 
 #define UI_LTE_DISCONNECTED_COLOR	UI_LED_COLOR_OFF
-#define UI_LTE_CONNECTING_COLOR		UI_LED_COLOR_WHITE
+/*#define UI_LTE_CONNECTING_COLOR		UI_LED_COLOR_WHITE*/
+#define UI_LTE_CONNECTING_COLOR		UI_LED_COLOR_BLUE
 #define UI_LTE_CONNECTED_COLOR		UI_LED_COLOR_CYAN
 #define UI_CLOUD_CONNECTING_COLOR	UI_LED_COLOR_CYAN
 #define UI_CLOUD_CONNECTED_COLOR	UI_LED_COLOR_BLUE
@@ -78,6 +81,12 @@ extern "C" {
 #define UI_LED_GPS_BLOCKED_COLOR	UI_LED_COLOR_BLUE
 #define UI_LED_GPS_FIX_COLOR		UI_LED_COLOR_GREEN
 
+#define  LTE_CONNECT_MASK		0x01
+#define  BAT_CHARGING_MASK		0x02
+#define	 GPS_ACTIVE_MASK		0x04
+#define  ALL_UI_MASK			(LTE_CONNECT_MASK|BAT_CHARGING_MASK|GPS_ACTIVE_MASK)
+
+
 #else
 
 #define UI_LED_ON_PERIOD_NORMAL		500
@@ -88,6 +97,14 @@ extern "C" {
 /**@brief UI LED state pattern definitions. */
 enum ui_led_pattern {
 #ifdef CONFIG_UI_LED_USE_PWM
+	UI_NGPS_NBAT_NLTE,
+	UI_NGPS_NBAT_LTE,
+	UI_NGPS_BAT_NLTE,
+	UI_NGPS_BAT_LTE,
+	UI_GPS_NBAT_NLTE,
+	UI_GPS_NBAT_LTE,
+	UI_GPS_BAT_NLTE,
+	UI_GPS_BAT_LTE,
 	UI_LTE_DISCONNECTED,
 	UI_LTE_CONNECTING,
 	UI_LTE_CONNECTED,
@@ -230,6 +247,9 @@ int ui_nmos_write(size_t nmos_idx, u8_t value);
  */
 int ui_nmos_pwm_set(size_t nmos_idx, u32_t period, u32_t pulse);
 
+void ui_led_active(u8_t mask, u8_t flg);
+void ui_led_deactive(u8_t mask, u8_t flg);
+void updateLedPattern(void);
 #ifdef __cplusplus
 }
 #endif

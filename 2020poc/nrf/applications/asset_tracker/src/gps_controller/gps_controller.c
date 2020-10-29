@@ -101,7 +101,8 @@ static int getRMC(char *nmea, gprmc_t *loc)
 	char buf[20]={0};
     p = strchr(p, ',') + 1;
     p = strchr(p, ',') + 1;
-
+	if(p[0] != 'A')
+		return -1;
     p = strchr(p, ',') + 1;
 	memcpy(buf,p, strchr(p, ',')-p);
 	if(strlen(buf) == 0)
@@ -157,15 +158,26 @@ int getGPS(double *lat, double *lon)
 		if(!getRMC(print_buf1,&rmc)){
 		//if(!getRMC("$GNRMC,093153.00,A,3050.68816,N,11448.65818,E,0.074,,220720,,,A,V*12",&rmc)){
             intpart= rmc.latitude/100;
-            fractpart=((rmc.latitude/100)-intpart)/0.6;                      
-   			*lat = intpart+fractpart;                      
+            fractpart=((rmc.latitude/100)-intpart)/0.6; 
+			if(rmc.lat == 'S')                     
+   				*lat = (intpart+fractpart)*-1;  
+			else
+				*lat = intpart+fractpart;
+			                    
             intpart= rmc.longitude/100;
-            fractpart=((rmc.longitude/100)-intpart)/0.6;                        
-   			*lon = intpart+fractpart; 
-   			ret = 0;			
+            fractpart=((rmc.longitude/100)-intpart)/0.6; 
+			if(rmc.lon == 'W')                     
+   				*lon = (intpart+fractpart)*-1; 
+			else	
+				*lon = intpart+fractpart; 									
+   			ret = 0;						
 		}
 		printit = 0;
 	}
+	if(ret)
+		ui_led_deactive(GPS_ACTIVE_MASK,0);
+	else
+		ui_led_active(GPS_ACTIVE_MASK,0);
 	return ret;	
 }
 

@@ -26,14 +26,44 @@ struct led {
 
 	struct k_delayed_work work;
 };
+static u8_t  patternIndex;
+static const u8_t ui_pattern[]={ 
+	UI_NGPS_NBAT_NLTE,   // Blink UI_LED_COLOR_BLUE
+	UI_NGPS_NBAT_LTE,    // Breathe UI_LED_COLOR_BLUE
+	UI_NGPS_BAT_NLTE,    // blink  UI_LED_COLOR_PURPLE
+	UI_NGPS_BAT_LTE,     // breathe UI_LED_COLOR_PURPLE
+	UI_GPS_NBAT_NLTE,    // blink   UI_LED_COLOR_CYAN
+	UI_GPS_NBAT_LTE,    // breathe   UI_LED_COLOR_CYAN
+	UI_GPS_BAT_NLTE,      // blink UI_LED_COLOR_YELLOW
+	UI_GPS_BAT_LTE,      // breathe UI_LED_COLOR_YELLOW
+};
 
 static const struct led_effect effect[] = {
+	[UI_NGPS_NBAT_NLTE]   = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
+					UI_LED_COLOR_BLUE),
+	[UI_NGPS_NBAT_LTE] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
+					UI_LED_OFF_PERIOD_NORMAL,
+					UI_LED_COLOR_BLUE),		
+	[UI_NGPS_BAT_NLTE]   = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
+					UI_LED_COLOR_PURPLE),	
+	[UI_NGPS_BAT_LTE] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
+					UI_LED_OFF_PERIOD_NORMAL,
+					UI_LED_COLOR_PURPLE),	
+	[UI_GPS_NBAT_NLTE]   = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
+					UI_LED_COLOR_CYAN),	
+	[UI_GPS_NBAT_LTE]   =  LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
+					UI_LED_OFF_PERIOD_NORMAL,
+					UI_LED_COLOR_CYAN),		
+	[UI_GPS_BAT_NLTE]   = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
+					UI_LED_COLOR_YELLOW),									
+	[UI_GPS_BAT_LTE] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
+					UI_LED_OFF_PERIOD_NORMAL,
+					UI_LED_COLOR_YELLOW),																						
 	[UI_LTE_DISCONNECTED] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
 					UI_LED_OFF_PERIOD_NORMAL,
 					UI_LTE_DISCONNECTED_COLOR),
-	[UI_LTE_CONNECTING] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
-					UI_LED_OFF_PERIOD_NORMAL,
-					UI_LTE_CONNECTING_COLOR),
+	[UI_LTE_CONNECTING] = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
+					UI_LTE_CONNECTING_COLOR),				
 	[UI_LTE_CONNECTED] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
 					UI_LED_OFF_PERIOD_NORMAL,
 					UI_LTE_CONNECTED_COLOR),
@@ -170,6 +200,7 @@ int ui_leds_init(void)
 
 	leds.pwm_dev = device_get_binding(dev_name);
 	leds.id = 0;
+	patternIndex = 0;
 	leds.effect = &effect[UI_LTE_DISCONNECTED];
 
 	if (!leds.pwm_dev) {
@@ -216,6 +247,11 @@ void ui_led_set_effect(enum ui_led_pattern state)
 	led_update(&leds);
 }
 
+void ui_led_set_effect_color(u8_t color,int index)
+{
+	leds.effect->steps->color.c[index]=color;
+}
+
 int ui_led_set_rgb(u8_t red, u8_t green, u8_t blue)
 {
 	struct led_effect effect =
@@ -230,4 +266,22 @@ int ui_led_set_rgb(u8_t red, u8_t green, u8_t blue)
 	led_update(&leds);
 
 	return 0;
+}
+void ui_led_active(u8_t mask, u8_t flg)
+{
+	patternIndex |= mask;
+	if(flg)
+		ui_led_set_effect(ui_pattern[patternIndex]);
+}
+void ui_led_deactive(u8_t mask, u8_t flg)
+{
+	patternIndex &= (~mask);
+	if(flg)
+		ui_led_set_effect(ui_pattern[patternIndex]);
+}
+void updateLedPattern(void)
+{	
+	patternIndex &= ALL_UI_MASK;
+	if(leds.effect != &effect[ui_pattern[patternIndex]])
+		ui_led_set_effect(ui_pattern[patternIndex]);
 }

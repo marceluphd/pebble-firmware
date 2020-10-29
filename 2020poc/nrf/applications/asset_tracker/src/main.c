@@ -682,8 +682,8 @@ static void modem_configure(void)
 
         printk("Connecting to LTE network. ");
         printk("This may take several minutes.\n");
-        ui_led_set_pattern(UI_LTE_CONNECTING);
-
+        //ui_led_set_pattern(UI_LTE_CONNECTING);
+        ui_led_deactive(LTE_CONNECT_MASK,1);
         err = lte_lc_init_and_connect();
 
         if (err) {
@@ -692,7 +692,7 @@ static void modem_configure(void)
         }
 
         printk("Connected to LTE network\n");
-        ui_led_set_pattern(UI_LTE_CONNECTED);
+        ui_led_active(LTE_CONNECT_MASK,1);
     }
 
 #endif
@@ -904,6 +904,7 @@ for(int i=0; i< 30; i++)
 #if 0
     Iotex_buzzer_test();
 #endif
+    updateLedPattern();
 	work_init();
 	modem_configure();
 	iotex_modem_get_clock(NULL);
@@ -981,6 +982,7 @@ while(1){
             mqtt_disconnect(&client);
             sys_reboot(0);
         }
+        updateLedPattern();
     }
 #if defined(CONFIG_LWM2M_CARRIER)
 	LOG_INF("Waiting for LWM2M carrier to complete initialization...");

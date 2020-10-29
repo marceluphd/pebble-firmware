@@ -1,6 +1,7 @@
 #include <zephyr.h>
 #include <drivers/gpio.h>
 #include "hal_gpio.h"
+#include "ui.h"
 
 struct device *__gpio0_dev;
 static u32_t g_key_press_start_time;
@@ -13,8 +14,16 @@ static void chrq_input_callback(struct device *port, struct gpio_callback *cb, u
     printk("Charge pin %d triggered\n", IO_NCHRQ);
 
     gpio_pin_read(port, IO_NCHRQ, &chrq);
-    gpio_pin_write(port, LED_RED, chrq);
-    gpio_pin_write(port, LED_GREEN, (chrq + 1 ) % 2);
+    //gpio_pin_write(port, LED_RED, chrq);    
+    //gpio_pin_write(port, LED_GREEN, (chrq + 1 ) % 2);
+    if(chrq)
+    {// charging
+        ui_led_active(BAT_CHARGING_MASK,0);
+    }
+    else
+    {// not charging
+        ui_led_deactive(BAT_CHARGING_MASK,0);
+    }
 }
 
 static void pwr_key_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
