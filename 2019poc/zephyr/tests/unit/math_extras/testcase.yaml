@@ -1,4 +1,0 @@
-tests:
-  misc.math_extras:
-    timeout: 5
-    type: unit

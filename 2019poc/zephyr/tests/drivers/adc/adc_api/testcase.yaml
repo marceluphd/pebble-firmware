@@ -1,5 +1,0 @@
-common:
-  tags: peripheral adc userspace
-tests:
-  peripheral.adc:
-    depends_on: adc

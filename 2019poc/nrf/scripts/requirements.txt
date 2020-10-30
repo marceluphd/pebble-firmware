@@ -1,5 +1,0 @@
-recommonmark==0.4.0
-git+https://github.com/carlescufi/mscgen.git@python3
-ecdsa
-intelhex
-nrfutil
