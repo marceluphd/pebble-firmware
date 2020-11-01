@@ -32,14 +32,14 @@ static u8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
 extern void mqttGetResponse(void);
 
 static const char *iotex_mqtt_get_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 7] ;
-    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/%s",
+    static uint8_t mqtt_topic[CLIENT_ID_LEN + 31] ;
+    snprintf(mqtt_topic, sizeof(mqtt_topic), "device/%s/data",
              iotex_mqtt_get_client_id());
     return mqtt_topic;
 }
 
 static const char *iotex_mqtt_get_config_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 15] ;
+    static uint8_t mqtt_topic[CLIENT_ID_LEN + 31] ;
     snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/config/%s",
              iotex_mqtt_get_client_id());
     return mqtt_topic;
@@ -336,7 +336,8 @@ int iotex_mqtt_client_init(struct mqtt_client *client, struct pollfd *fds) {
     client->tx_buf_size = sizeof(tx_buffer);
 
     /* MQTT transport configuration */
-    client->transport.type = MQTT_TRANSPORT_SECURE;
+    //client->transport.type = MQTT_TRANSPORT_SECURE;
+    client->transport.type = MQTT_TRANSPORT_NON_SECURE;
 
     static sec_tag_t sec_tag_list[] = {CONFIG_CLOUD_CERT_SEC_TAG};
     struct mqtt_sec_config *tls_config = &(client->transport).tls.config;

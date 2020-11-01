@@ -285,3 +285,22 @@ void updateLedPattern(void)
 	if(leds.effect != &effect[ui_pattern[patternIndex]])
 		ui_led_set_effect(ui_pattern[patternIndex]);
 }
+
+int onBeepMePressed(int ms)
+{
+	const char *dev_name = "PWM_1";
+	int err = 0;
+    struct device *pwm_dev;
+
+	pwm_dev = device_get_binding(dev_name);
+	if (!pwm_dev) {
+		printk("Could not bind to device %s", dev_name);
+		err = -ENODEV;
+	}
+        pwm_pin_set_usec(pwm_dev, 11,370, 185, 0);//2.7kHz ==370us  185/370=50% duty
+
+	k_sleep(K_MSEC(ms));  //1.5S delay
+
+        pwm_pin_set_usec(pwm_dev, 11, 0, 0, 0);
+	return err;
+}

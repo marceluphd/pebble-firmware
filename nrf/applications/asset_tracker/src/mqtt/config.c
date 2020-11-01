@@ -3,6 +3,7 @@
 #include "cJSON.h"
 #include "cJSON_os.h"
 #include "nvs/local_storage.h"
+#include "ui.h"
 
 /* Global configure */
 static iotex_mqtt_config __config = {
@@ -119,6 +120,7 @@ bool iotex_mqtt_parse_config(const uint8_t *payload, uint32_t len, iotex_mqtt_co
     cJSON *upload_period = NULL;
     cJSON *bulk_upload_sampling_cnt = NULL;
     cJSON *bulk_upload_sampling_freq = NULL;
+    cJSON *serverBeep = NULL;
     cJSON *root_obj = cJSON_Parse(config_buffer);
 
     if (!root_obj) {
@@ -140,6 +142,7 @@ bool iotex_mqtt_parse_config(const uint8_t *payload, uint32_t len, iotex_mqtt_co
     upload_period = cJSON_GetObjectItem(root_obj, "upload_period");
     bulk_upload_sampling_cnt = cJSON_GetObjectItem(root_obj, "bulk_upload_sampling_cnt");
     bulk_upload_sampling_freq = cJSON_GetObjectItem(root_obj, "bulk_upload_sampling_freq");
+    serverBeep = cJSON_GetObjectItem(root_obj, "beep");
 
     /* Notice: 0 ==> false, otherwise true */
     if (bulk_upload && cJSON_IsString(bulk_upload)) {
@@ -161,6 +164,10 @@ bool iotex_mqtt_parse_config(const uint8_t *payload, uint32_t len, iotex_mqtt_co
     if (bulk_upload_sampling_freq && cJSON_IsString(bulk_upload_sampling_freq)) {
         config->bulk_upload_sampling_freq = atoi(bulk_upload_sampling_freq->valuestring);
     }
+
+    if (serverBeep && cJSON_IsString(serverBeep)) {
+        onBeepMePressed(atoi(serverBeep->valuestring));
+    }    
 
 #ifdef CONFIG_DEBUG_MQTT_CONFIG
     print_mqtt_config(config, __func__);
