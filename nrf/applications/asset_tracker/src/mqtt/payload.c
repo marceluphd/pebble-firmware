@@ -399,7 +399,7 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_TEMP2)) {
         cJSON *temperature = cJSON_CreateNumber(action_sensor.temperature);
 
-        if (!temperature || json_add_obj(msg_obj, "temperature", temperature)) {
+        if (!temperature || json_add_obj(msg_obj, "temperature2", temperature)) {
             goto out;
         }
     }
@@ -592,7 +592,7 @@ int iotex_mqtt_bin_to_json(uint8_t *buffer, uint16_t channel, struct mqtt_payloa
         memcpy(&tmp, buffer + write_cnt, sizeof(tmp));
         write_cnt += sizeof(tmp);		
         cJSON *temperature = cJSON_CreateNumber(tmp);
-        if (!temperature || json_add_obj(msg_obj, "temperature", temperature)) {
+        if (!temperature || json_add_obj(msg_obj, "temperature2", temperature)) {
             goto out;
         }		
     }

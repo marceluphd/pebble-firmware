@@ -16,13 +16,15 @@ static void chrq_input_callback(struct device *port, struct gpio_callback *cb, u
     gpio_pin_read(port, IO_NCHRQ, &chrq);
     //gpio_pin_write(port, LED_RED, chrq);    
     //gpio_pin_write(port, LED_GREEN, (chrq + 1 ) % 2);
-    if(chrq)
+    if(!chrq)
     {// charging
         ui_led_active(BAT_CHARGING_MASK,0);
+        gpio_pin_write(port, LED_RED, chrq);
     }
     else
     {// not charging
         ui_led_deactive(BAT_CHARGING_MASK,0);
+        gpio_pin_write(port, LED_GREEN, (chrq + 1 ) % 2);
     }
 }
 

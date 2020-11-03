@@ -251,6 +251,7 @@ void ui_led_active(u8_t mask, u8_t flg);
 void ui_led_deactive(u8_t mask, u8_t flg);
 void updateLedPattern(void);
 int onBeepMePressed(int ms);
+bool isMask(u8_t mask);
 #ifdef __cplusplus
 }
 #endif

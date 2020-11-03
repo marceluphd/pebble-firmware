@@ -34,8 +34,8 @@ static const u8_t ui_pattern[]={
 	UI_NGPS_BAT_LTE,     // breathe UI_LED_COLOR_PURPLE
 	UI_GPS_NBAT_NLTE,    // blink   UI_LED_COLOR_CYAN
 	UI_GPS_NBAT_LTE,    // breathe   UI_LED_COLOR_CYAN
-	UI_GPS_BAT_NLTE,      // blink UI_LED_COLOR_YELLOW
-	UI_GPS_BAT_LTE,      // breathe UI_LED_COLOR_YELLOW
+	UI_GPS_BAT_NLTE,      // blink UI_LED_COLOR_WHITE
+	UI_GPS_BAT_LTE,      // breathe UI_LED_COLOR_WHITE
 };
 
 static const struct led_effect effect[] = {
@@ -55,10 +55,10 @@ static const struct led_effect effect[] = {
 					UI_LED_OFF_PERIOD_NORMAL,
 					UI_LED_COLOR_CYAN),		
 	[UI_GPS_BAT_NLTE]   = LED_EFFECT_LED_BLINK(UI_LED_BLINK_NORMAL,
-					UI_LED_COLOR_YELLOW),									
+					UI_LED_COLOR_WHITE),									
 	[UI_GPS_BAT_LTE] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
 					UI_LED_OFF_PERIOD_NORMAL,
-					UI_LED_COLOR_YELLOW),																						
+					UI_LED_COLOR_WHITE),																						
 	[UI_LTE_DISCONNECTED] = LED_EFFECT_LED_BREATHE(UI_LED_ON_PERIOD_NORMAL,
 					UI_LED_OFF_PERIOD_NORMAL,
 					UI_LTE_DISCONNECTED_COLOR),
@@ -138,15 +138,23 @@ static void work_handler(struct k_work *work)
 	const struct led_effect_step *effect_step =
 		&leds.effect->steps[leds.effect_step];
 	int substeps_left = effect_step->substep_count - leds.effect_substep;
+	struct led_color keep_led_on;
 
 	for (size_t i = 0; i < ARRAY_SIZE(leds.color.c); i++) {
 		int diff = (effect_step->color.c[i] - leds.color.c[i]) /
 			substeps_left;
 		leds.color.c[i] += diff;
 	}
-
-	pwm_out(led, &leds.color);
-
+	if(isMask(BAT_CHARGING_MASK)) {
+		keep_led_on.c[0] = UI_LED_MAX;
+		keep_led_on.c[1] = leds.color.c[1];
+		keep_led_on.c[2] = leds.color.c[2];
+		pwm_out(led, &keep_led_on);
+	}
+	else {
+		leds.color.c[0]=0;
+		pwm_out(led, &leds.color);
+	}		
 	leds.effect_substep++;
 	if (leds.effect_substep == effect_step->substep_count) {
 		leds.effect_substep = 0;
@@ -285,7 +293,10 @@ void updateLedPattern(void)
 	if(leds.effect != &effect[ui_pattern[patternIndex]])
 		ui_led_set_effect(ui_pattern[patternIndex]);
 }
-
+bool isMask(u8_t mask)
+{
+	return (patternIndex&mask) ? true:false;
+}
 int onBeepMePressed(int ms)
 {
 	const char *dev_name = "PWM_1";
