@@ -15,14 +15,14 @@ config CLOUD_CERT_SEC_TAG
 	default 16842753
 
 config MQTT_BROKER_HOSTNAME
-	string "AWS IoT MQTT broker hostname"
-	default "a38flh8hj8xizs-ats.iot.us-east-2.amazonaws.com"
+	string "IoTeX Hosted MQTT broker hostname"
+	default "trypebble.io"
 	help
-	  Default is set to be the AWS Cloud MQTT broker
+	  Default is set to be the IoTeX Hosted MQTT broker
 
 config MQTT_BROKER_PORT
-	int "AWS IoT MQTT broker port"
-	default 8883
+	int "IoTeX Hosted MQTT broker port"
+	default 1884
 
 config USE_CLOUD_CLIENT_ID
 	bool "Custom MQTT Client Id"
