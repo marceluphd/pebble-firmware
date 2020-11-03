@@ -390,6 +390,7 @@ void main(void)
         __ASSERT(rc == 0, "Error initializing boot console.\n");
 
 gpio_pin_write(detect_port,27, 1 );//qiuhm 0526
+gpio_pin_write(detect_port, 30,0 );
 
         boot_serial_start(&boot_funcs);
         __ASSERT(0, "Bootloader serial process was terminated unexpectedly.\n");
