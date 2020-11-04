@@ -669,11 +669,11 @@ boot_serial_start(const struct boot_uart_funcs *f)
         milliseconds_spent = k_uptime_get();
         if((milliseconds_spent - time_stamp) > SERIAL_UPDATE_TIMEOUT)
             break;
-        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);
-        LedCtrl(30,1);
+        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);        
         if (rc <= 0 && !full_line) {
             continue;
         }
+        LedCtrl(30,1);
         off += rc;
         if (!full_line) {
             if (off == max_input) {
