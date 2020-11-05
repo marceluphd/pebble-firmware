@@ -26,7 +26,7 @@ struct led {
 
 	struct k_delayed_work work;
 };
-static u8_t  patternIndex;
+static u8_t  patternIndex = 0;
 static const u8_t ui_pattern[]={ 
 	UI_NGPS_NBAT_NLTE,   // Blink UI_LED_COLOR_BLUE
 	UI_NGPS_NBAT_LTE,    // Breathe UI_LED_COLOR_BLUE
@@ -116,7 +116,7 @@ static const size_t led_pins[3] = {
 	CONFIG_UI_LED_GREEN_PIN,
 	CONFIG_UI_LED_BLUE_PIN,
 };
-
+extern void checkCHRQ(void);
 static void pwm_out(struct led *led, struct led_color *color)
 {
 	for (size_t i = 0; i < ARRAY_SIZE(color->c); i++) {
@@ -208,7 +208,7 @@ int ui_leds_init(void)
 
 	leds.pwm_dev = device_get_binding(dev_name);
 	leds.id = 0;
-	patternIndex = 0;
+	//patternIndex = 0;
 	leds.effect = &effect[UI_LTE_DISCONNECTED];
 
 	if (!leds.pwm_dev) {
@@ -289,6 +289,7 @@ void ui_led_deactive(u8_t mask, u8_t flg)
 }
 void updateLedPattern(void)
 {	
+	checkCHRQ();
 	patternIndex &= ALL_UI_MASK;
 	if(leds.effect != &effect[ui_pattern[patternIndex]])
 		ui_led_set_effect(ui_pattern[patternIndex]);

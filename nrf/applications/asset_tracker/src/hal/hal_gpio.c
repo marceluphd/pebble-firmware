@@ -7,25 +7,29 @@ struct device *__gpio0_dev;
 static u32_t g_key_press_start_time;
 static struct gpio_callback chrq_gpio_cb, pwr_key_gpio_cb;
 
-
-static void chrq_input_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
-
+void checkCHRQ(void)
+{
     u32_t chrq;
-    printk("Charge pin %d triggered\n", IO_NCHRQ);
-
-    gpio_pin_read(port, IO_NCHRQ, &chrq);
+    gpio_pin_read(__gpio0_dev, IO_NCHRQ, &chrq);
     //gpio_pin_write(port, LED_RED, chrq);    
     //gpio_pin_write(port, LED_GREEN, (chrq + 1 ) % 2);
     if(!chrq)
     {// charging
         ui_led_active(BAT_CHARGING_MASK,0);
-        gpio_pin_write(port, LED_RED, chrq);
+        gpio_pin_write(__gpio0_dev, LED_RED, chrq);
     }
     else
     {// not charging
         ui_led_deactive(BAT_CHARGING_MASK,0);
-        gpio_pin_write(port, LED_RED, (chrq + 1 ) % 2);
-    }
+        gpio_pin_write(__gpio0_dev, LED_RED, (chrq + 1 ) % 2);
+    }    
+}
+
+static void chrq_input_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
+    
+    printk("Charge pin %d triggered\n", IO_NCHRQ);
+
+    checkCHRQ();
 }
 
 static void pwr_key_callback(struct device *port, struct gpio_callback *cb, u32_t pins) {
@@ -97,6 +101,7 @@ void iotex_hal_gpio_init(void) {
 #endif
     /* Sync charge state */
     chrq_input_callback(__gpio0_dev, &chrq_input_callback, IO_NCHRQ);
+    checkCHRQ();
 }
 
 
