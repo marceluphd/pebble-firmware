@@ -35,20 +35,20 @@ target_sources(app PRIVATE src/mqtt/mqtt.c)
 target_sources(app PRIVATE src/mqtt/config.c)
 target_sources(app PRIVATE src/mqtt/payload.c)
 # Protbuf
-target_sources(app PRIVATE src/nanopb/pb_encode.c)
-target_sources(app PRIVATE src/nanopb/pb_decode.c)
-target_sources(app PRIVATE src/nanopb/pb_common.c)
+#target_sources(app PRIVATE src/nanopb/pb_encode.c)
+#target_sources(app PRIVATE src/nanopb/pb_decode.c)
+#target_sources(app PRIVATE src/nanopb/pb_common.c)
 # Local NVS
 target_sources(app PRIVATE src/nvs/local_storage.c)
 # Signature 
 target_sources(app PRIVATE src/sign/ecdsa.c)
 
 # Unittest
-target_sources(app PRIVATE src/unittest/unittest.c)
-target_sources(app PRIVATE src/unittest/nvs_unittest.c)
-target_sources(app PRIVATE src/unittest/mqtt_unittest.c)
-target_sources(app PRIVATE src/unittest/nanopb_unittest.c)
-target_sources(app PRIVATE src/unittest/nanopb_unittest.pb.c)
+#target_sources(app PRIVATE src/unittest/unittest.c)
+#target_sources(app PRIVATE src/unittest/nvs_unittest.c)
+#target_sources(app PRIVATE src/unittest/mqtt_unittest.c)
+#target_sources(app PRIVATE src/unittest/nanopb_unittest.c)
+#target_sources(app PRIVATE src/unittest/nanopb_unittest.pb.c)
 
 target_sources(app PRIVATE src/icm/icm42605_helper.c)
 target_sources(app PRIVATE src/icm/Icm426xxDriver_HL_apex.c)
@@ -71,7 +71,7 @@ zephyr_library_include_directories(
   src/ui
   src/cloud_codec
   src/unittest
-  src/nanopb
+  #src/nanopb
   src/mqtt
   src/env_sensors
   src/light_sensor

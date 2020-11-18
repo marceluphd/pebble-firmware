@@ -7,6 +7,7 @@
 #include "bme680_helper.h"
 #include "nvs/local_storage.h"
 #include "modem/modem_helper.h"
+#include "env_sensors.h"
 
 static struct bme680_dev __gas_sensor;
 static struct device *__i2c_dev_bme680;
@@ -127,6 +128,8 @@ int iotex_bme680_get_sensor_data(iotex_storage_bme680 *bme680) {
     bme680->temperature = data.temperature / 100.0;
     bme680->gas_resistance = data.gas_resistance;
 
+    bme680->pressure -= 6;
+    bme680->humidity *= 1.1;
     /* Trigger the next measurement if you would like to read data out continuously */
     if (__gas_sensor.power_mode == BME680_FORCED_MODE) {
         rslt = bme680_set_sensor_mode(&__gas_sensor);

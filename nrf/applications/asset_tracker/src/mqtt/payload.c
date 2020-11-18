@@ -287,6 +287,7 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     char jsStr[130];
     int  sinLen;
     float AmbientLight=0.0;
+    char random[17];
     cJSON *root_obj = cJSON_CreateObject();
     cJSON * msg_obj = cJSON_CreateObject();
     cJSON * sign_obj = cJSON_CreateObject();
@@ -438,6 +439,16 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     if (json_add_str(msg_obj, "timestamp", iotex_modem_get_clock(NULL))) {
         goto out;
     }
+    // get random number
+    GenRandom(random);
+    random[sizeof(random)-1] = 0;
+    cJSON *random_obj = cJSON_CreateString(random); 
+    if(!random_obj  || json_add_obj(msg_obj, "random", random_obj))
+    {
+        goto out;
+    }
+
+
     cJSON_AddItemToObject(root_obj, "message", msg_obj);      
     output->buf = cJSON_PrintUnformatted(msg_obj);   
     doESDA_sep256r_Sign(output->buf,strlen(output->buf),esdaSign,&sinLen);   
@@ -474,6 +485,7 @@ int iotex_mqtt_bin_to_json(uint8_t *buffer, uint16_t channel, struct mqtt_payloa
     char esdaSign[65];
     char jsStr[130];
     int  sinLen;
+    char random[17];
 
     cJSON *root_obj = cJSON_CreateObject();
     cJSON * msg_obj = cJSON_CreateObject();
@@ -633,6 +645,15 @@ int iotex_mqtt_bin_to_json(uint8_t *buffer, uint16_t channel, struct mqtt_payloa
     if (json_add_str(msg_obj, "timestamp", epoch_buf)) {
         goto out;
     }
+    // get random number
+    GenRandom(random);
+    random[sizeof(random)-1] = 0;
+    cJSON *random_obj = cJSON_CreateString(random); 
+    if(!random_obj  || json_add_obj(msg_obj, "random", random_obj))
+    {
+        goto out;
+    }
+
     cJSON_AddItemToObject(root_obj, "message", msg_obj);
     output->buf = cJSON_PrintUnformatted(msg_obj);
     doESDA_sep256r_Sign(output->buf,strlen(output->buf),esdaSign,&sinLen);

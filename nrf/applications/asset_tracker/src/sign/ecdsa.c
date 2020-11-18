@@ -287,3 +287,14 @@ void hex2str(char* buf_hex, int len, char *str)
 	str[j] = 0;	
 }
 
+
+int GenRandom(char *out)
+{	
+	char buf[8];
+	mbedtls_ctr_drbg_random(&ctr_drbg_ctx, buf, sizeof(buf));
+	hex2str(buf, sizeof(buf),out);
+	return  0;
+}
+
+
+
