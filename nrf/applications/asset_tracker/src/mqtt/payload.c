@@ -164,6 +164,7 @@ bool iotex_mqtt_sampling_data_and_store(uint16_t channel) {
     iotex_storage_icm42605 action_sensor;
 	double  timestamp;
     float AmbientLight;
+    uint16_t vol_Integer;
 
     /* Check current sampling count */
     if (!iotex_mqtt_is_need_sampling()) {
@@ -192,7 +193,9 @@ bool iotex_mqtt_sampling_data_and_store(uint16_t channel) {
 
     /* Vbatx100 */
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_VBAT)) {
-        buffer[write_cnt++] = (uint8_t)(iotex_modem_get_battery_voltage() * 100);
+        vol_Integer = (uint16_t)(iotex_modem_get_battery_voltage() * 1000);
+        buffer[write_cnt++] = (uint8_t)(vol_Integer&0x00FF);
+        buffer[write_cnt++] = (uint8_t)((vol_Integer>>8)&0x00FF);
     }
 
     /* TODO GPS */
@@ -486,7 +489,7 @@ int iotex_mqtt_bin_to_json(uint8_t *buffer, uint16_t channel, struct mqtt_payloa
     char jsStr[130];
     int  sinLen;
     char random[17];
-
+    uint16_t vol_Integer;
     cJSON *root_obj = cJSON_CreateObject();
     cJSON * msg_obj = cJSON_CreateObject();
     cJSON * sign_obj = cJSON_CreateObject();
@@ -504,7 +507,8 @@ int iotex_mqtt_bin_to_json(uint8_t *buffer, uint16_t channel, struct mqtt_payloa
 
     /* Vbatx100 */
     if (IOTEX_DATA_CHANNEL_IS_SET(channel, DATA_CHANNEL_VBAT)) {
-        cJSON *vbat = cJSON_CreateNumber(buffer[write_cnt++]);
+        vol_Integer = (uint16_t)(buffer[write_cnt++] | (buffer[write_cnt++]<<8));
+        cJSON *vbat = cJSON_CreateNumber((double)(vol_Integer/1000.0));
         if (!vbat || json_add_obj(msg_obj, "VBAT", vbat)) {
             goto out;
         }
