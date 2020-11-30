@@ -16,6 +16,8 @@
 #define CLOUD_CONNACK_WAIT_DURATION	CONFIG_CLOUD_WAIT_DURATION
 
 
+#define  MQTT_TOPIC_SIZE    (CLIENT_ID_LEN + 31)
+
 static bool connected = 0;
 
 /* When MQTT_EVT_CONNACK callback enable data sending */
@@ -31,18 +33,17 @@ static u8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
 
 extern void mqttGetResponse(void);
 
-static const char *iotex_mqtt_get_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 31] ;
-    snprintf(mqtt_topic, sizeof(mqtt_topic), "device/%s/data",
-             iotex_mqtt_get_client_id());
-    return mqtt_topic;
+static  void iotex_mqtt_get_topic(u8_t *buf, int len) 
+{
+    snprintf(buf, len, "device/%s/data",iotex_mqtt_get_client_id());     
 }
-
-static const char *iotex_mqtt_get_config_topic(void) {
-    static uint8_t mqtt_topic[CLIENT_ID_LEN + 31] ;
-    snprintf(mqtt_topic, sizeof(mqtt_topic), "topic/config/%s",
-             iotex_mqtt_get_client_id());
-    return mqtt_topic;
+static  void iotex_mqtt_get_config_topic(u8_t *buf, int len) 
+{
+    snprintf(buf, len, "topic/config/%s",iotex_mqtt_get_client_id());
+}
+static void iotex_get_heart_beat_topic(u8_t *buf, int len)
+{
+    snprintf(buf, len, "device/%s/connect",iotex_mqtt_get_client_id());
 }
 
 
@@ -111,7 +112,8 @@ static void broker_init(const char *hostname, struct sockaddr_storage *storage) 
 
 static int subscribe_config_topic(struct mqtt_client *client) {
 
-    const char *topic = iotex_mqtt_get_config_topic();
+    uint8_t topic[MQTT_TOPIC_SIZE];
+    iotex_mqtt_get_config_topic(topic, sizeof(topic));
     struct mqtt_topic subscribe_topic = {
         .topic = {
             .utf8 = (uint8_t *)topic,
@@ -292,8 +294,10 @@ const uint8_t *iotex_mqtt_get_client_id() {
 
 int iotex_mqtt_publish_data(struct mqtt_client *client, enum mqtt_qos qos, char *data) {
     struct mqtt_publish_param param;
+    u8_t pub_topic[MQTT_TOPIC_SIZE];
+    iotex_mqtt_get_topic(pub_topic, sizeof(pub_topic));
     param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = (u8_t *)iotex_mqtt_get_topic();
+    param.message.topic.topic.utf8 = pub_topic;
     param.message.topic.topic.size = strlen(param.message.topic.topic.utf8);
 
     param.message.payload.data = data;
@@ -303,6 +307,24 @@ int iotex_mqtt_publish_data(struct mqtt_client *client, enum mqtt_qos qos, char 
     param.retain_flag = 0U;
 
     return mqtt_publish(client, &param);
+}
+
+int iotex_mqtt_heart_beat(struct mqtt_client *client, enum mqtt_qos qos)
+{
+     struct mqtt_publish_param param;
+    u8_t pub_topic[MQTT_TOPIC_SIZE];
+    iotex_get_heart_beat_topic(pub_topic, sizeof(pub_topic));
+    param.message.topic.qos = qos;
+    param.message.topic.topic.utf8 = pub_topic;
+    param.message.topic.topic.size = strlen(param.message.topic.topic.utf8);
+
+    param.message.payload.data = "a";
+    param.message.payload.len = 1;
+    param.message_id = sys_rand32_get();
+    param.dup_flag = 0U;
+    param.retain_flag = 0U;
+
+    return mqtt_publish(client, &param);   
 }
 
 /**@brief Initialize the MQTT client structure */

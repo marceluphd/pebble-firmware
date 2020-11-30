@@ -347,6 +347,7 @@ static void send_env_data_work_fn(struct k_work *work) {
         return;
     }
 #endif
+    config_mutex_lock();
     if (iotex_mqtt_is_bulk_upload()) {
         sampling_and_store_sensor_data();
         k_delayed_work_submit(&send_env_data_work, K_SECONDS(iotex_mqtt_get_sampling_frequency()));
@@ -355,7 +356,7 @@ static void send_env_data_work_fn(struct k_work *work) {
         periodic_publish_sensors_data();
         k_delayed_work_submit(&send_env_data_work, K_SECONDS(iotex_mqtt_get_upload_period()));
     }
-
+    config_mutex_unlock();
     return;
 }
 #if(!EXTERN_GPS)
@@ -853,7 +854,7 @@ static void sampling_and_store_sensor_data(void) {
 
         /* Required sampling count is fulfilled */
         if (iotex_mqtt_inc_current_sampling_count()) {
-            iotex_mqtt_bulk_upload_sampling_data(iotex_mqtt_get_data_channel());
+            //iotex_mqtt_bulk_upload_sampling_data(iotex_mqtt_get_data_channel());
         }
     }
     /* Data upload mode */
@@ -939,7 +940,7 @@ while(1){
 
     sensors_init();
     while (true) {
-        err = poll(&fds, 1, mqtt_keepalive_time_left(&client));
+        err = poll(&fds, 1, CONFIG_MAIN_BASE_TIME);
 
         if (err < 0) {
             printk("ERROR: poll %d\n", errno);
@@ -953,6 +954,10 @@ while(1){
             error_handler(ERROR_CLOUD, err);
             break;
         }
+        if(!err)
+        {
+            iotex_mqtt_heart_beat(&client, 0);
+        }        
         printk("mqtt live ????\n");
 
         if ((fds.revents & POLLIN) == POLLIN) {

@@ -200,12 +200,14 @@ static void led_update(struct led *led)
 		LOG_DBG("LED effect with no effect");
 	}
 }
+struct device *beep_pwm_dev = NULL;
 
 int ui_leds_init(void)
 {
 	const char *dev_name = CONFIG_UI_LED_PWM_DEV_NAME;
 	int err = 0;
 
+	beep_pwm_dev = device_get_binding("PWM_1");
 	leds.pwm_dev = device_get_binding(dev_name);
 	leds.id = 0;
 	//patternIndex = 0;
@@ -300,19 +302,17 @@ bool isMask(u8_t mask)
 }
 int onBeepMePressed(int ms)
 {
-	const char *dev_name = "PWM_1";
 	int err = 0;
-    struct device *pwm_dev;
-
-	pwm_dev = device_get_binding(dev_name);
-	if (!pwm_dev) {
-		printk("Could not bind to device %s", dev_name);
+	if (!beep_pwm_dev) {
+		printk("Could not bind to device %s", beep_pwm_dev);
 		err = -ENODEV;
-	}
-        pwm_pin_set_usec(pwm_dev, 11,370, 185, 0);//2.7kHz ==370us  185/370=50% duty
+		return err;
+	}	
+	pwm_pin_set_usec(beep_pwm_dev, 11,370, 185, 0);//2.7kHz ==370us  185/370=50% duty
 
 	k_sleep(K_MSEC(ms));  //1.5S delay
 
-        pwm_pin_set_usec(pwm_dev, 11, 0, 0, 0);
+	pwm_pin_set_usec(beep_pwm_dev, 11, 0, 0, 0);
+
 	return err;
 }
