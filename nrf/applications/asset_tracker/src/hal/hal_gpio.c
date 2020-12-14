@@ -115,4 +115,17 @@ void gpio_poweroff(void)
     gpio_pin_write(__gpio0_dev, IO_POWER_ON, POWER_OFF);    
 }
 
+void PowerOffIndicator(void)
+{
+    int  i;
+    ui_leds_stop();
+    for(i =0;i<3;i++){
+        gpio_pin_write(__gpio0_dev, LED_RED, LED_ON);
+        k_sleep(K_MSEC(1000));
+        gpio_pin_write(__gpio0_dev, LED_RED, LED_OFF);
+        k_sleep(K_MSEC(1000));
+    }
+    gpio_poweroff();
+    k_sleep(K_MSEC(5000));
+}
 

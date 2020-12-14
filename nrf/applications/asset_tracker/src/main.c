@@ -359,6 +359,13 @@ static void send_env_data_work_fn(struct k_work *work) {
     config_mutex_unlock();
     return;
 }
+
+void RestartEnvWork(int s)
+{
+    k_delayed_work_cancel(&send_env_data_work);
+    k_delayed_work_submit(&send_env_data_work, K_SECONDS(s));
+}
+
 #if(!EXTERN_GPS)
 static void gps_handler(struct device *dev, struct gps_event *evt)
 {
@@ -988,6 +995,7 @@ while(1){
             sys_reboot(0);
         }
         updateLedPattern();
+        CheckPower();
     }
 #if defined(CONFIG_LWM2M_CARRIER)
 	LOG_INF("Waiting for LWM2M carrier to complete initialization...");

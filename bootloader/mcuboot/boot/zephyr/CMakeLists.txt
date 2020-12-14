@@ -80,6 +80,7 @@ zephyr_library_sources(
   flash_map_extended.c
   os.c
   keys.c
+  iotex_adc.c
   )
 
 if(NOT DEFINED CONFIG_FLASH_PAGE_LAYOUT)

@@ -304,6 +304,33 @@ void LedCtrl(u8_t port, u32_t val)
     gpio_pin_write(detect_port, port,val ); 
 }
 
+void TimdeDelay(s32_t ms)
+{
+    s32_t time_stamp;
+    volatile s32_t milliseconds_spent;
+    time_stamp = k_uptime_get(); 
+    while(true)
+    {
+        milliseconds_spent = k_uptime_get();
+        if((milliseconds_spent - time_stamp) >=ms)
+            break;
+    }
+}
+
+void PowerOfIndicator(void)
+{  
+    int i;
+    for(i=0; i < 3; i++)  
+    {
+        gpio_pin_write(detect_port, 30,0);
+        TimdeDelay(1000);
+        gpio_pin_write(detect_port, 30,1);
+        TimdeDelay(1000);
+    }
+    gpio_pin_write(detect_port, 15,0);
+    TimdeDelay(5000);
+}
+
 void main(void)
 {
     struct boot_rsp rsp;
@@ -360,11 +387,18 @@ void main(void)
                        &detect_value);
 #endif
     __ASSERT(rc >= 0, "Error of the reading the detect pin.\n"); 
-	
-     gpio_pin_configure(detect_port, 26,GPIO_DIR_OUT);    //qiuhm 0526
-     gpio_pin_configure(detect_port, 27,GPIO_DIR_OUT);    //qiuhm 0526
-     gpio_pin_configure(detect_port, 30,GPIO_DIR_OUT);    //qiuhm 0526
-      gpio_pin_write(detect_port, 27,0 );    
+    gpio_pin_configure(detect_port, 26,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 27,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 30,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 15, GPIO_DIR_OUT);
+    gpio_pin_write(detect_port, 15,1);
+    gpio_pin_write(detect_port, 27,1);
+    gpio_pin_write(detect_port, 26,1 ); 
+    gpio_pin_write(detect_port, 30,1 );    
+    // check voltage
+    adc_module_init();
+    power_check();    
+    gpio_pin_write(detect_port, 27,0 );    
     gpio_pin_write(detect_port, 26,1 ); 
     gpio_pin_write(detect_port, 30,1 );
 	

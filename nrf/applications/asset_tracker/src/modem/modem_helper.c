@@ -169,4 +169,13 @@ float iotex_modem_get_battery_voltage(void)
     return (atoi(vbat)/(float)1000.0);
 }
 
+void CheckPower(void)
+{
+    float adc_voltage = 0;
+    adc_voltage = iotex_modem_get_battery_voltage();
+    if(adc_voltage < 2.7)
+    {
+        PowerOffIndicator();
+    }
+}
 
