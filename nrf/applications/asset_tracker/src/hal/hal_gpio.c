@@ -16,12 +16,12 @@ void checkCHRQ(void)
     if(!chrq)
     {// charging
         ui_led_active(BAT_CHARGING_MASK,0);
-        gpio_pin_write(__gpio0_dev, LED_RED, chrq);
+        gpio_pin_write(__gpio0_dev, LED_RED, 0);
     }
     else
     {// not charging
         ui_led_deactive(BAT_CHARGING_MASK,0);
-        gpio_pin_write(__gpio0_dev, LED_RED, (chrq + 1 ) % 2);
+        gpio_pin_write(__gpio0_dev, LED_RED, 1);
     }    
 }
 
