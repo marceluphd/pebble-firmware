@@ -171,10 +171,11 @@ float iotex_modem_get_battery_voltage(void)
 
 void CheckPower(void)
 {
-    float adc_voltage = 0;
+    volatile float adc_voltage = 0;
     adc_voltage = iotex_modem_get_battery_voltage();
-    if(adc_voltage < 2.7)
+    if(adc_voltage < 3.0)
     {
+        printk("power lower than 3.0 \n");
         PowerOffIndicator();
     }
 }

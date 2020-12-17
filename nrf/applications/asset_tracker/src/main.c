@@ -169,7 +169,7 @@ static struct k_work send_gps_data_work;
 static struct k_delayed_work send_env_data_work;
 static struct k_delayed_work long_press_button_work;
 static struct k_delayed_work power_off_button_work;
-static struct k_delayed_work send_agps_request_work;
+//static struct k_delayed_work send_agps_request_work;
 //static struct k_delayed_work gps_work;
 
 #if defined(CONFIG_AT_CMD)
@@ -670,7 +670,7 @@ static void work_init(void)
 	k_work_init(&send_gps_data_work, send_gps_data_work_fn);
 #endif
 	k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
-	k_delayed_work_init(&send_agps_request_work, send_agps_request);
+	//k_delayed_work_init(&send_agps_request_work, send_agps_request);
 	k_delayed_work_init(&long_press_button_work, long_press_handler);
 	k_delayed_work_init(&power_off_button_work, power_off_handler);
 }
