@@ -62,7 +62,7 @@ int power_check(void)
     float adc_voltage = 0;
     nrfx_saadc_mode_trigger();   
     adc_voltage = m_sample_buffer[0]/1023.0 * 2 * 3600.0;
-    if(adc_voltage < 3100.0)
+    if(adc_voltage < 3300.0)
     {
         PowerOfIndicator();
     }
