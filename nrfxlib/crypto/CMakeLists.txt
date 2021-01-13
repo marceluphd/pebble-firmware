@@ -4,15 +4,13 @@
 # SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
 #
 
-include(${NRFXLIB_DIR}/common.cmake)
-
 nrfxlib_calculate_lib_path(lib_path)
 
 zephyr_interface_library_named(nrfxlib_crypto)
 
 if (CONFIG_NRF_OBERON)
   set(OBERON_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_oberon)
-  set(OBERON_VER 3.0.5)
+  set(OBERON_VER 3.0.7)
   set(OBERON_LIB ${OBERON_BASE}/${lib_path}/liboberon_${OBERON_VER}.a)
   set(OBERON_MBEDTLS_LIB ${OBERON_BASE}/${lib_path}/liboberon_mbedtls_${OBERON_VER}.a)
   if(NOT EXISTS ${OBERON_LIB})
@@ -65,7 +63,7 @@ endif()
 if (CONFIG_NRF_CC310_BL)
   assert(CONFIG_HAS_HW_NRF_CC310 "nrf_cc310_bl requires CryptoCell hardware.")
   set(CC310_BL_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_cc310_bl)
-  if (NOT CONFIG_HW_CC310_INTERRUPT)
+  if (NOT CONFIG_HW_CC3XX_INTERRUPT)
     set(CC310_FLAVOR no-interrupts)
   endif()
   set(CC310_BL_VER 0.9.12)
@@ -78,70 +76,80 @@ if (CONFIG_NRF_CC310_BL)
   target_link_libraries(nrfxlib_crypto INTERFACE ${CC310_BL_LIB})
 endif()
 
-if (CONFIG_NRF_CC310_PLATFORM)
-  set (NRF_CC310_PLATFORM_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_cc310_platform)
-  set (NRF_CC310_PLATFORM_VER 0.9.2)
-  if (NOT CONFIG_HW_CC310_INTERRUPT)
-    set(CC310_PLATFORM_FLAVOR no-interrupts)
+if (CONFIG_NRF_CC3XX_PLATFORM)
+  if(CONFIG_SOC_NRF5340_CPUAPP)
+    set (CC3XX_ARCH cc312)
+  else()
+    set (CC3XX_ARCH cc310)
   endif()
-  set(NRF_CC310_PLATFORM_LIB
-    ${NRF_CC310_PLATFORM_BASE}/${lib_path}/${CC310_PLATFORM_FLAVOR}/libnrf_cc310_platform_${NRF_CC310_PLATFORM_VER}.a
+  set (NRF_CC3XX_PLATFORM_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_${CC3XX_ARCH}_platform)
+  set (NRF_CC3XX_PLATFORM_VER 0.9.4)
+  if (NOT CONFIG_HW_CC3XX_INTERRUPT)
+    set(CC3XX_PLATFORM_FLAVOR no-interrupts)
+  endif()
+  set(NRF_CC3XX_PLATFORM_LIB
+    ${NRF_CC3XX_PLATFORM_BASE}/${lib_path}/${CC3XX_PLATFORM_FLAVOR}/libnrf_${CC3XX_ARCH}_platform_${NRF_CC3XX_PLATFORM_VER}.a
   )
 
-  if (NOT EXISTS ${NRF_CC310_PLATFORM_LIB})
-    message(WARNING "This combination of SoC, floating point ABI, and interrupts settings is not supported by the nrf_cc310_platform lib."
-                    "(${NRF_CC310_PLATFORM_LIB} doesn't exist.)")
+  if (NOT EXISTS ${NRF_CC3XX_PLATFORM_LIB})
+    message(WARNING "This combination of SoC, floating point ABI, and interrupts settings is not supported by the nrf_${CC3XX_ARCH}_platform lib."
+                    "(${NRF_CC3XX_PLATFORM_LIB} doesn't exist.)")
   endif()
   #
   # Uses a normal add_library to avoid --whole-archive
   #
-  add_library(platform_cc310 STATIC IMPORTED GLOBAL)
-  set_target_properties(platform_cc310 PROPERTIES
-    IMPORTED_LOCATION "${NRF_CC310_PLATFORM_LIB}"
-    BASE_INCLUDE_PATH "${NRF_CC310_PLATFORM_BASE}/include"
+  add_library(platform_cc3xx STATIC IMPORTED GLOBAL)
+  set_target_properties(platform_cc3xx PROPERTIES
+    IMPORTED_LOCATION "${NRF_CC3XX_PLATFORM_LIB}"
+    BASE_INCLUDE_PATH "${NRF_CC3XX_PLATFORM_BASE}/include"
   )
-  target_include_directories(platform_cc310 INTERFACE
-      "${NRF_CC310_PLATFORM_BASE}/include")
-  zephyr_link_libraries(platform_cc310)
+  target_include_directories(platform_cc3xx INTERFACE
+      "${NRF_CC3XX_PLATFORM_BASE}/include")
+  zephyr_link_libraries(platform_cc3xx)
   #
   # Add companion sources to directly to zephyr
   #
-  zephyr_sources(${NRF_CC310_PLATFORM_BASE}/src/nrf_cc310_platform_abort_zephyr.c)
-  zephyr_sources(${NRF_CC310_PLATFORM_BASE}/src/nrf_cc310_platform_mutex_zephyr.c)
+  zephyr_sources(${NRF_CC3XX_PLATFORM_BASE}/src/nrf_cc3xx_platform_abort_zephyr.c)
+  zephyr_sources(${NRF_CC3XX_PLATFORM_BASE}/src/nrf_cc3xx_platform_mutex_zephyr.c)
 endif()
 
-if (CONFIG_CC310_BACKEND)
-  set(NRF_CC310_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_cc310_mbedcrypto)
-  set(NRF_CC310_VER 0.9.2)
-  if (NOT CONFIG_HW_CC310_INTERRUPT)
-    set(CC310_FLAVOR no-interrupts)
+if (CONFIG_CC3XX_BACKEND)
+  if(CONFIG_SOC_NRF5340_CPUAPP)
+    set (CC3XX_ARCH cc312)
+  else()
+    set (CC3XX_ARCH cc310)
   endif()
-  set(NRF_CC310_LIB
-    ${NRF_CC310_BASE}/${lib_path}/${CC310_FLAVOR}/libnrf_cc310_mbedcrypto_${NRF_CC310_VER}.a
+  set(NRF_CC3XX_BASE ${CMAKE_CURRENT_SOURCE_DIR}/nrf_${CC3XX_ARCH}_mbedcrypto)
+  set(NRF_CC3XX_VER 0.9.4)
+  if (NOT CONFIG_HW_CC3XX_INTERRUPT)
+    set(CC3XX_FLAVOR no-interrupts)
+  endif()
+  set(NRF_CC3XX_LIB
+    ${NRF_CC3XX_BASE}/${lib_path}/${CC3XX_FLAVOR}/libnrf_${CC3XX_ARCH}_mbedcrypto_${NRF_CC3XX_VER}.a
   )
-  if(NOT EXISTS ${NRF_CC310_LIB})
-    message(WARNING "This combination of SoC, floating point ABI, and interrupts settings is not supported by the nrf_cc310_mbedcryto lib."
-                    "(${NRF_CC310_LIB} doesn't exist.)")
+  if(NOT EXISTS ${NRF_CC3XX_LIB})
+    message(WARNING "This combination of SoC, floating point ABI, and interrupts settings is not supported by the nrf_${CC3XX_ARCH}_mbedcryto lib."
+                    "(${NRF_CC3XX_LIB} doesn't exist.)")
   endif()
 
   #
-  # Add mbedcrypto_cc310_imported that points links to the actual library
+  # Add mbedcrypto_cc3xx_imported that points links to the actual library
   # This library will be stripped for unneeded symbols and combined into
-  # library target mbedcrypto_cc310
+  # library target mbedcrypto_cc3xx
   #
-  add_library(mbedcrypto_cc310_imported STATIC IMPORTED GLOBAL)
-  set_target_properties(mbedcrypto_cc310_imported PROPERTIES
-    IMPORTED_LOCATION "${NRF_CC310_LIB}"
-    BASE_INCLUDE_PATH "${NRF_CC310_BASE}/include/mbedtls"
+  add_library(mbedcrypto_cc3xx_imported STATIC IMPORTED GLOBAL)
+  set_target_properties(mbedcrypto_cc3xx_imported PROPERTIES
+    IMPORTED_LOCATION "${NRF_CC3XX_LIB}"
+    BASE_INCLUDE_PATH "${NRF_CC3XX_BASE}/include/mbedtls"
   )
-  target_include_directories(mbedcrypto_cc310_imported INTERFACE
-                             "${NRF_CC310_BASE}/include"
-                             "${NRF_CC310_BASE}/include/mbedtls")
-  target_link_libraries(mbedcrypto_cc310_imported INTERFACE platform_cc310)
-  if (NOT CONFIG_NRF_CRYPTO_BACKEND_COMBINATION_0)
-    # Only CC310 backend is selected for mbedtls API.
+  target_include_directories(mbedcrypto_cc3xx_imported INTERFACE
+                             "${NRF_CC3XX_BASE}/include"
+                             "${NRF_CC3XX_BASE}/include/mbedtls")
+  target_link_libraries(mbedcrypto_cc3xx_imported INTERFACE platform_cc3xx)
+  if (NOT CONFIG_NRF_SECURITY_MULTI_BACKEND)
+    # Only CC3XX backend is selected for mbedtls API.
     # Thus export the alt headers through Zephyr interface library.
-    zephyr_include_directories(${NRF_CC310_BASE}/include/mbedtls
-                               ${NRF_CC310_BASE}/include)
+    zephyr_include_directories(${NRF_CC3XX_BASE}/include/mbedtls
+                               ${NRF_CC3XX_BASE}/include)
   endif()
 endif()

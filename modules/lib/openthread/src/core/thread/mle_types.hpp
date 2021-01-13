@@ -42,9 +42,12 @@
 
 #include <openthread/thread.h>
 
+#include "common/clearable.hpp"
 #include "common/encoding.hpp"
+#include "common/equatable.hpp"
 #include "common/string.hpp"
 #include "mac/mac_types.hpp"
+#include "net/ip6_address.hpp"
 
 namespace ot {
 namespace Mle {
@@ -246,26 +249,30 @@ enum
     kServiceMaxId = 0x0f, ///< Maximal Service ID.
 };
 
-#if OPENTHREAD_FTD && OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE
+#if OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE || OPENTHREAD_CONFIG_MLR_ENABLE
 
 /**
- * Backbone Router constants
+ * Backbone Router / MLR constants
  *
  */
 enum
 {
     kRegistrationDelayDefault         = 1200, //< In seconds.
     kMlrTimeoutDefault                = 3600, //< In seconds.
+    kMlrTimeoutMin                    = 300,  //< In seconds.
     kBackboneRouterRegistrationJitter = 5,    //< In seconds.
 };
 
-#endif
+static_assert(kMlrTimeoutDefault >= kMlrTimeoutMin,
+              "kMlrTimeoutDefault must be larger than or equal to kMlrTimeoutMin");
+
+#endif // OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE || OPENTHREAD_CONFIG_MLR_ENABLE
 
 /**
  * This type represents a MLE device mode.
  *
  */
-class DeviceMode
+class DeviceMode : public Equatable<DeviceMode>
 {
 public:
     enum
@@ -408,28 +415,6 @@ public:
     bool IsValid(void) const { return !IsFullThreadDevice() || IsRxOnWhenIdle(); }
 
     /**
-     *  This method overloads operator `==` to evaluate whether or not two device modes are equal
-     *
-     * @param[in]  aOther  The other device mode to compare with.
-     *
-     * @retval TRUE   If the device modes are equal.
-     * @retval FALSE  If the device modes are not equal.
-     *
-     */
-    bool operator==(const DeviceMode &aOther) const { return (mMode == aOther.mMode); }
-
-    /**
-     * This method overloads operator `!=` to evaluate whether or not two device modes are not equal.
-     *
-     * @param[in]  aOther  The other device mode to compare with.
-     *
-     * @retval TRUE   If the device modes are not equal.
-     * @retval FALSE  If the device modes are equal.
-     *
-     */
-    bool operator!=(const DeviceMode &aOther) const { return !(*this == aOther); }
-
-    /**
      * This method converts the device mode into a human-readable string.
      *
      * @returns An `InfoString` object representing the device mode.
@@ -446,37 +431,9 @@ private:
  *
  */
 OT_TOOL_PACKED_BEGIN
-class MeshLocalPrefix : public otMeshLocalPrefix
+class MeshLocalPrefix : public Ip6::NetworkPrefix
 {
 public:
-    enum
-    {
-        kSize   = OT_MESH_LOCAL_PREFIX_SIZE,            ///< Size in bytes.
-        kLength = OT_MESH_LOCAL_PREFIX_SIZE * CHAR_BIT, ///< Length of Mesh Local Prefix in bits.
-    };
-
-    /**
-     * This method evaluates whether or not two Mesh Local Prefixes match.
-     *
-     * @param[in]  aOther  The Mesh Local Prefix to compare.
-     *
-     * @retval TRUE   If the Mesh Local Prefixes match.
-     * @retval FALSE  If the Mesh Local Prefixes do not match.
-     *
-     */
-    bool operator==(const MeshLocalPrefix &aOther) const { return memcmp(m8, aOther.m8, sizeof(*this)) == 0; }
-
-    /**
-     * This method evaluates whether or not two Mesh Local Prefixes match.
-     *
-     * @param[in]  aOther  The Mesh Local Prefix to compare.
-     *
-     * @retval TRUE   If the Mesh Local Prefixes do not match.
-     * @retval FALSE  If the Mesh Local Prefixes match.
-     *
-     */
-    bool operator!=(const MeshLocalPrefix &aOther) const { return !(*this == aOther); }
-
     /**
      * This method derives and sets the Mesh Local Prefix from an Extended PAN ID.
      *
@@ -491,15 +448,9 @@ public:
  * This class represents the Thread Leader Data.
  *
  */
-class LeaderData : public otLeaderData
+class LeaderData : public otLeaderData, public Clearable<LeaderData>
 {
 public:
-    /**
-     * This method clears the Leader Data (setting all the fields to zero).
-     *
-     */
-    void Clear(void) { memset(this, 0, sizeof(*this)); }
-
     /**
      * This method returns the Partition ID value.
      *
@@ -582,7 +533,7 @@ public:
 };
 
 OT_TOOL_PACKED_BEGIN
-class RouterIdSet
+class RouterIdSet : public Equatable<RouterIdSet>
 {
 public:
     /**
@@ -618,34 +569,15 @@ public:
      */
     void Remove(uint8_t aRouterId) { mRouterIdSet[aRouterId / 8] &= ~(0x80 >> (aRouterId % 8)); }
 
-    /**
-     * This method returns whether or not the Router ID sets are equal.
-     *
-     * @param[in]  aOther The other Router ID Set to compare with.
-     *
-     * @retval TRUE   If the Router ID sets are equal.
-     * @retval FALSE  If the Router ID sets are not equal.
-     *
-     */
-    bool operator==(const RouterIdSet &aOther) const
-    {
-        return memcmp(mRouterIdSet, aOther.mRouterIdSet, sizeof(mRouterIdSet)) == 0;
-    }
-
-    /**
-     * This method returns whether or not the Router ID sets are not equal.
-     *
-     * @param[in]  aOther The other Router ID Set to compare with.
-     *
-     * @retval TRUE   If the Router ID sets are not equal.
-     * @retval FALSE  If the Router ID sets are equal.
-     *
-     */
-    bool operator!=(const RouterIdSet &aOther) const { return !(*this == aOther); }
-
 private:
     uint8_t mRouterIdSet[BitVectorBytes(Mle::kMaxRouterId + 1)];
 } OT_TOOL_PACKED_END;
+
+/**
+ * This class represents a MLE key.
+ *
+ */
+typedef Mac::Key Key;
 
 /**
  * @}

@@ -9,14 +9,15 @@
 #include <string.h>
 #include <net/socket.h>
 #include <modem/modem_info.h>
-#include <net/tls_credentials.h>
+#include <sys/ring_buffer.h>
 #include "slm_util.h"
+#include "slm_native_tls.h"
 #include "slm_at_host.h"
 #include "slm_at_tcp_proxy.h"
 
 LOG_MODULE_REGISTER(tcp_proxy, CONFIG_SLM_LOG_LEVEL);
 
-#define THREAD_STACK_SIZE	(KB(1) + NET_IPV4_MTU)
+#define THREAD_STACK_SIZE	(KB(3) + NET_IPV4_MTU)
 #define THREAD_PRIORITY		K_LOWEST_APPLICATION_THREAD_PRIO
 #define DATA_HEX_MAX_SIZE	(2 * NET_IPV4_MTU)
 
@@ -25,7 +26,9 @@ enum slm_tcp_proxy_operation {
 	AT_SERVER_STOP,
 	AT_CLIENT_DISCONNECT = AT_SERVER_STOP,
 	AT_SERVER_START,
-	AT_CLIENT_CONNECT = AT_SERVER_START
+	AT_CLIENT_CONNECT = AT_SERVER_START,
+	AT_SERVER_START_WITH_DATAMODE,
+	AT_CLIENT_CONNECT_WITH_DATAMODE = AT_SERVER_START_WITH_DATAMODE
 };
 
 /**@brief Proxy roles. */
@@ -39,6 +42,7 @@ enum slm_tcp_proxy_at_cmd_type {
 	AT_TCP_SERVER,
 	AT_TCP_CLIENT,
 	AT_TCP_SEND,
+	AT_TCP_RECV,
 	AT_TCP_PROXY_MAX
 };
 
@@ -46,15 +50,18 @@ enum slm_tcp_proxy_at_cmd_type {
 static int handle_at_tcp_server(enum at_cmd_type cmd_type);
 static int handle_at_tcp_client(enum at_cmd_type cmd_type);
 static int handle_at_tcp_send(enum at_cmd_type cmd_type);
+static int handle_at_tcp_recv(enum at_cmd_type cmd_type);
 
 /**@brief SLM AT Command list type. */
-static slm_at_cmd_list_t m_tcp_proxy_at_list[AT_TCP_PROXY_MAX] = {
+static slm_at_cmd_list_t tcp_proxy_at_list[AT_TCP_PROXY_MAX] = {
 	{AT_TCP_SERVER, "AT#XTCPSVR", handle_at_tcp_server},
 	{AT_TCP_CLIENT, "AT#XTCPCLI", handle_at_tcp_client},
 	{AT_TCP_SEND, "AT#XTCPSEND", handle_at_tcp_send},
+	{AT_TCP_RECV, "AT#XTCPRECV", handle_at_tcp_recv},
 };
 
-static u8_t data_hex[DATA_HEX_MAX_SIZE];
+RING_BUF_DECLARE(data_buf, CONFIG_AT_CMD_RESPONSE_MAX_LEN / 2);
+static uint8_t data_hex[DATA_HEX_MAX_SIZE];
 static struct k_thread tcp_thread;
 static K_THREAD_STACK_DEFINE(tcp_thread_stack, THREAD_STACK_SIZE);
 static k_tid_t tcp_thread_id;
@@ -63,12 +70,14 @@ K_TIMER_DEFINE(conn_timer, NULL, NULL);
 static struct sockaddr_in remote;
 static struct tcp_proxy_t {
 	int sock; /* Socket descriptor. */
+	sec_tag_t sec_tag; /* Security tag of the credential */
 	int sock_peer; /* Socket descriptor for peer. */
 	int role; /* Client or Server proxy */
+	bool datamode; /* Data mode flag*/
 } proxy;
 
 /* global functions defined in different files */
-void rsp_send(const u8_t *str, size_t len);
+void rsp_send(const uint8_t *str, size_t len);
 
 /* global variable defined in different files */
 extern struct at_param_list at_param_list;
@@ -78,20 +87,26 @@ extern char rsp_buf[CONFIG_AT_CMD_RESPONSE_MAX_LEN];
 /** forward declaration of thread function **/
 static void tcp_thread_func(void *p1, void *p2, void *p3);
 
-static int do_tcp_server_start(u16_t port, int sec_tag)
+static int do_tcp_server_start(uint16_t port, int sec_tag)
 {
 	int ret = 0;
 	struct sockaddr_in local;
 	int addr_len;
 
+#if defined(CONFIG_SLM_NATIVE_TLS)
+	if (sec_tag != INVALID_SEC_TAG) {
+		ret = slm_tls_loadcrdl(sec_tag);
+		if (ret < 0) {
+			LOG_ERR("Fail to load credential: %d", ret);
+			return ret;
+		}
+	}
+#endif
 	/* Open socket */
 	if (sec_tag == INVALID_SEC_TAG) {
 		proxy.sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	} else {
-		sprintf(rsp_buf,
-			"#XTCPSVR: TLS Server not supported\r\n");
-		rsp_send(rsp_buf, strlen(rsp_buf));
-		return -ENOTSUP;
+		proxy.sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TLS_1_2);
 	}
 	if (proxy.sock < 0) {
 		LOG_ERR("socket() failed: %d", -errno);
@@ -99,6 +114,21 @@ static int do_tcp_server_start(u16_t port, int sec_tag)
 		rsp_send(rsp_buf, strlen(rsp_buf));
 		return -errno;
 	}
+
+	if (sec_tag != INVALID_SEC_TAG) {
+		sec_tag_t sec_tag_list[1] = { sec_tag };
+
+		ret = setsockopt(proxy.sock, SOL_TLS, TLS_SEC_TAG_LIST,
+				sec_tag_list, sizeof(sec_tag_t));
+		if (ret) {
+			LOG_ERR("set tag list failed: %d", -errno);
+			sprintf(rsp_buf, "#XTCPSVR: %d\r\n", -errno);
+			rsp_send(rsp_buf, strlen(rsp_buf));
+			close(proxy.sock);
+			return -errno;
+		}
+	}
+
 
 	/* Bind to local port */
 	local.sin_family = AF_INET;
@@ -152,7 +182,6 @@ static int do_tcp_server_start(u16_t port, int sec_tag)
 			K_THREAD_STACK_SIZEOF(tcp_thread_stack),
 			tcp_thread_func, NULL, NULL, NULL,
 			THREAD_PRIORITY, K_USER, K_NO_WAIT);
-
 	proxy.role = AT_TCP_ROLE_SERVER;
 	sprintf(rsp_buf, "#XTCPSVR: %d started\r\n", proxy.sock);
 	rsp_send(rsp_buf, strlen(rsp_buf));
@@ -175,19 +204,27 @@ static int do_tcp_server_stop(int error)
 			LOG_WRN("close() failed: %d", -errno);
 			ret = -errno;
 		}
-		proxy.sock = INVALID_SOCKET;
-		proxy.sock_peer = INVALID_SOCKET;
-		proxy.role = INVALID_ROLE;
+#if defined(CONFIG_SLM_NATIVE_TLS)
+		if (proxy.sec_tag != INVALID_SEC_TAG) {
+			ret = slm_tls_unloadcrdl(proxy.sec_tag);
+			if (ret < 0) {
+				LOG_ERR("Fail to unload credential: %d", ret);
+			}
+		}
+#endif
+		(void)slm_at_tcp_proxy_init();
 		if (error) {
 			sprintf(rsp_buf, "#XTCPSVR: %d stopped\r\n", error);
-			rsp_send(rsp_buf, strlen(rsp_buf));
+		} else {
+			sprintf(rsp_buf, "#XTCPSVR: stopped\r\n");
 		}
+		rsp_send(rsp_buf, strlen(rsp_buf));
 	}
 
 	return ret;
 }
 
-static int do_tcp_client_connect(const char *url, u16_t port, int sec_tag)
+static int do_tcp_client_connect(const char *url, uint16_t port, int sec_tag)
 {
 	int ret;
 
@@ -285,31 +322,32 @@ static int do_tcp_client_disconnect(int error)
 			LOG_WRN("close() failed: %d", -errno);
 			ret = -errno;
 		}
-		proxy.sock = INVALID_SOCKET;
-		proxy.role = INVALID_ROLE;
-
+		(void)slm_at_tcp_proxy_init();
 		if (error) {
 			sprintf(rsp_buf, "#XTCPCLI: %d disconnected\r\n",
 				error);
-			rsp_send(rsp_buf, strlen(rsp_buf));
+		} else {
+			sprintf(rsp_buf, "#XTCPCLI: disconnected\r\n");
 		}
+		rsp_send(rsp_buf, strlen(rsp_buf));
 	}
 
 	return ret;
 }
 
-static int do_tcp_send(const u8_t *data, int datalen)
+static int do_tcp_send(const uint8_t *data, int datalen)
 {
 	int ret = 0;
-	u32_t offset = 0;
+	uint32_t offset = 0;
 	int sock;
 
 	if (proxy.role == AT_TCP_ROLE_CLIENT &&
-		proxy.sock != INVALID_SOCKET) {
+	    proxy.sock != INVALID_SOCKET) {
 		sock = proxy.sock;
 	} else if (proxy.role == AT_TCP_ROLE_SERVER &&
-		proxy.sock_peer != INVALID_SOCKET) {
+		   proxy.sock_peer != INVALID_SOCKET) {
 		sock = proxy.sock_peer;
+		k_timer_stop(&conn_timer);
 	} else {
 		LOG_ERR("Not connected yet");
 		return -EINVAL;
@@ -337,11 +375,64 @@ static int do_tcp_send(const u8_t *data, int datalen)
 
 	sprintf(rsp_buf, "#XTCPSEND: %d\r\n", offset);
 	rsp_send(rsp_buf, strlen(rsp_buf));
+
+	/* restart activity timer */
+	if (proxy.role == AT_TCP_ROLE_SERVER) {
+		k_timer_start(&conn_timer, K_SECONDS(CONFIG_SLM_TCP_CONN_TIME),
+			K_NO_WAIT);
+	}
+
 	if (ret >= 0) {
 		return 0;
 	} else {
 		return ret;
 	}
+}
+
+static int do_tcp_send_datamode(const uint8_t *data, int datalen)
+{
+	int ret = 0;
+	uint32_t offset = 0;
+	int sock;
+
+	if (proxy.role == AT_TCP_ROLE_CLIENT &&
+	    proxy.sock != INVALID_SOCKET) {
+		sock = proxy.sock;
+	} else if (proxy.role == AT_TCP_ROLE_SERVER &&
+		   proxy.sock_peer != INVALID_SOCKET) {
+		sock = proxy.sock_peer;
+		k_timer_stop(&conn_timer);
+	} else {
+		LOG_ERR("Not connected yet");
+		return -EINVAL;
+	}
+
+	while (offset < datalen) {
+		ret = send(sock, data + offset, datalen - offset, 0);
+		if (ret < 0) {
+			LOG_ERR("send() failed: %d", -errno);
+			ret = -errno;
+			break;
+		}
+		offset += ret;
+	}
+
+	/* restart activity timer */
+	if (proxy.role == AT_TCP_ROLE_SERVER) {
+		k_timer_start(&conn_timer, K_SECONDS(CONFIG_SLM_TCP_CONN_TIME),
+			K_NO_WAIT);
+	}
+
+	return offset;
+}
+
+static int tcp_data_save(uint8_t *data, uint32_t length)
+{
+	if (ring_buf_space_get(&data_buf) < length) {
+		return -1; /* RX overrun */
+	}
+
+	return ring_buf_put(&data_buf, data, length);
 }
 
 static void tcp_thread_func(void *p1, void *p2, void *p3)
@@ -387,11 +478,14 @@ thread_entry:
 	}
 	fds.fd = sock;
 	fds.events = POLLIN;
+	ring_buf_reset(&data_buf);
 	while (true) {
 		if (proxy.role == AT_TCP_ROLE_SERVER &&
 			k_timer_status_get(&conn_timer) > 0) {
 			k_timer_stop(&conn_timer);
 			LOG_INF("Connecion timeout");
+			sprintf(rsp_buf, "#XTCPSVR: timeout\r\n");
+			rsp_send(rsp_buf, strlen(rsp_buf));
 			close(proxy.sock_peer);
 			goto thread_entry;
 		}
@@ -407,6 +501,10 @@ thread_entry:
 		if ((fds.revents & POLLIN) == POLLIN) {
 			char data[NET_IPV4_MTU];
 
+			/* stop activity timer */
+			if (proxy.role == AT_TCP_ROLE_SERVER) {
+				k_timer_stop(&conn_timer);
+			}
 			ret = recv(sock, data, NET_IPV4_MTU, 0);
 			if (ret < 0) {
 				LOG_WRN("recv() error: %d", -errno);
@@ -415,25 +513,42 @@ thread_entry:
 			if (ret == 0) {
 				continue;
 			}
-			if (slm_util_hex_check(data, ret)) {
+			if (proxy.datamode) {
+				rsp_send(data, ret);
+			} else if (slm_util_hex_check(data, ret)) {
 				ret = slm_util_htoa(data, ret, data_hex,
 					DATA_HEX_MAX_SIZE);
-				if (ret > 0) {
-					sprintf(rsp_buf,
-						"#XTCPRECV: %d, %d\r\n",
-						DATATYPE_HEXADECIMAL, ret);
-					rsp_send(rsp_buf, strlen(rsp_buf));
-					rsp_send(data_hex, ret);
-					rsp_send("\r\n", 2);
-				} else {
+				if (ret < 0) {
 					LOG_ERR("hex convert error: %d", ret);
+					continue;
 				}
-			} else {
-				sprintf(rsp_buf, "#XTCPRECV: %d, %d\r\n",
-					DATATYPE_PLAINTEXT, ret);
+				if (tcp_data_save(data_hex, ret) < 0) {
+					sprintf(rsp_buf,
+						"#XTCPDATA: overrun\r\n");
+				} else {
+					sprintf(rsp_buf,
+						"#XTCPDATA: %d, %d\r\n",
+						DATATYPE_HEXADECIMAL,
+						ret);
+				}
 				rsp_send(rsp_buf, strlen(rsp_buf));
-				rsp_send(data, ret);
-				rsp_send("\r\n", 2);
+			} else {
+				if (tcp_data_save(data, ret) < 0) {
+					sprintf(rsp_buf,
+						"#XTCPDATA: overrun\r\n");
+				} else {
+					sprintf(rsp_buf,
+						"#XTCPDATA: %d, %d\r\n",
+						DATATYPE_PLAINTEXT, ret);
+				}
+				rsp_send(rsp_buf, strlen(rsp_buf));
+			}
+			/* restart activity timer */
+			if (proxy.role == AT_TCP_ROLE_SERVER) {
+				k_timer_start(
+					&conn_timer,
+					K_SECONDS(CONFIG_SLM_TCP_CONN_TIME),
+					K_NO_WAIT);
 			}
 		}
 	}
@@ -441,13 +556,13 @@ thread_entry:
 
 /**@brief handle AT#XTCPSVR commands
  *  AT#XTCPSVR=<op>[,<port>[,[sec_tag]]
- *  AT#XTCPSVR? READ command not supported
+ *  AT#XTCPSVR?
  *  AT#XTCPSVR=?
  */
 static int handle_at_tcp_server(enum at_cmd_type cmd_type)
 {
 	int err = -EINVAL;
-	u16_t op;
+	uint16_t op;
 	int param_count = at_params_valid_count_get(&at_param_list);
 
 	switch (cmd_type) {
@@ -459,9 +574,10 @@ static int handle_at_tcp_server(enum at_cmd_type cmd_type)
 		if (err) {
 			return err;
 		}
-		if (op == AT_SERVER_START) {
-			u16_t port;
-			sec_tag_t sec_tag = INVALID_SEC_TAG;
+		if (op == AT_SERVER_START ||
+		    op == AT_SERVER_START_WITH_DATAMODE) {
+			uint16_t port;
+			proxy.sec_tag = INVALID_SEC_TAG;
 
 			if (param_count < 3) {
 				return -EINVAL;
@@ -471,9 +587,13 @@ static int handle_at_tcp_server(enum at_cmd_type cmd_type)
 				return err;
 			}
 			if (param_count > 3) {
-				at_params_int_get(&at_param_list, 3, &sec_tag);
+				at_params_int_get(&at_param_list, 3,
+						  &proxy.sec_tag);
 			}
-			err = do_tcp_server_start(port, sec_tag);
+			err = do_tcp_server_start(port, proxy.sec_tag);
+			if (err == 0 && op == AT_SERVER_START_WITH_DATAMODE) {
+				proxy.datamode = true;
+			}
 		} else if (op == AT_SERVER_STOP) {
 			if (proxy.sock < 0) {
 				LOG_WRN("Server is not running");
@@ -482,9 +602,23 @@ static int handle_at_tcp_server(enum at_cmd_type cmd_type)
 			err = do_tcp_server_stop(0);
 		} break;
 
+	case AT_CMD_TYPE_READ_COMMAND:
+		if (proxy.sock != INVALID_SOCKET &&
+		    proxy.role == AT_TCP_ROLE_SERVER) {
+			sprintf(rsp_buf, "#XTCPSVR: %d, %d, %d\r\n",
+				proxy.sock, proxy.sock_peer, proxy.datamode);
+		} else {
+			sprintf(rsp_buf, "#XTCPSVR: %d, %d\r\n",
+				INVALID_SOCKET, INVALID_SOCKET);
+		}
+		rsp_send(rsp_buf, strlen(rsp_buf));
+		err = 0;
+		break;
+
 	case AT_CMD_TYPE_TEST_COMMAND:
-		sprintf(rsp_buf, "#XTCPSVR: (%d, %d),<port>,<sec_tag>\r\n",
-			AT_SERVER_STOP, AT_SERVER_START);
+		sprintf(rsp_buf, "#XTCPSVR: (%d, %d, %d),<port>,<sec_tag>\r\n",
+			AT_SERVER_STOP, AT_SERVER_START,
+			AT_SERVER_START_WITH_DATAMODE);
 		rsp_send(rsp_buf, strlen(rsp_buf));
 		err = 0;
 		break;
@@ -498,13 +632,13 @@ static int handle_at_tcp_server(enum at_cmd_type cmd_type)
 
 /**@brief handle AT#XTCPCLI commands
  *  AT#XTCPCLI=<op>[,<url>,<port>[,[sec_tag]]
- *  AT#XTCPCLI? READ command not supported
+ *  AT#XTCPCLI?
  *  AT#XTCPCLI=?
  */
 static int handle_at_tcp_client(enum at_cmd_type cmd_type)
 {
 	int err = -EINVAL;
-	u16_t op;
+	uint16_t op;
 	int param_count = at_params_valid_count_get(&at_param_list);
 
 	switch (cmd_type) {
@@ -516,11 +650,12 @@ static int handle_at_tcp_client(enum at_cmd_type cmd_type)
 		if (err) {
 			return err;
 		}
-		if (op == AT_CLIENT_CONNECT) {
-			u16_t port;
+		if (op == AT_CLIENT_CONNECT ||
+		    op == AT_CLIENT_CONNECT_WITH_DATAMODE) {
+			uint16_t port;
 			char url[TCPIP_MAX_URL];
 			int size = TCPIP_MAX_URL;
-			sec_tag_t sec_tag = INVALID_SEC_TAG;
+			proxy.sec_tag = INVALID_SEC_TAG;
 
 			if (param_count < 4) {
 				return -EINVAL;
@@ -536,9 +671,14 @@ static int handle_at_tcp_client(enum at_cmd_type cmd_type)
 				return err;
 			}
 			if (param_count > 4) {
-				at_params_int_get(&at_param_list, 4, &sec_tag);
+				at_params_int_get(&at_param_list,
+						  4, &proxy.sec_tag);
 			}
-			err = do_tcp_client_connect(url, port, sec_tag);
+			err = do_tcp_client_connect(url, port, proxy.sec_tag);
+			if (err == 0 &&
+			    op == AT_CLIENT_CONNECT_WITH_DATAMODE) {
+				proxy.datamode = true;
+			}
 		} else if (op == AT_CLIENT_DISCONNECT) {
 			if (proxy.sock < 0) {
 				LOG_WRN("Client is not connected");
@@ -547,10 +687,23 @@ static int handle_at_tcp_client(enum at_cmd_type cmd_type)
 			err = do_tcp_client_disconnect(0);
 		} break;
 
+	case AT_CMD_TYPE_READ_COMMAND:
+		if (proxy.sock != INVALID_SOCKET &&
+		    proxy.role == AT_TCP_ROLE_CLIENT) {
+			sprintf(rsp_buf, "#XTCPCLI: %d, %d\r\n",
+				proxy.sock, proxy.datamode);
+		} else {
+			sprintf(rsp_buf, "#XTCPCLI: %d\r\n", INVALID_SOCKET);
+		}
+		rsp_send(rsp_buf, strlen(rsp_buf));
+		err = 0;
+		break;
+
 	case AT_CMD_TYPE_TEST_COMMAND:
 		sprintf(rsp_buf,
-			"#XTCPCLI: (%d, %d),<url>,<port>,<sec_tag>\r\n",
-			AT_CLIENT_DISCONNECT, AT_CLIENT_CONNECT);
+			"#XTCPCLI: (%d, %d, %d),<url>,<port>,<sec_tag>\r\n",
+			AT_CLIENT_DISCONNECT, AT_CLIENT_CONNECT,
+			AT_CLIENT_CONNECT_WITH_DATAMODE);
 		rsp_send(rsp_buf, strlen(rsp_buf));
 		err = 0;
 		break;
@@ -570,7 +723,7 @@ static int handle_at_tcp_client(enum at_cmd_type cmd_type)
 static int handle_at_tcp_send(enum at_cmd_type cmd_type)
 {
 	int err = -EINVAL;
-	u16_t datatype;
+	uint16_t datatype;
 	char data[NET_IPV4_MTU];
 	int size = NET_IPV4_MTU;
 
@@ -588,7 +741,7 @@ static int handle_at_tcp_send(enum at_cmd_type cmd_type)
 			return err;
 		}
 		if (datatype == DATATYPE_HEXADECIMAL) {
-			u8_t data_hex[size / 2];
+			uint8_t data_hex[size / 2];
 
 			err = slm_util_atoh(data, size, data_hex, size / 2);
 			if (err > 0) {
@@ -606,16 +759,58 @@ static int handle_at_tcp_send(enum at_cmd_type cmd_type)
 	return err;
 }
 
+/**@brief handle AT#XTCPRECV commands
+ *  AT#XTCPRECV[=<length>]
+ *  AT#XTCPRECV? READ command not supported
+ *  AT#XTCPRECV=? TEST command not supported
+ */
+static int handle_at_tcp_recv(enum at_cmd_type cmd_type)
+{
+	int err = -EINVAL;
+	uint16_t length = 0;
+
+	switch (cmd_type) {
+	case AT_CMD_TYPE_SET_COMMAND:
+	{
+		uint32_t sz_send = 0;
+
+		if (at_params_valid_count_get(&at_param_list) > 1) {
+			err = at_params_short_get(&at_param_list, 1, &length);
+			if (err) {
+				return err;
+			}
+		}
+		if (ring_buf_is_empty(&data_buf) == 0) {
+			sz_send = ring_buf_get(&data_buf, rsp_buf,
+					sizeof(rsp_buf));
+			if (length > 0 && sz_send > length) {
+				sz_send = length;
+			}
+			rsp_send(rsp_buf, sz_send);
+			rsp_send("\r\n", 2);
+		}
+		sprintf(rsp_buf, "#XTCPRECV: %d\r\n", sz_send);
+		rsp_send(rsp_buf, strlen(rsp_buf));
+		err = 0;
+	} break;
+
+	default:
+		break;
+	}
+
+	return err;
+}
+
 /**@brief API to handle TCP proxy AT commands
  */
-int slm_at_tcp_proxy_parse(const char *at_cmd)
+int slm_at_tcp_proxy_parse(const char *at_cmd, uint16_t length)
 {
-	int ret = -ENOTSUP;
+	int ret = -ENOENT;
 	enum at_cmd_type type;
 
 	for (int i = 0; i < AT_TCP_PROXY_MAX; i++) {
 		if (slm_util_cmd_casecmp(at_cmd,
-			m_tcp_proxy_at_list[i].string)) {
+			tcp_proxy_at_list[i].string)) {
 			ret = at_parser_params_from_str(at_cmd, NULL,
 						&at_param_list);
 			if (ret) {
@@ -623,9 +818,14 @@ int slm_at_tcp_proxy_parse(const char *at_cmd)
 				return -EINVAL;
 			}
 			type = at_parser_cmd_type_get(at_cmd);
-			ret = m_tcp_proxy_at_list[i].handler(type);
+			ret = tcp_proxy_at_list[i].handler(type);
 			break;
 		}
+	}
+
+	/* handle sending in data mode */
+	if (ret == -ENOENT && proxy.datamode) {
+		ret = do_tcp_send_datamode(at_cmd, length);
 	}
 
 	return ret;
@@ -636,7 +836,7 @@ int slm_at_tcp_proxy_parse(const char *at_cmd)
 void slm_at_tcp_proxy_clac(void)
 {
 	for (int i = 0; i < AT_TCP_PROXY_MAX; i++) {
-		sprintf(rsp_buf, "%s\r\n", m_tcp_proxy_at_list[i].string);
+		sprintf(rsp_buf, "%s\r\n", tcp_proxy_at_list[i].string);
 		rsp_send(rsp_buf, strlen(rsp_buf));
 	}
 }
@@ -648,6 +848,7 @@ int slm_at_tcp_proxy_init(void)
 	proxy.sock = INVALID_SOCKET;
 	proxy.sock_peer = INVALID_SOCKET;
 	proxy.role = INVALID_ROLE;
+	proxy.datamode = false;
 
 	return 0;
 }

@@ -3,6 +3,10 @@
 Integration notes
 #################
 
+.. contents::
+   :local:
+   :depth: 2
+
 When integrating the NFC libraries in your application, there are a few things to be aware of.
 See the following notes:
 
@@ -40,6 +44,10 @@ The module must implement the following functions:
 nfc_platform_setup()
   This function is called by the NFC libraries at initialization.
   It sets up the clock interface and connects NFCT and the chosen TIMER IRQs with their respective IRQ handler functions from nrfx.
+
+nfc_platform_nfcid1_default_bytes_get()
+  This function is used to fetch default bytes for NFCID1 that are stored in FICR registers.
+  Access to FICR registers differs between secure and non-secure environments.
 
 nfc_platform_event_handler()
   This event handler is called by the NFC libraries to forward NFC events received from the NFCT driver.

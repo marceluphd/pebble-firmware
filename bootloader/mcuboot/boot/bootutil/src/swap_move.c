@@ -224,23 +224,36 @@ boot_slots_compatible(struct boot_loader_state *state)
      */
         return 1;
 #else
-    size_t num_sectors;
+    size_t num_sectors_pri;
+    size_t num_sectors_sec;
+    size_t sector_sz_pri = 0;
+    size_t sector_sz_sec = 0;
     size_t i;
 
-    num_sectors = boot_img_num_sectors(state, BOOT_PRIMARY_SLOT);
-    if (num_sectors != boot_img_num_sectors(state, BOOT_SECONDARY_SLOT)) {
-        BOOT_LOG_WRN("Cannot upgrade: slots don't have same amount of sectors");
+    num_sectors_pri = boot_img_num_sectors(state, BOOT_PRIMARY_SLOT);
+    num_sectors_sec = boot_img_num_sectors(state, BOOT_SECONDARY_SLOT);
+    if ((num_sectors_pri != num_sectors_sec) &&
+            (num_sectors_pri != (num_sectors_sec + 1))) {
+        BOOT_LOG_WRN("Cannot upgrade: not a compatible amount of sectors");
         return 0;
     }
 
-    if (num_sectors > BOOT_MAX_IMG_SECTORS) {
+    if (num_sectors_pri > BOOT_MAX_IMG_SECTORS) {
         BOOT_LOG_WRN("Cannot upgrade: more sectors than allowed");
         return 0;
     }
 
-    for (i = 0; i < num_sectors; i++) {
-        if (boot_img_sector_size(state, BOOT_PRIMARY_SLOT, i) !=
-                boot_img_sector_size(state, BOOT_SECONDARY_SLOT, i)) {
+    for (i = 0; i < num_sectors_sec; i++) {
+        sector_sz_pri = boot_img_sector_size(state, BOOT_PRIMARY_SLOT, i);
+        sector_sz_sec = boot_img_sector_size(state, BOOT_SECONDARY_SLOT, i);
+        if (sector_sz_pri != sector_sz_sec) {
+            BOOT_LOG_WRN("Cannot upgrade: not same sector layout");
+            return 0;
+        }
+    }
+
+    if (num_sectors_pri > num_sectors_sec) {
+        if (sector_sz_pri != boot_img_sector_size(state, BOOT_PRIMARY_SLOT, i)) {
             BOOT_LOG_WRN("Cannot upgrade: not same sector layout");
             return 0;
         }
@@ -316,13 +329,11 @@ boot_move_sector_up(int idx, uint32_t sz, struct boot_loader_state *state,
     old_off = boot_img_sector_off(state, BOOT_PRIMARY_SLOT, idx - 1);
 
     if (bs->idx == BOOT_STATUS_IDX_0) {
-        if (bs->source != BOOT_STATUS_SOURCE_PRIMARY_SLOT) {
-            rc = swap_erase_trailer_sectors(state, fap_pri);
-            assert(rc == 0);
+        rc = swap_erase_trailer_sectors(state, fap_pri);
+        assert(rc == 0);
 
-            rc = swap_status_init(state, fap_pri, bs);
-            assert(rc == 0);
-        }
+        rc = swap_status_init(state, fap_pri, bs);
+        assert(rc == 0);
 
         rc = swap_erase_trailer_sectors(state, fap_sec);
         assert(rc == 0);

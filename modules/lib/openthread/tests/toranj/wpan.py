@@ -110,6 +110,9 @@ WPAN_THREAD_PENDING_DATASET = "Thread:PendingDataset"
 WPAN_THREAD_PENDING_DATASET_ASVALMAP = "Thread:PendingDataset:AsValMap"
 WPAN_THREAD_ADDRESS_CACHE_TABLE = "Thread:AddressCacheTable"
 WPAN_THREAD_ADDRESS_CACHE_TABLE_ASVALMAP = "Thread:AddressCacheTable:AsValMap"
+WPAN_THREAD_JOINER_DISCERNER_VALUE = "Joiner:Discerner:Value"
+WPAN_THREAD_JOINER_DISCERNER_BIT_LENGTH = "Joiner:Discerner:BitLength"
+WPAN_THREAD_COMMISSIONER_JOINERS = "Commissioner:Joiners"
 
 WPAN_OT_LOG_LEVEL = "OpenThread:LogLevel"
 WPAN_OT_SLAAC_ENABLED = "OpenThread:SLAAC:Enabled"
@@ -281,7 +284,8 @@ class Node(object):
     """ A wpantund OT NCP instance """
 
     # defines the default verbosity setting (can be changed per `Node`)
-    _VERBOSE = False
+    _VERBOSE = os.getenv('TORANJ_VERBOSE',
+                         'no').lower() in ['true', '1', 't', 'y', 'yes', 'on']
     _SPEED_UP_FACTOR = 1  # defines the default time speed up factor
 
     # path to `wpantund`, `wpanctl`, `ot-ncp-ftd`,`ot-ncp` and `ot-rcp`
@@ -330,7 +334,7 @@ class Node(object):
             self._use_posix_with_rcp = False
 
         if self._use_posix_with_rcp:
-            ncp_socket_path = 'system:{} -s {} {} {}'.format(
+            ncp_socket_path = 'system:{} -s {} spinel+hdlc+uart://{}?forkpty-arg={}'.format(
                 self._OT_NCP_FTD_POSIX, self._SPEED_UP_FACTOR, self._OT_RCP,
                 index)
         else:
@@ -502,7 +506,7 @@ class Node(object):
             'scan -d' +
             (' -c {}'.format(channel) if channel is not None else '') +
             (' -j' if joiner_only else '') +
-            (' -e' if enable_filtering else '') +
+            (' -f' if enable_filtering else '') +
             (' -p {}'.format(panid_filter) if panid_filter is not None else ''))
 
     def permit_join(self, duration_sec=None, port=None, udp=True, tcp=True):
@@ -579,6 +583,15 @@ class Node(object):
     def commissioner_add_joiner(self, eui64, pskd, timeout='100'):
         return self.wpanctl('commissioner joiner-add {} {} {}'.format(
             eui64, timeout, pskd))
+
+    def commissioner_add_joiner_with_discerner(self,
+                                               discerner_value,
+                                               discerner_bit_len,
+                                               pskd,
+                                               timeout='100'):
+        return self.wpanctl(
+            'commissioner joiner-add-discerner {} {} {} {}'.format(
+                discerner_value, discerner_bit_len, timeout, pskd))
 
     def joiner_join(self, pskd):
         return self.wpanctl('joiner --join {}'.format(pskd))
@@ -687,7 +700,7 @@ class Node(object):
     # class methods
 
     @classmethod
-    def init_all_nodes(cls, disable_logs=True, wait_time=15):
+    def init_all_nodes(cls, disable_logs=not _VERBOSE, wait_time=15):
         """Issues a `wpanctl.leave` on all `Node` objects and waits for them to be ready"""
         random.seed(123456)
         time.sleep(0.5)

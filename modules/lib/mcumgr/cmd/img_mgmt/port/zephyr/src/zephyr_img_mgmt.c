@@ -40,7 +40,7 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
  * Determines if the specified area of flash is completely unwritten.
  */
 static int
-zephyr_img_mgmt_flash_check_empty(u8_t fa_id, bool *out_empty)
+zephyr_img_mgmt_flash_check_empty(uint8_t fa_id, bool *out_empty)
 {
     const struct flash_area *fa;
     uint32_t data[16];
@@ -88,10 +88,10 @@ zephyr_img_mgmt_flash_check_empty(u8_t fa_id, bool *out_empty)
 /**
  * Get flash_area ID for a image slot number.
  */
-static u8_t
+static uint8_t
 zephyr_img_mgmt_flash_area_id(int slot)
 {
-    u8_t fa_id;
+    uint8_t fa_id;
 
     switch (slot) {
     case 0:
@@ -331,28 +331,29 @@ img_mgmt_impl_erase_image_data(unsigned int off, unsigned int num_bytes)
     }
 
     /* align requested erase size to the erase-block-size */
-    struct device *dev = flash_area_get_device(fa);
+    const struct device *dev = flash_area_get_device(fa);
     struct flash_pages_info page;
+    off_t page_offset = fa->fa_off + num_bytes - 1;
 
-    rc = flash_get_page_info_by_offs(dev, fa->fa_off + num_bytes -1, &page);
+    rc = flash_get_page_info_by_offs(dev, page_offset, &page);
     if (rc != 0) {
-        LOG_ERR("bad offset (0x%x)", fa->fa_off + num_bytes -1);
+        LOG_ERR("bad offset (0x%lx)", (long)page_offset);
         rc = MGMT_ERR_EUNKNOWN;
         goto end_fa;
     }
 
     size_t erase_size = page.start_offset + page.size - fa->fa_off;
-    
+
     rc = flash_area_erase(fa, 0, erase_size);
 
     if (rc != 0) {
-        LOG_ERR("image slot erase of 0x%x bytes failed (err %d)", erase_size,
+        LOG_ERR("image slot erase of 0x%zx bytes failed (err %d)", erase_size,
                 rc);
         rc = MGMT_ERR_EUNKNOWN;
         goto end_fa;
     }
 
-    LOG_INF("Erased 0x%x bytes of image slot", erase_size);
+    LOG_INF("Erased 0x%zx bytes of image slot", erase_size);
 
     /* erase the image trailer area if it was not erased */
     off = BOOT_TRAILER_IMG_STATUS_OFFS(fa);
@@ -364,13 +365,13 @@ img_mgmt_impl_erase_image_data(unsigned int off, unsigned int num_bytes)
 
         rc = flash_area_erase(fa, off, erase_size);
         if (rc != 0) {
-            LOG_ERR("image slot trailer erase of 0x%x bytes failed (err %d)",
+            LOG_ERR("image slot trailer erase of 0x%zx bytes failed (err %d)",
                     erase_size, rc);
             rc = MGMT_ERR_EUNKNOWN;
             goto end_fa;
         }
 
-        LOG_INF("Erased 0x%x bytes of image slot trailer", erase_size);
+        LOG_INF("Erased 0x%zx bytes of image slot trailer", erase_size);
     }
 
     rc = 0;

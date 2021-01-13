@@ -53,9 +53,9 @@ static void double_to_sensor_value(double val,
  * @param cb Pointer to GPIO callback structure.
  * @param pins Pin mask for callback.
  */
-static void sensor_sim_gpio_callback(struct device *dev,
+static void sensor_sim_gpio_callback(const struct device *dev,
 				struct gpio_callback *cb,
-				u32_t pins)
+				uint32_t pins)
 {
 	ARG_UNUSED(pins);
 	struct sensor_sim_data *drv_data =
@@ -74,7 +74,7 @@ static void sensor_sim_gpio_callback(struct device *dev,
 static void sensor_sim_thread(int dev_ptr)
 {
 	struct device *dev = INT_TO_POINTER(dev_ptr);
-	struct sensor_sim_data *drv_data = dev->driver_data;
+	struct sensor_sim_data *drv_data = dev->data;
 
 	while (true) {
 		if (IS_ENABLED(CONFIG_SENSOR_SIM_TRIGGER_USE_TIMER)) {
@@ -99,9 +99,9 @@ static void sensor_sim_thread(int dev_ptr)
  *
  * @param dev Pointer to device instance.
  */
-static int sensor_sim_init_thread(struct device *dev)
+static int sensor_sim_init_thread(const struct device *dev)
 {
-	struct sensor_sim_data *drv_data = dev->driver_data;
+	struct sensor_sim_data *drv_data = dev->data;
 
 #if defined(CONFIG_SENSOR_SIM_TRIGGER_USE_BUTTON)
 	drv_data->gpio = device_get_binding(drv_data->gpio_port);
@@ -129,7 +129,8 @@ static int sensor_sim_init_thread(struct device *dev)
 
 	k_thread_create(&drv_data->thread, drv_data->thread_stack,
 			CONFIG_SENSOR_SIM_THREAD_STACK_SIZE,
-			(k_thread_entry_t)sensor_sim_thread, dev,
+			// TODO TORA: upmerge confirmation from Jan Tore needed.
+			(k_thread_entry_t)sensor_sim_thread, (void *)dev,
 			NULL, NULL,
 			K_PRIO_COOP(CONFIG_SENSOR_SIM_THREAD_PRIORITY),
 			0, K_NO_WAIT);
@@ -137,12 +138,12 @@ static int sensor_sim_init_thread(struct device *dev)
 	return 0;
 }
 
-static int sensor_sim_trigger_set(struct device *dev,
+static int sensor_sim_trigger_set(const struct device *dev,
 			   const struct sensor_trigger *trig,
 			   sensor_trigger_handler_t handler)
 {
 	int ret = 0;
-	struct sensor_sim_data *drv_data = dev->driver_data;
+	struct sensor_sim_data *drv_data = dev->data;
 
 #if defined(CONFIG_SENSOR_SIM_TRIGGER_USE_BUTTON)
 	gpio_pin_interrupt_configure(drv_data->gpio, drv_data->gpio_pin,
@@ -174,11 +175,11 @@ static int sensor_sim_trigger_set(struct device *dev,
  *
  * @return 0 when successful or negative error code
  */
-static int sensor_sim_init(struct device *dev)
+static int sensor_sim_init(const struct device *dev)
 {
 #if defined(CONFIG_SENSOR_SIM_TRIGGER)
 #if defined(CONFIG_SENSOR_SIM_TRIGGER_USE_BUTTON)
-	struct sensor_sim_data *drv_data = dev->driver_data;
+	struct sensor_sim_data *drv_data = dev->data;
 
 	drv_data->gpio_port = SW0_GPIO_CONTROLLER;
 	drv_data->gpio_pin = SW0_GPIO_PIN;
@@ -210,7 +211,7 @@ static double generate_pseudo_random(void)
  */
 static double generate_sine(double offset, double amplitude)
 {
-	u32_t time = k_uptime_get_32();
+	uint32_t time = k_uptime_get_32();
 
 	return offset + amplitude * sin(time % 65535);
 }
@@ -341,7 +342,7 @@ static int sensor_sim_generate_data(enum sensor_channel chan)
 	return 0;
 }
 
-static int sensor_sim_attr_set(struct device *dev,
+static int sensor_sim_attr_set(const struct device *dev,
 		enum sensor_channel chan,
 		enum sensor_attribute attr,
 		const struct sensor_value *val)
@@ -349,13 +350,13 @@ static int sensor_sim_attr_set(struct device *dev,
 	return 0;
 }
 
-static int sensor_sim_sample_fetch(struct device *dev,
+static int sensor_sim_sample_fetch(const struct device *dev,
 				enum sensor_channel chan)
 {
 	return sensor_sim_generate_data(chan);
 }
 
-static int sensor_sim_channel_get(struct device *dev,
+static int sensor_sim_channel_get(const struct device *dev,
 				  enum sensor_channel chan,
 				  struct sensor_value *sample)
 {

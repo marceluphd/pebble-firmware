@@ -60,8 +60,12 @@ LINK_LOCAL_ALL_NODES_ADDRESS = 'ff02::1'
 LINK_LOCAL_ALL_ROUTERS_ADDRESS = 'ff02::2'
 
 DOMAIN_PREFIX = 'fd00:7d03:7d03:7d03::/64'
-ALL_DOMAIN_BBRS_ADDRESS = 'ff32:40:fd00:7d03:7d03:7d03:0:3'
+DOMAIN_PREFIX_ALTER = 'fd00:7d04:7d04:7d04::/64'
+
 ALL_NETWORK_BBRS_ADDRESS = 'ff32:40:fd00:db8:0:0:0:3'
+
+ALL_DOMAIN_BBRS_ADDRESS = 'ff32:40:fd00:7d03:7d03:7d03:0:3'
+ALL_DOMAIN_BBRS_ADDRESS_ALTER = 'ff32:40:fd00:7d04:7d04:7d04:0:3'
 
 DEFAULT_MASTER_KEY = bytearray([
     0x00,
@@ -332,6 +336,8 @@ def create_deafult_network_tlvs_factories():
         # which is in fact MLE Route64 TLV. Thread specificaton v1.1. - Chapter 5.20
         network_layer.TlvType.MLE_ROUTING:
             create_default_mle_tlv_route64_factory(),
+        network_layer.TlvType.IPv6_ADDRESSES:
+            network_layer.IPv6AddressesFactory(),
     }
 
 
@@ -484,6 +490,7 @@ def create_default_uri_path_based_payload_factories():
         '/d/dg': network_diag_tlvs_factory,
         '/d/dq': network_diag_tlvs_factory,
         '/d/dr': network_diag_tlvs_factory,
+        '/n/mr': network_layer_tlvs_factory,
     }
 
 

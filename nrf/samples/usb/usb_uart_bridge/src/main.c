@@ -14,15 +14,15 @@
 #include <usb/usb_device.h>
 
 /* Overriding weak function to set iSerial runtime. */
-u8_t *usb_update_sn_string_descriptor(void)
+uint8_t *usb_update_sn_string_descriptor(void)
 {
-	static u8_t buf[] = "THINGY91_12PLACEHLDRS";
+	static uint8_t buf[] = "THINGY91_12PLACEHLDRS";
 
 	snprintk(&buf[9], 13, "%04X%08X",
 		(uint32_t)(NRF_FICR->DEVICEADDR[1] & 0x0000FFFF)|0x0000C000,
 		(uint32_t)NRF_FICR->DEVICEADDR[0]);
 
-	return (u8_t *)&buf;
+	return (uint8_t *)&buf;
 }
 
 #define POWER_THREAD_STACKSIZE		CONFIG_IDLE_STACK_SIZE
@@ -46,12 +46,12 @@ static K_FIFO_DEFINE(uart_1_tx_fifo);
 
 struct uart_data {
 	void *fifo_reserved;
-	u8_t buffer[UART_BUF_SIZE];
-	u16_t len;
+	uint8_t buffer[UART_BUF_SIZE];
+	uint16_t len;
 };
 
 static struct serial_dev {
-	struct device *dev;
+	const struct device *dev;
 	void *peer;
 	struct k_fifo *fifo;
 	struct k_sem sem;
@@ -134,7 +134,7 @@ static void uart_interrupt_handler(void *user_data)
 
 	if (uart_irq_tx_ready(dev)) {
 		struct uart_data *buf = k_fifo_get(sd->fifo, K_NO_WAIT);
-		u16_t written = 0;
+		uint16_t written = 0;
 
 		/* Nothing in the FIFO, nothing to send */
 		if (!buf) {
@@ -179,7 +179,7 @@ void main(void)
 	struct serial_dev *usb_1_sd = &devs[1];
 	struct serial_dev *uart_0_sd = &devs[2];
 	struct serial_dev *uart_1_sd = &devs[3];
-	struct device *usb_0_dev, *usb_1_dev, *uart_0_dev, *uart_1_dev;
+	const struct device *usb_0_dev, *usb_1_dev, *uart_0_dev, *uart_1_dev;
 
 	usb_0_dev = device_get_binding("CDC_ACM_0");
 	if (!usb_0_dev) {

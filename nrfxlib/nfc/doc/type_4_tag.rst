@@ -3,6 +3,10 @@
 Type 4 Tag
 ##########
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Type 4 Tag implementation is based on the NFC Forum document *Type 4 Tag Technical Specification Version 1.0 2017-08-28 [T4T]*.
 
 A Type 4 Tag must contain at least the NDEF tag application.
@@ -29,7 +33,7 @@ The Type 4 Tag library supports three different modes of emulation:
      - All APDUs are signaled through the callback.
    * - Read-only T4T NDEF tag
      - The NDEF file cannot be modified.
-       Only NFC field status and :cpp:enumerator:`NFC_T4T_EVENT_NDEF_READ <nfc_t4t_lib::NFC_T4T_EVENT_NDEF_READ>` can be signaled through the callback.
+       Only NFC field status and :c:enumerator:`NFC_T4T_EVENT_NDEF_READ` can be signaled through the callback.
    * - Read-write T4T NDEF tag
      - The NDEF file can be modified.
        The changes to the NDEF content are signaled through the callback.
@@ -54,7 +58,7 @@ It consists of following fields:
    * - NDEF Message
      - NLEN bytes
      - NDEF message.
-       See `NFC Data Exchange Format (NDEF)`_.
+       See :ref:`nrf:ug_nfc_ndef`.
 
 As you see, the NDEF file adds one additional field in comparison to the raw NDEF message.
 It is called NLEN and is required for an NDEF file.

@@ -49,6 +49,25 @@
 #include "zb_types.h"
 #include "zb_channel_page.h"
 #include "zb_errors.h"
+
+/* zb_callback_t is used in osif if we have serial API */
+/*! \addtogroup sched */
+/*! @{ */
+
+/**
+ *   Callback function typedef.
+ *   Callback is function planned to execute by another function.
+ *
+ *   @note Callback must be declared as reentrant for sdcc.
+ *
+ *   @param param - callback parameter - usually, but not always, ref to packet buf
+ *
+ *   See any sample
+ */
+typedef void (ZB_CODE * zb_callback_t)(zb_uint8_t param);
+/*! @} */
+
+
 #include "zb_osif.h"
 #include "zb_debug.h"
 #include "zb_trace.h"
@@ -247,18 +266,7 @@ zb_time_t zb_timer_get(void);
 
 /*! \addtogroup sched */
 /*! @{ */
-
-/**
- *   Callback function typedef.
- *   Callback is function planned to execute by another function.
- *
- *   @note Callback must be declared as reentrant for sdcc.
- *
- *   @param param - callback parameter - usually, but not always, ref to packet buf
- *
- *   See any sample
- */
-typedef void (ZB_CODE * zb_callback_t)(zb_uint8_t param);
+                                                        
 
 typedef zb_ret_t (ZB_CODE * zb_ret_callback_t)(zb_uint8_t param);
 
@@ -308,7 +316,9 @@ zb_ret_t zb_schedule_app_callback(zb_callback_t func, zb_uint8_t param,
 
    See sched sample
  */
+#ifndef ZB_SCHEDULE_APP_CALLBACK
 #define ZB_SCHEDULE_APP_CALLBACK(func, param) zb_schedule_app_callback(func, param, ZB_FALSE, 0, ZB_FALSE)
+#endif /* ZB_SCHEDULE_APP_CALLBACK */
 
 /**
    Schedule two-param callback execution.
@@ -323,7 +333,9 @@ zb_ret_t zb_schedule_app_callback(zb_callback_t func, zb_uint8_t param,
    @return RET_OK or RET_OVERFLOW.
    See sched sample
  */
+#ifndef ZB_SCHEDULE_APP_CALLBACK2
 #define ZB_SCHEDULE_APP_CALLBACK2(func, param, user_param) zb_schedule_app_callback((zb_callback_t)(func),  param, ZB_TRUE, user_param, ZB_FALSE)
+#endif /* ZB_SCHEDULE_APP_CALLBACK2 */
 
 /** @cond internals_doc */
 zb_ret_t zb_schedule_app_alarm(zb_callback_t func, zb_uint8_t param, zb_time_t run_after);
@@ -344,7 +356,9 @@ zb_ret_t zb_schedule_app_alarm(zb_callback_t func, zb_uint8_t param, zb_time_t r
 
    See any sample
  */
+#ifndef ZB_SCHEDULE_APP_ALARM
 #define ZB_SCHEDULE_APP_ALARM(func, param, timeout_bi) zb_schedule_app_alarm(func, param, timeout_bi)
+#endif /* ZB_SCHEDULE_APP_ALARM */
 
 /**
    Special parameter for zb_schedule_alarm_cancel(): cancel alarm once without
@@ -388,32 +402,10 @@ zb_ret_t zb_schedule_alarm_cancel(zb_callback_t func, zb_uint8_t param, zb_uint8
 
    See reporting_srv sample
  */
+#ifndef ZB_SCHEDULE_APP_ALARM_CANCEL
 #define ZB_SCHEDULE_APP_ALARM_CANCEL(func, param) zb_schedule_alarm_cancel((func), (param), NULL)
+#endif /* ZB_SCHEDULE_APP_ALARM_CANCEL */
 
-/**
-   Cancel scheduled alarm and get buffer.
-
-   This function cancel previously scheduled alarm and returns buffer ref associated with alarm.
-   Function is identified by the pointer.
-
-   @param func - function to cancel
-   @param param - parameter to cancel. \see ZB_ALARM_ANY_PARAM. \see ZB_ALARM_ALL_CB
-   @param p_param - [out] pointer of ref buffer from cancelled flag: free buffer if its alarm will be cancel
-   @return RET_OK or error code
-
-   @b Example:
-   @code
-   {
-     zb_uint8_t cancelled_param;
-
-     ZB_SCHEDULE_ALARM_CANCEL_AND_GET_BUF(my_func1, ZB_ALARM_ALL_CB, &cancelled_param);
-     my_func1(cancelled_param);
-   }
-   @endcode
-
-   See reporting_srv sample
- */
-#define ZB_SCHEDULE_APP_ALARM_CANCEL_AND_GET_BUF(func, param, p_param) zb_schedule_alarm_cancel((func), (param), p_param)
 
 /** @cond internals_doc */
 /**

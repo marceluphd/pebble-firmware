@@ -48,6 +48,46 @@
 #define NRFX_CLOCK_ENABLED 1
 #endif
 
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_RC
+#if defined(CONFIG_SOC_SERIES_NRF91X) || defined(CONFIG_SOC_SERIES_NRF53X)
+#define NRFX_CLOCK_CONFIG_LF_SRC 1
+#else
+#define NRFX_CLOCK_CONFIG_LF_SRC 0
+#endif
+#endif // CONFIG_CLOCK_CONTROL_NRF_K32SRC_RC
+
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_XTAL
+#if defined(CONFIG_SOC_SERIES_NRF91X) || defined(CONFIG_SOC_SERIES_NRF53X)
+#define NRFX_CLOCK_CONFIG_LF_SRC 2
+#else
+#define NRFX_CLOCK_CONFIG_LF_SRC 1
+#endif
+#endif // CONFIG_CLOCK_CONTROL_NRF_K32SRC_XTAL
+
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_SYNTH
+#ifdef CONFIG_SOC_SERIES_NRF53X
+#define NRFX_CLOCK_CONFIG_LF_SRC 3
+#else
+#define NRFX_CLOCK_CONFIG_LF_SRC 2
+#endif
+#endif // CONFIG_CLOCK_CONTROL_NRF_K32SRC_SYNTH
+
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_EXT_LOW_SWING
+#define NRFX_CLOCK_CONFIG_LF_SRC 131073
+#endif
+
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_EXT_FULL_SWING
+#define NRFX_CLOCK_CONFIG_LF_SRC 196609
+#endif
+
+#ifdef CONFIG_CLOCK_CONTROL_NRF_K32SRC_RC_CALIBRATION
+#define NRFX_CLOCK_CONFIG_LF_CAL_ENABLED 1
+#endif
+
+#ifdef CONFIG_NRFX_CLOCK_LFXO_TWO_STAGE_ENABLED
+#define NRFX_CLOCK_CONFIG_LFXO_TWO_STAGE_ENABLED 1
+#endif
+
 #ifdef CONFIG_NRFX_COMP
 #define NRFX_COMP_ENABLED 1
 #endif
@@ -339,6 +379,9 @@
 #define NRFX_WDT1_ENABLED 1
 #endif
 
+#if defined(CONFIG_SOC_SERIES_BSIM_NRFXX)
+#include "nrfx_config_bsim.h"
+#endif
 
 /*
  * For chips with TrustZone support, MDK provides CMSIS-Core peripheral
@@ -357,6 +400,8 @@
 
 #if defined(NRF51)
     #include <nrfx_config_nrf51.h>
+#elif defined(NRF52805_XXAA)
+    #include <nrfx_config_nrf52805.h>
 #elif defined(NRF52810_XXAA)
     #include <nrfx_config_nrf52810.h>
 #elif defined(NRF52811_XXAA)

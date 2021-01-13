@@ -3,6 +3,10 @@
 Radio Test
 ##########
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Radio Test sample demonstrates how to configure the radio in a specific mode and then test its performance.
 The sample provides a set of predefined commands that allow you to configure the radio in three modes:
 
@@ -30,16 +34,18 @@ See :ref:`radio_test_ui` for a list of available commands.
 Requirements
 ************
 
-* One of the following development boards:
+The sample supports the following development kits:
 
-  * |nRF5340DK|
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf5340pdk_nrf5340_cpunet, nrf52840dk_nrf52840, nrf52dk_nrf52832
 
-    * Network core
+You can use any one of the development kits listed above.
 
-  * |nRF52840DK|
-  * |nRF52DK|
+.. note::
+   On nRF5340 DK, the sample is designed to run on the network core.
 
-* One of the following testing devices:
+The sample also requires one of the following testing devices:
 
   * Another board with the same sample.
     See :ref:`radio_test_testing_board`.

@@ -43,6 +43,7 @@
 #include <openthread/platform/otns.h>
 
 #include "common/locator.hpp"
+#include "common/non_copyable.hpp"
 #include "common/notifier.hpp"
 #include "mac/mac_types.hpp"
 #include "net/ip6_address.hpp"
@@ -55,7 +56,7 @@ namespace Utils {
  * This class implements the OTNS Stub that interacts with OTNS.
  *
  */
-class Otns : public InstanceLocator
+class Otns : public InstanceLocator, public Notifier::Receiver, private NonCopyable
 {
 public:
     /**
@@ -66,7 +67,7 @@ public:
      */
     explicit Otns(Instance &aInstance)
         : InstanceLocator(aInstance)
-        , mNotifierCallback(aInstance, &Otns::HandleStateChanged, this)
+        , Notifier::Receiver(aInstance, Otns::HandleNotifierEvents)
     {
     }
 
@@ -123,13 +124,27 @@ public:
      */
     static void EmitNeighborChange(otNeighborTableEvent aEvent, Neighbor &aNeighbor);
 
+    /**
+     * This function emits a transmit event to OTNS.
+     *
+     * @param[in]  aFrame  The frame of the transmission.
+     *
+     */
+    static void EmitTransmit(const Mac::TxFrame &aFrame);
+
+    /**
+     * This function emits the device mode to OTNS.
+     *
+     * @param[in] aMode The device mode.
+     *
+     */
+    static void EmitDeviceMode(Mle::DeviceMode aMode);
+
 private:
     static void EmitStatus(const char *aFmt, ...);
 
-    static void HandleStateChanged(Notifier::Callback &aCallback, otChangedFlags aFlags);
-    void        HandleStateChanged(otChangedFlags aFlags);
-
-    Notifier::Callback mNotifierCallback;
+    static void HandleNotifierEvents(Notifier::Receiver &aReceiver, Events aEvents);
+    void        HandleNotifierEvents(Events aEvents);
 };
 
 } // namespace Utils

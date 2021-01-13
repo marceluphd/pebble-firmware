@@ -201,7 +201,7 @@ enum zb_zcl_level_control_options_e
                        (&(move_status_data_ctx## _attr_list)))                              \
   ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST
 
-    
+
 /*!
   @brief Declare attribute list for Level Control cluster
   @param attr_list - attribute list name
@@ -221,7 +221,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_LEVEL_CONTROL_MOVE_STATUS_ID,                                      \
                        (&(move_status_data_ctx## _attr_list)))                                        \
   ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST
-    
+
 /*! @} */ /* Level Control cluster attributes */
 
 /** @cond internals_doc */
@@ -236,7 +236,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_ATTR_LEVEL_CONTROL_CURRENT_LEVEL_ID,                                             \
   ZB_ZCL_ATTR_TYPE_U8,                                                                    \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_REPORTING | ZB_ZCL_ATTR_ACCESS_SCENE, \
-  (zb_voidp_t) data_ptr                                                                   \
+  (void*) data_ptr                                                                   \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_LEVEL_CONTROL_REMAINING_TIME_ID(data_ptr)\
@@ -244,7 +244,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_ATTR_LEVEL_CONTROL_REMAINING_TIME_ID,                                      \
   ZB_ZCL_ATTR_TYPE_U16,                                                             \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                     \
-  (zb_voidp_t) data_ptr                                                             \
+  (void*) data_ptr                                                             \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_LEVEL_CONTROL_OPTIONS_ID(data_ptr)      \
@@ -252,7 +252,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_ATTR_LEVEL_CONTROL_OPTIONS_ID,                                            \
   ZB_ZCL_ATTR_TYPE_8BITMAP,                                                        \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                                   \
-  (zb_voidp_t) data_ptr                                                            \
+  (void*) data_ptr                                                            \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_LEVEL_CONTROL_MOVE_STATUS_ID(data_ptr) \
@@ -260,7 +260,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_ATTR_LEVEL_CONTROL_MOVE_STATUS_ID,                                       \
   ZB_ZCL_ATTR_TYPE_NULL,                                                          \
   ZB_ZCL_ATTR_ACCESS_INTERNAL,                                                    \
-  (zb_voidp_t) data_ptr                                                           \
+  (void*) data_ptr                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_LEVEL_CONTROL_START_UP_CURRENT_LEVEL_ID(data_ptr) \
@@ -268,7 +268,7 @@ enum zb_zcl_level_control_options_e
   ZB_ZCL_ATTR_LEVEL_CONTROL_START_UP_CURRENT_LEVEL_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U8,                                                                       \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                                             \
-  (zb_voidp_t) data_ptr                                                                      \
+  (void*) data_ptr                                                                      \
 }
 /** @internal Structure of addr variables for Move commands
  */
@@ -305,7 +305,7 @@ typedef struct zb_zcl_level_control_move_status_s
 {
   zb_zcl_level_control_move_variables_t move_var;
   zb_uint8_t buf_id;
-} ZB_PACKED_STRUCT zb_zcl_level_control_move_status_t;
+} zb_zcl_level_control_move_status_t;
 
 /*! Number of attributes mandatory for reporting in Level Control cluster */
 #define ZB_ZCL_LEVEL_CONTROL_REPORT_ATTR_COUNT 1
@@ -369,7 +369,7 @@ enum zb_zcl_level_control_cmd_e
 
 /* command request structure */
 
-/*! @brief Structured representsation of Level Control command payload (optional part)
+/*! @brief Structured representation of Level Control command payload (optional part)
     @see ZCL spec, subclause 3.10.2.3.1.1*/
 typedef ZB_PACKED_PRE struct zb_zcl_level_control_req_options_s
 {
@@ -403,7 +403,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_req_options_s
   }                                                                     \
 }
 
-/*! @brief Structured representsation of MOVE_TO_LEVEL command payload
+/*! @brief Structured representation of MOVE_TO_LEVEL command payload
     @see ZCL spec, subclause 3.10.2.3.1.1*/
 typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_to_level_req_s
 {
@@ -484,7 +484,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_to_level_req_s
   @brief Parses Get Move to Level command and fills data request structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param move_to_level_req - variable to save command request
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 
@@ -527,7 +527,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_to_level_req_s
   structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param move_to_level_req - variable to save command request.
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 
@@ -544,7 +544,7 @@ enum zb_zcl_level_control_move_mode_e
   ZB_ZCL_LEVEL_CONTROL_MOVE_MODE_DOWN = 0x01
 };
 
-/*! @brief Structured representsation of MOVE command payload */
+/*! @brief Structured representation of MOVE command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_req_s
 {
   /** Move Mode field */
@@ -622,7 +622,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_req_s
   structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param move_req - variable to save command request
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 
@@ -665,7 +665,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_move_req_s
   structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param move_req - variable to save command request
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 
@@ -680,7 +680,7 @@ enum zb_zcl_level_control_step_mode_e
   ZB_ZCL_LEVEL_CONTROL_STEP_MODE_DOWN = 0x01
 };
 
-/*! @brief Structured representsation of STEP command payload */
+/*! @brief Structured representation of STEP command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_level_control_step_req_s
 {
   /** Step Mode field */
@@ -793,7 +793,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_step_req_s
   structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param step_req - variable to save command request
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 
@@ -847,7 +847,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_level_control_step_req_s
   structure.
   @param data_buf - pointer to zb_buf_t buffer containing command request data
   @param step_req - variable to save command request
-  @param status - succsess or not read parameters - ZB_TRUE or ZB_FALSE
+  @param status - success or not read parameters - ZB_TRUE or ZB_FALSE
   @note data_buf buffer should contain command request payload without ZCL header.
 */
 

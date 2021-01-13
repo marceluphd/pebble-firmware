@@ -36,6 +36,7 @@
 
 #include "openthread-core-config.h"
 
+#include "common/clearable.hpp"
 #include "net/ip6_address.hpp"
 
 namespace ot {
@@ -52,14 +53,14 @@ namespace Ip6 {
  * This class implements message information for an IPv6 message.
  *
  */
-class MessageInfo : public otMessageInfo
+class MessageInfo : public otMessageInfo, public Clearable<MessageInfo>
 {
 public:
     /**
      * This constructor initializes the object.
      *
      */
-    MessageInfo(void) { memset(this, 0, sizeof(*this)); }
+    MessageInfo(void) { Clear(); }
 
     /**
      * This method returns a reference to the local socket address.
@@ -204,7 +205,7 @@ public:
  * This class implements a socket address.
  *
  */
-class SockAddr : public otSockAddr
+class SockAddr : public otSockAddr, public Clearable<SockAddr>
 {
 public:
     /**
@@ -212,12 +213,6 @@ public:
      *
      */
     SockAddr(void) { Clear(); }
-
-    /**
-     * This method clears the object (sets all fields to zero).
-     *
-     */
-    void Clear(void) { memset(this, 0, sizeof(*this)); }
 
     /**
      * This method returns a reference to the IPv6 address.

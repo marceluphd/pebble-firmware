@@ -55,7 +55,7 @@
 
 #define ZB_32BIT_WORD
 
-/* Really need xdata declaration here, not in osif: don't want to include osig.h here */
+/* Really need xdata declaration here, not in osif: don't want to include osif.h here */
 #ifdef ZB_IAR
 #define ZB_XDATA
 #define ZB_CODE
@@ -315,9 +315,6 @@ typedef zb_int_t           zb_long_t;
 typedef zb_uint_t          zb_ulong_t;
 #endif
 
-typedef void *             zb_voidp_t;
-typedef void               zb_void_t;
-
 /** @brief General purpose boolean type. */
 typedef enum zb_bool_e zb_bool_t;
 
@@ -472,7 +469,7 @@ extern ZB_CODE ZB_CONST zb_64bit_addr_t g_unknown_ieee_addr;
  */
 typedef zb_64bit_addr_t zb_ieee_addr_t;
 /*
-  Long (64-bit) Extented Pan id
+  Long (64-bit) Extended Pan ID
  */
 typedef zb_64bit_addr_t zb_ext_pan_id_t;
 
@@ -611,7 +608,7 @@ void zb_htole16(zb_uint8_t ZB_XDATA *ptr, zb_uint8_t ZB_XDATA *val);
 
 #define ZB_HTOLE16_ONPLACE(val) 		\
 {						\
-  zb_uint8_t *pval = (zb_uint8_t*)val;		\
+  zb_uint8_t *pval = (zb_uint8_t*)(&(val));     \
   zb_uint8_t a = pval[0];			\
   pval[0] = pval[1]; 				\
   pval[1] = a;  				\
@@ -659,11 +656,11 @@ void zb_htole32(zb_uint8_t ZB_XDATA *ptr, zb_uint8_t ZB_XDATA *val);
 }
 
 /**
-   Put next 2-bute value into buffer, move pointer
+   Put next 2-bite value into buffer, move pointer
 
    To be used for headers compose.
 
-   @param dst - (in/out) address os the buffer pointer
+   @param dst - (in/out) address of the buffer pointer
           As a side effect it will be incremented by 2.
    @param val - value
  */
@@ -825,12 +822,6 @@ void* zb_put_next_2_htole32(zb_uint8_t *dst, zb_uint32_t val1, zb_uint32_t val2)
  *    @typedef zb_ulong_t
  *    @brief Unsigned long int (at least 4 bytes).
  *
- *    @typedef zb_void_t
- *    @brief Project-local void type.
- *
- *    @typedef zb_voidp_t
- *    @brief Project-local "pointer to void" type.
- *
  *    @typedef zb_bool_t
  *    @brief Boolean type can be ZB_TRUE or ZB_FALSE
  *  @}
@@ -846,7 +837,7 @@ void* zb_put_next_2_htole32(zb_uint8_t *dst, zb_uint32_t val1, zb_uint32_t val2)
  *    @brief Long (64-bit) device address.
  *
  *    @typedef zb_ext_pan_id_t
- *    @brief Long (64-bit) extended Pan Id.
+ *    @brief Long (64-bit) extended Pan ID.
  *
  *    @union zb_addr_u
  *    @brief Union to address either long or short address.
@@ -1047,7 +1038,7 @@ typedef ZB_PACKED_PRE struct zb_int48_s
 
 #else /* ZB_BIG_ENDIAN */
 
-zb_void_t zb_reverse_bytes(zb_uint8_t *ptr, zb_uint8_t *val, zb_uint8_t size);
+void zb_reverse_bytes(zb_uint8_t *ptr, zb_uint8_t *val, zb_uint8_t size);
 
 #define ZB_HTOLE24(ptr, val)   zb_reverse_bytes((zb_uint8_t*)(ptr), (val), ZB_24BIT_SIZE)
 #define ZB_HTOLE48(ptr, val)   zb_reverse_bytes((zb_uint8_t*)(ptr), (val), ZB_48BIT_SIZE)

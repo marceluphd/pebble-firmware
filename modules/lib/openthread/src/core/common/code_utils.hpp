@@ -34,11 +34,9 @@
 #ifndef CODE_UTILS_HPP_
 #define CODE_UTILS_HPP_
 
-#include "openthread-core-config.h"
-
 #include <stdbool.h>
 
-#include "utils/static_assert.hpp"
+#include <openthread/error.h>
 
 /**
  * This macro calculates the number of elements in an array.
@@ -154,5 +152,19 @@
         {                             \
         }                             \
     } while (false)
+
+/**
+ * This function ignores an error explicitly.
+ *
+ * This is primarily used to indicate the intention of developer that
+ * the error can be safely ignored or there is guaranteed to be no error.
+ *
+ * @param[in]  aError  The error to be ignored.
+ *
+ */
+static inline void IgnoreError(otError aError)
+{
+    OT_UNUSED_VARIABLE(aError);
+}
 
 #endif // CODE_UTILS_HPP_

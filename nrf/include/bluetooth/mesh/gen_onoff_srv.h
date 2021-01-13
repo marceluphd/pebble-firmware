@@ -16,6 +16,7 @@
 #define BT_MESH_GEN_ONOFF_SRV_H__
 
 #include <bluetooth/mesh/gen_onoff.h>
+#include <bluetooth/mesh/scene_srv.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,6 +99,8 @@ struct bt_mesh_onoff_srv {
 	struct bt_mesh_model *model;
 	/** Publish parameters. */
 	struct bt_mesh_model_pub pub;
+	/* Scene entry */
+	struct bt_mesh_scene_entry scene;
 };
 
 /** @brief Publish the Generic OnOff Server model status.
@@ -120,7 +123,7 @@ struct bt_mesh_onoff_srv {
  * not configured.
  * @retval -EAGAIN The device has not been provisioned.
  */
-s32_t bt_mesh_onoff_srv_pub(struct bt_mesh_onoff_srv *srv,
+int32_t bt_mesh_onoff_srv_pub(struct bt_mesh_onoff_srv *srv,
 			    struct bt_mesh_msg_ctx *ctx,
 			    const struct bt_mesh_onoff_status *status);
 

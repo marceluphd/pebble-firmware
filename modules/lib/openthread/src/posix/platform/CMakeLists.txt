@@ -67,6 +67,7 @@ add_library(openthread-posix
     misc.cpp
     netif.cpp
     radio.cpp
+    radio_url.cpp
     settings.cpp
     spi_interface.cpp
     system.cpp
@@ -82,9 +83,14 @@ set_target_properties(
         CXX_STANDARD 11
 )
 
-target_link_libraries(openthread-posix PUBLIC
-    openthread-platform
-    util
+target_link_libraries(openthread-posix
+    PUBLIC
+        openthread-platform
+    PRIVATE
+        openthread-url
+        ot-config
+        util
+        $<$<STREQUAL:${CMAKE_SYSTEM_NAME},Linux>:rt>
 )
 
 target_compile_definitions(openthread-posix
@@ -92,7 +98,6 @@ target_compile_definitions(openthread-posix
         ${OT_PUBLIC_DEFINES}
     PRIVATE
         ${OT_PLATFORM_DEFINES}
-        ${OT_PRIVATE_DEFINES}
 )
 
 target_compile_options(openthread-posix PRIVATE
@@ -101,7 +106,6 @@ target_compile_options(openthread-posix PRIVATE
 
 target_include_directories(openthread-posix PRIVATE
     ${OT_PUBLIC_INCLUDES}
-    ${OT_PRIVATE_INCLUDES}
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/core
     ${PROJECT_SOURCE_DIR}/third_party/mbedtls/repo/include

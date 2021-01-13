@@ -150,7 +150,7 @@ enum zb_zcl_identify_trigger_variant_e
 };
 
 
-/*! @brief Structured representsation of Trigger effect command payload */
+/*! @brief Structured representation of Trigger effect command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_identify_effect_req_s
 {
   zb_uint8_t effect_id;         /*!< Effect identify, see @ref zb_zcl_identify_trigger_effect_e */
@@ -299,7 +299,7 @@ typedef struct zb_zcl_identify_effect_user_app_schedule_e
     @param ep - sending endpoint
     @param prfl_id - profile identifier
     @param seq_num - sequence number
-    @param aps_secured - APS sequrity mode
+    @param aps_secured - APS security mode
 */
 #define ZB_ZCL_IDENTIFY_SEND_IDENTIFY_QUERY_RES(                                              \
     buffer, time, addr, dst_addr_mode, dst_ep, ep, prfl_id, seq_num, aps_secured)             \
@@ -405,7 +405,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_identify_query_res_s
   ZB_ZCL_ATTR_IDENTIFY_IDENTIFY_TIME_ID,                               \
   ZB_ZCL_ATTR_TYPE_U16,                                         \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                \
-  (zb_voidp_t) data_ptr                                         \
+  (void*) data_ptr                                         \
 }
 
 #if defined ZB_ZCL_SUPPORT_CLUSTER_SCENES

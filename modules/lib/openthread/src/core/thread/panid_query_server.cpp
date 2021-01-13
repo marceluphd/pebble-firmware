@@ -50,7 +50,7 @@ PanIdQueryServer::PanIdQueryServer(Instance &aInstance)
     : InstanceLocator(aInstance)
     , mChannelMask(0)
     , mPanId(Mac::kPanIdBroadcast)
-    , mTimer(aInstance, &PanIdQueryServer::HandleTimer, this)
+    , mTimer(aInstance, PanIdQueryServer::HandleTimer, this)
     , mPanIdQuery(OT_URI_PATH_PANID_QUERY, &PanIdQueryServer::HandleQuery, this)
 {
     Get<Coap::Coap>().AddResource(mPanIdQuery);
@@ -71,7 +71,7 @@ void PanIdQueryServer::HandleQuery(Coap::Message &aMessage, const Ip6::MessageIn
     VerifyOrExit(aMessage.GetCode() == OT_COAP_CODE_POST, OT_NOOP);
     VerifyOrExit((mask = MeshCoP::ChannelMaskTlv::GetChannelMask(aMessage)) != 0, OT_NOOP);
 
-    SuccessOrExit(Tlv::ReadUint16Tlv(aMessage, MeshCoP::Tlv::kPanId, panId));
+    SuccessOrExit(Tlv::FindUint16Tlv(aMessage, MeshCoP::Tlv::kPanId, panId));
 
     mChannelMask  = mask;
     mCommissioner = aMessageInfo.GetPeerAddr();
@@ -95,7 +95,7 @@ void PanIdQueryServer::HandleScanResult(Mac::ActiveScanResult *aScanResult, void
 
 void PanIdQueryServer::HandleScanResult(Mac::ActiveScanResult *aScanResult)
 {
-    if (aScanResult != NULL)
+    if (aScanResult != nullptr)
     {
         if (aScanResult->mPanId == mPanId)
         {
@@ -108,14 +108,14 @@ void PanIdQueryServer::HandleScanResult(Mac::ActiveScanResult *aScanResult)
     }
 }
 
-otError PanIdQueryServer::SendConflict(void)
+void PanIdQueryServer::SendConflict(void)
 {
     otError                 error = OT_ERROR_NONE;
     MeshCoP::ChannelMaskTlv channelMask;
     Ip6::MessageInfo        messageInfo;
     Coap::Message *         message;
 
-    VerifyOrExit((message = MeshCoP::NewMeshCoPMessage(Get<Coap::Coap>())) != NULL, error = OT_ERROR_NO_BUFS);
+    VerifyOrExit((message = MeshCoP::NewMeshCoPMessage(Get<Coap::Coap>())) != nullptr, error = OT_ERROR_NO_BUFS);
 
     SuccessOrExit(error = message->Init(OT_COAP_TYPE_CONFIRMABLE, OT_COAP_CODE_POST, OT_URI_PATH_PANID_CONFLICT));
     SuccessOrExit(error = message->SetPayloadMarker());
@@ -135,12 +135,15 @@ otError PanIdQueryServer::SendConflict(void)
 
 exit:
 
-    if (error != OT_ERROR_NONE && message != NULL)
+    if (error != OT_ERROR_NONE)
     {
-        message->Free();
-    }
+        otLogWarnMeshCoP("Failed to send panid conflict: %s", otThreadErrorToString(error));
 
-    return error;
+        if (message != nullptr)
+        {
+            message->Free();
+        }
+    }
 }
 
 void PanIdQueryServer::HandleTimer(Timer &aTimer)
@@ -150,7 +153,7 @@ void PanIdQueryServer::HandleTimer(Timer &aTimer)
 
 void PanIdQueryServer::HandleTimer(void)
 {
-    Get<Mac::Mac>().ActiveScan(mChannelMask, 0, HandleScanResult, this);
+    IgnoreError(Get<Mac::Mac>().ActiveScan(mChannelMask, 0, HandleScanResult, this));
     mChannelMask = 0;
 }
 

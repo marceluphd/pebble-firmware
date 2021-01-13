@@ -22,6 +22,7 @@
 #include <drivers/timer/system_timer.h>
 #include <usb/usb_device.h>
 #include <soc.h>
+#include <linker/linker-defs.h>
 
 #include "target.h"
 
@@ -29,14 +30,6 @@
 #include "bootutil/image.h"
 #include "bootutil/bootutil.h"
 #include "flash_map_backend/flash_map_backend.h"
-
-#define  POWER_ON_PIN  15
-#define  POWER_ON_IO_VAL   1
-#define  POWER_OFF_IO_VAL  0
-//  5s  power key , entry firmware update  proc.
-#define  PWK_ENTRY_UPDATE_TIM    5000     
-//  2s   power key active time
-#define  PWK_ACTIVE_TIME    500
 
 #ifdef CONFIG_FW_INFO
 #include <fw_info.h>
@@ -58,6 +51,10 @@ const struct boot_uart_funcs boot_funcs = {
 
 #if CONFIG_MCUBOOT_CLEANUP_ARM_CORE
 #include <arm_cleanup.h>
+#endif
+
+#ifdef CONFIG_SOC_NRF5340_CPUAPP
+#include <dfu/pcd.h>
 #endif
 
 #if defined(CONFIG_LOG) && !defined(CONFIG_LOG_IMMEDIATE)
@@ -90,13 +87,18 @@ K_SEM_DEFINE(boot_log_sem, 1, 1);
 #include <pm_config.h>
 
 #endif
+
+#if CONFIG_MCUBOOT_NRF_CLEANUP_PERIPHERAL
+#include <nrf_cleanup.h>
+#endif
+
 #ifdef CONFIG_SOC_FAMILY_NRF
 #include <hal/nrf_power.h>
 
 static inline bool boot_skip_serial_recovery()
 {
 #if NRF_POWER_HAS_RESETREAS
-    u32_t rr = nrf_power_resetreas_get(NRF_POWER);
+    uint32_t rr = nrf_power_resetreas_get(NRF_POWER);
 
     return !(rr == 0 || (rr & NRF_POWER_RESETREAS_RESETPIN_MASK));
 #else
@@ -115,6 +117,11 @@ MCUBOOT_LOG_MODULE_REGISTER(mcuboot);
 void os_heap_init(void);
 
 #if defined(CONFIG_ARM)
+
+#ifdef CONFIG_SW_VECTOR_RELAY
+extern void *_vector_table_pointer;
+#endif
+
 struct arm_vector_table {
     uint32_t msp;
     uint32_t reset;
@@ -159,10 +166,38 @@ static void do_boot(struct boot_rsp *rsp)
     }
 #endif
 #endif
-
+#if CONFIG_MCUBOOT_NRF_CLEANUP_PERIPHERAL
+    nrf_cleanup_peripheral();
+#endif
 #if CONFIG_MCUBOOT_CLEANUP_ARM_CORE
     cleanup_arm_nvic(); /* cleanup NVIC registers */
 #endif
+
+#if defined(CONFIG_BUILTIN_STACK_GUARD) && \
+    defined(CONFIG_CPU_CORTEX_M_HAS_SPLIM)
+    /* Reset limit registers to avoid inflicting stack overflow on image
+     * being booted.
+     */
+    __set_PSPLIM(0);
+    __set_MSPLIM(0);
+#endif
+
+#ifdef CONFIG_BOOT_INTR_VEC_RELOC
+#if defined(CONFIG_SW_VECTOR_RELAY)
+    _vector_table_pointer = vt;
+#ifdef CONFIG_CPU_CORTEX_M_HAS_VTOR
+    SCB->VTOR = (uint32_t)__vector_relay_table;
+#endif
+#elif defined(CONFIG_CPU_CORTEX_M_HAS_VTOR)
+    SCB->VTOR = (uint32_t)vt;
+#endif /* CONFIG_SW_VECTOR_RELAY */
+#else /* CONFIG_BOOT_INTR_VEC_RELOC */
+#if defined(CONFIG_CPU_CORTEX_M_HAS_VTOR) && defined(CONFIG_SW_VECTOR_RELAY)
+    _vector_table_pointer = _vector_start;
+    SCB->VTOR = (uint32_t)__vector_relay_table;
+#endif
+#endif /* CONFIG_BOOT_INTR_VEC_RELOC */
+
     __set_MSP(vt->msp);
 #if CONFIG_MCUBOOT_CLEANUP_ARM_CORE
     __set_CONTROL(0x00); /* application will configures core on its own */
@@ -296,41 +331,6 @@ void zephyr_boot_log_stop(void)
 #endif/* defined(CONFIG_LOG) && !defined(CONFIG_LOG_IMMEDIATE) &&\
         !defined(CONFIG_LOG_PROCESS_THREAD) */
 
-
-struct device *detect_port;
-
-void LedCtrl(u8_t port, u32_t val)
-{
-    gpio_pin_write(detect_port, port,val ); 
-}
-
-void TimdeDelay(s32_t ms)
-{
-    s32_t time_stamp;
-    volatile s32_t milliseconds_spent;
-    time_stamp = k_uptime_get(); 
-    while(true)
-    {
-        milliseconds_spent = k_uptime_get();
-        if((milliseconds_spent - time_stamp) >=ms)
-            break;
-    }
-}
-
-void PowerOfIndicator(void)
-{  
-    int i;
-    for(i=0; i < 3; i++)  
-    {
-        gpio_pin_write(detect_port, 30,0);
-        TimdeDelay(1000);
-        gpio_pin_write(detect_port, 30,1);
-        TimdeDelay(1000);
-    }
-    gpio_pin_write(detect_port, 15,0);
-    TimdeDelay(5000);
-}
-
 void main(void)
 {
     struct boot_rsp rsp;
@@ -359,8 +359,8 @@ void main(void)
 
 #ifdef CONFIG_MCUBOOT_SERIAL
 
-    //struct device *detect_port;
-    u32_t detect_value = !CONFIG_BOOT_SERIAL_DETECT_PIN_VAL;
+    struct device const *detect_port;
+    uint32_t detect_value = !CONFIG_BOOT_SERIAL_DETECT_PIN_VAL;
 
     detect_port = device_get_binding(CONFIG_BOOT_SERIAL_DETECT_PORT);
     __ASSERT(detect_port, "Error: Bad port for boot serial detection.\n");
@@ -377,7 +377,6 @@ void main(void)
 #endif
            );
     __ASSERT(rc == 0, "Error of boot detect pin initialization.\n");
-    gpio_pin_configure(detect_port, POWER_ON_PIN, GPIO_DIR_OUT);
 
 #ifdef GPIO_INPUT
     rc = gpio_pin_get_raw(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN);
@@ -386,46 +385,12 @@ void main(void)
     rc = gpio_pin_read(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN,
                        &detect_value);
 #endif
-    __ASSERT(rc >= 0, "Error of the reading the detect pin.\n"); 
-    gpio_pin_configure(detect_port, 26,GPIO_DIR_OUT);    //qiuhm 0526
-    gpio_pin_configure(detect_port, 27,GPIO_DIR_OUT);    //qiuhm 0526
-    gpio_pin_configure(detect_port, 30,GPIO_DIR_OUT);    //qiuhm 0526
-    gpio_pin_configure(detect_port, 15, GPIO_DIR_OUT);
-    gpio_pin_write(detect_port, 15,1);
-    gpio_pin_write(detect_port, 27,1);
-    gpio_pin_write(detect_port, 26,1 ); 
-    gpio_pin_write(detect_port, 30,1 );    
-    // check voltage
-    adc_module_init();
-    power_check();    
-    gpio_pin_write(detect_port, 27,0 );    
-    gpio_pin_write(detect_port, 26,1 ); 
-    gpio_pin_write(detect_port, 30,1 );
-	
-		   
-    s32_t time_stamp;
-    s32_t milliseconds_spent;
-    time_stamp = k_uptime_get();   
-    rc = 0;     
-     milliseconds_spent = k_uptime_delta(&time_stamp);
-    while((detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL)&&((milliseconds_spent-time_stamp) < PWK_ENTRY_UPDATE_TIM)){
-        milliseconds_spent = k_uptime_get();
-        if((!rc)&&((milliseconds_spent-time_stamp) >= PWK_ACTIVE_TIME)){
-            gpio_pin_write(detect_port, POWER_ON_PIN, POWER_ON_IO_VAL);
-            rc++;
-        }
-        gpio_pin_read(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN, &detect_value);  
-    }    
-    //if (detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL &&
-    if (((milliseconds_spent-time_stamp) >=PWK_ENTRY_UPDATE_TIM ) &&
+    __ASSERT(rc >= 0, "Error of the reading the detect pin.\n");
+    if (detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL &&
         !boot_skip_serial_recovery()) {
-        BOOT_LOG_INF("Enter the serial recovery mode");        
+        BOOT_LOG_INF("Enter the serial recovery mode");
         rc = boot_console_init();
         __ASSERT(rc == 0, "Error initializing boot console.\n");
-
-gpio_pin_write(detect_port,27, 1 );//qiuhm 0526
-gpio_pin_write(detect_port, 30,0 );
-
         boot_serial_start(&boot_funcs);
         __ASSERT(0, "Bootloader serial process was terminated unexpectedly.\n");
     }
@@ -474,6 +439,9 @@ gpio_pin_write(detect_port, 30,0 );
             ;
     }
 #endif /* USE_PARTITION_MANAGER && CONFIG_FPROTECT */
+#if defined(CONFIG_SOC_NRF5340_CPUAPP) && defined(PM_CPUNET_B0N_ADDRESS)
+    pcd_lock_ram();
+#endif
 
     ZEPHYR_BOOT_LOG_STOP();
 

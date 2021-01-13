@@ -26,26 +26,7 @@ target_include_directories(mbedtls_common INTERFACE
   ${generated_includes}
 )
 
-if(ARM_MBEDTLS_PATH)
-  # Do nothing, just use the provided path
-elseif(WEST)
-  ## Use `west list` to find the mbedtls tree we use (this is not the
-  ## mbedtls tree distributed as a zephyr module).
-  execute_process(
-    COMMAND
-    ${WEST} list mbedtls-nrf --format={posixpath}
-    OUTPUT_VARIABLE
-    west_project_output
-    RESULT_VARIABLE
-    result
-  )
-  string(REGEX REPLACE "[\r\n]+" "" ARM_MBEDTLS_PATH "${west_project_output}")
-  if(${result})
-    message(FATAL_ERROR "Failed to find mbedtls, cannot build security libraries")
-  endif()
-else()
-  message(FATAL_ERROR "west not installed, please provide ARM_MBEDTLS_PATH to CMake to support security libraries")
-endif()
+get_mbedtls_dir(ARM_MBEDTLS_PATH)
 
 set(mbedcrypto_glue_include_path
   "${CMAKE_CURRENT_LIST_DIR}/include/mbedcrypto_glue/mbedtls"
@@ -65,7 +46,7 @@ set(common_includes
 add_subdirectory(src/mbedtls)
 nrf_security_debug("-------- Adding src/mbedtls")
 
-if (CONFIG_NRF_CRYPTO_BACKEND_COMBINATION_0)
+if (CONFIG_NRF_SECURITY_MULTI_BACKEND)
   # a. cc310 and vanilla selection of ciphers --> Renaming and glue
   # b. vanilla selection of ciphers only --> Renaming, but no glue
   add_subdirectory(src/mbedcrypto_glue)

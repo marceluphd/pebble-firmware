@@ -14,7 +14,6 @@
 #define CLR_ERROR_DESC(desc) do {if (desc) *desc = NULL;} while (0)
 #define SET_ERROR_DESC(error, desc) do {if (desc && error) *desc = strndup(error, strlen(error));} while (0)
 
-#define  _DEBUG_HTTP_
 
 /*
  * @brief: send request to http server and get response data then follow the rule parse json string to struct data
@@ -23,7 +22,6 @@
  * $return: successed return 0, (the data will saved to the rule binded struct), failed return negative value
  */
 int res_get_data(const char *request, json_parse_rule *rules) {
-
     char *response = NULL;
 
     if ((response = malloc(IOTEX_EBM_MAX_RES_LEN)) == NULL) {
@@ -53,15 +51,18 @@ int res_get_data(const char *request, json_parse_rule *rules) {
 }
 
 int res_get_hash(const void *action, uint8_t action_id, char *hash, size_t hash_max, char **error_desc) {
-
-    int action_hash_len;
     int action_bytes_len;
     char *response = NULL;
     char request[IOTEX_EMB_MAX_URL_LEN + IOTEX_EMB_MAX_ACB_LEN * 2];
 
-    uint8_t action_hash[SIG_HASH_SIZE + 2];
     uint8_t action_bytes[IOTEX_EMB_MAX_ACB_LEN];
     char action_bytes_str[IOTEX_EMB_MAX_ACB_LEN * 2] = {0};
+
+    /* Response data is a json {"actionHash": "xxxxxx"} */
+    json_parse_rule response_purse_rule[] = {
+        {"actionHash", JSON_TYPE_STR, NULL, (void *)hash, hash_max},
+        {NULL}
+    };
 
     /* Generate tx action bytes */
     switch (action_id) {
@@ -98,6 +99,7 @@ int res_get_hash(const void *action, uint8_t action_id, char *hash, size_t hash_
     }
 
 #ifdef _DEBUG_HTTP_
+    __INFO_MSG__("Request:");
     __INFO_MSG__(request);
 #endif
 
@@ -107,28 +109,18 @@ int res_get_hash(const void *action, uint8_t action_id, char *hash, size_t hash_
     }
 
 #ifdef _DEBUG_HTTP_
+    __INFO_MSG__("Response:");
     __INFO_MSG__(response);
 #endif
 
     CLR_ERROR_DESC(error_desc);
-
-    /* Assume response data is google protocol buffer packed hash string */
-    if ((action_hash_len = signer_str2hex(response, action_hash, sizeof(action_hash))) <= 0) {
-        SET_ERROR_DESC(response, error_desc);
-        free(response);
-        return -IOTEX_E_RESPONSE;
-    }
-
-    /* Unpack hash from hex */
-    if (PB_GET_WTYPE(action_hash[0]) != PB_WT_LD || PB_GET_FIELD(action_hash[0]) != 1 ||
-            action_hash[1] != action_hash_len - 2 || action_hash[1] != SIG_HASH_SIZE) {
-        SET_ERROR_DESC(response, error_desc);
+    if (json_parse_response(response, response_purse_rule) != 0) {
         free(response);
         return -IOTEX_E_RESPONSE;
     }
 
     free(response);
-    return signer_hex2str(action_hash + 2, action_hash_len - 2, hash, hash_max) == SIG_HASH_SIZE * 2 ? 0 : -IOTEX_E_RESPONSE;
+    return 0;
 }
 
 
@@ -139,7 +131,7 @@ int res_get_hash(const void *action, uint8_t action_id, char *hash, size_t hash_
  * #max_size: #actions array size
  * $return: successed return actual get actions size, failed -1
  */
-int res_get_actions(const char *request, struct iotex_st_action_info *actions, size_t max_size) {
+int res_get_actions(const char *request, iotex_st_action_info *actions, size_t max_size) {
 
     int ret;
     int32_t actual_size = 0;
@@ -190,4 +182,13 @@ int res_get_actions(const char *request, struct iotex_st_action_info *actions, s
     }
 
     return actual_size;
+}
+
+int res_get_contract_data(const char *request, iotex_st_contract_data *contract_data) {
+    json_parse_rule contract_rules[] = {
+        {"data", JSON_TYPE_STR, NULL, (void *)contract_data->data, sizeof(contract_data->data)},
+        {NULL}
+    };
+
+    return res_get_data(request, contract_rules);
 }

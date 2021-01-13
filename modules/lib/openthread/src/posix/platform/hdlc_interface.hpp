@@ -74,14 +74,14 @@ public:
      *
      * @note This method should be called before reading and sending spinel frames to the interface.
      *
-     * @param[in]  aPlatformConfig  Platform configuration structure.
+     * @param[in]  aRadioUrl          RadioUrl parsed from radio url.
      *
      * @retval OT_ERROR_NONE          The interface is initialized successfully
      * @retval OT_ERROR_ALREADY       The interface is already initialized.
      * @retval OT_ERROR_INVALID_ARGS  The UART device or executable cannot be found or failed to open/run.
      *
      */
-    otError Init(const otPlatformConfig &aPlatformConfig);
+    otError Init(const RadioUrl &aRadioUrl);
 
     /**
      * This method deinitializes the interface to the RCP.
@@ -145,7 +145,7 @@ public:
      * @param[in] aEvent   The data event.
      *
      */
-    void Process(const Event &aEvent) { Decode(aEvent.mData, aEvent.mDataLength); }
+    void Process(const VirtualTimeEvent &aEvent) { Decode(aEvent.mData, aEvent.mDataLength); }
 #endif
 
 private:
@@ -198,9 +198,9 @@ private:
     static void HandleHdlcFrame(void *aContext, otError aError);
     void        HandleHdlcFrame(otError aError);
 
-    static int OpenFile(const char *aFile, const char *aConfig);
+    static int OpenFile(const RadioUrl &aRadioUrl);
 #if OPENTHREAD_POSIX_CONFIG_RCP_PTY_ENABLE
-    static int ForkPty(const char *aCommand, const char *aArguments);
+    static int ForkPty(const char *aCommand, const char *aRadioUrl);
 #endif
 
     enum

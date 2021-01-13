@@ -27,6 +27,7 @@
 #
 
 include $(abs_top_nlbuild_autotools_dir)/automake/pre.am
+include $(top_srcdir)/src/lib/common.am
 
 lib_LIBRARIES                             = libopenthread-posix.a
 
@@ -50,6 +51,7 @@ libopenthread_posix_a_SOURCES             = \
     misc.cpp                                \
     netif.cpp                               \
     radio.cpp                               \
+    radio_url.cpp                           \
     settings.cpp                            \
     spi_interface.cpp                       \
     system.cpp                              \
@@ -58,10 +60,16 @@ libopenthread_posix_a_SOURCES             = \
     virtual_time.cpp                        \
     $(NULL)
 
+libopenthread_posix_a_LIBADD                                                        = \
+    $(call ot_list_objects,$(top_builddir)/src/lib/url/libopenthread-url.a)           \
+    $(call ot_list_objects,$(top_builddir)/src/lib/platform/libopenthread-platform.a) \
+    $(NULL)
+
 noinst_HEADERS                            = \
     hdlc_interface.hpp                      \
     openthread-posix-config.h               \
     platform-posix.h                        \
+    radio_url.hpp                           \
     $(NULL)
 
 openthread_HEADERS                        = \

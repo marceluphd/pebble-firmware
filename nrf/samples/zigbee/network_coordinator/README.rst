@@ -3,7 +3,11 @@
 Zigbee: Network coordinator
 ###########################
 
-This Zigbee network coordinator sample establishes the Zigbee network and commissions Zigbee devices that want to join the network.
+.. contents::
+   :local:
+   :depth: 2
+
+This :ref:`Zigbee <ug_zigbee>` network coordinator sample establishes the Zigbee network and commissions Zigbee devices that want to join the network.
 
 You can use this sample together with the :ref:`Zigbee light bulb <zigbee_light_bulb_sample>` and the :ref:`Zigbee light switch <zigbee_light_switch_sample>` to set up a basic Zigbee network.
 
@@ -16,15 +20,18 @@ It is a minimal implementation that supports only the network steering commissio
 Requirements
 ************
 
-* One of the following development kits:
+The sample supports the following development kits:
 
-  * |nRF52840DK|
-  * |nRF52833DK|
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf52840dk_nrf52840, nrf52833dk_nrf52833
 
-* One or both of the following samples:
+You can use one of the development kits listed above.
 
-  * The :ref:`Zigbee light bulb <zigbee_light_bulb_sample>` sample programmed on one or more separate devices.
-  * The :ref:`Zigbee light switch <zigbee_light_switch_sample>` sample programmed on one or more separate devices.
+Optionally, you can use this sample with one or both of the following samples:
+
+* The :ref:`Zigbee light bulb <zigbee_light_bulb_sample>` sample programmed on one or more separate devices.
+* The :ref:`Zigbee light switch <zigbee_light_switch_sample>` sample programmed on one or more separate devices.
 
 You can mix different development kits.
 

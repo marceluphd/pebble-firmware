@@ -3,6 +3,10 @@
 Connectivity bridge
 ###################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Connectivity bridge application demonstrates the bridge functionality for the Thingy:91 hardware and is an enhancement to the :ref:`usb_uart_bridge_sample` sample.
 
 Additionally, the application also provides an option of adding the bluetooth functionality by making use of the :ref:`nus_service_readme`.
@@ -48,9 +52,9 @@ Requirements
 
 The sample supports the following nRF52840-based device:
 
-.. include:: /includes/boardname_tables/sample_boardnames.txt
-   :start-after: set17_start
-   :end-before: set17_end
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: thingy91_nrf52840
 
 The sample also requires a USB host which can communicate with CDC ACM devices, such as a Windows or Linux PC.
 
@@ -61,6 +65,12 @@ Building and running
 
 .. include:: /includes/build_and_run.txt
 
+Using RSA signing for MCUboot
+=============================
+
+The Connectivity bridge application adds an overlay configuration for MCUboot.
+This configuration enables the RSA signing of the images for backward compatibility with the MCUboot versions that precede the |NCS| v1.4.0.
+The overlay can be found in :file:`mcuboot_overlay-rsa.conf`.
 
 Testing
 =======

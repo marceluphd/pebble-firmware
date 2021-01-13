@@ -45,13 +45,13 @@ typedef struct
 
 void zb_macll_init(void);
 
-void zb_macll_set_trans_int(void);
-void zb_macll_clear_trans_int(void);
-zb_bool_t zb_macll_get_trans_int(void);
+#define zb_macll_set_trans_int()      /* Transceiver interrupt is a logical or of the TX and RX interrupt flag. */
+#define zb_macll_clear_trans_int()    /* Transceiver interrupt is a logical or of the TX and RX interrupt flag. */
+#define zb_macll_get_trans_int()      (zb_macll_get_rx_flag() || zb_macll_get_tx_flag())
 
-void zb_macll_set_rx_flag(void);
-void zb_macll_clear_rx_flag(void);
-zb_bool_t zb_macll_get_rx_flag(void);
+#define zb_macll_set_rx_flag()        /* Implemented through reading RX status via zb_trans_rx_pending(). */
+#define zb_macll_clear_rx_flag()      /* Implemented through reading RX status via zb_trans_rx_pending(). */
+#define zb_macll_get_rx_flag          zb_trans_rx_pending
 
 void zb_macll_set_tx_flag(void);
 void zb_macll_clear_tx_flag(void);
@@ -95,5 +95,7 @@ void zb_macll_metadata_set_power(zb_bufid_t bufid, int8_t power);
 uint8_t zb_macll_metadata_get_lqi(zb_bufid_t bufid);
 void zb_macll_metadata_set_lqi(zb_bufid_t bufid, uint8_t lqi);
 void zb_macll_set_received_data_status(zb_bufid_t bufid, zb_bool_t pending_bit);
+
+zb_ret_t zb_macll_tx_carrier(zb_uint8_t channel, zb_time_t timeout_bi);
 
 #endif /* ZB_MACLL_H__ */

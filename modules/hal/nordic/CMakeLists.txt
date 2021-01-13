@@ -13,21 +13,24 @@ if(CONFIG_HAS_NRFX)
   zephyr_include_directories(.)
 
   # Define MDK defines globally
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_SERIES_NRF51X  NRF51)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52810       NRF52810_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52811       NRF52811_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52820       NRF52820_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52832       NRF52832_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52833       NRF52833_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52840       NRF52840_XXAA)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF5340_CPUAPP NRF5340_XXAA_APPLICATION)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF5340_CPUNET NRF5340_XXAA_NETWORK)
-  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF9160        NRF9160_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_SERIES_NRF51X       NRF51)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52805            NRF52805_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52810            NRF52810_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52811            NRF52811_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52820            NRF52820_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52832            NRF52832_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_COMPATIBLE_NRF52832 NRF52832_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52833            NRF52833_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF52840            NRF52840_XXAA)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF5340_CPUAPP      NRF5340_XXAA_APPLICATION)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF5340_CPUNET      NRF5340_XXAA_NETWORK)
+  zephyr_compile_definitions_ifdef(CONFIG_SOC_NRF9160             NRF9160_XXAA)
 
   # Connect Kconfig compilation option for Non-Secure software with option required by MDK/nrfx
   zephyr_compile_definitions_ifdef(CONFIG_ARM_NONSECURE_FIRMWARE NRF_TRUSTZONE_NONSECURE)
 
   zephyr_library_sources_ifdef(CONFIG_SOC_SERIES_NRF51X  nrfx/mdk/system_nrf51.c)
+  zephyr_library_sources_ifdef(CONFIG_SOC_NRF52805       nrfx/mdk/system_nrf52805.c)
   zephyr_library_sources_ifdef(CONFIG_SOC_NRF52810       nrfx/mdk/system_nrf52810.c)
   zephyr_library_sources_ifdef(CONFIG_SOC_NRF52811       nrfx/mdk/system_nrf52811.c)
   zephyr_library_sources_ifdef(CONFIG_SOC_NRF52820       nrfx/mdk/system_nrf52820.c)
@@ -40,7 +43,7 @@ if(CONFIG_HAS_NRFX)
 
   zephyr_library_sources(nrfx_glue.c)
 
-  zephyr_library_sources_ifdef(CONFIG_NRFX_PRS     nrfx/drivers/prs/nrfx_prs.c)
+  zephyr_library_sources_ifdef(CONFIG_NRFX_PRS     nrfx/drivers/src/prs/nrfx_prs.c)
 
   zephyr_library_sources_ifdef(CONFIG_NRFX_ADC     nrfx/drivers/src/nrfx_adc.c)
   zephyr_library_sources_ifdef(CONFIG_NRFX_CLOCK   nrfx/drivers/src/nrfx_clock.c)

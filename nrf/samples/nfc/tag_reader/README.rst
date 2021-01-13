@@ -3,6 +3,10 @@
 NFC: Tag reader
 ###############
 
+.. contents::
+   :local:
+   :depth: 2
+
 The NFC Tag reader sample demonstrates how to use the :ref:`st25r3911b_nfc_readme` driver to interact with an NFC-A Tag.
 
 Overview
@@ -29,6 +33,7 @@ Requirements
   * |nRF5340DK|
   * |nRF52840DK|
   * |nRF52DK|
+  * |nRF52833DK|
 
 * NFC Reader ST25R3911B Nucleo expansion board (X-NUCLEO-NFC05A1)
 * NFC Type 2 Tag or Type 4 Tag
@@ -64,6 +69,7 @@ This sample uses the following |NCS| libraries:
 * :ref:`nfc_t2t_parser_readme`
 * :ref:`nfc_ndef_parser_readme`
 * :ref:`nfc_ndef_le_oob_rec_parser_readme`
+* :ref:`nfc_ndef_ch_rec_parser_readme`
 * :ref:`nfc_t4t_apdu_readme`
 * :ref:`nfc_t4t_isodep_readme`
 * :ref:`nfc_t4t_hl_procedure_readme`

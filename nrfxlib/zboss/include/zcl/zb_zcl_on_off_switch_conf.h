@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: On/Off switch configuration definitoins
+/* PURPOSE: On/Off switch configuration definitions
 */
 
 #if ! defined ZB_ZCL_ON_OFF_SWITCH_CONF_H
@@ -146,7 +146,7 @@ enum zb_zcl_on_off_switch_configuration_switch_actions_e
     ZB_ZCL_ATTR_ON_OFF_SWITCH_CONFIGURATION_SWITCH_TYPE_ID,                                      \
     ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                           \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                         \
-    (zb_voidp_t) data_ptr                                                 \
+    (void*) data_ptr                                                 \
   }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_ON_OFF_SWITCH_CONFIGURATION_SWITCH_ACTIONS_ID(data_ptr) \
@@ -154,7 +154,7 @@ enum zb_zcl_on_off_switch_configuration_switch_actions_e
     ZB_ZCL_ATTR_ON_OFF_SWITCH_CONFIGURATION_SWITCH_ACTIONS_ID,                                     \
     ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                             \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                          \
-    (zb_voidp_t) data_ptr                                                   \
+    (void*) data_ptr                                                   \
   }
 
 /** @internal Number of attributes mandatory for reporting on On/Off switch configuration cluster */
@@ -163,7 +163,7 @@ enum zb_zcl_on_off_switch_configuration_switch_actions_e
 /*! @}
  *  @endcond */ /* internals_doc */
 
-/** @brief Declare attribute list for ON/OFF Swith configuration cluster
+/** @brief Declare attribute list for ON/OFF Switch configuration cluster
     @param attr_list - attribute list name
     @param switch_type - pointer to variable to store switch type attribute value
     @param switch_actions - pointer to variable to store switch action attribute value
@@ -180,8 +180,8 @@ enum zb_zcl_on_off_switch_configuration_switch_actions_e
 
 /** @endcond */ /* DOXYGEN_ZCL_SECTION */
 
-zb_void_t zb_zcl_on_off_switch_config_init_server(void);
-zb_void_t zb_zcl_on_off_switch_config_init_client(void);
+void zb_zcl_on_off_switch_config_init_server(void);
+void zb_zcl_on_off_switch_config_init_client(void);
 #define ZB_ZCL_CLUSTER_ID_ON_OFF_SWITCH_CONFIG_SERVER_ROLE_INIT zb_zcl_on_off_switch_config_init_server
 #define ZB_ZCL_CLUSTER_ID_ON_OFF_SWITCH_CONFIG_CLIENT_ROLE_INIT zb_zcl_on_off_switch_config_init_client
 

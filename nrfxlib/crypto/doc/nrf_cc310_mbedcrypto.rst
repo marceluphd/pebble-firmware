@@ -1,24 +1,29 @@
 .. _nrf_cc310_mbedcrypto_readme:
+.. _nrf_cc3xx_mbedcrypto_readme:
 
-nrf_cc310_mbedcrypto library
+nrf_cc3xx_mbedcrypto library
 ############################
 
-The nrf_cc310_mbedcrypto library is software library to interface with the Arm CryptoCell CC310 hardware accelerator that is available on the nRF52840 SoC and the nRF9160 SiP.
+.. contents::
+   :local:
+   :depth: 2
+
+The nrf_cc3xx_mbedcrypto library is software library to interface with the Arm CryptoCell CC310 hardware accelerator that is available on the nRF52840 SoC and the nRF9160 SiP.
 The library adds hardware support for selected cryptographic algorithms.
 
 Integration with mbed TLS
 =========================
-The nrf_cc310_mbedcrypto library provides low-level integration towards selected versions of mbed TLS deliverables.
+The nrf_cc3xx_mbedcrypto library provides low-level integration towards selected versions of mbed TLS deliverables.
 The APIs expressed in this library use the alternative implementation abstraction layer inside mbed TLS for selected modules.
 
 .. note::
-   It is not recommended to link to this library directly. Use the :ref:`nrf_security_readme`.
+   It is not recommended to link to this library directly. Use the :ref:`nrf_security`.
 
 
 Supported cryptographic algorithms
 ==================================
 
-The following tables show the supported cryptographic algorithms in the Arm CryptoCell CC310 hardware accelerator in nRF52840 and nRF9160, as well as the current state of support in the nrf_cc310_mbedcrypto library.
+The following tables show the supported cryptographic algorithms in the Arm CryptoCell CC310 hardware accelerator in nRF52840 and nRF9160, as well as the current state of support in the nrf_cc3xx_mbedcrypto library.
 
 .. note::
    If `no mbed TLS support` is listed in limitations, it indicates that the hardware supports it, but it is not exposed in an API that works with mbed TLS.
@@ -54,7 +59,7 @@ AEAD - Authenticated Encryption with Associated Data
 +-----------------------+-------------------------------+
 
 .. note::
-   APIs currently in mbedtls_extra, as well as APIs with no current HW TLS support, will be supported in upcoming releases of the nrf_cc310_mbedcrypto library.
+   APIs currently in mbedtls_extra, as well as APIs with no current HW TLS support, will be supported in upcoming releases of the nrf_cc3xx_mbedcrypto library.
 
 Diffie-Hellman-Merkel
 ---------------------
@@ -130,16 +135,16 @@ The following API must be used to change the default `calloc`/`free` function:
     }
 
 .. note::
-   This API must be called prior to calling :cpp:func:`mbedtls_platform_setup`.
+   This API must be called prior to calling :c:func:`mbedtls_platform_setup`.
 
 .. note::
-   The library will default to use clib calloc/free functions if the :cpp:func:`mbedtls_platform_set_calloc_free` is not used.
+   The library will default to use clib calloc/free functions if the :c:func:`mbedtls_platform_set_calloc_free` is not used.
 
 
 Initializing the library
 ------------------------
 The library requires initialization before use.
-You can initialize it by calling the :cpp:func:`mbedtls_platform_setup`/:cpp:func:`mbedtls_platform_teardown` functions.
+You can initialize it by calling the :c:func:`mbedtls_platform_setup`/:c:func:`mbedtls_platform_teardown` functions.
 
 .. code-block:: c
     :caption: Initializing the library
@@ -149,7 +154,7 @@ You can initialize it by calling the :cpp:func:`mbedtls_platform_setup`/:cpp:fun
     
     ret = mbedtls_platform_setup(&platform_context);
     if (ret != 0) {
-            /* Failed to initialize nrf_cc310_mbedcrypto platform */
+            /* Failed to initialize nrf_cc3xx_mbedcrypto platform */
             return ret,
     }
 
@@ -160,9 +165,9 @@ You can initialize it by calling the :cpp:func:`mbedtls_platform_setup`/:cpp:fun
 RNG initialization memory management
 ------------------------------------
 
-The nrf_cc310_mbedcrypto library allocates a work buffer during RNG initialization using calloc/free.
+The nrf_cc3xx_mbedcrypto library allocates a work buffer during RNG initialization using calloc/free.
 The size of this work buffer is 6112 bytes.
-An alternative to allocating this on the heap is to provide a reference to a static variable inside the :cpp:type:`mbedtls_platform_context` structure type.
+An alternative to allocating this on the heap is to provide a reference to a static variable inside the :c:type:`mbedtls_platform_context` structure type.
 
 .. code-block:: c
     :caption: Preventing heap-allocation for RNG initialization
@@ -174,12 +179,12 @@ An alternative to allocating this on the heap is to provide a reference to a sta
     
     ret = mbedtls_platform_setup(&platform_context);
     if (ret != 0) {
-            /* Failed to initialize nrf_cc310_mbedcrypto platform */
+            /* Failed to initialize nrf_cc3xx_mbedcrypto platform */
             return ret,
     }
 
 Usage restrictions
 ------------------
 
-On the nRF9160 SiP, the nrf_cc310_mbedcrypto library is restricted to only work in secure processing environment.
+On the nRF9160 SiP, the nrf_cc3xx_mbedcrypto library is restricted to only work in secure processing environment.
 The library uses mutexes to ensure single usage of hardware modules.

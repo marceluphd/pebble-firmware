@@ -177,8 +177,13 @@ public:
      * Write an IPv6 address to the CLI console.
      *
      * @param[in]  aAddress  A reference to the IPv6 address.
+     *
+     * @returns The number of bytes placed in the output queue.
+     *
+     * @retval  -1  Driver is broken.
+     *
      */
-    void OutputIp6Address(const otIp6Address &aAddress) const;
+    int OutputIp6Address(const otIp6Address &aAddress) const;
 
     /**
      * Set a user command table.
@@ -211,6 +216,11 @@ private:
 #endif
 
     void ProcessDomainName(uint8_t aArgsLength, char *aArgs[]);
+
+#if OPENTHREAD_CONFIG_DUA_ENABLE
+    void ProcessDua(uint8_t aArgsLength, char *aArgs[]);
+#endif
+
 #endif // (OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2)
 
 #if OPENTHREAD_FTD
@@ -285,6 +295,11 @@ private:
     void ProcessNetworkDataRegister(uint8_t aArgsLength, char *aArgs[]);
 #endif
     void ProcessNetworkDataShow(uint8_t aArgsLength, char *aArgs[]);
+#if OPENTHREAD_CONFIG_PLATFORM_NETIF_ENABLE
+    void ProcessNetif(uint8_t aArgsLength, char *aArgs[]);
+#endif
+    void ProcessNetstat(uint8_t aArgsLength, char *aArgs[]);
+    int  OutputSocketAddress(const otSockAddr &aAddress);
 #if OPENTHREAD_CONFIG_TMF_NETDATA_SERVICE_ENABLE
     void ProcessService(uint8_t aArgsLength, char *aArgs[]);
 #endif
@@ -325,6 +340,9 @@ private:
 #if OPENTHREAD_FTD
     void ProcessPreferRouterId(uint8_t aArgsLength, char *aArgs[]);
     void ProcessPskc(uint8_t aArgsLength, char *aArgs[]);
+#endif
+    void ProcessRcp(uint8_t aArgsLength, char *aArgs[]);
+#if OPENTHREAD_FTD
     void ProcessReleaseRouterId(uint8_t aArgsLength, char *aArgs[]);
 #endif
     void ProcessReset(uint8_t aArgsLength, char *aArgs[]);

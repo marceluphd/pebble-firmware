@@ -18,4 +18,5 @@ target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/signer.c)
 target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/u128.c)
 target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utils.c)
 target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/abi_pack.c)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/abi_read_contract.c)
 

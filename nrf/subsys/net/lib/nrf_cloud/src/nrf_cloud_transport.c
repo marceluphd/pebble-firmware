@@ -15,6 +15,7 @@
 #include <net/cloud.h>
 #include <logging/log.h>
 #include <sys/util.h>
+#include <settings/settings.h>
 
 #if defined(CONFIG_BSD_LIBRARY)
 #include <nrf_socket.h>
@@ -35,7 +36,7 @@ LOG_MODULE_REGISTER(nrf_cloud_transport, CONFIG_NRF_CLOUD_LOG_LEVEL);
 
 #if !defined(NRF_CLOUD_CLIENT_ID)
 #define NRF_IMEI_LEN 15
-#define NRF_CLOUD_CLIENT_ID_LEN (NRF_IMEI_LEN + 4)
+#define NRF_CLOUD_CLIENT_ID_LEN (sizeof(CONFIG_NRF_CLOUD_CLIENT_ID_PREFIX) - 1 + NRF_IMEI_LEN)
 #else
 #define NRF_CLOUD_CLIENT_ID_LEN (sizeof(NRF_CLOUD_CLIENT_ID) - 1)
 #endif
@@ -102,12 +103,25 @@ static int last_sent_fota_progress;
 #endif
 
 static bool initialized;
+static bool persistent_session;
 
 #define NCT_CC_SUBSCRIBE_ID 1234
 #define NCT_DC_SUBSCRIBE_ID 8765
 
 #define NCT_RX_LIST 0
 #define NCT_TX_LIST 1
+
+static int nct_settings_set(const char *key, size_t len_rd,
+			    settings_read_cb read_cb, void *cb_arg);
+
+#define SETTINGS_NAME "nrf_cloud"
+#define SETTINGS_KEY_PERSISTENT_SESSION "p_sesh"
+#define SETTINGS_FULL_PERSISTENT_SESSION SETTINGS_NAME \
+					 "/" \
+					 SETTINGS_KEY_PERSISTENT_SESSION
+
+SETTINGS_STATIC_HANDLER_DEFINE(nrf_cloud, SETTINGS_NAME, NULL, nct_settings_set,
+			       NULL, NULL);
 
 /* Forward declaration of the event handler registered with MQTT. */
 static void nct_mqtt_evt_handler(struct mqtt_client *client,
@@ -122,10 +136,10 @@ static struct nct {
 	struct mqtt_utf8 dc_rx_endp;
 	struct mqtt_utf8 dc_m_endp;
 	struct mqtt_utf8 job_status_endp;
-	u32_t message_id;
-	u8_t rx_buf[CONFIG_NRF_CLOUD_MQTT_MESSAGE_BUFFER_LEN];
-	u8_t tx_buf[CONFIG_NRF_CLOUD_MQTT_MESSAGE_BUFFER_LEN];
-	u8_t payload_buf[CONFIG_NRF_CLOUD_MQTT_PAYLOAD_BUFFER_LEN];
+	uint32_t message_id;
+	uint8_t rx_buf[CONFIG_NRF_CLOUD_MQTT_MESSAGE_BUFFER_LEN];
+	uint8_t tx_buf[CONFIG_NRF_CLOUD_MQTT_MESSAGE_BUFFER_LEN];
+	uint8_t payload_buf[CONFIG_NRF_CLOUD_MQTT_PAYLOAD_BUFFER_LEN];
 } nct;
 
 static const struct mqtt_topic nct_cc_rx_list[] = {
@@ -169,7 +183,7 @@ static const struct mqtt_topic nct_cc_tx_list[] = {
 	}
 };
 
-static u32_t const nct_cc_rx_opcode_map[] = {
+static uint32_t const nct_cc_rx_opcode_map[] = {
 	NCT_CC_OPCODE_UPDATE_REQ,
 	NCT_CC_OPCODE_UPDATE_REJECT_RSP,
 	NCT_CC_OPCODE_UPDATE_ACCEPT_RSP
@@ -192,36 +206,45 @@ static void dc_endpoint_reset(void)
 }
 
 /* Get the next unused message id. */
-static u32_t dc_get_next_message_id(void)
+static uint32_t dc_get_next_message_id(void)
 {
 	nct.message_id++;
 
-	if ((u16_t)nct.message_id == 0) {
+	if ((uint16_t)nct.message_id == 0) {
 		nct.message_id++;
 	}
 
 	return nct.message_id;
 }
 
-/* Free memory allocated for the data endpoint and reset the endpoint. */
+/* Free memory allocated for the data endpoint and reset the endpoint.
+ *
+ * Casting away const for rx, tx, and m seems to be OK because the
+ * nct_dc_endpoint_set() caller gets the buffers from
+ * json_decode_and_alloc(), which uses nrf_cloud_malloc() to call
+ * k_malloc().
+ *
+ * The job_status_endp.utf8 buffer is allocated in this file as
+ * non-const, so casting away const here is safe.
+ */
 static void dc_endpoint_free(void)
 {
 	if (nct.dc_rx_endp.utf8 != NULL) {
-		nrf_cloud_free(nct.dc_rx_endp.utf8);
+		nrf_cloud_free((void *)nct.dc_rx_endp.utf8);
 	}
 	if (nct.dc_tx_endp.utf8 != NULL) {
-		nrf_cloud_free(nct.dc_tx_endp.utf8);
+		nrf_cloud_free((void *)nct.dc_tx_endp.utf8);
 	}
 	if (nct.dc_m_endp.utf8 != NULL) {
-		nrf_cloud_free(nct.dc_m_endp.utf8);
+		nrf_cloud_free((void *)nct.dc_m_endp.utf8);
 	}
 	if (nct.job_status_endp.utf8 != NULL) {
-		nrf_cloud_free(nct.job_status_endp.utf8);
+		nrf_cloud_free((void *)nct.job_status_endp.utf8);
 	}
 	dc_endpoint_reset();
 }
 
-static u32_t dc_send(const struct nct_dc_data *dc_data, u8_t qos)
+static uint32_t dc_send(const struct nct_dc_data *dc_data, uint8_t qos)
 {
 	if (dc_data == NULL) {
 		return -EINVAL;
@@ -235,7 +258,7 @@ static u32_t dc_send(const struct nct_dc_data *dc_data, u8_t qos)
 
 	/* Populate payload. */
 	if ((dc_data->data.len != 0) && (dc_data->data.ptr != NULL)) {
-		publish.message.payload.data = (u8_t *)dc_data->data.ptr;
+		publish.message.payload.data = (uint8_t *)dc_data->data.ptr;
 		publish.message.payload.len = dc_data->data.len;
 	}
 
@@ -248,19 +271,19 @@ static u32_t dc_send(const struct nct_dc_data *dc_data, u8_t qos)
 	return mqtt_publish(&nct.client, &publish);
 }
 
-static bool strings_compare(const char *s1, const char *s2, u32_t s1_len,
-			    u32_t s2_len)
+static bool strings_compare(const char *s1, const char *s2, uint32_t s1_len,
+			    uint32_t s2_len)
 {
 	return (strncmp(s1, s2, MIN(s1_len, s2_len))) ? false : true;
 }
 
 /* Verify if the topic is a control channel topic or not. */
-static bool control_channel_topic_match(u32_t list_id,
+static bool control_channel_topic_match(uint32_t list_id,
 					const struct mqtt_topic *topic,
 					enum nct_cc_opcode *opcode)
 {
 	struct mqtt_topic *topic_list;
-	u32_t list_size;
+	uint32_t list_size;
 
 	if (list_id == NCT_RX_LIST) {
 		topic_list = (struct mqtt_topic *)nct_cc_rx_list;
@@ -272,7 +295,7 @@ static bool control_channel_topic_match(u32_t list_id,
 		return false;
 	}
 
-	for (u32_t index = 0; index < list_size; index++) {
+	for (uint32_t index = 0; index < list_size; index++) {
 		if (strings_compare(
 			    topic->topic.utf8, topic_list[index].topic.utf8,
 			    topic->topic.size, topic_list[index].topic.size)) {
@@ -304,7 +327,7 @@ static int nct_client_id_get(char *id)
 	__ASSERT_NO_MSG(bytes_read == NRF_IMEI_LEN);
 	imei_buf[NRF_IMEI_LEN] = 0;
 
-	snprintf(id, NRF_CLOUD_CLIENT_ID_LEN + 1, "nrf-%s", imei_buf);
+	snprintf(id, NRF_CLOUD_CLIENT_ID_LEN + 1, "%s%s", CONFIG_NRF_CLOUD_CLIENT_ID_PREFIX, imei_buf);
 
 	ret = nrf_close(at_socket_fd);
 	__ASSERT_NO_MSG(ret == 0);
@@ -394,7 +417,7 @@ static int nct_provision(void)
 		/* Delete certificates */
 		nrf_sec_tag_t sec_tag = CONFIG_NRF_CLOUD_SEC_TAG;
 
-		for (enum modem_key_mgnt_cred_type_t type = 0; type < 5;
+		for (enum modem_key_mgnt_cred_type type = 0; type < 5;
 		     type++) {
 			err = modem_key_mgmt_delete(sec_tag, type);
 			LOG_DBG("modem_key_mgmt_delete(%u, %d) => result = %d",
@@ -491,7 +514,7 @@ static int job_status_stream(const struct nct_dc_data *dc_data)
 
 	/* Populate payload. */
 	if ((dc_data->data.len != 0) && (dc_data->data.ptr != NULL)) {
-		publish.message.payload.data = (u8_t *)dc_data->data.ptr;
+		publish.message.payload.data = (uint8_t *)dc_data->data.ptr;
 		publish.message.payload.len = dc_data->data.len;
 	}
 
@@ -585,7 +608,8 @@ static void aws_fota_cb_handler(struct aws_fota_event *fota_evt)
 		}
 
 		prog.data.ptr = fota_status;
-		LOG_ERR("JOB STATUS: %s", log_strdup(prog.data.ptr));
+		LOG_DBG("Job status (ID/progress): %s",
+			log_strdup(prog.data.ptr));
 		err = job_status_stream(&prog);
 		if (err) {
 			LOG_ERR("job_status_stream failed %d", err);
@@ -598,6 +622,66 @@ static void aws_fota_cb_handler(struct aws_fota_event *fota_evt)
 }
 #endif /* defined(CONFIG_AWS_FOTA) */
 
+static int nct_settings_set(const char *key, size_t len_rd,
+			    settings_read_cb read_cb, void *cb_arg)
+{
+	if (!key) {
+		return -EINVAL;
+	}
+
+	int read_val;
+
+	LOG_DBG("Settings key: %s, size: %d", log_strdup(key), len_rd);
+
+	if (!strncmp(key, SETTINGS_KEY_PERSISTENT_SESSION,
+		     strlen(SETTINGS_KEY_PERSISTENT_SESSION)) &&
+	    (len_rd == sizeof(read_val))) {
+		if (read_cb(cb_arg, (void *)&read_val, len_rd) == len_rd) {
+#if !IS_ENABLED(CONFIG_MQTT_CLEAN_SESSION)
+			persistent_session = (bool)read_val;
+#endif
+			LOG_DBG("Read setting val: %d", read_val);
+			return 0;
+		}
+	}
+	return -ENOTSUP;
+}
+
+int save_session_state(const int session_valid)
+{
+	int ret = 0;
+
+#if !IS_ENABLED(CONFIG_MQTT_CLEAN_SESSION)
+	LOG_DBG("Setting session state: %d", session_valid);
+	persistent_session = (bool)session_valid;
+	ret = settings_save_one(SETTINGS_FULL_PERSISTENT_SESSION,
+				&session_valid, sizeof(session_valid));
+#endif
+	return ret;
+}
+
+static int nct_settings_init(void)
+{
+	int ret = 0;
+
+#if !IS_ENABLED(CONFIG_MQTT_CLEAN_SESSION)
+	ret = settings_subsys_init();
+	if (ret) {
+		LOG_ERR("Settings init failed: %d", ret);
+		return ret;
+	}
+
+	ret = settings_load_subtree(settings_handler_nrf_cloud.name);
+	if (ret) {
+		LOG_ERR("Cannot load settings: %d", ret);
+	}
+#else
+	ARG_UNUSED(settings_handler_nrf_cloud);
+#endif
+
+	return ret;
+}
+
 /* Connect to MQTT broker. */
 int nct_mqtt_connect(void)
 {
@@ -608,15 +692,15 @@ int nct_mqtt_connect(void)
 
 		nct.client.broker = (struct sockaddr *)&nct.broker;
 		nct.client.evt_cb = nct_mqtt_evt_handler;
-		nct.client.client_id.utf8 = (u8_t *)client_id_buf;
+		nct.client.client_id.utf8 = (uint8_t *)client_id_buf;
 		nct.client.client_id.size = strlen(client_id_buf);
 		nct.client.protocol_version = MQTT_VERSION_3_1_1;
 		nct.client.password = NULL;
 		nct.client.user_name = NULL;
-#if defined(CONFIG_CLOUD_PERSISTENT_SESSIONS)
-		nct.client.clean_session = 0U;
-		LOG_DBG("mqtt_connect requesting persistent session");
-#endif
+		nct.client.clean_session = persistent_session ? 0U : 1U;
+		LOG_DBG("MQTT clean session flag: %u",
+			nct.client.clean_session);
+
 #if defined(CONFIG_MQTT_LIB_TLS)
 		nct.client.transport.type = MQTT_TRANSPORT_SECURE;
 		nct.client.rx_buf = nct.rx_buf;
@@ -648,7 +732,7 @@ int nct_mqtt_connect(void)
 		return err;
 	}
 
-	if (IS_ENABLED(CONFIG_NRF_CLOUD_NONBLOCKING_SEND)) {
+	if (IS_ENABLED(CONFIG_NRF_CLOUD_SEND_NONBLOCKING)) {
 		err = fcntl(nct_socket_get(), F_SETFL, O_NONBLOCK);
 		if (err == -1) {
 			LOG_ERR("Failed to set socket as non-blocking, err: %d",
@@ -657,6 +741,20 @@ int nct_mqtt_connect(void)
 			err = 0;
 		} else {
 			LOG_INF("Using non-blocking socket");
+		}
+	}  else if (IS_ENABLED(CONFIG_NRF_CLOUD_SEND_TIMEOUT)) {
+		struct timeval timeout = {
+			.tv_sec = CONFIG_NRF_CLOUD_SEND_TIMEOUT_SEC
+		};
+
+		err = setsockopt(nct_socket_get(), SOL_SOCKET, SO_SNDTIMEO,
+				 &timeout, sizeof(timeout));
+		if (err == -1) {
+			LOG_ERR("Failed to set timeout, errno: %d", errno);
+			err = 0;
+		} else {
+			LOG_INF("Using socket send timeout of %d seconds",
+				CONFIG_NRF_CLOUD_SEND_TIMEOUT_SEC);
 		}
 	}
 
@@ -704,8 +802,15 @@ static void nct_mqtt_evt_handler(struct mqtt_client *const mqtt_client,
 
 		LOG_DBG("MQTT_EVT_CONNACK: result %d", _mqtt_evt->result);
 
+		evt.param.flag = (p->session_present_flag != 0) &&
+				 persistent_session;
+
+		if (persistent_session && (p->session_present_flag == 0)) {
+			/* Session not present, clear saved state */
+			save_session_state(0);
+		}
+
 		evt.type = NCT_EVT_CONNECTED;
-		evt.param.flag = (p->session_present_flag != 0);
 		event_notify = true;
 		break;
 	}
@@ -774,6 +879,13 @@ static void nct_mqtt_evt_handler(struct mqtt_client *const mqtt_client,
 		if (_mqtt_evt->param.suback.message_id == NCT_DC_SUBSCRIBE_ID) {
 			evt.type = NCT_EVT_DC_CONNECTED;
 			event_notify = true;
+
+			/* Subscribing complete, session is now valid */
+			err = save_session_state(1);
+			if (err) {
+				LOG_ERR("Failed to save session state: %d",
+					err);
+			}
 		}
 		break;
 	}
@@ -822,6 +934,11 @@ int nct_init(void)
 	dc_endpoint_reset();
 
 	err = nct_topics_populate();
+	if (err) {
+		return err;
+	}
+
+	err = nct_settings_init();
 	if (err) {
 		return err;
 	}
@@ -938,7 +1055,7 @@ int nct_cc_connect(void)
 
 int nct_cc_send(const struct nct_cc_data *cc_data)
 {
-	static u32_t msg_id;
+	static uint32_t msg_id;
 
 	if (cc_data == NULL) {
 		LOG_ERR("cc_data == NULL");
@@ -960,7 +1077,7 @@ int nct_cc_send(const struct nct_cc_data *cc_data)
 
 	/* Populate payload. */
 	if ((cc_data->data.len != 0) && (cc_data->data.ptr != NULL)) {
-		publish.message.payload.data = (u8_t *)cc_data->data.ptr,
+		publish.message.payload.data = (uint8_t *)cc_data->data.ptr,
 		publish.message.payload.len = cc_data->data.len;
 	}
 
@@ -1002,40 +1119,42 @@ void nct_dc_endpoint_set(const struct nrf_cloud_data *tx_endp,
 	 */
 	dc_endpoint_free();
 
-	nct.dc_tx_endp.utf8 = (u8_t *)tx_endp->ptr;
+	nct.dc_tx_endp.utf8 = (const uint8_t *)tx_endp->ptr;
 	nct.dc_tx_endp.size = tx_endp->len;
 
-	nct.dc_rx_endp.utf8 = (u8_t *)rx_endp->ptr;
+	nct.dc_rx_endp.utf8 = (const uint8_t *)rx_endp->ptr;
 	nct.dc_rx_endp.size = rx_endp->len;
 
 	if (m_endp != NULL) {
-		nct.dc_m_endp.utf8 = (u8_t *)m_endp->ptr;
+		nct.dc_m_endp.utf8 = (const uint8_t *)m_endp->ptr;
 		nct.dc_m_endp.size = m_endp->len;
 
 #if defined(CONFIG_AWS_FOTA)
+		void *job_status_utf8;
 		int ret;
 
 		nct.job_status_endp.size =
 			nct.dc_m_endp.size + NCT_TOPIC_PREFIX_M_D_LEN +
 			NRF_CLOUD_CLIENT_ID_LEN + NCT_JOB_STATUS_TOPIC_LEN + 1;
-		nct.job_status_endp.utf8 =
-			nrf_cloud_malloc(nct.job_status_endp.size);
-		if (nct.job_status_endp.utf8 == NULL) {
+		job_status_utf8 = nrf_cloud_malloc(nct.job_status_endp.size);
+		if (job_status_utf8 == NULL) {
 			LOG_ERR("Failed to allocate mem for job status topic");
+			nct.job_status_endp.utf8 = NULL;
+			nct.job_status_endp.size = 0;
 			return;
 		}
-
-		ret = snprintf(nct.job_status_endp.utf8,
+		ret = snprintf(job_status_utf8,
 			       nct.job_status_endp.size, "%s%s%s%s",
 			       nct.dc_m_endp.utf8, NCT_M_D_TOPIC_PREFIX,
 			       client_id_buf, NCT_JOB_STATUS_TOPIC);
 		if ((ret <= 0) || (ret >= nct.job_status_endp.size)) {
-			nrf_cloud_free(nct.job_status_endp.utf8);
+			nrf_cloud_free(job_status_utf8);
 			nct.job_status_endp.utf8 = NULL;
 			nct.job_status_endp.size = 0;
 			LOG_ERR("Failed to build job status topic");
 			return;
 		}
+		nct.job_status_endp.utf8 = (const uint8_t *)job_status_utf8;
 		/* size is actually string length */
 		nct.job_status_endp.size = ret;
 #endif

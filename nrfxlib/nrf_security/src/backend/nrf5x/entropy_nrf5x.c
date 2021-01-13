@@ -5,21 +5,18 @@
  */
 #include <assert.h>
 #include <zephyr.h>
-#include <entropy.h>
+#include <device.h>
+#include <drivers/entropy.h>
 #include <mbedtls/entropy.h>
-
-static_assert(defined(CONFIG_ENTROPY_GENERATOR), "CONFIG_ENTROPY_GENERATOR is not enabled.");
-static_assert(defined(CONFIG_ENTROPY_HAS_DRIVER), "CONFIG_ENTROPY_HAS_DRIVER is not set.");
 
 int mbedtls_hardware_poll(void *data,
                           unsigned char *output,
                           size_t len,
                           size_t *olen )
 {
-    struct device *dev;
-    u8_t buffer[MBEDTLS_ENTROPY_MAX_GATHER] = { 0 };
-    int ret;
-    
+    const struct device *dev;
+    size_t chunk_size;
+
     (void)data;
 
     if (output == NULL)
@@ -37,21 +34,25 @@ int mbedtls_hardware_poll(void *data,
         return -1;
     }
 
-    if (len != MBEDTLS_ENTROPY_MAX_GATHER)
-    {
-        return -1;
-    }
+    dev = device_get_binding(DT_CHOSEN_ZEPHYR_ENTROPY_LABEL);
 
-    dev = device_get_binding(CONFIG_ENTROPY_NAME);
     if (!dev)
     {
         return MBEDTLS_ERR_ENTROPY_NO_SOURCES_DEFINED;
     }
 
-    ret = entropy_get_entropy(dev, buffer, MBEDTLS_ENTROPY_MAX_GATHER);
-    if (ret)
+    while (len > 0)
     {
-        return MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
+        chunk_size = MIN(MBEDTLS_ENTROPY_MAX_GATHER, len);
+
+        if (entropy_get_entropy(dev, output, chunk_size) < 0)
+        {
+            return MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
+        }
+
+        *olen += chunk_size;
+        output += chunk_size;
+        len -= chunk_size;
     }
 
     return 0;

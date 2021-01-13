@@ -50,6 +50,37 @@
 extern "C" {
 #endif
 
+/*
+ * Suppress use of anomaly workarounds in nrfx drivers that would directly
+ * access hardware registers.
+ */
+#define USE_WORKAROUND_FOR_ANOMALY_132 0
+
+/*
+ * When nrfx drivers are compiled for a real SoC, this macro is inherited from
+ * CMSIS. The below definition is needed when those drivers are compiled for
+ * the simulated target.
+ */
+#ifndef __STATIC_INLINE
+#define __STATIC_INLINE static inline
+#endif
+
+#ifndef NRFX_STATIC_INLINE
+#ifdef NRFX_DECLARE_ONLY
+#define NRFX_STATIC_INLINE
+#else
+#define NRFX_STATIC_INLINE static inline
+#endif
+#endif // NRFX_STATIC_INLINE
+
+#ifndef NRF_STATIC_INLINE
+#ifdef NRF_DECLARE_ONLY
+#define NRF_STATIC_INLINE
+#else
+#define NRF_STATIC_INLINE static inline
+#endif
+#endif // NRF_STATIC_INLINE
+
 /**
  * @defgroup nrfx_common Common module
  * @{
@@ -143,6 +174,39 @@ extern "C" {
  */
 #define NRFX_ARRAY_SIZE(array) (sizeof(array) / sizeof((array)[0]))
 
+/**
+ * @brief Macro for getting the offset (in bytes) from the beginning of a structure
+ *        of the specified type to its specified member.
+ *
+ * @param[in] type   Structure type.
+ * @param[in] member Structure member whose offset is searched for.
+ *
+ * @return Member offset in bytes.
+ */
+#define NRFX_OFFSETOF(type, member)  ((size_t)&(((type *)0)->member))
+
+/**
+ * @brief Macro for waiting until condition is met.
+ *
+ * @param[in]  condition Condition to meet.
+ * @param[in]  attempts  Maximum number of condition checks. Must not be 0.
+ * @param[in]  delay_us  Delay between consecutive checks, in microseconds.
+ * @param[out] result    Boolean variable to store the result of the wait process.
+ *                       Set to true if the condition is met or false otherwise.
+ */
+#define NRFX_WAIT_FOR(condition, attempts, delay_us, result) \
+do {                                                         \
+    result =  false;                                         \
+    uint32_t remaining_attempts = (attempts);                \
+    do {                                                     \
+           if (condition)                                    \
+           {                                                 \
+               result =  true;                               \
+               break;                                        \
+           }                                                 \
+           NRFX_DELAY_US(delay_us);                          \
+    } while (--remaining_attempts);                          \
+} while(0)
 
 unsigned int nrfx_peripheral_from_base_address(void const * p_reg);
 
@@ -173,12 +237,17 @@ unsigned int nrfx_peripheral_from_base_address(void const * p_reg);
  */
 #define NRFX_IRQ_NUMBER_GET(base_addr)  NRFX_PERIPHERAL_ID_GET(base_addr)
 
-static inline bool nrfx_is_word_aligned(void const * p_object)
+/**
+ * @brief IRQ handler type.
+ */
+typedef void (*nrfx_irq_handler_t)(void);
+
+NRF_STATIC_INLINE bool nrfx_is_word_aligned(void const * p_object)
 {
     return ((((uint32_t)p_object) & 0x3u) == 0u);
 }
 
-static inline IRQn_Type nrfx_get_irq_number(void const * p_reg)
+NRF_STATIC_INLINE IRQn_Type nrfx_get_irq_number(void const * p_reg)
 {
     return (IRQn_Type)NRFX_IRQ_NUMBER_GET(p_reg);
 }
@@ -189,4 +258,4 @@ static inline IRQn_Type nrfx_get_irq_number(void const * p_reg)
 }
 #endif
 
-#endif // NRFX_COMMON_H__
+#endif /* BS_NRFX_COMMON_H__ */

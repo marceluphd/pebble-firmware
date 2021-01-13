@@ -18,7 +18,7 @@
 #define LED_PORT	DT_GPIO_LABEL(DT_ALIAS(led0), gpios)
 #define TLS_SEC_TAG 42
 
-static struct		device *gpiob;
+static const struct	device *gpiob;
 static struct		gpio_callback gpio_cb;
 static struct k_work	fota_work;
 
@@ -37,7 +37,7 @@ int cert_provision(void)
 	BUILD_ASSERT(sizeof(cert) < KB(4), "Certificate too large");
 	int err;
 	bool exists;
-	u8_t unused;
+	uint8_t unused;
 
 	err = modem_key_mgmt_exists(TLS_SEC_TAG,
 				    MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN,
@@ -89,8 +89,8 @@ static void app_dfu_transfer_start(struct k_work *unused)
 	retval = fota_download_start(CONFIG_DOWNLOAD_HOST,
 				     CONFIG_DOWNLOAD_FILE,
 				     sec_tag,
-				     CONFIG_DOWNLOAD_PORT,
-				     apn);
+				     apn,
+				     0);
 	if (retval != 0) {
 		/* Re-enable button callback */
 		gpio_pin_interrupt_configure(gpiob,
@@ -108,7 +108,7 @@ static void app_dfu_transfer_start(struct k_work *unused)
  */
 static int led_app_version(void)
 {
-	struct device *dev;
+	const struct device *dev;
 
 	dev = device_get_binding(LED_PORT);
 	if (dev == 0) {
@@ -128,8 +128,8 @@ static int led_app_version(void)
 	return 0;
 }
 
-void dfu_button_pressed(struct device *gpiob, struct gpio_callback *cb,
-			u32_t pins)
+void dfu_button_pressed(const struct device *gpiob, struct gpio_callback *cb,
+			uint32_t pins)
 {
 	k_work_submit(&fota_work);
 	gpio_pin_interrupt_configure(gpiob, DT_GPIO_PIN(DT_ALIAS(sw0), gpios),

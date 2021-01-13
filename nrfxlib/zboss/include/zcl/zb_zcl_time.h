@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: Time cluster defintions
+/* PURPOSE: Time cluster definitions
 */
 
 #if ! defined ZB_ZCL_TIME_H
@@ -93,7 +93,7 @@ typedef struct zb_zcl_time_sync_payload_s
 {
   /** Network time received from the most authoritative Time server */
   zb_uint32_t time;
-  /** Source addres of the most authoritative Time server */
+  /** Source address of the most authoritative Time server */
   zb_uint16_t addr;
   /** Source endpoint of the most authoritative Time server */
   zb_uint8_t endpoint;
@@ -115,6 +115,41 @@ typedef struct zb_zcl_time_sync_payload_s
  *
  */
 #define ZB_ZCL_TIME_SET_REAL_TIME_CLOCK_CB(func_ptr) (zb_zcl_set_real_time_clock_callback((func_ptr)))
+
+
+#define ZB_TIME_COMPARE_AUTH_LEVEL(new_level, new_short_addr, old_level, old_short_addr)  \
+        (((new_level) > (old_level)) ||                                                   \
+         (((old_level) > ZB_ZCL_TIME_SERVER_NOT_CHOSEN) &&                                \
+          ((new_level) == (old_level)) &&                                                 \
+          ((new_short_addr) < (old_short_addr))))
+
+
+/**
+ * @brief Callback to call when new time server found during synchronization.
+ */
+typedef void (*zb_zcl_time_sync_time_server_found_cb_t)(zb_ret_t status, zb_uint32_t auth_level, zb_uint16_t short_addr,
+                                                        zb_uint8_t ep, zb_uint32_t nw_time);
+
+
+/**
+ * @brief Start time synchronization.
+ * @param endpoint enpoint for each time server synchronization shall be started.
+ * @param cb callback that will be called on each successfull time server discovery.
+ * @details Start time synchronization process. If device doesn't have master bit set in Time Status attribute of Time Cluster
+ *          then starts to search available time server in Zigbee network and tries to read status and time attributes.
+ *          After time server successfully found and gathered attributes their values will be passed to application
+ *          to take further actions.
+ */
+void zb_zcl_time_server_synchronize(zb_uint8_t endpoint, zb_zcl_time_sync_time_server_found_cb_t cb);
+
+
+/**
+ * @brief Handle read attribute response for time cluster.
+ * @details Handles read attribute response while time synchronization process running.
+ *          If time synchronization process is not started or finished there will be no processing.
+ */
+zb_bool_t zb_zcl_time_server_read_attr_handle(zb_uint8_t param);
+
 
 /** @defgroup ZB_ZCL_TIME_ATTRS Time cluster attributes
     @{
@@ -271,7 +306,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_TIME_ID,                                                   \
   ZB_ZCL_ATTR_TYPE_UTC_TIME,                                                  \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_TIME_STATUS_ID(data_ptr)      \
@@ -279,7 +314,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_TIME_STATUS_ID,                                            \
   ZB_ZCL_ATTR_TYPE_8BITMAP,                                                 \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_TIME_ZONE_ID(data_ptr)        \
@@ -287,7 +322,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_TIME_ZONE_ID,                                              \
   ZB_ZCL_ATTR_TYPE_S32,                                                       \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_DST_START_ID(data_ptr)        \
@@ -295,7 +330,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_DST_START_ID,                                              \
   ZB_ZCL_ATTR_TYPE_U32,                                                       \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_DST_END_ID(data_ptr)          \
@@ -303,7 +338,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_DST_END_ID,                                                \
   ZB_ZCL_ATTR_TYPE_U32,                                                       \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_DST_SHIFT_ID(data_ptr)        \
@@ -311,7 +346,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_DST_SHIFT_ID,                                              \
   ZB_ZCL_ATTR_TYPE_S32,                                                     \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_STANDARD_TIME_ID(data_ptr)    \
@@ -319,7 +354,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_STANDARD_TIME_ID,                                          \
   ZB_ZCL_ATTR_TYPE_U32,                                                       \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                       \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_LOCAL_TIME_ID(data_ptr)       \
@@ -327,7 +362,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_LOCAL_TIME_ID,                                             \
   ZB_ZCL_ATTR_TYPE_U32,                                                       \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                       \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_LAST_SET_TIME_ID(data_ptr)    \
@@ -335,7 +370,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_LAST_SET_TIME_ID,                                          \
   ZB_ZCL_ATTR_TYPE_UTC_TIME,                                                  \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                       \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_TIME_VALID_UNTIL_TIME_ID(data_ptr) \
@@ -343,7 +378,7 @@ enum zb_zcl_time_time_status_e
   ZB_ZCL_ATTR_TIME_VALID_UNTIL_TIME_ID,                                       \
   ZB_ZCL_ATTR_TYPE_UTC_TIME,                                                  \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                      \
-  (zb_voidp_t) data_ptr                                                       \
+  (void*) data_ptr                                                       \
 }
 
 /*! @internal Number of attributes mandatory for reporting in Time cluster */

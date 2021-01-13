@@ -51,8 +51,8 @@ OT_DEFINE_ALIGNED_VAR(gInstanceRaw, sizeof(Instance), uint64_t);
 
 #if OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
 
-otHeapFreeFn   ot::Instance::mFree   = NULL;
-otHeapCAllocFn ot::Instance::mCAlloc = NULL;
+otHeapFreeFn   ot::Instance::mFree   = nullptr;
+otHeapCAllocFn ot::Instance::mCAlloc = nullptr;
 
 #endif // OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
 
@@ -141,14 +141,14 @@ Instance &Instance::Get(void)
 
 Instance *Instance::Init(void *aBuffer, size_t *aBufferSize)
 {
-    Instance *instance = NULL;
+    Instance *instance = nullptr;
 
-    VerifyOrExit(aBufferSize != NULL, OT_NOOP);
+    VerifyOrExit(aBufferSize != nullptr, OT_NOOP);
 
     // Make sure the input buffer is big enough
     VerifyOrExit(sizeof(Instance) <= *aBufferSize, *aBufferSize = sizeof(Instance));
 
-    VerifyOrExit(aBuffer != NULL, OT_NOOP);
+    VerifyOrExit(aBuffer != nullptr, OT_NOOP);
 
     instance = new (aBuffer) Instance();
 
@@ -173,7 +173,7 @@ void Instance::AfterInit(void)
     // Restore datasets and network information
 
     Get<Settings>().Init();
-    Get<Mle::MleRouter>().Restore();
+    IgnoreError(Get<Mle::MleRouter>().Restore());
 
 #endif // OPENTHREAD_MTD || OPENTHREAD_FTD
 
@@ -189,14 +189,14 @@ void Instance::Finalize(void)
     mIsInitialized = false;
 
 #if OPENTHREAD_MTD || OPENTHREAD_FTD
-    IgnoreReturnValue(otThreadSetEnabled(this, false));
-    IgnoreReturnValue(otIp6SetEnabled(this, false));
-    IgnoreReturnValue(otLinkSetEnabled(this, false));
+    IgnoreError(otThreadSetEnabled(this, false));
+    IgnoreError(otIp6SetEnabled(this, false));
+    IgnoreError(otLinkSetEnabled(this, false));
 
     Get<Settings>().Deinit();
 #endif
 
-    Get<Mac::SubMac>().Disable();
+    IgnoreError(Get<Mac::SubMac>().Disable());
 
 #if !OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
 

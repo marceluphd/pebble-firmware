@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: Window Covering cluster defintions
+/* PURPOSE: Window Covering cluster definitions
 */
 
 #ifndef ZB_ZCL_WINDOW_COVERING_H
@@ -360,7 +360,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_WINDOW_COVERING_TYPE_ID,                                            \
   ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                                                     \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_CONFIG_STATUS_ID(data_ptr) \
@@ -368,7 +368,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_CONFIG_STATUS_ID,                                                   \
   ZB_ZCL_ATTR_TYPE_8BITMAP,                                                                       \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_LIFT_ID(data_ptr)     \
@@ -376,7 +376,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_LIFT_ID,                                           \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_TILT_ID(data_ptr)     \
@@ -384,7 +384,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_TILT_ID,                                           \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_LIFT_PERCENTAGE_ID(data_ptr)  \
@@ -392,7 +392,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_LIFT_PERCENTAGE_ID,                                \
   ZB_ZCL_ATTR_TYPE_U8,                                                                            \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_SCENE | ZB_ZCL_ATTR_ACCESS_REPORTING,         \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_TILT_PERCENTAGE_ID(data_ptr)  \
@@ -400,7 +400,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_CURRENT_POSITION_TILT_PERCENTAGE_ID,                                \
   ZB_ZCL_ATTR_TYPE_U8,                                                                            \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_SCENE | ZB_ZCL_ATTR_ACCESS_REPORTING,         \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_OPEN_LIMIT_LIFT_ID(data_ptr) \
@@ -408,7 +408,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_OPEN_LIMIT_LIFT_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_CLOSED_LIMIT_LIFT_ID(        \
@@ -417,7 +417,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_CLOSED_LIMIT_LIFT_ID,                                     \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_OPEN_LIMIT_TILT_ID(data_ptr) \
@@ -425,7 +425,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_OPEN_LIMIT_TILT_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_CLOSED_LIMIT_TILT_ID(        \
@@ -434,7 +434,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_INSTALLED_CLOSED_LIMIT_TILT_ID,                                     \
   ZB_ZCL_ATTR_TYPE_U16,                                                                           \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                                   \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_WINDOW_COVERING_MODE_ID(data_ptr)                      \
@@ -442,7 +442,7 @@ enum zb_zcl_window_covering_mode_e
   ZB_ZCL_ATTR_WINDOW_COVERING_MODE_ID,                                                            \
   ZB_ZCL_ATTR_TYPE_8BITMAP,                                                                       \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                                                  \
-  (zb_voidp_t) data_ptr                                                                           \
+  (void*) data_ptr                                                                           \
 }
 
 /** @internal Number of attributes mandatory for reporting in window covering cluster */
@@ -496,14 +496,14 @@ enum zb_zcl_window_covering_cmd_e
 
 /** Mandatory commands defines */
 
-/** @brief Structured representsation of GO_TO_LIFT_VALUE command payload */
+/** @brief Structured representation of GO_TO_LIFT_VALUE command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_go_to_lift_value_req_s
 {
   /** Lift Value */
   zb_uint16_t      lift_value;
 } ZB_PACKED_STRUCT zb_zcl_go_to_lift_value_req_t;
 
-/** @brief Structured representsation of GO_TO_LIFT_PERCENTAGE command payload
+/** @brief Structured representation of GO_TO_LIFT_PERCENTAGE command payload
     @see ZCL spec, subclause 9.4.2.2.5.2.1*/
 typedef ZB_PACKED_PRE struct zb_zcl_go_to_lift_percentage_req_s
 {
@@ -511,14 +511,14 @@ typedef ZB_PACKED_PRE struct zb_zcl_go_to_lift_percentage_req_s
   zb_uint8_t       percentage_lift_value;
 } ZB_PACKED_STRUCT zb_zcl_go_to_lift_percentage_req_t;
 
-/** @brief Structured representsation of GO_TO_TILT_VALUE command payload */
+/** @brief Structured representation of GO_TO_TILT_VALUE command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_go_to_tilt_value_req_s
 {
   /** Tilt Value */
   zb_uint16_t      tilt_value;
 } ZB_PACKED_STRUCT zb_zcl_go_to_tilt_value_req_t;
 
-/** @brief Structured representsation of GO_TO_TILT_PERCENTAGE command payload
+/** @brief Structured representation of GO_TO_TILT_PERCENTAGE command payload
     @see ZCL spec, subclause 9.4.2.2.5.5.1*/
 typedef ZB_PACKED_PRE struct zb_zcl_go_to_tilt_percentage_req_s
 {

@@ -7,11 +7,11 @@
 #ifndef NRF_ERRNO_H__
 #define NRF_ERRNO_H__
 /**
- * @file nrf_errno.h
+ * @file bsdlib/include/nrf_errno.h
  * @brief Defines integer values for errno.
  *        Used by system calls to indicates the latest error.
  *
- * @defgroup nrf_errno
+ * @defgroup nrf_errno Integer values for errno
  */
 #ifdef __cplusplus
 extern "C" {
@@ -41,6 +41,7 @@ extern "C" {
 #define NRF_ENETDOWN        50  /**< Network is down */
 #define NRF_ENETUNREACH     51  /**< Network is unreachable */
 #define NRF_ENETRESET       52  /**< Connection aborted by network */
+#define NRF_ECONNABORTED    53  /**< Software caused connection abort */
 #define NRF_ECONNRESET      54  /**< Connection reset by peer */
 #define NRF_EISCONN         56  /**< Transport endpoint is already connected */
 #define NRF_ENOTCONN        57  /**< Transport endpoint is not connected */

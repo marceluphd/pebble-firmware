@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: Fan Control cluster defintions
+/* PURPOSE: Fan Control cluster definitions
 */
 
 #if ! defined ZB_ZCL_FAN_CONTROL_H
@@ -146,7 +146,7 @@ enum zb_zcl_fan_control_fan_mode_sequence_e
   ZB_ZCL_ATTR_FAN_CONTROL_FAN_MODE_ID,                                       \
   ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                                \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                             \
-  (zb_voidp_t) data_ptr                                                      \
+  (void*) data_ptr                                                      \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_FAN_CONTROL_FAN_MODE_SEQUENCE_ID(data_ptr) \
@@ -154,7 +154,7 @@ enum zb_zcl_fan_control_fan_mode_sequence_e
   ZB_ZCL_ATTR_FAN_CONTROL_FAN_MODE_SEQUENCE_ID,                                       \
   ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                                         \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                                      \
-  (zb_voidp_t) data_ptr                                                               \
+  (void*) data_ptr                                                               \
 }
 
 /*! @internal Number of attributes mandatory for reporting in Fan Control cluster */

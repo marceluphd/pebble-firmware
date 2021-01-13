@@ -28,7 +28,7 @@
 
 static volatile bool test_ready;
 static struct bt_conn *default_conn;
-static struct bt_gatt_throughput gatt_throughput;
+static struct bt_throughput throughput;
 static struct bt_uuid *uuid128 = BT_UUID_THROUGHPUT;
 static struct bt_gatt_exchange_params exchange_params;
 static struct bt_le_conn_param *conn_param =
@@ -55,7 +55,7 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 {
 	char addr[BT_ADDR_LE_STR_LEN];
 
-	bt_addr_le_to_str(device_info->addr, addr, sizeof(addr));
+	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
 	printk("Filters matched. Address: %s connectable: %d\n",
 		addr, connectable);
@@ -66,7 +66,7 @@ void scan_filter_no_match(struct bt_scan_device_info *device_info,
 {
 	char addr[BT_ADDR_LE_STR_LEN];
 
-	bt_addr_le_to_str(device_info->addr, addr, sizeof(addr));
+	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
 	printk("Filter not match. Address: %s connectable: %d\n",
 				addr, connectable);
@@ -80,7 +80,7 @@ void scan_connecting_error(struct bt_scan_device_info *device_info)
 BT_SCAN_CB_INIT(scan_cb, scan_filter_match, scan_filter_no_match,
 		scan_connecting_error, NULL);
 
-static void exchange_func(struct bt_conn *conn, u8_t att_err,
+static void exchange_func(struct bt_conn *conn, uint8_t att_err,
 			  struct bt_gatt_exchange_params *params)
 {
 	struct bt_conn_info info = {0};
@@ -103,12 +103,12 @@ static void discovery_complete(struct bt_gatt_dm *dm,
 			       void *context)
 {
 	int err;
-	struct bt_gatt_throughput *throughput = context;
+	struct bt_throughput *throughput = context;
 
 	printk("Service discovery completed\n");
 
 	bt_gatt_dm_data_print(dm);
-	bt_gatt_throughput_handles_assign(dm, throughput);
+	bt_throughput_handles_assign(dm, throughput);
 	bt_gatt_dm_data_release(dm);
 
 	exchange_params.func = exchange_func;
@@ -140,7 +140,7 @@ struct bt_gatt_dm_cb discovery_cb = {
 	.error_found       = discovery_error,
 };
 
-static void connected(struct bt_conn *conn, u8_t hci_err)
+static void connected(struct bt_conn *conn, uint8_t hci_err)
 {
 	struct bt_conn_info info = {0};
 	int err;
@@ -177,7 +177,7 @@ static void connected(struct bt_conn *conn, u8_t hci_err)
 		err = bt_gatt_dm_start(default_conn,
 				       BT_UUID_THROUGHPUT,
 				       &discovery_cb,
-				       &gatt_throughput);
+				       &throughput);
 
 		if (err) {
 			printk("Discover failed (err %d)\n", err);
@@ -189,10 +189,10 @@ static void scan_init(void)
 {
 	int err;
 	struct bt_le_scan_param scan_param = {
-	    .type = BT_HCI_LE_SCAN_PASSIVE,
-	    .filter_dup = BT_HCI_LE_SCAN_FILTER_DUP_ENABLE,
-	    .interval = 0x0010,
-	    .window = 0x0010,
+		.type = BT_LE_SCAN_TYPE_PASSIVE,
+		.options = BT_LE_SCAN_OPT_FILTER_DUPLICATE,
+		.interval = 0x0010,
+		.window = 0x0010,
 	};
 
 	struct bt_scan_init_param scan_init = {
@@ -246,7 +246,7 @@ static void adv_start(void)
 	}
 }
 
-static void disconnected(struct bt_conn *conn, u8_t reason)
+static void disconnected(struct bt_conn *conn, uint8_t reason)
 {
 	struct bt_conn_info info = {0};
 	int err;
@@ -273,7 +273,7 @@ static void disconnected(struct bt_conn *conn, u8_t reason)
 	}
 }
 
-static u8_t throughput_read(const struct bt_gatt_throughput_metrics *met)
+static uint8_t throughput_read(const struct bt_throughput_metrics *met)
 {
 	printk("[peer] received %u bytes (%u KB)"
 	       " in %u GATT writes at %u bps\n",
@@ -285,9 +285,9 @@ static u8_t throughput_read(const struct bt_gatt_throughput_metrics *met)
 	return BT_GATT_ITER_STOP;
 }
 
-static void throughput_received(const struct bt_gatt_throughput_metrics *met)
+static void throughput_received(const struct bt_throughput_metrics *met)
 {
-	static u32_t kb;
+	static uint32_t kb;
 
 	if (met->write_len == 0) {
 		kb = 0;
@@ -302,7 +302,7 @@ static void throughput_received(const struct bt_gatt_throughput_metrics *met)
 	}
 }
 
-static void throughput_send(const struct bt_gatt_throughput_metrics *met)
+static void throughput_send(const struct bt_throughput_metrics *met)
 {
 	printk("\n[local] received %u bytes (%u KB)"
 		" in %u GATT writes at %u bps\n",
@@ -310,7 +310,7 @@ static void throughput_send(const struct bt_gatt_throughput_metrics *met)
 		met->write_count, met->write_rate);
 }
 
-static const struct bt_gatt_throughput_cb throughput_cb = {
+static const struct bt_throughput_cb throughput_cb = {
 	.data_read = throughput_read,
 	.data_received = throughput_received,
 	.data_send = throughput_send
@@ -319,10 +319,10 @@ static const struct bt_gatt_throughput_cb throughput_cb = {
 static void test_run(void)
 {
 	int err;
-	u64_t stamp;
-	s64_t delta;
-	u32_t data = 0;
-	u32_t prog = 0;
+	uint64_t stamp;
+	int64_t delta;
+	uint32_t data = 0;
+	uint32_t prog = 0;
 
 	/* a dummy data buffer */
 	static char dummy[256];
@@ -340,7 +340,7 @@ static void test_run(void)
 	test_ready = false;
 
 	/* reset peer metrics */
-	err = bt_gatt_throughput_write(&gatt_throughput, dummy, 1);
+	err = bt_throughput_write(&throughput, dummy, 1);
 	if (err) {
 		printk("Reset peer metrics failed.\n");
 		return;
@@ -350,7 +350,7 @@ static void test_run(void)
 	stamp = k_uptime_get_32();
 
 	while (prog < IMG_SIZE) {
-		err = bt_gatt_throughput_write(&gatt_throughput, dummy, 244);
+		err = bt_throughput_write(&throughput, dummy, 244);
 		if (err) {
 			printk("GATT write failed (err %d)\n", err);
 			break;
@@ -366,10 +366,10 @@ static void test_run(void)
 
 	printk("\nDone\n");
 	printk("[local] sent %u bytes (%u KB) in %lld ms at %llu kbps\n",
-	       data, data / 1024, delta, ((u64_t)data * 8 / delta));
+	       data, data / 1024, delta, ((uint64_t)data * 8 / delta));
 
 	/* read back char from peer */
-	err = bt_gatt_throughput_read(&gatt_throughput);
+	err = bt_throughput_read(&throughput);
 	if (err) {
 		printk("GATT read failed (err %d)\n", err);
 	}
@@ -431,7 +431,7 @@ void main(void)
 
 	scan_init();
 
-	err = bt_gatt_throughput_init(&gatt_throughput, &throughput_cb);
+	err = bt_throughput_init(&throughput, &throughput_cb);
 	if (err) {
 		printk("Throughput service initialization failed.\n");
 		return;

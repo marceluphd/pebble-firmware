@@ -39,6 +39,7 @@ Done
 - [discover](#discover-channel)
 - [dns](#dns-resolve-hostname-dns-server-ip-dns-server-port)
 - [domainname](#domainname)
+- [dua](#dua-iid)
 - [eidcache](#eidcache)
 - [eui64](#eui64)
 - [extaddr](#extaddr)
@@ -62,6 +63,7 @@ Done
 - [neighbor](#neighbor-list)
 - [netdataregister](#netdataregister)
 - [netdatashow](#netdatashow)
+- [netstat](#netstat)
 - [networkdiagnostic](#networkdiagnostic-get-addr-type-)
 - [networkidtimeout](#networkidtimeout)
 - [networkname](#networkname)
@@ -75,6 +77,7 @@ Done
 - [prefix](#prefix-add-prefix-padcrosnD-prf)
 - [promiscuous](#promiscuous)
 - [pskc](#pskc--p-keypassphrase)
+- [rcp](#rcp)
 - [releaserouterid](#releaserouterid-routerid)
 - [reset](#reset)
 - [rloc16](#rloc16)
@@ -561,6 +564,34 @@ Set the Thread Domain Name for Thread 1.2 device.
 Done
 ```
 
+### dua iid
+
+Get the Interface Identifier mannually specified for Thread Domain Unicast Address on Thread 1.2 device.
+
+```bash
+> dua iid
+0004000300020001
+Done
+```
+
+### dua iid \<iid\>
+
+Set the Interface Identifier mannually specified for Thread Domain Unicast Address on Thread 1.2 device.
+
+```bash
+> dua iid 0004000300020001
+Done
+```
+
+### dua iid clear
+
+Clear the Interface Identifier mannually specified for Thread Domain Unicast Address on Thread 1.2 device.
+
+```bash
+> dua iid clear
+Done
+```
+
 ### eidcache
 
 Print the EID-to-RLOC cache entries.
@@ -1012,6 +1043,21 @@ Show Thread Leader network data.
 Done
 ```
 
+### netstat
+
+List all UDP sockets.
+
+```bash
+> netstat
+|                 Local Address                 |                  Peer Address                 |
++-----------------------------------------------+-----------------------------------------------+
+| 0:0:0:0:0:0:0:0:49153                         | 0:0:0:0:0:0:0:0:*                             |
+| 0:0:0:0:0:0:0:0:49152                         | 0:0:0:0:0:0:0:0:*                             |
+| 0:0:0:0:0:0:0:0:61631                         | 0:0:0:0:0:0:0:0:*                             |
+| 0:0:0:0:0:0:0:0:19788                         | 0:0:0:0:0:0:0:0:*                             |
+Done
+```
+
 ### networkdiagnostic get \<addr\> \<type\> ..
 
 Send network diagnostic request to retrieve tlv of \<type\>s.
@@ -1279,6 +1325,20 @@ Disable radio promiscuous operation.
 
 ```bash
 > promiscuous disable
+Done
+```
+
+### rcp
+
+RCP-related commands.
+
+### rcp version
+
+Print RCP version string.
+
+```bash
+> rcp version
+OPENTHREAD/20191113-00825-g82053cc9d-dirty; SIMULATION; Jun  4 2020 17:53:16
 Done
 ```
 

@@ -62,11 +62,12 @@ struct bt_mesh_dtt_cli {
 	 *
 	 * @param[in] cli Client that received the message.
 	 * @param[in] ctx Message context.
-	 * @param[in] transition_time Transition time presented in the message.
+	 * @param[in] transition_time Transition time presented in the message,
+	 *                            in milliseconds.
 	 */
 	void (*const status_handler)(struct bt_mesh_dtt_cli *cli,
 				     struct bt_mesh_msg_ctx *ctx,
-				     s32_t transition_time);
+				     int32_t transition_time);
 
 	/** Response context for tracking acknowledged messages. */
 	struct bt_mesh_model_ack_ctx ack_ctx;
@@ -85,16 +86,17 @@ struct bt_mesh_dtt_cli {
  * @param[in] cli Client making the request.
  * @param[in] ctx Message context to use for sending, or NULL to publish with
  * the configured parameters.
- * @param[out] rsp_transition_time Pointer to a response buffer, or NULL to keep
- * from blocking. Note that the response is a signed value, that can be
- * K_FOREVER if the current state is unknown or too large to represent.
+ * @param[out] rsp_transition_time Pointer to a response buffer, or NULL to
+ * keep from blocking. The response denotes the configured transition time in
+ * milliseconds. Can be @em SYS_FOREVER_MS if the current state is unknown or
+ * too large to represent.
  *
  * @retval 0 Successfully retrieved the status of the bound srv.
  * @retval -EALREADY A blocking operation is already in progress in this model.
  * @retval -EAGAIN The request timed out.
  */
 int bt_mesh_dtt_get(struct bt_mesh_dtt_cli *cli, struct bt_mesh_msg_ctx *ctx,
-		    s32_t *rsp_transition_time);
+		    int32_t *rsp_transition_time);
 
 /** @brief Set the Default Transition Time of the server.
  *
@@ -107,9 +109,10 @@ int bt_mesh_dtt_get(struct bt_mesh_dtt_cli *cli, struct bt_mesh_msg_ctx *ctx,
  * the configured parameters.
  * @param[in] transition_time Transition time to set (in milliseconds). Must be
  * less than @ref BT_MESH_MODEL_TRANSITION_TIME_MAX_MS.
- * @param[out] rsp_transition_time Response buffer, or NULL to keep from
- * blocking. Note that the response is a signed value, that can be K_FOREVER if
- * the current state is unknown or too large to represent.
+ * @param[out] rsp_transition_time Pointer to a response buffer, or NULL to
+ * keep from blocking. The response denotes the configured transition time in
+ * milliseconds. Can be @em SYS_FOREVER_MS if the current state is unknown or
+ * too large to represent.
  *
  * @retval 0 Successfully sent the message and populated the
  * @p rsp_transition_time buffer.
@@ -118,7 +121,7 @@ int bt_mesh_dtt_get(struct bt_mesh_dtt_cli *cli, struct bt_mesh_msg_ctx *ctx,
  * @retval -EAGAIN The request timed out.
  */
 int bt_mesh_dtt_set(struct bt_mesh_dtt_cli *cli, struct bt_mesh_msg_ctx *ctx,
-		    u32_t transition_time, s32_t *rsp_transition_time);
+		    uint32_t transition_time, int32_t *rsp_transition_time);
 
 /** @brief Set the Default Transition Time of the server without requesting a
  * response.
@@ -138,7 +141,7 @@ int bt_mesh_dtt_set(struct bt_mesh_dtt_cli *cli, struct bt_mesh_msg_ctx *ctx,
  * @retval -EAGAIN The device has not been provisioned.
  */
 int bt_mesh_dtt_set_unack(struct bt_mesh_dtt_cli *cli,
-			  struct bt_mesh_msg_ctx *ctx, u32_t transition_time);
+			  struct bt_mesh_msg_ctx *ctx, uint32_t transition_time);
 
 /** @cond INTERNAL_HIDDEN */
 extern const struct bt_mesh_model_op _bt_mesh_dtt_cli_op[];

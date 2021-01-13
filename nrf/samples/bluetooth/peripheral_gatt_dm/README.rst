@@ -3,6 +3,10 @@
 Bluetooth: Peripheral GATT Discovery Manager
 ############################################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Peripheral GATT Discovery Manager sample demonstrates how to use the :ref:`gatt_dm_readme`.
 
 Overview
@@ -17,7 +21,6 @@ Requirements
 
   * |nRF52840DK|
   * |nRF52DK|
-  * |nRF51DK|
 
 * A device to connect to the peripheral, for example, a phone or a tablet with `nRF Connect for Mobile`_ or `nRF Toolbox`_
 

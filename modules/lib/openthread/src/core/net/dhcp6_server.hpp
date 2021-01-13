@@ -174,9 +174,10 @@ private:
             mPrefix = aPrefix;
 
             mAloc.GetAddress().SetToAnycastLocator(aMeshLocalPrefix, (Ip6::Address::kAloc16Mask << 8) + aContextId);
-            mAloc.mPrefixLength = OT_IP6_PREFIX_BITSIZE;
-            mAloc.mPreferred    = true;
-            mAloc.mValid        = true;
+            mAloc.mPrefixLength  = OT_IP6_PREFIX_BITSIZE;
+            mAloc.mAddressOrigin = OT_ADDRESS_ORIGIN_THREAD;
+            mAloc.mPreferred     = true;
+            mAloc.mValid         = true;
         }
 
     private:
@@ -187,7 +188,7 @@ private:
     void Start(void);
     void Stop(void);
 
-    otError AddPrefixAgent(const otIp6Prefix &aIp6Prefix, const Lowpan::Context &aContext);
+    void AddPrefixAgent(const otIp6Prefix &aIp6Prefix, const Lowpan::Context &aContext);
 
     otError AppendHeader(Message &aMessage, uint8_t *aTransactionId);
     otError AppendClientIdentifier(Message &aMessage, ClientIdentifier &aClientId);
@@ -213,7 +214,7 @@ private:
 
     otError SendReply(otIp6Address &aDst, uint8_t *aTransactionId, ClientIdentifier &aClientId, IaNa &aIaNa);
 
-    Ip6::UdpSocket mSocket;
+    Ip6::Udp::Socket mSocket;
 
     PrefixAgent mPrefixAgents[OPENTHREAD_CONFIG_DHCP6_SERVER_NUM_PREFIXES];
     uint8_t     mPrefixAgentsCount;

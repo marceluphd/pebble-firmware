@@ -31,7 +31,6 @@
 #endif /* CONFIG_BSD_LIBRARY */
 
 
-
 typedef struct {
     uint32_t req;
     const char *paths[3];
@@ -60,13 +59,19 @@ static const iotex_st_request_conf __g_req_configs[] = {
     {
         REQ_GET_ACTIONS_BY_ADDR,
         {"actions", "addr", NULL},
-        "%s?&start=%u&count=%u",
+        "%s?start=%u&count=%u",
     },
 
     {
         REQ_GET_ACTIONS_BY_HASH,
         {"actions", "hash", NULL},
         "%s",
+    },
+
+    {
+        REQ_READ_CONTRACT_BY_ADDR,
+        {"contract", "addr", NULL},
+        "%s?method=%s&data=%s",
     },
 
     {
@@ -110,11 +115,11 @@ typedef struct {
                       "Content-type: application/x-www-form-urlencoded\r\n"\
                       "Content-length: %d\r\n\r\n"
 
-#define GET_TEMPLATE "GET %s HTTP/1.1\r\n"\
-                      "Host: %s\r\n"\
-                      "Connection: close\r\n"                                       
+#define GET_TEMPLATE "GET /%s HTTP/1.1\r\n"\
+                      "Host: %s:%d\r\n"\
+                      "Connection: close\r\n\r\n"                                       
 
-#define HTTPS_PORT 8192
+#define HTTPS_PORT   8192
 
 #define HTTP_HDR_END "\r\n\r\n"
 
@@ -265,8 +270,10 @@ char *req_compose_url(char *url, size_t url_max_size, iotex_em_request req, ...)
 
 void parseURL(char *url, Host_Path *parse)
 {
-    sscanf(url, "http://%99[^:]:%99d/%99[^\n]", parse->host,&parse->port, parse->path);
-    printk("parse->host:%s,parse->port:%d,parse->path:%s \n",parse->host,parse->port, parse->path);
+    //printk("url:%s\n",url);
+    sscanf(url, "http://%99[^:]:%99d/%999[^\n]", parse->host,&parse->port, parse->path);
+    //printk("parse->host:%s,parse->port:%d \n",parse->host,parse->port);
+    //printk("parse->path:%s\n",parse->path);
 }
 
 
@@ -353,12 +360,10 @@ int tls_setup(int fd)
 int blocking_recv(int fd, u8_t *buf, u32_t size, u32_t flags)
 {
     int err;
-
-	  do {
-		    err = recv(fd, buf, size, flags);
-	      } while (err < 0 && errno == EAGAIN);
-
-	  return err;
+	do {
+		err = recv(fd, buf, size, flags);
+	} while (err < 0 && errno == EAGAIN);
+	return err;
 }
 
 int blocking_send(int fd, u8_t *buf, u32_t size, u32_t flags)
@@ -377,8 +382,7 @@ int blocking_connect(int fd, struct sockaddr *local_addr, socklen_t len)
 	int err;
 
 	do {
-		err = connect(fd, local_addr, len);
-        printk("errno:%d\n",errno);
+		err = connect(fd, local_addr, len);        
 	} while (err < 0 && errno == EAGAIN);
 
 	return err;
@@ -455,7 +459,7 @@ static int req_basic_request(const char *request, char *response, size_t respons
     curl_easy_cleanup(curl);    
     return 0;
 #else
-	int err;
+	int err,i;
 	int fd,send_data_len,num_bytes;
 	struct addrinfo *res;
 	struct addrinfo hints = {
@@ -463,7 +467,7 @@ static int req_basic_request(const char *request, char *response, size_t respons
 		.ai_socktype = SOCK_STREAM,
 	};
     Host_Path *pHost;
-    char *send_buf, *recv_buf = response;
+    char *send_buf, *recv_buf = response,*pStr;
     pHost = malloc(sizeof(Host_Path));
     send_buf = malloc(SEND_BUF_SIZE);
     //recv_buf = malloc(RECV_BUF_SIZE);
@@ -480,7 +484,7 @@ static int req_basic_request(const char *request, char *response, size_t respons
 	}
 
 	((struct sockaddr_in *)res->ai_addr)->sin_port = htons(pHost->port);
-
+#ifdef  HTTP_TLS_SERVER
 	fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TLS_1_2);
 	if (fd == -1) {
 		printk("Failed to open socket!\n");
@@ -491,15 +495,22 @@ static int req_basic_request(const char *request, char *response, size_t respons
 	if (err) {
 		goto clean_up;
 	}
+#else
+	fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (fd == -1) {
+		printk("Failed to open socket!%d\n", errno);
+		goto clean_up;
+	}
+#endif
 	printk("Connecting to %s\n", pHost->host);  
-
     err = blocking_connect(fd, (struct sockaddr *)res->ai_addr,
 			       sizeof(struct sockaddr_in));
-    printk("connect err: %d,errno:%d\n\r", err,errno);
+    //printk("connect err: %d,errno:%d\n\r", err,errno);
     if(err)
         goto clean_up;
 
-    printk("\n\rPrepare send buffer:\n\r");
+    //printk("\n\rPrepare send buffer:\n\r");
+    printk("connect ok \n");
     if (is_post) {
         send_data_len = snprintf(send_buf,
                              MAX_MTU_SIZE,
@@ -507,20 +518,22 @@ static int req_basic_request(const char *request, char *response, size_t respons
 		             		 pHost->host,0);
     }
     else {
+        
          send_data_len = snprintf(send_buf,
                              MAX_MTU_SIZE,
 			     			 GET_TEMPLATE, pHost->path,
-		             		 pHost->host);       
+		             		 pHost->host,pHost->port);  
+                                 
     }
-    printk("\n\rSend HTTP post request.\n\r"); 
+    //printk("\n\rsend_data_len:%d,Send HTTP post request.:%s\n\r", send_data_len,send_buf); 
     do {
-	    num_bytes =
-		blocking_send(fd, send_buf, send_data_len, 0);
-		
+	    num_bytes = blocking_send(fd, send_buf, send_data_len, 0);		
 		if (num_bytes < 0) {
 			printk("ret: %d, errno: %s\n", num_bytes, strerror(errno));
 		};
+        //printk("ret: %d, errno: %s\n", num_bytes, strerror(errno));
     } while (num_bytes < 0);
+    printk("Start recv\n");
     int tot_num_bytes = 0;
 	do {
 		num_bytes =blocking_recv(fd, recv_buf, RECV_BUF_SIZE, 0);
@@ -529,10 +542,23 @@ static int req_basic_request(const char *request, char *response, size_t respons
 		if (num_bytes <= 0) {
 			break;
 		}
-        printk("Reply from the webserver \n\r");
-		printk("%s", recv_buf);
+        printk("Reply %d bytes from the webserver \n\r", num_bytes);
 	} while (num_bytes > 0);
-
+    if(num_bytes <= RECV_BUF_SIZE)
+        recv_buf[tot_num_bytes] = 0;
+    //printk("%s\n", recv_buf);
+    pStr = strstr(recv_buf, "{\"");
+    if (!is_post && pStr) {
+        // get data        
+        i = 0;
+        while(pStr[i])
+        {
+            recv_buf[i] = pStr[i];
+            i++;            
+        } 
+        recv_buf[i] = 0;
+        //printk("recv_buf: %s\n", recv_buf);
+    }
 #endif
 clean_up:
 	freeaddrinfo(res);

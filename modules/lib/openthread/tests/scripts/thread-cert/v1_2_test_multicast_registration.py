@@ -95,7 +95,7 @@ MED_1_2 --- LEADER_1_2 --- MED_1_1
 
 
 class TestMulticastRegistration(thread_cert.TestCase):
-    topology = {
+    TOPOLOGY = {
         LEADER_1_2: {
             'version': '1.2',
             'whitelist': [MED_1_2, SED_1_2, MED_1_1, SED_1_1, ROUTER_1_1],
@@ -170,11 +170,11 @@ class TestMulticastRegistration(thread_cert.TestCase):
                 msg, multicast_address)
 
             if in_address_registration:
-                assert is_in, 'Error: %s %s in AddressRegistrationTLV %s'.format(
-                    'Expected', multicast_address, ' not found')
+                assert is_in, 'Error: Expected {} in AddressRegistrationTLV not found'.format(
+                    multicast_address)
             else:
-                assert not is_in, 'Error: %s %s in AddressRegistrationTLV %s'.format(
-                    'Unexpected', multicast_address, '')
+                assert not is_in, 'Error: Unexpected {} in AddressRegistrationTLV'.format(
+                    multicast_address)
 
     def test(self):
 

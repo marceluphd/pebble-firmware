@@ -3,6 +3,10 @@
 MPSL timeslot
 #############
 
+.. contents::
+   :local:
+   :depth: 2
+
 This sample demonstrates how to use :ref:`nrfxlib:mpsl` and basic MPSL Timeslot functionality.
 
 Overview
@@ -22,17 +26,18 @@ The timeslot session is closed when any key is pressed in the terminal.
 Requirements
 ************
 
-One of the following development boards:
+The sample supports any one of the following development kits:
 
-  * |nRF52DK|
-  * |nRF52840DK|
-  * |nRF5340DK|
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf5340pdk_nrf5340_cpunet, nrf52840dk_nrf52840, nrf52dk_nrf52832
 
-    .. note::
-       For the nRF5340DK this sample is only supported on the network core (nrf5340pdk_nrf5340_cpunet), and the :ref:`nrf5340_empty_app_core` sample must be flashed on the application core.
+.. note::
+   For nRF5340 PDK, this sample is only supported on the network core (nrf5340pdk_nrf5340_cpunet), and the :ref:`nrf5340_empty_app_core` sample must be programmed to the application core.
 
 Building and Running
 ********************
+
 .. |sample path| replace:: :file:`samples/mpsl/timeslot`
 
 .. include:: /includes/build_and_run.txt

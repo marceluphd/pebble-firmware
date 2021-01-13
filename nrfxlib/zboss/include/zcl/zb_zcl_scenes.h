@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: Scenes cluster definitoins
+/* PURPOSE: Scenes cluster definitions
 */
 
 #ifndef ZB_ZCL_SCENES_H
@@ -167,7 +167,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_scene_table_record_fixed_s
       sets is known, its actual length should be figured out in order to finish reading at
       a proper point. E. g.: as stated in ZCL spec, subclause 3.7.2.4.1.1, it is
       not mandatory for a field set to be included in the command for every
-      cluster on the endpoint that has a defined field set. This field can provide 
+      cluster on the endpoint that has a defined field set. This field can provide
       and actual length of the field sets thus being able to read
       only the info required.
   */
@@ -218,8 +218,8 @@ typedef ZB_PACKED_PRE struct zb_zcl_scenes_fieldset_common_s
     @param param - buffer to get data from.
     @param group_id - group identifier for which all scenes must be removed.
 */
-zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints_by_group_id(zb_uint8_t param, zb_uint16_t group_id);
-zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
+void zb_zcl_scenes_remove_all_scenes_in_all_endpoints_by_group_id(zb_uint8_t param, zb_uint16_t group_id);
+void zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
 /*! @}
  *  @endcond */ /* internals_doc */
 
@@ -237,7 +237,7 @@ zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
   ZB_ZCL_ATTR_SCENES_SCENE_COUNT_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U8,                                                     \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                            \
-  (zb_voidp_t) data_ptr                                                    \
+  (void*) data_ptr                                                    \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_SCENES_CURRENT_SCENE_ID(data_ptr) \
@@ -245,7 +245,7 @@ zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
   ZB_ZCL_ATTR_SCENES_CURRENT_SCENE_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U8,                                                       \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                              \
-  (zb_voidp_t) data_ptr                                                      \
+  (void*) data_ptr                                                      \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_SCENES_CURRENT_GROUP_ID(data_ptr) \
@@ -253,7 +253,7 @@ zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
   ZB_ZCL_ATTR_SCENES_CURRENT_GROUP_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U16,                                                      \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                              \
-  (zb_voidp_t) data_ptr                                                      \
+  (void*) data_ptr                                                      \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_SCENES_SCENE_VALID_ID(data_ptr) \
@@ -261,7 +261,7 @@ zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
   ZB_ZCL_ATTR_SCENES_SCENE_VALID_ID,                                       \
   ZB_ZCL_ATTR_TYPE_BOOL,                                                   \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                            \
-  (zb_voidp_t) data_ptr                                                    \
+  (void*) data_ptr                                                    \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_SCENES_NAME_SUPPORT_ID(data_ptr) \
@@ -269,7 +269,7 @@ zb_void_t zb_zcl_scenes_remove_all_scenes_in_all_endpoints(zb_uint8_t param);
   ZB_ZCL_ATTR_SCENES_NAME_SUPPORT_ID,                                       \
   ZB_ZCL_ATTR_TYPE_8BITMAP,                                                 \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                             \
-  (zb_voidp_t) data_ptr                                                     \
+  (void*) data_ptr                                                     \
 }
 
 /*! @} */ /* Scenes cluster internals */
@@ -1074,7 +1074,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_scenes_add_scene_res_s
     @param callback for getting command send status
     @param status of the corresponding Add scene command execution. Appropriate
     values (defined in @ref zb_zcl_status_e enumeration)are:
-    @li @ref ZB_ZCL_STATUS_SUCCESS for successfull result
+    @li @ref ZB_ZCL_STATUS_SUCCESS for successful result
     @li @ref ZB_ZCL_STATUS_INSUFF_SPACE if the scene table is full
     @li @ref ZB_ZCL_STATUS_INVALID_FIELD if the group is not present in the
     Group Table
@@ -1246,7 +1246,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_scenes_view_scene_res_fixed_size_s
 
 /* TODO Fix possible issue with buffer length */
 
-/** @brief Parses comon part of the Scenes.ViewSceneResponse
+/** @brief Parses common part of the Scenes.ViewSceneResponse
     @param buffer containing data
     @param response_ptr - pointer to the extracted data
 */
@@ -1704,8 +1704,8 @@ zb_uint8_t zb_zcl_scenes_process_remove_all_scenes(zb_uint8_t param, zb_zcl_scen
 
 /** @endcond */ /* DOXYGEN_ZCL_SECTION */
 
-zb_void_t zb_zcl_scenes_init_server(void);
-zb_void_t zb_zcl_scenes_init_client(void);
+void zb_zcl_scenes_init_server(void);
+void zb_zcl_scenes_init_client(void);
 #define ZB_ZCL_CLUSTER_ID_SCENES_SERVER_ROLE_INIT zb_zcl_scenes_init_server
 #define ZB_ZCL_CLUSTER_ID_SCENES_CLIENT_ROLE_INIT zb_zcl_scenes_init_client
 

@@ -7,9 +7,13 @@
 #include <pm_config.h>
 #include <mcuboot_config/mcuboot_config.h>
 
+#ifndef CONFIG_SINGLE_IMAGE_DFU
+
 #if (MCUBOOT_IMAGE_NUMBER == 1)
+
 #define FLASH_AREA_IMAGE_PRIMARY(x)    PM_MCUBOOT_PRIMARY_ID
 #define FLASH_AREA_IMAGE_SECONDARY(x)  PM_MCUBOOT_SECONDARY_ID
+
 #elif (MCUBOOT_IMAGE_NUMBER == 2)
 
 extern uint32_t _image_1_primary_slot_id[];
@@ -30,10 +34,24 @@ extern uint32_t _image_1_primary_slot_id[];
 #endif
 #define FLASH_AREA_IMAGE_SCRATCH    PM_MCUBOOT_SCRATCH_ID
 
+#else /* CONFIG_SINGLE_IMAGE_DFU */
+
+#define FLASH_AREA_IMAGE_PRIMARY(x)	PM_MCUBOOT_PRIMARY_ID
+#define FLASH_AREA_IMAGE_SECONDARY(x)	PM_MCUBOOT_PRIMARY_ID
+/* NOTE: Scratch parition is not used by single image DFU but some of
+ * functions in common files reference it, so the definitions has been
+ * provided to allow compilation of common units.
+ */
+#define FLASH_AREA_IMAGE_SCRATCH       0
+
+#endif /* CONFIG_SINGLE_IMAGE_DFU */
+
 #else
 
 #include <devicetree.h>
 #include <mcuboot_config/mcuboot_config.h>
+
+#ifndef CONFIG_SINGLE_IMAGE_DFU
 
 #if (MCUBOOT_IMAGE_NUMBER == 1)
 /*
@@ -69,7 +87,19 @@ extern uint32_t _image_1_primary_slot_id[];
 #if !defined(CONFIG_BOOT_SWAP_USING_MOVE)
 #define FLASH_AREA_IMAGE_SCRATCH    FLASH_AREA_ID(image_scratch)
 #endif
-#endif /* USE_PARTITION_MANAGER */
 
+#else /* CONFIG_SINGLE_IMAGE_DFU */
+
+#define FLASH_AREA_IMAGE_PRIMARY(x)	FLASH_AREA_ID(image_0)
+#define FLASH_AREA_IMAGE_SECONDARY(x)	FLASH_AREA_ID(image_0)
+/* NOTE: Scratch parition is not used by single image DFU but some of
+ * functions in common files reference it, so the definitions has been
+ * provided to allow compilation of common units.
+ */
+#define FLASH_AREA_IMAGE_SCRATCH	0
+
+#endif /* CONFIG_SINGLE_IMAGE_DFU */
+
+#endif /* USE_PARTITION_MANAGER */
 
 #endif /* __SYSFLASH_H__ */

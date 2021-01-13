@@ -3,6 +3,10 @@
 NFC: TNEP poller
 ################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The NFC TNEP poller sample demonstrates how to use the :ref:`tnep_poller_readme` library to exchange data using an NFC polling device.
 
 Overview
@@ -22,6 +26,7 @@ One of the following boards:
   * |nRF5340DK|
   * |nRF52840DK|
   * |nRF52DK|
+  * |nRF52833DK|
 
 * NFC Reader ST25R3911B Nucleo expansion board (X-NUCLEO-NFC05A1)
 * NFC Type 4 Tag TNEP device
@@ -59,6 +64,7 @@ This sample uses the following |NCS| libraries:
 * :ref:`nfc_t4t_apdu_readme`
 * :ref:`nfc_t4t_isodep_readme`
 * :ref:`nfc_t4t_hl_procedure_readme`
+* :ref:`nfc_t4t_ndef_file_readme`
 
 In addition, it uses the following Zephyr libraries:
 

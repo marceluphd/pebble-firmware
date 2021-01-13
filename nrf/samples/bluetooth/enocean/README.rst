@@ -3,6 +3,10 @@
 Bluetooth: EnOcean
 ##################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Bluetooth EnOcean sample demonstrates the basic usage of the :ref:`bt_enocean_readme` library.
 
 Overview
@@ -23,7 +27,6 @@ Requirements
   * |nRF5340DK|
   * |nRF52840DK|
   * |nRF52DK|
-  * |nRF51DK|
 
 * At least one :ref:`supported EnOcean device <bt_enocean_devices>`.
 

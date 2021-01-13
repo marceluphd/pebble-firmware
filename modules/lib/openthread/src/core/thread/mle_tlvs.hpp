@@ -50,10 +50,6 @@ namespace Mle {
 using ot::Encoding::BigEndian::HostSwap16;
 using ot::Encoding::BigEndian::HostSwap32;
 
-#define TLVREQUESTTLV_ITERATOR_INIT 0 ///< Initializer for TlvRequestTlvIterator.
-
-typedef uint8_t TlvRequestIterator; ///< Used to iterate through TlvRequestTlv.
-
 /**
  * @addtogroup core-mle-tlvs
  *
@@ -133,39 +129,6 @@ public:
      *
      */
     void SetType(Type aType) { ot::Tlv::SetType(static_cast<uint8_t>(aType)); }
-
-    /**
-     * This static method reads the requested TLV out of @p aMessage.
-     *
-     * @param[in]   aMessage    A reference to the message.
-     * @param[in]   aType       The Type value to search for.
-     * @param[in]   aMaxLength  Maximum number of bytes to read.
-     * @param[out]  aTlv        A reference to the TLV that will be copied to.
-     *
-     * @retval OT_ERROR_NONE       Successfully copied the TLV.
-     * @retval OT_ERROR_NOT_FOUND  Could not find the TLV with Type @p aType.
-     *
-     */
-    static otError GetTlv(const Message &aMessage, Type aType, uint16_t aMaxLength, Tlv &aTlv)
-    {
-        return ot::Tlv::Get(aMessage, static_cast<uint8_t>(aType), aMaxLength, aTlv);
-    }
-
-    /**
-     * This static method obtains the offset of a TLV within @p aMessage.
-     *
-     * @param[in]   aMessage    A reference to the message.
-     * @param[in]   aType       The Type value to search for.
-     * @param[out]  aOffset     A reference to the offset of the TLV.
-     *
-     * @retval OT_ERROR_NONE       Successfully copied the TLV.
-     * @retval OT_ERROR_NOT_FOUND  Could not find the TLV with Type @p aType.
-     *
-     */
-    static otError GetOffset(const Message &aMessage, Type aType, uint16_t &aOffset)
-    {
-        return ot::Tlv::GetOffset(aMessage, static_cast<uint8_t>(aType), aOffset);
-    }
 
 } OT_TOOL_PACKED_END;
 
@@ -572,7 +535,7 @@ private:
 #endif // OPENTHREAD_CONFIG_MLE_LONG_ROUTES_ENABLE
 
 /**
- * This class implements Source Address TLV generation and parsing.
+ * This class implements Leader Data TLV generation and parsing.
  *
  */
 OT_TOOL_PACKED_BEGIN
@@ -671,7 +634,7 @@ public:
 };
 
 /**
- * This class implements Source Address TLV generation and parsing.
+ * This class implements Connectivity TLV generation and parsing.
  *
  */
 OT_TOOL_PACKED_BEGIN
@@ -960,28 +923,28 @@ public:
     void SetContextId(uint8_t aContextId) { mControl = kCompressed | aContextId; }
 
     /**
-     * This method returns a pointer to the IID value.
+     * This method returns the IID value.
      *
-     * @returns A pointer to the IID value.
+     * @returns The IID value.
      *
      */
-    const uint8_t *GetIid(void) const { return mIid; }
+    const Ip6::InterfaceIdentifier &GetIid(void) const { return mIid; }
 
     /**
      * This method sets the IID value.
      *
-     * @param[in]  aIid  A pointer to the IID value.
+     * @param[in]  aIid  The IID value.
      *
      */
-    void SetIid(const uint8_t *aIid) { memcpy(mIid, aIid, sizeof(mIid)); }
+    void SetIid(const Ip6::InterfaceIdentifier &aIid) { mIid = aIid; }
 
     /**
-     * This method returns a pointer to the IPv6 Address value.
+     * This method returns the IPv6 Address value.
      *
-     * @returns A pointer to the IPv6 Address value.
+     * @returns The IPv6 Address value.
      *
      */
-    const Ip6::Address *GetIp6Address(void) const { return &mIp6Address; }
+    const Ip6::Address &GetIp6Address(void) const { return mIp6Address; }
 
     /**
      * This method sets the IPv6 Address value.
@@ -1001,8 +964,8 @@ private:
     uint8_t mControl;
     union
     {
-        uint8_t      mIid[Ip6::Address::kInterfaceIdentifierSize];
-        Ip6::Address mIp6Address;
+        Ip6::InterfaceIdentifier mIid;
+        Ip6::Address             mIp6Address;
     } OT_TOOL_PACKED_FIELD;
 } OT_TOOL_PACKED_END;
 

@@ -73,6 +73,33 @@ zb_bool_t zb_osif_timer_is_on(void);
 void zb_osif_enable_all_inter(void);
 void zb_osif_disable_all_inter(void);
 
+/* Redefine ZBOSS scheduler API only inside Zephyr application. */
+#ifndef ZBOSS_BUILD
+#define ZB_SCHEDULE_APP_CALLBACK(func, param) \
+	zigbee_schedule_callback(func, param)
+
+#define ZB_SCHEDULE_APP_CALLBACK2(func, param, user_param) \
+	zigbee_schedule_callback2(func, param, user_param)
+
+#define ZB_SCHEDULE_APP_ALARM(func, param, timeout_bi) \
+	zigbee_schedule_alarm(func, param, timeout_bi)
+
+#define ZB_SCHEDULE_APP_ALARM_CANCEL(func, param) \
+	zigbee_schedule_alarm_cancel(func, param)
+
+#define zb_buf_get_out_delayed(func) \
+	zigbee_get_out_buf_delayed(func)
+
+#define zb_buf_get_in_delayed(func) \
+	zigbee_get_in_buf_delayed(func)
+
+#define zb_buf_get_out_delayed_ext(func, param, max_size) \
+	zigbee_get_out_buf_delayed_ext(func, param, max_size)
+
+#define zb_buf_get_in_delayed_ext(func, param, max_size) \
+	zigbee_get_in_buf_delayed_ext(func, param, max_size)
+#endif /* ZBOSS_BUILD */
+
 #ifdef ZB_STACK_REGRESSION_TESTING_API
 
 #define ZB_ENABLE_ALL_INTER()                          \
@@ -113,6 +140,20 @@ zb_bool_t zb_osif_is_sleeping(void);
 #define ZB_HAVE_ASYNC_SERIAL
 #endif  /* CONFIG_ZB_HAVE_SERIAL */
 
+#ifdef CONFIG_ZB_USE_LEDS
+#define ZB_USE_LEDS
+#define ZB_N_LEDS 4
+#endif /* CONFIG_ZB_USE_LEDS */
+
+#ifdef CONFIG_ZB_USE_DIMMABLE_LED
+#define ZB_USE_DIMMABLE_LED
+#endif /* CONFIG_ZB_USE_DIMMABLE_LED */
+
+#ifdef CONFIG_ZB_USE_BUTTONS
+#define ZB_USE_BUTTONS
+#define ZB_N_BUTTONS 4
+#endif /* CONFIG_ZB_USE_BUTTONS */
+
 
 /** @addtogroup special_nordic_functions
  * @{
@@ -124,33 +165,6 @@ zb_bool_t zb_osif_is_sleeping(void);
  * @param[out] ieee_eui64  Pointer to a long address structure to be filled.
  */
 void zb_osif_get_ieee_eui64(zb_ieee_addr_t ieee_eui64);
-
-#ifdef CONFIG_RADIO_STATISTICS
-typedef struct zb_osif_radio_stats_s
-{
-  zb_uint32_t rx_successful;            /* Success: nrf_802154_received_timestamp_raw() calls count. */
-  zb_uint32_t rx_err_none;              /* Error Code: 0x00 */
-  zb_uint32_t rx_err_invalid_frame;     /* Error Code: 0x01 */
-  zb_uint32_t rx_err_invalid_fcs;       /* Error Code: 0x02 */
-  zb_uint32_t rx_err_invalid_dest_addr; /* Error Code: 0x03 */
-  zb_uint32_t rx_err_runtime;           /* Error Code: 0x04 */
-  zb_uint32_t rx_err_timeslot_ended;    /* Error Code: 0x05 */
-  zb_uint32_t rx_err_aborted;           /* Error Code: 0x06 */
-
-  zb_uint32_t tx_successful;            /* Success: nrf_802154_transmitted_raw() calls count. */
-  zb_uint32_t tx_err_none;              /* Error Code: 0x00 */
-  zb_uint32_t tx_err_busy_channel;      /* Error Code: 0x01 */
-  zb_uint32_t tx_err_invalid_ack;       /* Error Code: 0x02 */
-  zb_uint32_t tx_err_no_mem;            /* Error Code: 0x03 */
-  zb_uint32_t tx_err_timeslot_ended;    /* Error Code: 0x04 */
-  zb_uint32_t tx_err_no_ack;            /* Error Code: 0x05 */
-  zb_uint32_t tx_err_aborted;           /* Error Code: 0x06 */
-  zb_uint32_t tx_err_timeslot_denied;   /* Error Code: 0x07 */
-
-} zb_osif_radio_stats_t;
-
-zb_osif_radio_stats_t *zb_osif_get_radio_stats(void);
-#endif /* CONFIG_RADIO_STATISTICS */
 
 /**
  * @}

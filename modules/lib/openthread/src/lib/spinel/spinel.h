@@ -345,7 +345,29 @@
 #define SPINEL_PROTOCOL_VERSION_THREAD_MAJOR 4
 #define SPINEL_PROTOCOL_VERSION_THREAD_MINOR 3
 
+/**
+ * @def SPINEL_FRAME_MAX_SIZE
+ *
+ *  The maximum size of SPINEL frame.
+ *
+ */
 #define SPINEL_FRAME_MAX_SIZE 1300
+
+/**
+ * @def SPINEL_FRAME_MAX_COMMAND_HEADER_SIZE
+ *
+ *  The maximum size of SPINEL command header.
+ *
+ */
+#define SPINEL_FRAME_MAX_COMMAND_HEADER_SIZE 4
+
+/**
+ * @def SPINEL_FRAME_MAX_PAYLOAD_SIZE
+ *
+ *  The maximum size of SPINEL command payload.
+ *
+ */
+#define SPINEL_FRAME_MAX_COMMAND_PAYLOAD_SIZE (SPINEL_FRAME_MAX_SIZE - SPINEL_FRAME_MAX_COMMAND_HEADER_SIZE)
 
 /**
  * @def SPINEL_ENCRYPTER_EXTRA_DATA_SIZE
@@ -622,6 +644,8 @@ enum
     SPINEL_NCP_LOG_REGION_OT_CORE     = 15,
     SPINEL_NCP_LOG_REGION_OT_UTIL     = 16,
     SPINEL_NCP_LOG_REGION_OT_BBR      = 17,
+    SPINEL_NCP_LOG_REGION_OT_MLR      = 18,
+    SPINEL_NCP_LOG_REGION_OT_DUA      = 19,
 };
 
 enum
@@ -670,11 +694,12 @@ typedef uint8_t      spinel_tid_t;
 
 enum
 {
-    SPINEL_MD_FLAG_TX       = 0x0001, //!< Packet was transmitted, not received.
-    SPINEL_MD_FLAG_BAD_FCS  = 0x0004, //!< Packet was received with bad FCS
-    SPINEL_MD_FLAG_DUPE     = 0x0008, //!< Packet seems to be a duplicate
-    SPINEL_MD_FLAG_ACKED_FP = 0x0010, //!< Packet was acknowledged with frame pending set
-    SPINEL_MD_FLAG_RESERVED = 0xFFE2, //!< Flags reserved for future use.
+    SPINEL_MD_FLAG_TX        = 0x0001, //!< Packet was transmitted, not received.
+    SPINEL_MD_FLAG_BAD_FCS   = 0x0004, //!< Packet was received with bad FCS
+    SPINEL_MD_FLAG_DUPE      = 0x0008, //!< Packet seems to be a duplicate
+    SPINEL_MD_FLAG_ACKED_FP  = 0x0010, //!< Packet was acknowledged with frame pending set
+    SPINEL_MD_FLAG_ACKED_SEC = 0x0020, //!< Packet was acknowledged with secure enhance ACK
+    SPINEL_MD_FLAG_RESERVED  = 0xFFC2, //!< Flags reserved for future use.
 };
 
 enum
@@ -1115,6 +1140,7 @@ typedef uint32_t spinel_capability_t;
  *    Interface    | 0x100 - 0x1FF                  | Interface (e.g., UART)
  *    PIB          | 0x400 - 0x4FF                  | 802.15.4 PIB
  *    Counter      | 0x500 - 0x7FF                  | Counters (MAC, IP, etc).
+ *    RCP          | 0x800 - 0x8FF                  | RCP specific property
  *    Nest         |                0x3BC0 - 0x3BFF | Nest (legacy)
  *    Vendor       |                0x3C00 - 0x3FFF | Vendor specific
  *    Debug        |                0x4000 - 0x43FF | Debug related
@@ -2931,6 +2957,10 @@ enum
      *        (use Thread stack default if not specified)
      *  `b` : Set to true to enable CSMA-CA for this packet, false otherwise.
      *        (default true).
+     *  `b` : Set to true to indicate it is a retransmission packet, false otherwise.
+     *        (default false).
+     *  `b` : Set to true to indicate that SubMac should skip AES processing, false otherwise.
+     *        (default false).
      *
      */
     SPINEL_PROP_STREAM_RAW = SPINEL_PROP_STREAM__BEGIN + 1,
@@ -3084,15 +3114,22 @@ enum
     SPINEL_PROP_MESHCOP_COMMISSIONER_STATE = SPINEL_PROP_MESHCOP__BEGIN + 2,
 
     // Thread Commissioner Joiners
-    /** Format `A(t(E)UL)` - insert or remove only
+    /** Format `A(t(t(E|CX)UL))` - get, insert or remove.
      *
      * Required capability: SPINEL_CAP_THREAD_COMMISSIONER
      *
-     * Data per item is:
+     * Data per array entry is:
      *
-     *  `t(E)` | `t()`: Joiner EUI64. Empty struct indicates any Joiner
-     *  `L`           : Timeout (in seconds) after which the Joiner is automatically removed
-     *  `U`           : PSKd
+     *  `t()` | `t(E)` | `t(CX)` : Joiner info struct (formatting varies).
+     *
+     *   -  `t()` or empty struct indicates any joiner.
+     *   -  `t(E)` specifies the Joiner EUI-64.
+     *   -  `t(CX) specifies Joiner Discerner, `C` is Discerner length (in bits), and `X` is Discerner value.
+     *
+     * The struct is followed by:
+     *
+     *  `L` : Timeout after which to remove Joiner (when written should be in seconds, when read is in milliseconds)
+     *  `U` : PSKd
      *
      * For CMD_PROP_VALUE_REMOVE the timeout and PSKd are optional.
      *
@@ -3114,6 +3151,32 @@ enum
      *
      */
     SPINEL_PROP_MESHCOP_COMMISSIONER_SESSION_ID = SPINEL_PROP_MESHCOP__BEGIN + 5,
+
+    /// Thread Joiner Discerner
+    /** Format `CX`  - Read-write
+     *
+     * Required capability: SPINEL_CAP_THREAD_JOINER
+     *
+     * This property represents a Joiner Discerner.
+     *
+     * The Joiner Discerner is used to calculate the Joiner ID used during commissioning/joining process.
+     *
+     * By default (when a discerner is not provided or cleared), Joiner ID is derived as first 64 bits of the result
+     * of computing SHA-256 over factory-assigned IEEE EUI-64. Note that this is the main behavior expected by Thread
+     * specification.
+     *
+     * Format:
+     *
+     *   'C' : The Joiner Discerner bit length (number of bits).
+     *   `X` : The Joiner Discerner value (64-bit unsigned)  - Only present/applicable when length is non-zero.
+     *
+     * When writing to this property, the length can be set to zero to clear any previously set Joiner Discerner value.
+     *
+     * When reading this property if there is no currently set Joiner Discerner, zero is returned as the length (with
+     * no value field).
+     *
+     */
+    SPINEL_PROP_MESHCOP_JOINER_DISCERNER = SPINEL_PROP_MESHCOP__BEGIN + 6,
 
     SPINEL_PROP_MESHCOP__END = 0x90,
 
@@ -3908,6 +3971,44 @@ enum
     SPINEL_PROP_CNTR_MAC_RETRY_HISTOGRAM = SPINEL_PROP_CNTR__BEGIN + 404,
 
     SPINEL_PROP_CNTR__END = 0x800,
+
+    SPINEL_PROP_RCP__BEGIN = 0x800,
+
+    /// MAC Key
+    /** Format: `CCddd`.
+     *
+     *  `C`: MAC key ID mode
+     *  `C`: MAC key ID
+     *  `d`: previous MAC key material data
+     *  `d`: current MAC key material data
+     *  `d`: next MAC key material data
+     *
+     * The Spinel property is used to set/get MAC key materials to and from RCP.
+     *
+     */
+    SPINEL_PROP_RCP_MAC_KEY = SPINEL_PROP_RCP__BEGIN + 0,
+
+    /// MAC Frame Counter
+    /** Format: `L`.
+     *
+     *  `L`: MAC frame counter
+     *
+     * The Spinel property is used to set MAC frame counter to RCP.
+     *
+     */
+    SPINEL_PROP_RCP_MAC_FRAME_COUNTER = SPINEL_PROP_RCP__BEGIN + 1,
+
+    /// Timestamps when Spinel frame is received and transmitted
+    /** Format: `X`.
+     *
+     *  `X`: Spinel frame transmit timestamp
+     *
+     * The Spinel property is used to get timestamp from RCP to calculate host and RCP timer difference.
+     *
+     */
+    SPINEL_PROP_RCP_TIMESTAMP = SPINEL_PROP_RCP__BEGIN + 2,
+
+    SPINEL_PROP_RCP__END = 0x900,
 
     SPINEL_PROP_NEST__BEGIN = 0x3BC0,
 

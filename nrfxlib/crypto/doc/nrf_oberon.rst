@@ -3,6 +3,10 @@
 nrf_oberon crypto library
 #########################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The nrf_oberon library contains a collection of cryptographic algorithms created by Oberon Microsystems, licensed to Nordic Semiconductor ASA for redistribution.
 The library provides highly optimized software for Nordic Semiconductor SoCs based on Cortex-M0, Cortex-M4, and Cortex-M33 architectures.
 
@@ -31,7 +35,7 @@ The library does not require any initialization before the APIs can be used, alt
 mbed TLS integration
 ====================
 Starting from version 3.0.5, the nrf_oberon library contains a companion library that provides mbed TLS integration for select features.
-This must be used with the :ref:`nrf_security_readme`.
+This must be used with the :ref:`nrf_security`.
 
 
 Supported features

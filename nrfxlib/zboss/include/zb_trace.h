@@ -121,9 +121,9 @@ extern zb_uint_t g_trace_inside_intr;
 #define TRACE_SUBSYSTEM_SECUR     0x0080  /**< Security subsystem. */
 
 #define TRACE_SUBSYSTEM_ZCL       0x0100  /**< ZCL subsystem. */
-/** @cond DOXYGEN_ZLL_SECTION*/
-#define TRACE_SUBSYSTEM_ZLL       0x0200  /**< ZLL subsystem. */
-/** @endcond */ /* DOXYGEN_ZLL_SECTION */
+/** @cond DOXYGEN_TOUCHLINK_FEATURE */
+#define TRACE_SUBSYSTEM_ZLL       0x0200  /**< ZLL/Touchlink subsystem. */
+/** @endcond */ /* DOXYGEN_TOUCHLINK_FEATURE */
 /** @cond internals_doc */
 #define TRACE_SUBSYSTEM_JSON      TRACE_SUBSYSTEM_ZLL  /**< JSON decoding is used in app,
                                            * else free */
@@ -141,6 +141,8 @@ extern zb_uint_t g_trace_inside_intr;
 #define TRACE_SUBSYSTEM_USB       0x8000
 /** @endcond */ /* internals_doc */
 
+#define TRACE_SUBSYSTEM_INFO      (zb_uint_t)(-1)  /**< Common subsystem */
+
 #define TRACE_SUBSYSTEM_OTA TRACE_SUBSYSTEM_ZGP /**< OTA subsystem */
 #define TRACE_SUBSYSTEM_ZSE       TRACE_SUBSYSTEM_CLOUD  /**< ZSE subsystem. Not conflicting
                                                           * with cloud, let's use it */
@@ -156,15 +158,17 @@ extern zb_uint_t g_trace_inside_intr;
 #define TRACE_SUBSYSTEM_TRANSPORT TRACE_SUBSYSTEM_LWIP
 #define TRACE_SUBSYSTEM_UART TRACE_SUBSYSTEM_LWIP
 
-#define TRACE_SUBSYSTEM_SPECIAL1 TRACE_SUBSYSTEM_ALIEN
-#define TRACE_SUBSYSTEM_MACLL   TRACE_SUBSYSTEM_ALIEN
+#define TRACE_SUBSYSTEM_SPECIAL1 TRACE_SUBSYSTEM_SSL
+#define TRACE_SUBSYSTEM_MACLL   TRACE_SUBSYSTEM_SSL
 
 #define TRACE_SUBSYSTEM_BATTERY TRACE_SUBSYSTEM_SSL
 #define TRACE_SUBSYSTEM_MAC_API TRACE_SUBSYSTEM_SSL
 /** @endcond */ /* internals_doc */
 /* to be continued... */
 
+/** @cond DSR_TRACE */
 /** @} */ /* TRACE_SUBSYSTEMS */
+/** @endcond */ /* DSR_TRACE */
 /** @} */ /* ZB_TRACE */
 
 /** @cond DSR_TRACE */
@@ -202,7 +206,7 @@ zb_uint32_t zb_trace_get_counter(void);
 
 #ifdef DOXYGEN
 /**
-   Trace file id used by win_com_dump to identify source file.
+   Trace file ID used by win_com_dump to identify source file.
 
    Must be first define in the .c file, just before first include directive.
   @par Example
@@ -250,31 +254,70 @@ void zb_file_trace_commit(void);
  @param name - trace file name component
 */
 #define TRACE_INIT(name)   zb_trace_init_file(name)
+/** @endcond */
 
 /**
  Deinitialize trace subsystem
 */
 #define TRACE_DEINIT zb_trace_deinit_file
 
+/** @cond DOXYGEN_INTERNAL_DOC */
 #define _T0(...) __VA_ARGS__
 
 #if defined ZB_BINARY_TRACE && !defined ZB_TRACE_TO_SYSLOG
+
 /**
- *  @brief Print trace message.
+ *  @brief Print binary trace message.
  */
-void zb_trace_msg_file(
+void zb_trace_msg_bin_file(
     zb_uint_t mask,
     zb_uint_t level,
+#if defined ZB_BINARY_AND_TEXT_TRACE_MODE
+    zb_char_t *file_name,
+#endif
     zb_uint16_t file_id,
     zb_int_t line_number,
     zb_int_t args_size, ...);
 
-#define _T1(s, l, fmts, args) if ((zb_int_t)ZB_TRACE_LEVEL>=(zb_int_t)l && ((s) & ZB_TRACE_MASK)) zb_trace_msg_file(s, l, _T0 args)
+#if defined ZB_BINARY_AND_TEXT_TRACE_MODE
+#define ZB_TRACE_MODE_BINARY 0
+#define ZB_TRACE_MODE_TEXT   1
+extern zb_uint8_t g_trace_text_mode;
+void zb_trace_set_mode(zb_uint8_t mode);
+
+/**
+ *  @brief Print trace message.
+ */
+void zb_trace_msg_txt_file(
+    zb_uint_t mask,
+    zb_uint_t level,
+    zb_char_t *format,
+    zb_char_t *file_name,
+    zb_uint16_t file_id,
+    zb_int_t line_number,
+    zb_int_t args_size, ...);
+
+#define _T1(s, l, fmts, args)                  \
+  if ((zb_int_t)ZB_TRACE_LEVEL>=(zb_int_t)l && \
+      ((s) & ZB_TRACE_MASK))                   \
+  {                                            \
+    if (g_trace_text_mode == 0)                \
+    {                                          \
+      zb_trace_msg_bin_file(s, l, _T0 args);   \
+    }                                          \
+    else                                       \
+    {                                          \
+      zb_trace_msg_txt_file(s, l, fmts, _T0 args); \
+    }                                          \
+  }
+#else
+#define _T1(s, l, fmts, args) if ((zb_int_t)ZB_TRACE_LEVEL>=(zb_int_t)l && ((s) & ZB_TRACE_MASK)) zb_trace_msg_bin_file(s, l, _T0 args)
+#endif
 #else
 /**
  *  @brief Print trace message.
  */
-void zb_trace_msg_file(
+void zb_trace_msg_txt_file(
     zb_uint_t mask,
     zb_uint_t level,
     zb_char_t *format,
@@ -282,10 +325,9 @@ void zb_trace_msg_file(
     zb_int_t line_number,
     zb_int_t args_size, ...);
 
-#define _T1(s, l, fmts, args) if ((zb_int_t)ZB_TRACE_LEVEL>=(zb_int_t)l && ((s) & ZB_TRACE_MASK)) zb_trace_msg_file(s, l, fmts, _T0 args)
+#define _T1(s, l, fmts, args) if ((zb_int_t)ZB_TRACE_LEVEL>=(zb_int_t)l && ((s) & ZB_TRACE_MASK)) zb_trace_msg_txt_file(s, l, fmts, _T0 args)
 #endif
-
-/** @endcond */ /* internals_doc */
+/** @endcond */ /* DOXYGEN_INTERNAL_DOC */
 
 /**
  *  @brief Put trace output.
@@ -302,8 +344,8 @@ void zb_trace_msg_file(
     _T1(lm, fmts, args); \
   } while (0)
 
+/** @cond DOXYGEN_INTERNAL_DOC */
 #elif (defined ZB_TRACE_TO_PORT || defined ZB_TRACE_OVER_SIF)
-
 /*
   8051 trace does not use format string in the code to save code space.
 
@@ -321,15 +363,14 @@ Define readable constants like
 
  */
 
-#ifdef ZB_TRACE_OVER_SIF
+#if defined ZB_TRACE_OVER_SIF
 #define TRACE_INIT(name) zb_osif_sif_init()
-#else
-#ifndef ZB_SERIAL_FOR_TRACE
+#elif ! defined ZB_SERIAL_FOR_TRACE || defined ZB_TRACE_OVER_JTAG
 #define TRACE_INIT(name)
 #else
 #define TRACE_INIT(name) zb_osif_serial_init()
-#endif
-#endif
+#endif /* defined ZB_TRACE_OVER_SIF */
+
 /* No trace deinit */
 #define TRACE_DEINIT()
 
@@ -396,8 +437,9 @@ void zb_trace_msg_port(
 #define TRACE_ENABLED(m) 0
 
 #endif  /* trace on/off */
+/** @endcond */
 
-
+/** @cond DSR_TRACE */
 /**
  *  @addtogroup TRACE_DATA_FORMAT_ADDITIONAL Trace data format for keys
  *  @{
@@ -440,6 +482,7 @@ void zb_trace_msg_port(
 #define TRACE_FORMAT_64 "%A"
 #define TRACE_FORMAT_128 "%A:%A"
 
+/** @endcond */ /* DSR_TRACE */
 /** @cond internals_doc */
 typedef struct zb_addr64_struct_s
 {
@@ -456,10 +499,11 @@ typedef struct zb_byte128_struct_s
 /* Pass 16-bytes key as structure by value */
 #define TRACE_ARG_128(a) *((zb_byte128_struct_t *)a)
 /** @endcond */ /* internals_doc */
+/** @cond DSR_TRACE */
 
 #endif  /* ti file / !to file */
 /** @} */ /* TRACE_DATA_FORMAT_ADDITIONAL */
-
+/** @endcond */ /* DSR_TRACE */
 
 
 /** @cond DSR_TRACE */
@@ -468,13 +512,13 @@ typedef struct zb_byte128_struct_s
  *  @{
  */
 /** @brief Error message. */
-#define TRACE_ERROR (zb_uint_t)-1, 1
+#define TRACE_ERROR TRACE_SUBSYSTEM_INFO, 0
 /** @brief Information message level 1. */
-#define TRACE_INFO1 (zb_uint_t)-1, 2
+#define TRACE_INFO1 TRACE_SUBSYSTEM_INFO, 1
 /** @brief Information message level 2. */
-#define TRACE_INFO2 (zb_uint_t)-1, 3
+#define TRACE_INFO2 TRACE_SUBSYSTEM_INFO, 2
 /** @brief Information message level 3. */
-#define TRACE_INFO3 (zb_uint_t)-1, 4
+#define TRACE_INFO3 TRACE_SUBSYSTEM_INFO, 3
 
 /** @} */ /* TRACE_GENERAL_MESSAGES */
 
@@ -520,7 +564,11 @@ typedef struct zb_byte128_struct_s
  * Pointers are 4-bytes. */
 
 #if defined ZB_BINARY_TRACE && !defined ZB_TRACE_TO_SYSLOG
+#if defined ZB_BINARY_AND_TEXT_TRACE_MODE
+  #define TRACE_ARG_SIZE(n_h, n_d, n_l, n_p, n_a) __FILE__,ZB_TRACE_FILE_ID,__LINE__, (n_h*4 + n_d*4 + n_l*4 + n_p*4 + n_a*8)
+#else
 #define TRACE_ARG_SIZE(n_h, n_d, n_l, n_p, n_a) ZB_TRACE_FILE_ID,__LINE__, (n_h*4 + n_d*4 + n_l*4 + n_p*4 + n_a*8)
+#endif
 #else
 #define TRACE_ARG_SIZE(n_h, n_d, n_l, n_p, n_a) __FILE__,__LINE__, (n_h*4 + n_d*4 + n_l*4 + n_p*4 + n_a*8)
 #endif
@@ -536,6 +584,7 @@ typedef struct zb_byte128_struct_s
 #define FMT__A_D_D                                      TRACE_ARG_SIZE(0,2,0,0,1)
 #define FMT__A_D_D_P_H                                  TRACE_ARG_SIZE(1,2,0,1,1)
 #define FMT__A_D_H                                      TRACE_ARG_SIZE(1,1,0,0,1)
+#define FMT__A_D_H_H                                    TRACE_ARG_SIZE(2,1,0,0,1)
 #define FMT__A_D_P_H_H_H                                TRACE_ARG_SIZE(3,1,0,1,1)
 #define FMT__A_H                                        TRACE_ARG_SIZE(1,0,0,0,1)
 #define FMT__A_H_H                                      TRACE_ARG_SIZE(2,0,0,0,1)
@@ -583,6 +632,8 @@ typedef struct zb_byte128_struct_s
 #define FMT__D_D_L_P                                    TRACE_ARG_SIZE(0,2,1,1,0)
 #define FMT__D_D_P                                      TRACE_ARG_SIZE(0,2,0,1,0)
 #define FMT__D_D_P_D                                    TRACE_ARG_SIZE(0,3,0,1,0)
+#define FMT__D_P_P_D                                    TRACE_ARG_SIZE(0,2,0,2,0)
+#define FMT__D_P_P_P                                    TRACE_ARG_SIZE(0,1,0,3,0)
 #define FMT__D_D_P_D_D                                  TRACE_ARG_SIZE(0,4,0,1,0)
 #define FMT__D_D_P_D_L                                  TRACE_ARG_SIZE(0,3,1,1,0)
 #define FMT__D_D_P_H                                    TRACE_ARG_SIZE(1,2,0,1,0)
@@ -918,6 +969,7 @@ typedef struct zb_byte128_struct_s
 #define TRACE_COMMON1 TRACE_SUBSYSTEM_COMMON, 1
 #define TRACE_COMMON2 TRACE_SUBSYSTEM_COMMON, 2
 #define TRACE_COMMON3 TRACE_SUBSYSTEM_COMMON, 3
+#define TRACE_COMMON4 TRACE_SUBSYSTEM_COMMON, 4
 
 /** @cond internals_doc */
 /* osif subsystem is nearly not used. Place it to the same with common and free
@@ -925,42 +977,52 @@ typedef struct zb_byte128_struct_s
 #define TRACE_OSIF1 TRACE_SUBSYSTEM_COMMON, 1
 #define TRACE_OSIF2 TRACE_SUBSYSTEM_COMMON, 2
 #define TRACE_OSIF3 TRACE_SUBSYSTEM_COMMON, 3
+#define TRACE_OSIF4 TRACE_SUBSYSTEM_COMMON, 4
 
 #define TRACE_MAC1 TRACE_SUBSYSTEM_MAC, 1
 #define TRACE_MAC2 TRACE_SUBSYSTEM_MAC, 2
 #define TRACE_MAC3 TRACE_SUBSYSTEM_MAC, 3
+#define TRACE_MAC4 TRACE_SUBSYSTEM_MAC, 4
 
 #define TRACE_MACLL1 TRACE_SUBSYSTEM_MACLL, 1
 #define TRACE_MACLL2 TRACE_SUBSYSTEM_MACLL, 2
 #define TRACE_MACLL3 TRACE_SUBSYSTEM_MACLL, 3
+#define TRACE_MACLL4 TRACE_SUBSYSTEM_MACLL, 4
 
 #define TRACE_NWK1 TRACE_SUBSYSTEM_NWK, 1
 #define TRACE_NWK2 TRACE_SUBSYSTEM_NWK, 2
 #define TRACE_NWK3 TRACE_SUBSYSTEM_NWK, 3
+#define TRACE_NWK4 TRACE_SUBSYSTEM_NWK, 4
 
 #define TRACE_APS1 TRACE_SUBSYSTEM_APS, 1
 #define TRACE_APS2 TRACE_SUBSYSTEM_APS, 2
 #define TRACE_APS3 TRACE_SUBSYSTEM_APS, 3
+#define TRACE_APS4 TRACE_SUBSYSTEM_APS, 4
 
 #define TRACE_AF1 TRACE_SUBSYSTEM_AF, 1
 #define TRACE_AF2 TRACE_SUBSYSTEM_AF, 2
 #define TRACE_AF3 TRACE_SUBSYSTEM_AF, 3
+#define TRACE_AF4 TRACE_SUBSYSTEM_AF, 4
 
 #define TRACE_ZDO1 TRACE_SUBSYSTEM_ZDO, 1
 #define TRACE_ZDO2 TRACE_SUBSYSTEM_ZDO, 2
 #define TRACE_ZDO3 TRACE_SUBSYSTEM_ZDO, 3
+#define TRACE_ZDO4 TRACE_SUBSYSTEM_ZDO, 4
 
 #define TRACE_SECUR1 TRACE_SUBSYSTEM_SECUR, 1
 #define TRACE_SECUR2 TRACE_SUBSYSTEM_SECUR, 2
 #define TRACE_SECUR3 TRACE_SUBSYSTEM_SECUR, 3
+#define TRACE_SECUR4 TRACE_SUBSYSTEM_SECUR, 4
 
 #define TRACE_ZCL1 TRACE_SUBSYSTEM_ZCL, 1
 #define TRACE_ZCL2 TRACE_SUBSYSTEM_ZCL, 2
 #define TRACE_ZCL3 TRACE_SUBSYSTEM_ZCL, 3
+#define TRACE_ZCL4 TRACE_SUBSYSTEM_ZCL, 4
 
 #define TRACE_ZLL1 TRACE_SUBSYSTEM_ZLL, 1
 #define TRACE_ZLL2 TRACE_SUBSYSTEM_ZLL, 2
 #define TRACE_ZLL3 TRACE_SUBSYSTEM_ZLL, 3
+#define TRACE_ZLL4 TRACE_SUBSYSTEM_ZLL, 4
 
 #define TRACE_ZGP1 TRACE_SUBSYSTEM_ZGP, 1
 #define TRACE_ZGP2 TRACE_SUBSYSTEM_ZGP, 2
@@ -975,10 +1037,12 @@ typedef struct zb_byte128_struct_s
 #define TRACE_SPI1 TRACE_SUBSYSTEM_SPI, 1
 #define TRACE_SPI2 TRACE_SUBSYSTEM_SPI, 2
 #define TRACE_SPI3 TRACE_SUBSYSTEM_SPI, 3
+#define TRACE_SPI4 TRACE_SUBSYSTEM_SPI, 4
 
 #define TRACE_SSL1 TRACE_SUBSYSTEM_SSL, 1
 #define TRACE_SSL2 TRACE_SUBSYSTEM_SSL, 2
 #define TRACE_SSL3 TRACE_SUBSYSTEM_SSL, 3
+#define TRACE_SSL4 TRACE_SUBSYSTEM_SSL, 4
 
 #define TRACE_APP1 TRACE_SUBSYSTEM_APP, 1
 #define TRACE_APP2 TRACE_SUBSYSTEM_APP, 2
@@ -988,14 +1052,17 @@ typedef struct zb_byte128_struct_s
 #define TRACE_SPECIAL1 TRACE_SUBSYSTEM_SPECIAL1, 1
 #define TRACE_SPECIAL2 TRACE_SUBSYSTEM_SPECIAL1, 2
 #define TRACE_SPECIAL3 TRACE_SUBSYSTEM_SPECIAL1, 3
+#define TRACE_SPECIAL4 TRACE_SUBSYSTEM_SPECIAL1, 4
 
 #define TRACE_USB1 TRACE_SUBSYSTEM_USB, 1
 #define TRACE_USB2 TRACE_SUBSYSTEM_USB, 2
 #define TRACE_USB3 TRACE_SUBSYSTEM_USB, 3
+#define TRACE_USB4 TRACE_SUBSYSTEM_USB, 4
 
 #define TRACE_MEMDBG1 TRACE_SUBSYSTEM_MEM, 1
 #define TRACE_MEMDBG2 TRACE_SUBSYSTEM_MEM, 2
 #define TRACE_MEMDBG3 TRACE_SUBSYSTEM_MEM, 3
+#define TRACE_MEMDBG4 TRACE_SUBSYSTEM_MEM, 4
 
 #define TRACE_CLOUD1 TRACE_SUBSYSTEM_CLOUD, 1
 #define TRACE_CLOUD2 TRACE_SUBSYSTEM_CLOUD, 2
@@ -1005,38 +1072,47 @@ typedef struct zb_byte128_struct_s
 #define TRACE_HTTP1 TRACE_SUBSYSTEM_HTTP, 1
 #define TRACE_HTTP2 TRACE_SUBSYSTEM_HTTP, 2
 #define TRACE_HTTP3 TRACE_SUBSYSTEM_HTTP, 3
+#define TRACE_HTTP4 TRACE_SUBSYSTEM_HTTP, 4
 
 #define TRACE_JSON1 TRACE_SUBSYSTEM_JSON, 1
 #define TRACE_JSON2 TRACE_SUBSYSTEM_JSON, 2
 #define TRACE_JSON3 TRACE_SUBSYSTEM_JSON, 3
+#define TRACE_JSON4 TRACE_SUBSYSTEM_JSON, 4
 
 #define TRACE_LWIP1 TRACE_SUBSYSTEM_LWIP, 1
 #define TRACE_LWIP2 TRACE_SUBSYSTEM_LWIP, 2
 #define TRACE_LWIP3 TRACE_SUBSYSTEM_LWIP, 3
+#define TRACE_LWIP4 TRACE_SUBSYSTEM_LWIP, 4
 
 #define TRACE_VENSTAR1 TRACE_SUBSYSTEM_VENSTAR, 1
 #define TRACE_VENSTAR2 TRACE_SUBSYSTEM_VENSTAR, 2
 #define TRACE_VENSTAR3 TRACE_SUBSYSTEM_VENSTAR, 3
+#define TRACE_VENSTAR4 TRACE_SUBSYSTEM_VENSTAR, 4
 
 #define TRACE_TRANSPORT1 TRACE_SUBSYSTEM_TRANSPORT, 1
 #define TRACE_TRANSPORT2 TRACE_SUBSYSTEM_TRANSPORT, 2
 #define TRACE_TRANSPORT3 TRACE_SUBSYSTEM_TRANSPORT, 3
+#define TRACE_TRANSPORT4 TRACE_SUBSYSTEM_TRANSPORT, 4
 
 #define TRACE_UART1 TRACE_SUBSYSTEM_UART, 1
 #define TRACE_UART2 TRACE_SUBSYSTEM_UART, 2
 #define TRACE_UART3 TRACE_SUBSYSTEM_UART, 3
+#define TRACE_UART4 TRACE_SUBSYSTEM_UART, 4
 
 #define TRACE_BATTERY1 TRACE_SUBSYSTEM_BATTERY, 1
 #define TRACE_BATTERY2 TRACE_SUBSYSTEM_BATTERY, 2
 #define TRACE_BATTERY3 TRACE_SUBSYSTEM_BATTERY, 3
+#define TRACE_BATTERY4 TRACE_SUBSYSTEM_BATTERY, 4
 
 #define TRACE_OTA1 TRACE_SUBSYSTEM_OTA, 1
 #define TRACE_OTA2 TRACE_SUBSYSTEM_OTA, 2
 #define TRACE_OTA3 TRACE_SUBSYSTEM_OTA, 3
+#define TRACE_OTA4 TRACE_SUBSYSTEM_OTA, 4
 
 #define TRACE_MAC_API1 TRACE_SUBSYSTEM_MAC_API, 1
 #define TRACE_MAC_API2 TRACE_SUBSYSTEM_MAC_API, 2
 #define TRACE_MAC_API3 TRACE_SUBSYSTEM_MAC_API, 3
+#define TRACE_MAC_API4 TRACE_SUBSYSTEM_MAC_API, 4
 /** @endcond */ /* internals_doc */
 
 #ifndef ZB_SET_TRACE_LEVEL

@@ -121,8 +121,10 @@ check_PROGRAMS                                                     += \
     test-message-queue                                                \
     test-netif                                                        \
     test-network-data                                                 \
+    test-pool                                                         \
     test-priority-queue                                               \
     test-pskc                                                         \
+    test-steering-data                                                \
     test-string                                                       \
     test-timer                                                        \
     $(NULL)
@@ -216,11 +218,17 @@ test_netif_SOURCES           = $(COMMON_SOURCES) test_netif.cpp
 test_network_data_LDADD      = $(COMMON_LDADD)
 test_network_data_SOURCES    = $(COMMON_SOURCES) test_network_data.cpp
 
+test_pool_LDADD              = $(COMMON_LDADD)
+test_pool_SOURCES            = $(COMMON_SOURCES) test_pool.cpp
+
 test_priority_queue_LDADD    = $(COMMON_LDADD)
 test_priority_queue_SOURCES  = $(COMMON_SOURCES) test_priority_queue.cpp
 
 test_pskc_LDADD              = $(COMMON_LDADD)
 test_pskc_SOURCES            = $(COMMON_SOURCES) test_pskc.cpp
+
+test_steering_data_LDADD     = $(COMMON_LDADD)
+test_steering_data_SOURCES   = $(COMMON_SOURCES) test_steering_data.cpp
 
 test_string_LDADD            = $(COMMON_LDADD)
 test_string_SOURCES          = $(COMMON_SOURCES) test_string.cpp

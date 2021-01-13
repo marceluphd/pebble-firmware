@@ -102,15 +102,15 @@ enum zb_zcl_tunneling_attr_e
   ZB_ZCL_ATTR_TUNNELING_CLOSE_TUNNEL_TIMEOUT_ID,                                       \
   ZB_ZCL_ATTR_TYPE_U16,                                                                \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                        \
-  (zb_voidp_t) data_ptr                                                                \
+  (void*) data_ptr                                                                \
 }
 
 /** @endcond */ /* internals_doc */
 
 /** @def ZB_ZCL_DECLARE_TUNNELING_ATTRIB_LIST(attr_list, close_tunnel_timeout)
-  * @brief Declare attribute list for Tunnelling cluster
+  * @brief Declare attribute list for Tunneling cluster
   * @param[in] attr_list - attribute list name
-  * @param[in] close_tunnel_timeout - pointer to variable to store On/Tunnelling attribute value
+  * @param[in] close_tunnel_timeout - pointer to variable to store On/Tunneling attribute value
   */
 #define ZB_ZCL_DECLARE_TUNNELING_ATTRIB_LIST(attr_list, close_tunnel_timeout)                 \
   ZB_ZCL_START_DECLARE_ATTRIB_LIST(attr_list)                                                 \
@@ -358,7 +358,7 @@ typedef enum zb_zcl_tunneling_protocol_id_e
   ZB_ZCL_TUNNELING_PROTOCOL_IPv6                 = 8,     /**< IP v6 */
   /* 9 to 199 reserved for future growth */
   ZB_ZCL_TUNNELING_PROTOCOL_MANUFACTURER_DEFINED = 200,   /**< 200 to 254 manufacturer-defined protocols */
-  ZB_ZCL_TUNNELING_PROTOCOL_RESERVED             = 255    /**< reserver value */
+  ZB_ZCL_TUNNELING_PROTOCOL_RESERVED             = 255    /**< reserved value */
 } zb_zcl_tunneling_protocol_id_t;
 
 /************* Tunnel cluster command structures **************/
@@ -494,7 +494,7 @@ zb_zcl_tunneling_close_tunnel_t;
  * @param _dst_addr_mode - Address mode for _dst_addr.
  * @param _dst_ep - Destination endpoint.
  * @param _ep - Current endpoint.
- * @param _prfl_id - profiler identifier
+ * @param _prfl_id - profile identifier
  * @param _def_resp - enable/disable default zcl response
  * @param _cb - Callback which should be called when the ZCL stack receives
  * APS ack.
@@ -627,7 +627,7 @@ zb_ret_t zb_zcl_tunneling_server_send_transfer_data(zb_uint8_t param, zb_uint8_t
 /*! Send @e TransferData command from Tunneling server to client
  * @param _param - Reference to buffer.
  * @param _ep - Current endpoint.
- * @param _prfl_id - profiler identifier
+ * @param _prfl_id - profile identifier
  * @param _def_resp - enable/disable default zcl response
  * @param _cb - Callback which should be called when the ZCL stack receives
  * APS ack.
@@ -647,7 +647,7 @@ zb_ret_t zb_zcl_tunneling_server_send_transfer_data(zb_uint8_t param, zb_uint8_t
 /*! Send @e TransferData command from Tunneling client to server
  * @param _param - Reference to buffer.
  * @param _ep - Current endpoint.
- * @param _prfl_id - profiler identifier
+ * @param _prfl_id - profile identifier
  * @param _def_resp - enable/disable default zcl response
  * @param _cb - Callback which should be called when the ZCL stack receives
  * APS ack.
@@ -722,7 +722,7 @@ ZB_PACKED_STRUCT zb_zcl_tunneling_transfer_data_error_t;
  * @param _dst_addr_mode - Address mode for _dst_addr.
  * @param _dst_ep - Destination endpoint.
  * @param _ep - Current endpoint.
- * @param _prfl_id - profiler identifier
+ * @param _prfl_id - profile identifier
  * @param _def_resp - enable/disable default zcl response
  * @param _cb - Callback which should be called when the ZCL stack receives
  * APS ack.
@@ -811,7 +811,7 @@ ZB_PACKED_STRUCT zb_zcl_tunneling_request_tunnel_response_t;
  * @param _dst_addr_mode - Address mode for _dst_addr.
  * @param _dst_ep - Destination endpoint.
  * @param _ep - Current endpoint.
- * @param _prfl_id - profiler identifier
+ * @param _prfl_id - profile identifier
  * @param _def_resp - enable/disable default zcl response
  * @param _seq_num - ZCL transaction sequence number
  * @param _cb - Callback which should be called when the ZCL stack receives
@@ -868,8 +868,8 @@ ZB_PACKED_STRUCT zb_zcl_tunneling_request_tunnel_response_t;
 
 /** @e AckTransferData command payload.
  * @see SE spec, subclause D.6.2.4.5.2.
- * @see Client @ref ZB_ZCL_TUNNELING_CLI_CMD_ACK_TRANSFER_DATA "AckTransferData" comamnd
- * @see Server @ref ZB_ZCL_TUNNELING_SRV_CMD_ACK_TRANSFER_DATA "AckTransferData" comamnd
+ * @see Client @ref ZB_ZCL_TUNNELING_CLI_CMD_ACK_TRANSFER_DATA "AckTransferData" command
+ * @see Server @ref ZB_ZCL_TUNNELING_SRV_CMD_ACK_TRANSFER_DATA "AckTransferData" command
  */
 typedef ZB_PACKED_PRE struct zb_zcl_tunneling_ack_transfer_data_s
 {
@@ -1002,8 +1002,8 @@ extern zb_zcl_tunneling_cli_t tunneling_cli;
 
 /**************************** Tunnel internal **********************************/
 
-zb_void_t zb_zcl_tunneling_init_server(void);
-zb_void_t zb_zcl_tunneling_init_client(void);
+void zb_zcl_tunneling_init_server(void);
+void zb_zcl_tunneling_init_client(void);
 #define ZB_ZCL_CLUSTER_ID_TUNNELING_SERVER_ROLE_INIT zb_zcl_tunneling_init_server
 #define ZB_ZCL_CLUSTER_ID_TUNNELING_CLIENT_ROLE_INIT zb_zcl_tunneling_init_client
 

@@ -98,6 +98,10 @@ zb_osif_platform.h is different in different platforms repo.
 //#define ZB_PLATFORM_INIT()
 #endif
 
+#ifndef ZB_OSIF_IS_EXIT
+#define ZB_OSIF_IS_EXIT() 0
+#endif
+
 /* Default (C standard) definition of MAIN() if not redefined in zb_osif_platform.h */
 #ifndef MAIN
 #define MAIN() int main(int argc, char *argv[])
@@ -155,19 +159,13 @@ void zb_osif_serial_transport_init();
 void zb_osif_serial_transport_put_bytes(zb_uint8_t *buf, zb_short_t len);
 #endif
 
+/** @cond DOXYGEN_UART_SECTION */
 /*! \addtogroup uart */
 /*! @{ */
 
 #if defined ZB_HAVE_SERIAL || defined DOXYGEN
 
 /* Serial interface (trace, traffic dump, serial transport) */
-
-/**
-   Type of callback called by serial interface when it receives a single byte.
-
-   @param byte - received byte
- */
-typedef void (*zb_osif_uart_byte_received_cb_t)(zb_uint8_t byte);
 
 /**
    Initialize UART low level.
@@ -183,7 +181,7 @@ void zb_osif_serial_init(void);
 
    @param hnd user's rx callback
  */
-void zb_osif_set_uart_byte_received_cb(zb_osif_uart_byte_received_cb_t hnd);
+void zb_osif_set_uart_byte_received_cb(zb_callback_t hnd);
 
 /** @cond internals_doc */
 
@@ -303,24 +301,33 @@ void zb_osif_serial_set_cb_send_data(serial_send_data_cb_t cb);
 void zb_osif_serial_put_bytes(zb_uint8_t *buf, zb_short_t len);
 #endif
 
+#ifdef ZB_TRACE_OVER_JTAG
+void zb_osif_jtag_put_bytes(zb_uint8_t *buf, zb_short_t len);
+void zb_osif_jtag_flush(void);
+#endif
+
 /*! @} */
+/** @endcond */ /* DOXYGEN_UART_SECTION */
 
 
 
 #ifdef ZB_TRACE_OVER_SIF
 void zb_osif_sif_put_bytes(zb_uint8_t *buf, zb_short_t len);
 void zb_osif_sif_init(void);
-zb_void_t zb_osif_sif_debug_trace(zb_uint8_t param);
+void zb_osif_sif_debug_trace(zb_uint8_t param);
 #endif
 
 #ifdef ZB_HAVE_FILE
 /* File  */
 zb_uint32_t zb_osif_get_file_size(zb_char_t *name);
+zb_bool_t zb_osif_check_dir_exist(const zb_char_t *name);
+int zb_osif_create_dir(const zb_char_t *name);
 zb_bool_t zb_osif_check_file_exist(const zb_char_t *name, const zb_uint8_t mode);
 void zb_osif_file_copy(const zb_char_t *name_src, const zb_char_t *name_dst);
 zb_osif_file_t *zb_osif_file_open(const zb_char_t *name, const zb_char_t *mode);
 zb_osif_file_t *zb_osif_init_trace(zb_char_t *name);
 zb_osif_file_t *zb_osif_file_stdout(void);
+zb_osif_file_t *zb_osif_file_stdin(void);
 void zb_osif_file_close(zb_osif_file_t *f);
 int zb_osif_file_remove(const zb_char_t *name);
 void zb_osif_trace_printf(zb_osif_file_t *f, zb_char_t *format, ...);
@@ -337,11 +344,15 @@ int zb_osif_file_sync(zb_osif_file_t *f);
 void zb_osif_trace_get_time(zb_uint_t *sec, zb_uint_t *msec);
 zb_osif_file_t *zb_osif_popen(zb_char_t *arg);
 
+int zb_osif_stream_read(zb_osif_file_t *stream, zb_uint8_t *buf, zb_uint_t len);
+int zb_osif_stream_write(zb_osif_file_t *stream, zb_uint8_t *buf, zb_uint_t len);
+
 enum zb_file_path_base_type_e
 {
   ZB_FILE_PATH_BASE_ROMFS_BINARIES,    /* ROM FS */  /* elf binaries, etc */
   ZB_FILE_PATH_BASE_MNTFS_BINARIES,    /* RW FS */   /* prod config, etc */
   ZB_FILE_PATH_BASE_MNTFS_USER_DATA,   /* RW FS */   /* nvram. etc */
+  ZB_FILE_PATH_BASE_MNTFS_TRACE_LOGS,  /* RW FS */
   ZB_FILE_PATH_BASE_RAMFS_UNIX_SOCKET, /* RAM FS */
   ZB_FILE_PATH_BASE_RAMFS_TRACE_LOGS,  /* RAM FS */
   ZB_FILE_PATH_BASE_RAMFS_TMP_DATA,    /* RAM FS */
@@ -380,6 +391,16 @@ void zb_file_path_get_with_postfix(zb_uint8_t base_type, const char *default_bas
     ZB_ASSERT(sn_ret < ZB_MAX_FILE_PATH_SIZE); \
   }
 #endif  /* ZB_FILE_PATH_MGMNT */
+
+#ifdef ZB_USE_LOGFILE_ROTATE
+zb_uint32_t zb_osif_get_max_logfile_size(void);
+zb_ret_t zb_osif_set_max_logfile_size(zb_uint32_t val);
+
+zb_uint32_t zb_osif_get_max_logfiles_count(void);
+zb_ret_t zb_osif_set_max_logfiles_count(zb_uint32_t val);
+
+zb_ret_t zb_osif_file_rotate(const zb_char_t *file_path, const zb_char_t *file_name);
+#endif /* ZB_USE_LOGFILE_ROTATE */
 #endif /* ZB_HAVE_FILE */
 
 /*! \addtogroup zb_platform */
@@ -388,8 +409,8 @@ void zb_file_path_get_with_postfix(zb_uint8_t base_type, const char *default_bas
 /**
    Platform dependent soft reset
 */
-zb_void_t zb_reset(zb_uint8_t param);
-zb_void_t zb_syslog_msg(const zb_char_t *msg);
+void zb_reset(zb_uint8_t param);
+void zb_syslog_msg(const zb_char_t *msg);
 
 /*! @} */
 
@@ -402,9 +423,6 @@ zb_void_t zb_syslog_msg(const zb_char_t *msg);
  *  @param s_direction [OUT] - stack growing direction (ZB_TRUE - UP, ZB_FALSE - DOWN).
  */
 void zb_osif_get_stack(zb_uint8_t **s_head, zb_uint32_t *s_size, zb_uint8_t *s_direction);
-
-void osif_set_reset_at_crash(void);
-void osif_handle_crash(void);
 
 #if defined ZB_USE_NVRAM || defined doxygen
 /**
@@ -659,7 +677,7 @@ zb_bool_t zb_osif_ota_verify_integrity_async(void *dev, zb_uint32_t raw_len);
  *
  * @param integrity_is_ok - is verification of OTA image recording successfull
  */
-zb_void_t zb_osif_ota_verify_integrity_done(zb_uint8_t integrity_is_ok);
+void zb_osif_ota_verify_integrity_done(zb_uint8_t integrity_is_ok);
 
 /**
  * Read OTA image data from flash.
@@ -710,7 +728,7 @@ zb_uint8_t *zb_osif_ota_srv_get_image_header(void *dev);
  * Fill stack area with a predefined pattern.
  *
  */
-zb_void_t zb_stack_profiler_pre(void);
+void zb_stack_profiler_pre(void);
 
 /**
  * @brief Get stack usage by previously called function.
@@ -724,7 +742,7 @@ zb_uint16_t zb_stack_profiler_usage(void);
 
 #ifdef ZB_USE_SLEEP
 zb_uint32_t zb_osif_sleep(zb_uint32_t sleep_tmo);
-zb_void_t zb_osif_wake_up(void);
+void zb_osif_wake_up(void);
 #endif
 
 #ifdef ZB_PRODUCTION_CONFIG
@@ -776,5 +794,55 @@ void zb_osif_busy_loop_delay(zb_uint32_t count);
  * @return Timer counter value in microseconds
  */
 zb_uint16_t zb_osif_get_timer_reminder(void);
+
+/* Init leds and buttons
+ *
+ */
+void zb_osif_led_button_init(void);
+
+/* Set a LED on
+ * It must be initialized first.
+ *
+ * @param led_no - id of the LED in board (check platform specific headers to identify LED)
+ */
+void zb_osif_led_on(zb_uint8_t led_no);
+
+/* Set a LED off
+ * It must be initialized first.
+ *
+ * @param led_no - id of the LED in board (check platform specific headers to identify LED)
+ */
+void zb_osif_led_off(zb_uint8_t led_no);
+
+/* Get the current button tate
+ * It must be initialized first.
+ *
+ * @param arg - id of the LED in board (check platform specific headers to identify LED)
+ *
+ * @return ZB_FALSE is button is pressed, ZB_TRUE if button is not being pressed
+ */
+int zb_osif_button_state(zb_uint8_t arg);
+
+
+/* Configure one LED to be dimmable
+ *
+ * @param led_no - Led id to be dimmable
+ */
+zb_bool_t zb_osif_led_level_init(zb_uint8_t led_no);
+
+/* Set level of a dimmable LED (only one led is supported)
+ *  It must be initialized first with zb_osif_led_level_init(zb_uint8_t led_no)
+ *
+ * @param level - brightness level to set from (0 to 255) to the dimmable led
+ */
+void zb_osif_led_on_set_level(zb_uint8_t level);
+
+void zb_osif_button_cb(zb_uint8_t arg);
+
+/* Inform osif layer that button callback is being set
+ * @return ZB_TRUE if leds and buttons have been initiated
+ *  with zb_osif_led_button_init()
+ */
+zb_bool_t zb_setup_buttons_cb(zb_callback_t cb);
 
 #endif /* ZB_OSIF_H */

@@ -3,6 +3,10 @@
 NFC: Writable NDEF message
 ##########################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Writable NDEF message sample shows how to use the NFC tag to expose an NDEF message, which can be overwritten with any other NDEF message by an NFC device.
 It uses the :ref:`lib_nfc_ndef`.
 
@@ -25,6 +29,7 @@ Requirements
   * |nRF5340DK|
   * |nRF52840DK|
   * |nRF52DK|
+  * |nRF52833DK|
 
 * Smartphone or tablet with NFC Tools application (or equivalent)
 
@@ -64,6 +69,7 @@ Dependencies
 This sample uses the following |NCS| libraries:
 
 * :ref:`nfc_uri`
+* :ref:`nfc_t4t_ndef_file_readme`
 
 In addition, it uses the Type 4 Tag library from nrfxlib:
 

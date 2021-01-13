@@ -58,7 +58,6 @@
 #define MBEDTLS_SSL_TLS_C
 #define MBEDTLS_SSL_SRV_C
 #define MBEDTLS_SSL_CLI_C
-#define MBEDTLS_CIPHER_C
 #define MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
 
 #endif
@@ -294,14 +293,19 @@
 #define MBEDTLS_SSL_EXPORT_KEYS
 #endif
 
-/* Automatic dependencies */
+#if defined(CONFIG_MBEDTLS_CIPHER)
+#define MBEDTLS_CIPHER_C
+#endif
 
-#if defined(MBEDTLS_SSL_PROTO_TLS1) || \
-    defined(MBEDTLS_SSL_PROTO_TLS1_1) || \
-    defined(MBEDTLS_SSL_PROTO_TLS1_2) || \
-    defined(MBEDTLS_HMAC_DRBG_C)
+#if defined(CONFIG_MBEDTLS_PKCS1_V21_ENABLED)
+#define MBEDTLS_PKCS1_V21
+#endif
+
+#if defined(CONFIG_MBEDTLS_MD)
 #define MBEDTLS_MD_C
 #endif
+
+/* Automatic dependencies */
 
 #if defined(MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED) || \
     defined(MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED)
@@ -404,6 +408,11 @@
 #define MBEDTLS_ECP_WINDOW_SIZE            2 /**< Maximum window size used */
 #define MBEDTLS_ECP_FIXED_POINT_OPTIM      0 /**< Enable fixed-point speed-up */
 #define MBEDTLS_ENTROPY_MAX_SOURCES        1 /**< Maximum number of sources supported */
+#endif
+
+#if defined(CONFIG_MBEDTLS_SERVER_NAME_INDICATION) && \
+    defined(MBEDTLS_X509_CRT_PARSE_C)
+#define MBEDTLS_SSL_SERVER_NAME_INDICATION
 #endif
 
 /* User config file */

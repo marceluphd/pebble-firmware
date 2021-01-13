@@ -3,7 +3,36 @@
 Changelog
 #########
 
+.. contents::
+   :local:
+   :depth: 2
+
 All notable changes to this project are documented in this file.
+
+nRF Connect SDK v1.4.0
+**********************
+
+Changes
+=======
+* Changed the timeslot implementation to support up to 8 concurrent sessions (DRGN-13952).
+  It is now necessary to supply a timeslot context configuration using :c:func:`mpsl_timeslot_session_count_set`.
+  All timeslot APIs now take a ``session_id`` as input.
+  The session id is retrieved from :c:func:`mpsl_timeslot_session_open`.
+
+* Added an API to use Front-End Modules, like the nRF21540 GPIO or a simple GPIO, with the protocols and an API to configure them using the application.
+  Only the nRF52 series is supported.
+
+Bugfixes
+========
+
+* Fixed an issue where the high frequency clock and ``TIMER0`` were not turned off during idle periods shorter than 9 ms (DRGN-14152).
+  This increased the average power consumption.
+  Such a case could occur when running a |BLE| connection with a connection interval of 7.5 ms.
+
+Known Issues and limitations
+============================
+
+See the :ref:`nrf:known_issues` page in |NCS| for the list of known issues and limitations for this release.
 
 nRF Connect SDK v1.3.0
 **********************
@@ -20,8 +49,8 @@ Added
 Changes
 =======
 * Removed ``MPSL_RADIO_NOTIFICATION_DISTANCE_425US`` and replaced it by ``MPSL_RADIO_NOTIFICATION_DISTANCE_420US``.
-* On nRF53, the fix for Errata 16 is now applied. 
-* The scheduling overhead of a timeslot event is reduced. 
+* On nRF53, the fix for Errata 16 is now applied.
+* The scheduling overhead of a timeslot event is reduced.
 
 Bugfixes
 ========
@@ -45,8 +74,8 @@ Changes
 
 * Removed ``_nrf52`` from the MPSL library file names.
 * Version numbers have been removed from the libraries.
-* It is no longer allowed to call :cpp:func:`mpsl_init()` if MPSL is already initialized.
-* Clock configuration parameters for any stack that uses MPSL must be provided in :c:type:`mpsl_clock_lfclk_cfg_t` to :cpp:func:`mpsl_init()`.
+* It is no longer allowed to call :c:func:`mpsl_init` if MPSL is already initialized.
+* Clock configuration parameters for any stack that uses MPSL must be provided in :c:type:`mpsl_clock_lfclk_cfg_t` to :c:func:`mpsl_init`.
   This now also involves clock accuracy.
 * Clock accuracy must be specified in parts per million (ppm).
 * Renamed MPSL clock API for high and low frequency clock.

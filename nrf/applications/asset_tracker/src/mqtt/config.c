@@ -181,10 +181,8 @@ static int iotex_mqtt_parse_config(const uint8_t *payload, uint32_t len, iotex_m
         config->data_channel = atoi(data_channel->valuestring);
     }
 
-    if (upload_period && cJSON_IsString(upload_period)) { 
+    if (upload_period && cJSON_IsString(upload_period)) {
         config->upload_period = atoi(upload_period->valuestring);
-        if(!config->bulk_upload)
-            RestartEnvWork(config->upload_period);
     }
 
     if (bulk_upload_sampling_cnt && cJSON_IsString(bulk_upload_sampling_cnt)) {
@@ -195,10 +193,8 @@ static int iotex_mqtt_parse_config(const uint8_t *payload, uint32_t len, iotex_m
         } 
     }
 
-    if (bulk_upload_sampling_freq && cJSON_IsString(bulk_upload_sampling_freq)) {        
+    if (bulk_upload_sampling_freq && cJSON_IsString(bulk_upload_sampling_freq)) {
         config->bulk_upload_sampling_freq = atoi(bulk_upload_sampling_freq->valuestring);
-        if(config->bulk_upload)
-            RestartEnvWork(config->bulk_upload_sampling_freq);
     }
 
     if (serverBeep && cJSON_IsString(serverBeep)) {

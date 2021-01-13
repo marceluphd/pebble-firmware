@@ -19,6 +19,7 @@ add_subdirectory_ifdef(CONFIG_ESB		esb)
 add_subdirectory_ifdef(CONFIG_EVENT_MANAGER	event_manager)
 add_subdirectory_ifdef(CONFIG_PROFILER		profiler)
 add_subdirectory_ifdef(CONFIG_DFU_TARGET		dfu)
+add_subdirectory_ifdef(CONFIG_PCD 		pcd)
 add_subdirectory_ifdef(CONFIG_IS_SPM		spm)
 add_subdirectory_ifdef(CONFIG_TRUSTED_EXECUTION_NONSECURE nonsecure)
 add_subdirectory_ifdef(CONFIG_MPSL mpsl)
@@ -42,3 +43,5 @@ add_subdirectory_ifdef(CONFIG_SHELL_BT_NUS	shell)
 
 add_subdirectory(debug)
 add_subdirectory(partition_manager)
+
+add_subdirectory_ifdef(CONFIG_NRF_RPC nrf_rpc)

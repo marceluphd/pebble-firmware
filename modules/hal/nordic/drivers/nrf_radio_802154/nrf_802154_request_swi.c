@@ -49,13 +49,14 @@
 #include "nrf_802154_swi.h"
 #include "nrf_802154_utils.h"
 #include "hal/nrf_radio.h"
+#include "platform/irq/nrf_802154_irq.h"
 
 #include <nrf.h>
 
 /** Assert if SWI interrupt is disabled. */
 static inline void assert_interrupt_status(void)
 {
-    assert(nrf_is_nvic_irq_enabled(NRF_802154_SWI_IRQN));
+    assert(nrf_802154_irq_is_enabled(NRF_802154_SWI_IRQN));
 }
 
 #define REQUEST_FUNCTION(func_core, func_swi, ...) \
@@ -95,8 +96,8 @@ static inline void assert_interrupt_status(void)
  */
 static bool active_vector_priority_is_high(void)
 {
-
-    return nrf_802154_critical_section_active_vector_priority_get() <= NRF_802154_SWI_PRIORITY;
+    return nrf_802154_critical_section_active_vector_priority_get() <=
+            nrf_802154_irq_priority_get(NRF_802154_SWI_IRQN);
 }
 
 void nrf_802154_request_init(void)

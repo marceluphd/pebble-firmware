@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: On/Off cluster defintions
+/* PURPOSE: On/Off cluster definitions
 */
 
 #if ! defined ZB_ZCL_ON_OFF_H
@@ -318,7 +318,7 @@ enum zb_zcl_on_off_effect_variant_dying_e
 * @see ZCL spec 3.8.2.3.6.1 */
 #define ZB_ZCL_ON_OFF_ACCEPT_ONLY_WHEN_ON   1
 
-/*! @brief Structured representsation of Off with effect command payload */
+/*! @brief Structured representation of Off with effect command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_on_off_off_with_effect_req_s
 {
   /** Effect identify */
@@ -327,7 +327,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_on_off_off_with_effect_req_s
   zb_uint8_t effect_variant;
 } ZB_PACKED_STRUCT zb_zcl_on_off_off_with_effect_req_t;
 
-/*! @brief Structured representsation of On with timed off command payload */
+/*! @brief Structured representation of On with timed off command payload */
 typedef ZB_PACKED_PRE struct zb_zcl_on_off_on_with_timed_off_req_s
 {
   /** On/off control */
@@ -436,7 +436,7 @@ typedef struct zb_zcl_on_off_effect_user_app_schedule_e
   ZB_ZCL_ATTR_ON_OFF_ON_OFF_ID,                                                              \
   ZB_ZCL_ATTR_TYPE_BOOL,                                                                     \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_REPORTING | ZB_ZCL_ATTR_ACCESS_SCENE,    \
-  (zb_voidp_t) data_ptr                                                                      \
+  (void*) data_ptr                                                                      \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_ON_OFF_GLOBAL_SCENE_CONTROL(data_ptr) \
@@ -444,7 +444,7 @@ typedef struct zb_zcl_on_off_effect_user_app_schedule_e
   ZB_ZCL_ATTR_ON_OFF_GLOBAL_SCENE_CONTROL,                                       \
   ZB_ZCL_ATTR_TYPE_BOOL,                                                         \
   ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                                  \
-  (zb_voidp_t) data_ptr                                                          \
+  (void*) data_ptr                                                          \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_ON_OFF_ON_TIME(data_ptr)  \
@@ -452,7 +452,7 @@ typedef struct zb_zcl_on_off_effect_user_app_schedule_e
   ZB_ZCL_ATTR_ON_OFF_ON_TIME,                                        \
   ZB_ZCL_ATTR_TYPE_U16,                                              \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                     \
-  (zb_voidp_t) data_ptr                                              \
+  (void*) data_ptr                                              \
 }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_ON_OFF_OFF_WAIT_TIME(data_ptr)    \
@@ -460,7 +460,7 @@ typedef struct zb_zcl_on_off_effect_user_app_schedule_e
   ZB_ZCL_ATTR_ON_OFF_OFF_WAIT_TIME,                                          \
   ZB_ZCL_ATTR_TYPE_U16,                                                      \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                             \
-  (zb_voidp_t) data_ptr                                                      \
+  (void*) data_ptr                                                      \
 }
 
 /** @struct zb_zcl_on_off_attrs_s
@@ -476,7 +476,7 @@ typedef struct zb_zcl_on_off_attrs_s
   ZB_ZCL_ATTR_ON_OFF_START_UP_ON_OFF,                                        \
   ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                                \
   ZB_ZCL_ATTR_ACCESS_READ_WRITE,                                             \
-  (zb_voidp_t) data_ptr                                                      \
+  (void*) data_ptr                                                      \
 }
 
 #define ZB_ZCL_DECLARE_ON_OFF_ATTR_LIST(attr_list, attrs)               \
@@ -501,8 +501,8 @@ typedef struct zb_on_off_user_app_schedule_e
 
 /** @endcond */ /* DOXYGEN_ZCL_SECTION */
 
-zb_void_t zb_zcl_on_off_init_server(void);
-zb_void_t zb_zcl_on_off_init_client(void);
+void zb_zcl_on_off_init_server(void);
+void zb_zcl_on_off_init_client(void);
 #define ZB_ZCL_CLUSTER_ID_ON_OFF_SERVER_ROLE_INIT zb_zcl_on_off_init_server
 #define ZB_ZCL_CLUSTER_ID_ON_OFF_CLIENT_ROLE_INIT zb_zcl_on_off_init_client
 

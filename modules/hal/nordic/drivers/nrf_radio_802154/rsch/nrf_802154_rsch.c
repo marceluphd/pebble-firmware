@@ -55,6 +55,7 @@ static volatile rsch_prio_t m_last_notified_prio;            ///< Last reported 
 static volatile rsch_prio_t m_approved_prios[RSCH_PREC_CNT]; ///< Priority levels approved by each precondition.
 static rsch_prio_t          m_requested_prio;                ///< Priority requested from all preconditions.
 static rsch_prio_t          m_cont_mode_prio;                ///< Continuous mode priority level. If continuous mode is not requested equal to @ref RSCH_PRIO_IDLE.
+static volatile bool        m_shall_notify_raal;             ///< Flag that indicates that RAAL shall be notified about continuous mode end.
 
 typedef struct
 {
@@ -291,7 +292,7 @@ static inline void notify_core(void)
     {
         if (!mutex_trylock(&m_ntf_mutex, &m_ntf_mutex_monitor))
         {
-            return;
+            break;
         }
 
         /* It is possible that preemption is not detected (m_ntf_mutex_monitor is read after
@@ -307,6 +308,24 @@ static inline void notify_core(void)
             m_last_notified_prio = approved_prio_lvl;
 
             nrf_802154_rsch_continuous_prio_changed(approved_prio_lvl);
+        }
+        else if ((m_last_notified_prio == RSCH_PRIO_IDLE) && m_shall_notify_raal)
+        {
+            /* It might happen that the action of exiting continuous mode is preempted by
+             * nrf_raal_timeslot_ended() indicating end of a timeslot. RAAL API requires to respond
+             * with nrf_802154_rsch_continuous_ended when that function is called. Usually,
+             * it is performed through the above if clause. However, when the described preemption
+             * occurs, approved priority equal IDLE has already been notified as a result of exiting
+             * continuous mode. Taking no action here would lead to breaking RAAL API by not
+             * responding with nrf_802154_rsch_continuous_ended(). As the driver's core has already
+             * been notified about denied preconditions and it doesn't need to modify its state,
+             * it's enough to call this function directly here.
+             */
+            nrf_802154_rsch_continuous_ended();
+        }
+        else
+        {
+            /* Intentionally empty */
         }
 
         mutex_unlock(&m_ntf_mutex);
@@ -414,7 +433,11 @@ void nrf_802154_rsch_continuous_mode_priority_set(rsch_prio_t prio)
 
 void nrf_802154_rsch_continuous_ended(void)
 {
-    nrf_raal_continuous_ended();
+    if (m_shall_notify_raal)
+    {
+        m_shall_notify_raal = false;
+        nrf_raal_continuous_ended();
+    }
 }
 
 bool nrf_802154_rsch_timeslot_request(uint32_t length_us)
@@ -547,6 +570,8 @@ void nrf_raal_timeslot_started(void)
 void nrf_raal_timeslot_ended(void)
 {
     nrf_802154_log(EVENT_TRACE_ENTER, FUNCTION_RSCH_TIMESLOT_ENDED);
+
+    m_shall_notify_raal = true;
 
     prec_approved_prio_set(RSCH_PREC_RAAL, RSCH_PRIO_IDLE);
     notify_core();

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2019 Oticon A/S
 
 # CMake file to compile this BabbleSim component as a west module in Zephyr
 
@@ -17,10 +18,17 @@ if(CONFIG_BOARD_NRF52_BSIM)
  https://babblesim.github.io/folder_structure_and_env.html")
   endif()
 
+  # These include directories must be added before those from the hal_nordic
+  # module, so that the local modified versions of nrfx files are used instead
+  # of those from the original nrfx.
+  target_include_directories(zephyr_interface BEFORE INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nrfx/
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nrfx/hal/
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nrfx/mdk/
+  )
+
   zephyr_include_directories(
-    src/
-    src/nrfx/hal/
-    src/nrfx/
     src/HW_models/
   )
 

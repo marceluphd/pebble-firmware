@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
  */
 
-/**@file ipc/bsd_platform.h
- *
+/**
+ * @file bsd_platform.h
  * @defgroup bsd_platform_ipc BSD Platform
  * @ingroup bsd_platform
  * @{
@@ -47,9 +47,8 @@ extern "C" {
 
 /**
  * @brief Memory size reserved by the BSD library when trace will always be disabled.
- * This value has to match with the application RAM start address defined in the linker script.
  */
-#define BSD_RESERVED_MEMORY_SIZE_TRACE_DISABLED 0x8000
+#define BSD_RESERVED_MEMORY_SIZE_TRACE_DISABLED 0x8020
 
 /**@} */
 

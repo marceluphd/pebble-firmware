@@ -57,20 +57,19 @@ PanId GenerateRandomPanId(void)
 #if !OPENTHREAD_RADIO
 void ExtAddress::GenerateRandom(void)
 {
-    Random::Crypto::FillBuffer(m8, sizeof(ExtAddress));
+    IgnoreError(Random::Crypto::FillBuffer(m8, sizeof(ExtAddress)));
     SetGroup(false);
     SetLocal(true);
 }
 #endif
 
-bool ExtAddress::operator==(const ExtAddress &aOther) const
-{
-    return memcmp(m8, aOther.m8, sizeof(ExtAddress)) == 0;
-}
-
 ExtAddress::InfoString ExtAddress::ToString(void) const
 {
-    return InfoString("%02x%02x%02x%02x%02x%02x%02x%02x", m8[0], m8[1], m8[2], m8[3], m8[4], m8[5], m8[6], m8[7]);
+    InfoString string;
+
+    IgnoreError(string.AppendHexBytes(m8, sizeof(ExtAddress)));
+
+    return string;
 }
 
 void ExtAddress::CopyAddress(uint8_t *aDst, const uint8_t *aSrc, CopyByteOrder aByteOrder)
@@ -97,14 +96,13 @@ Address::InfoString Address::ToString(void) const
                                     : (mType == kTypeNone ? InfoString("None") : InfoString("0x%04x", GetShort()));
 }
 
-bool ExtendedPanId::operator==(const ExtendedPanId &aOther) const
-{
-    return memcmp(m8, aOther.m8, sizeof(ExtendedPanId)) == 0;
-}
-
 ExtendedPanId::InfoString ExtendedPanId::ToString(void) const
 {
-    return InfoString("%02x%02x%02x%02x%02x%02x%02x%02x", m8[0], m8[1], m8[2], m8[3], m8[4], m8[5], m8[6], m8[7]);
+    InfoString string;
+
+    IgnoreError(string.AppendHexBytes(m8, sizeof(ExtendedPanId)));
+
+    return string;
 }
 
 uint8_t NameData::CopyTo(char *aBuffer, uint8_t aMaxSize) const

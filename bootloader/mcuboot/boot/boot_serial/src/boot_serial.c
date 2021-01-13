@@ -65,8 +65,6 @@ MCUBOOT_LOG_MODULE_DECLARE(mcuboot);
 
 #define BOOT_SERIAL_INPUT_MAX   512
 #define BOOT_SERIAL_OUT_MAX     128
-// 20s update timeout  
-#define  SERIAL_UPDATE_TIMEOUT  20000
 
 #ifdef __ZEPHYR__
 /* base64 lib encodes data to null-terminated string */
@@ -229,18 +227,13 @@ bs_list(char *buf, int len)
 static void
 bs_upload(char *buf, int len)
 {
-    CborParser parser;
-    struct cbor_buf_reader reader;
-    struct CborValue root_value;
-    struct CborValue value;
-    uint8_t img_data[512];
+    const uint8_t *img_data = NULL;
     long long int off = UINT_MAX;
     size_t img_blen = 0;
     uint8_t rem_bytes;
     long long int data_len = UINT_MAX;
     int img_num;
     size_t slen;
-    char name_str[8];
     const struct flash_area *fap = NULL;
     int rc;
 #ifdef CONFIG_BOOT_ERASE_PROGRESSIVELY
@@ -248,7 +241,6 @@ bs_upload(char *buf, int len)
     struct flash_sector sector;
 #endif
 
-    memset(img_data, 0, sizeof(img_data));
     img_num = 0;
 
     /*
@@ -261,98 +253,36 @@ bs_upload(char *buf, int len)
      * }
      */
 
-    /*
-     * Object comes within { ... }
-     */
-    cbor_buf_reader_init(&reader, (uint8_t *)buf, len);
-    cbor_parser_init(&reader.r, 0, &parser, &root_value);
-    if (!cbor_value_is_container(&root_value)) {
+    Upload_t upload;
+    if (!cbor_decode_Upload((const uint8_t *)buf, len, &upload)) {
         goto out_invalid_data;
     }
-    if (cbor_value_enter_container(&root_value, &value)) {
-        goto out_invalid_data;
-    }
-    while (cbor_value_is_valid(&value)) {
-        /*
-         * Decode key.
-         */
-        if (cbor_value_calculate_string_length(&value, &slen)) {
-            goto out_invalid_data;
-        }
-        if (!cbor_value_is_text_string(&value) ||
-            slen >= sizeof(name_str) - 1) {
-            goto out_invalid_data;
-        }
-        if (cbor_value_copy_text_string(&value, name_str, &slen, &value)) {
-            goto out_invalid_data;
-        }
-        name_str[slen] = '\0';
-        if (!strcmp(name_str, "data")) {
-            /*
-             * Image data
-             */
-            if (value.type != CborByteStringType) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_calculate_string_length(&value, &slen) ||
-                slen >= sizeof(img_data)) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_copy_byte_string(&value, img_data, &slen, &value)) {
-                goto out_invalid_data;
-            }
-            img_blen = slen;
-        } else if (!strcmp(name_str, "off")) {
-            /*
-             * Offset of the data.
-             */
-            if (value.type != CborIntegerType) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_get_int64(&value, &off)) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_advance(&value)) {
-                goto out_invalid_data;
-            }
-        } else if (!strcmp(name_str, "len")) {
-            /*
-             * Length of the image. This should only be present in the first
-             * block of data; when offset is 0.
-             */
-            if (value.type != CborIntegerType) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_get_int64(&value, &data_len)) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_advance(&value)) {
-                goto out_invalid_data;
-            }
-        } else if (!strcmp(name_str, "image")) {
-            /*
-             * In a multi-image system, image number to upload to, if not
-             * present will upload to slot 0 of image set 0.
-             */
-            if (value.type != CborIntegerType) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_get_int(&value, &img_num)) {
-                goto out_invalid_data;
-            }
-            if (cbor_value_advance(&value)) {
-                goto out_invalid_data;
-            }
-        } else {
-            /*
-             * Unknown keys.
-             */
-            if (cbor_value_advance(&value)) {
-                goto out_invalid_data;
-            }
+
+    for (int i = 0; i < upload._Upload_members_count; i++) {
+        _Member_t *member = &upload._Upload_members[i];
+        switch(member->_Member_choice) {
+            case _Member_image:
+                img_num = member->_Member_image;
+                break;
+            case _Member_data:
+                img_data = member->_Member_data.value;
+                slen = member->_Member_data.len;
+                img_blen = slen;
+                break;
+            case _Member_len:
+                data_len = member->_Member_len;
+                break;
+            case _Member_off:
+                off = member->_Member_off;
+                break;
+            case _Member_sha:
+            default:
+                /* Nothing to do. */
+                break;
         }
     }
-    if (off == UINT_MAX) {
+
+    if (off == UINT_MAX || img_data == NULL) {
         /*
          * Offset must be set in every block.
          */
@@ -555,7 +485,7 @@ boot_serial_output(void)
     bs_hdr->nh_group = htons(bs_hdr->nh_group);
 
 #ifdef __ZEPHYR__
-    crc =  crc16((u8_t *)bs_hdr, sizeof(*bs_hdr), CRC_CITT_POLYMINAL,
+    crc =  crc16((uint8_t *)bs_hdr, sizeof(*bs_hdr), CRC_CITT_POLYMINAL,
                  CRC16_INITIAL_CRC, false);
     crc =  crc16(data, len, CRC_CITT_POLYMINAL, crc, true);
 #else
@@ -644,7 +574,6 @@ boot_serial_in_dec(char *in, int inlen, char *out, int *out_off, int maxout)
     return 1;
 }
 
-extern void LedCtrl(u8_t port, u32_t val);
 /*
  * Task which waits reading console, expecting to get image over
  * serial port.
@@ -654,26 +583,19 @@ boot_serial_start(const struct boot_uart_funcs *f)
 {
     int rc;
     int off;
-    int dec_off;
+    int dec_off = 0;
     int full_line;
     int max_input;
-    s32_t time_stamp;
-    s32_t milliseconds_spent;
-    time_stamp = k_uptime_get();
 
     boot_uf = f;
     max_input = sizeof(in_buf);
 
     off = 0;
     while (1) {
-        milliseconds_spent = k_uptime_get();
-        if((milliseconds_spent - time_stamp) > SERIAL_UPDATE_TIMEOUT)
-            break;
-        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);        
+        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);
         if (rc <= 0 && !full_line) {
             continue;
         }
-        LedCtrl(30,1);
         off += rc;
         if (!full_line) {
             if (off == max_input) {
@@ -683,21 +605,19 @@ boot_serial_start(const struct boot_uart_funcs *f)
                 off = 0;
             }
             continue;
-        } 
-              
+        }
         if (in_buf[0] == SHELL_NLIP_PKT_START1 &&
           in_buf[1] == SHELL_NLIP_PKT_START2) {
             dec_off = 0;
-            rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);        
+            rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);
         } else if (in_buf[0] == SHELL_NLIP_DATA_START1 &&
           in_buf[1] == SHELL_NLIP_DATA_START2) {
             rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);
         }
-        time_stamp = k_uptime_get();
+
         /* serve errors: out of decode memory, or bad encoding */
         if (rc == 1) {
-            LedCtrl(30,0);
-            boot_serial_input(&dec_buf[2], dec_off - 2);            
+            boot_serial_input(&dec_buf[2], dec_off - 2);
         }
         off = 0;
     }

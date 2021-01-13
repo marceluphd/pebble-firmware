@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
 #
 
-if(CONFIG_NRF_CRYPTO_GLUE_LIBRARY)
+if(CONFIG_NRF_SECURITY_GLUE_LIBRARY)
 
   nrf_security_debug("######### Creating mbedcrypto glue library #########")
   #
@@ -23,10 +23,6 @@ if(CONFIG_NRF_CRYPTO_GLUE_LIBRARY)
 
   if(CONFIG_GLUE_MBEDTLS_CCM_C)
     nrf_security_debug("Adding to glue: CCM")
-  endif()
-
-  if(CONFIG_GLUE_MBEDTLS_CMAC_C)
-    nrf_security_debug("Adding to glue: CMAC")
   endif()
 
   if(CONFIG_GLUE_MBEDTLS_DHM_C)
@@ -54,7 +50,7 @@ if(CONFIG_NRF_CRYPTO_GLUE_LIBRARY)
   #
   # Create glue libraries for backends (if enabled)
   #
-  if (CONFIG_CC310_BACKEND)
+  if (CONFIG_CC3XX_BACKEND)
     nrf_security_debug("Adding cc310_glue.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/cc310/cc310_glue.cmake)
   endif()
@@ -103,25 +99,25 @@ configure_file_ifdef(CONFIG_GLUE_MBEDTLS_RSA_C
   COPYONLY
 )
 
-endif() # CONFIG_NRF_CRYPTO_GLUE_LIBRARY
+endif(CONFIG_NRF_SECURITY_GLUE_LIBRARY)
 
 #
 # CC310: Rename glued symbols to prevent collision
 #
-if (CONFIG_CC310_BACKEND)
-  symbol_rename_func("cc310" ${CMAKE_CURRENT_LIST_DIR}/symbol_rename.template.txt)
+if (CONFIG_CC3XX_BACKEND)
+  symbol_rename_func("cc3xx" ${CMAKE_CURRENT_LIST_DIR}/symbol_rename.template.txt)
 endif()
 
 #
 # nrf_oberon: Rename glued symbols to prevent collisions
 #
-if (CONFIG_OBERON_BACKEND AND CONFIG_NRF_CRYPTO_GLUE_LIBRARY)
+if (CONFIG_OBERON_BACKEND AND CONFIG_NRF_SECURITY_GLUE_LIBRARY)
   symbol_rename_func("oberon" ${CMAKE_CURRENT_LIST_DIR}/symbol_rename.template.txt)
 endif()
 
 #
 # Vanilla: Rename glued symbols to prevent collision
 #
-if (CONFIG_MBEDTLS_VANILLA_BACKEND AND CONFIG_NRF_CRYPTO_GLUE_LIBRARY)
+if (CONFIG_MBEDTLS_VANILLA_BACKEND AND CONFIG_NRF_SECURITY_GLUE_LIBRARY)
   symbol_rename_func("vanilla" ${CMAKE_CURRENT_LIST_DIR}/symbol_rename.template.txt)
 endif()

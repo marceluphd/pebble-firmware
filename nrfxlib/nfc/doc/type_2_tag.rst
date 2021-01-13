@@ -3,6 +3,10 @@
 Type 2 Tag
 ##########
 
+.. contents::
+   :local:
+   :depth: 2
+
 The Type 2 Tag implementation is based on the NFC Forum document *Type 2 Tag Technical Specification Version 1.0*.
 
 A Type 2 Tag can be read and re-written, and the memory of the tag can be write protected.
@@ -202,7 +206,7 @@ CT stands for Cascade Tag byte and equals 0x88.
 
 The UID bytes are stored in the nRF52 FICR registers.
 
-If you want to use UID bytes other than the ones from the FICR registers, use the :cpp:func:`nfc_t2t_parameter_set` function with the :cpp:enumerator:`NFC_T2T_PARAM_NFCID1 <nfc_t2t_lib::NFC_T2T_PARAM_NFCID1>` parameter.
+If you want to use UID bytes other than the ones from the FICR registers, use the :c:func:`nfc_t2t_parameter_set` function with the :c:enumerator:`NFC_T2T_PARAM_NFCID1` parameter.
 When choosing a custom UID, remember to follow the NFC Forum requirements.
 
 Static Lock bytes
@@ -276,9 +280,9 @@ The following block types are defined:
      - 0xFE
      - Contains the last TLV block in the data area.
 
-To write data to the tag, use the Type 2 Tag library functions :cpp:func:`nfc_t2t_payload_set` or :cpp:func:`nfc_t2t_payload_raw_set`.
-:cpp:func:`nfc_t2t_payload_set` configures a single NDEF TLV block based on a user-provided NDEF message.
-:cpp:func:`nfc_t2t_payload_raw_set` does not configure a TLV block, but the provided data must be organized in a TLV structure.
+To write data to the tag, use the Type 2 Tag library functions :c:func:`nfc_t2t_payload_set` or :c:func:`nfc_t2t_payload_raw_set`.
+:c:func:`nfc_t2t_payload_set` configures a single NDEF TLV block based on a user-provided NDEF message.
+:c:func:`nfc_t2t_payload_raw_set` does not configure a TLV block, but the provided data must be organized in a TLV structure.
 
 Dynamic Lock and Reserved bytes
 ===============================
@@ -334,9 +338,9 @@ To program a tag, complete the following steps:
       /* Callback for NFC events */
       static void nfc_callback(void * context,
                                enum nfc_t4t_event event,
-                               const u8_t * data,
+                               const uint8_t * data,
                                size_t data_length,
-                               u32_t flags)
+                               uint32_t flags)
       {
       ...
       }
@@ -348,14 +352,14 @@ To program a tag, complete the following steps:
       }
 
 #. Configure the data for the tag.
-   You can provide the data as NDEF message (recommended, see `NFC Data Exchange Format (NDEF)`_) or as a raw TLV structure (advanced usage, see Type 2 Tag :ref:`t2t_memory_layout`).
+   You can provide the data as NDEF message (recommended, see :ref:`nrf:ug_nfc_ndef`) or as a raw TLV structure (advanced usage, see Type 2 Tag :ref:`t2t_memory_layout`).
 
    * Set an NDEF message:
 
      .. code-block:: c
 
-        u8_t ndef_msg_buf[] = ...; // Buffer with the user NDEF message
-        u32_t len           = sizeof(ndef_msg_buf);
+        uint8_t ndef_msg_buf[] = ...; // Buffer with the user NDEF message
+        uint32_t len           = sizeof(ndef_msg_buf);
         /* Set created message as the NFC payload. */
         err = nfc_t2t_payload_set(ndef_msg_buf, len);
         if (err) {
@@ -368,8 +372,8 @@ To program a tag, complete the following steps:
 
      .. code-block:: c
 
-        u8_t tlv_buf[] = ...; // Buffer with the user TLV structure
-        u32_t len           = sizeof(tlv_buf);
+        uint8_t tlv_buf[] = ...; // Buffer with the user TLV structure
+        uint32_t len           = sizeof(tlv_buf);
         /* Set created TLV structure as the NFC payload. */
         err = nfc_t2t_payload_raw_set(tlv_buf, len);
         if (err) {

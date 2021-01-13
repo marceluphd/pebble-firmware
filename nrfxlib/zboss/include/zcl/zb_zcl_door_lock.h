@@ -38,7 +38,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* PURPOSE: DOOR_LOCK cluster defintions
+/* PURPOSE: DOOR_LOCK cluster definitions
 */
 
 #ifndef ZB_ZCL_DOOR_LOCK_H
@@ -73,7 +73,7 @@
  *    For more information see HA_samples/door_lock and HA_samples/door_lock_controller samples
  */
 
-/*! @name DoorLock cluster attributes
+/*! @name Door Lock cluster attributes
     @{
 */
 
@@ -238,7 +238,7 @@ enum zb_zcl_door_lock_actuator_enabled_e
   ZB_ZCL_ATTR_DOOR_LOCK_ACTUATOR_ENABLED_ENABLED
 
 /** @brief Values for DoorState attribute
-  * @see ZCL specx, subclause 7.3.2.2.4
+  * @see ZCL spec, subclause 7.3.2.2.4
   */
 enum zb_zcl_door_lock_door_state_e
 {
@@ -254,7 +254,7 @@ enum zb_zcl_door_lock_door_state_e
   ZB_ZCL_ATTR_DOOR_LOCK_DOOR_STATE_ERROR_UNSPECIFIED = 0x04
 };
 
-/** @brief Declare attribute list for DoorLock cluster
+/** @brief Declare attribute list for Door Lock cluster
     @param attr_list - attribute list name
     @param lock_state
     @param lock_type
@@ -270,13 +270,13 @@ enum zb_zcl_door_lock_door_state_e
   ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_DOOR_LOCK_ACTUATOR_ENABLED_ID, (actuator_enabled)) \
   ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST
 
-/*! @} */ /* DoorLock cluster attributes */
+/*! @} */ /* Door Lock cluster attributes */
 
-/*! @name DoorLock cluster commands
+/*! @name Door Lock cluster commands
     @{
 */
 
-/*! @brief DoorLock cluster commands
+/*! @brief Door Lock cluster commands
     @see ZCL spec, subclause 7.3.2.3 Commands Received
 */
 enum zb_zcl_door_lock_cmd_e
@@ -336,7 +336,7 @@ enum zb_zcl_door_lock_cmd_e
   ZB_ZCL_CMD_DOOR_LOCK_CLEAR_ALL_RFID_CODES             = 0x19,
 };
 
-/*! @brief DoorLock cluster commands response
+/*! @brief Door Lock cluster commands response
     @see ZCL spec, subclause 7.3.2.4 Commands Generated
 */
 enum zb_zcl_door_lock_cmd_resp_e
@@ -738,11 +738,11 @@ typedef ZB_PACKED_PRE struct zb_zcl_door_lock_read_unlock_door_res_payload_s
    ?  NULL                                                                              \
    : (zb_zcl_door_lock_read_unlock_door_res_payload_t*)zb_buf_begin((buffer)))
 
-/*! @} */ /* DoorLock cluster commands */
+/*! @} */ /* Door Lock cluster commands */
 
 /*! @cond internals_doc
-    @internal @name DoorLock cluster internals
-    Internal structures for DoorLock cluster
+    @internal @name Door Lock cluster internals
+    Internal structures for Door Lock cluster
     @{
 */
 
@@ -751,7 +751,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_door_lock_read_unlock_door_res_payload_s
     ZB_ZCL_ATTR_DOOR_LOCK_LOCK_STATE_ID,                                                     \
     ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                                              \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_REPORTING | ZB_ZCL_ATTR_ACCESS_SCENE,  \
-    (zb_voidp_t) data_ptr                                                                    \
+    (void*) data_ptr                                                                    \
   }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_DOOR_LOCK_LOCK_TYPE_ID(data_ptr) \
@@ -759,7 +759,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_door_lock_read_unlock_door_res_payload_s
     ZB_ZCL_ATTR_DOOR_LOCK_LOCK_TYPE_ID,                           \
     ZB_ZCL_ATTR_TYPE_8BIT_ENUM,                                   \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                 \
-    (zb_voidp_t) data_ptr                                         \
+    (void*) data_ptr                                         \
   }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_DOOR_LOCK_ACTUATOR_ENABLED_ID(data_ptr) \
@@ -767,7 +767,7 @@ typedef ZB_PACKED_PRE struct zb_zcl_door_lock_read_unlock_door_res_payload_s
     ZB_ZCL_ATTR_DOOR_LOCK_ACTUATOR_ENABLED_ID,                    \
     ZB_ZCL_ATTR_TYPE_BOOL,                                        \
     ZB_ZCL_ATTR_ACCESS_READ_ONLY,                                 \
-    (zb_voidp_t) data_ptr                                         \
+    (void*) data_ptr                                         \
   }
 
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_DOOR_LOCK_RF_OPERATION_EVENT_MASK_ID(data_ptr) \
@@ -775,16 +775,16 @@ typedef ZB_PACKED_PRE struct zb_zcl_door_lock_read_unlock_door_res_payload_s
     ZB_ZCL_ATTR_DOOR_LOCK_RF_OPERATION_EVENT_MASK_ID,             \
     ZB_ZCL_ATTR_TYPE_16BITMAP,                                    \
     ZB_ZCL_ATTR_ACCESS_READ_WRITE | ZB_ZCL_ATTR_ACCESS_REPORTING, \
-    (zb_voidp_t) data_ptr                                         \
+    (void*) data_ptr                                         \
   }
 
 /*! @internal @brief Number of attributes mandatory for reporting in Door Lock cluster */
 #define ZB_ZCL_DOOR_LOCK_REPORT_ATTR_COUNT  1
 
 /*! @}
-    @endcond */ /* DoorLock cluster internals */
+    @endcond */ /* Door Lock cluster internals */
 
-/*! @} */ /* ZCL DoorLock cluster definitions */
+/*! @} */ /* ZCL Door Lock cluster definitions */
 
 /** @endcond */ /* DOXYGEN_ZCL_SECTION */
 

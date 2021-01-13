@@ -11,7 +11,7 @@
  * @brief Type declarations and APIs for the HMAC-SHA1 algorithm.
  *
  * HMAC-SHA1 is an algorithm for message authentication using the
- * cryptographic hash function SHA512 and a reusable secret key. Users in
+ * cryptographic hash function SHA-1 and a reusable secret key. Users in
  * possession of the key can verify the integrity and authenticity of the
  * message.
  *
@@ -24,9 +24,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /**
  * Maximum key length.

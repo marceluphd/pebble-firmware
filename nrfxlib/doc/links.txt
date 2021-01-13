@@ -10,17 +10,11 @@
 
 .. _`nRF IEEE 802.15.4 radio driver documentation`: https://infocenter.nordicsemi.com/topic/15.4_radio_driver_v2.0.0-1.prealpha/index.html
 
+.. _`Infocenter`: https://infocenter.nordicsemi.com/index.jsp
+
 .. ### Links to Nordic pages
 
 .. _`nRF9160 modem firmware zip file`: https://www.nordicsemi.com/Products/Low-power-cellular-IoT/nRF9160/Download#98C9E2578566420786ABD40B695FDB9B
-
-.. ### Links to nrf (not a good way to link)
-
-.. _`Modem key management`: ../../../nrf/include/modem/modem_key_mgmt.html
-
-.. _`NFC Data Exchange Format (NDEF)`: ../../../nrf/ug_nfc.html#nfc-data-exchange-format-ndef
-
-.. _`Working with NFC`: ../../nrf/ug_nfc.html
 
 .. ### Other links
 
@@ -29,13 +23,22 @@
 .. _`Socket API`: https://pubs.opengroup.org/onlinepubs/9699919799/functions/socket.html
 
 .. _`ZBOSS API documentation`: https://developer.nordicsemi.com/nRF_Connect_SDK/doc/zboss_api_doc/index.html
+.. _`ZBOSS stack release notes`: https://developer.nordicsemi.com/nRF_Connect_SDK/doc/zboss/index.html
 
 .. _`mbed TLS backend`: https://tls.mbed.org/
 
 .. _`article on reducing mbed TLS memory and storage footprint`: https://tls.mbed.org/kb/how-to/reduce-mbedtls-memory-and-storage-footprint
+
+.. _`Arm mbed TLS project`: https://github.com/ARMmbed/mbedtls
 
 .. _`Global navigation satellite system (GNSS)`: https://en.wikipedia.org/wiki/Satellite_navigation
 
 .. _`NMEA`: https://www.gpsinformation.org/dale/nmea.htm
 
 .. _`A-GPS`: https://en.wikipedia.org/wiki/Assisted_GPS
+
+.. _`TinyCBOR`: https://github.com/zephyrproject-rtos/tinycbor
+
+.. _`OpenAMP`: https://github.com/OpenAMP/open-amp/
+
+.. _`Zephyr`: https://www.zephyrproject.org

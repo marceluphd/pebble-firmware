@@ -70,7 +70,7 @@ static void z_to_nrf_ipv6(const struct sockaddr *z_in,
 	nrf_out->sin6_family = NRF_AF_INET6;
 	memcpy(nrf_out->sin6_addr.s6_addr, ptr->sin6_addr.s6_addr,
 		sizeof(struct in6_addr));
-	nrf_out->sin6_scope_id = (u32_t)ptr->sin6_scope_id;
+	nrf_out->sin6_scope_id = (uint32_t)ptr->sin6_scope_id;
 }
 
 static void nrf_to_z_ipv6(struct sockaddr *z_out,
@@ -83,7 +83,7 @@ static void nrf_to_z_ipv6(struct sockaddr *z_out,
 	ptr->sin6_family = AF_INET6;
 	memcpy(ptr->sin6_addr.s6_addr, nrf_in->sin6_addr.s6_addr,
 		sizeof(struct nrf_in6_addr));
-	ptr->sin6_scope_id = (u8_t)nrf_in->sin6_scope_id;
+	ptr->sin6_scope_id = (uint8_t)nrf_in->sin6_scope_id;
 }
 
 static int z_to_nrf_level(int z_in_level, int *nrf_out_level)
@@ -154,8 +154,23 @@ static int z_to_nrf_optname(int z_in_level, int z_in_optname,
 		case SO_RCVTIMEO:
 			*nrf_out_optname = NRF_SO_RCVTIMEO;
 			break;
+		case SO_SNDTIMEO:
+			*nrf_out_optname = NRF_SO_SNDTIMEO;
+			break;
 		case SO_BINDTODEVICE:
 			*nrf_out_optname = NRF_SO_BINDTODEVICE;
+			break;
+		case SO_REUSEADDR:
+			*nrf_out_optname = NRF_SO_REUSEADDR;
+			break;
+		case SO_SILENCE_ALL:
+			*nrf_out_optname = NRF_SO_SILENCE_ALL;
+			break;
+		case SO_IP_ECHO_REPLY:
+			*nrf_out_optname = NRF_SO_SILENCE_IP_ECHO_REPLY;
+			break;
+		case SO_IPV6_ECHO_REPLY:
+			*nrf_out_optname = NRF_SO_SILENCE_IPV6_ECHO_REPLY;
 			break;
 		default:
 			retval = -1;
@@ -231,13 +246,16 @@ static int z_to_nrf_flags(int z_flags)
 	if (z_flags & MSG_PEEK) {
 		nrf_flags |= NRF_MSG_PEEK;
 	}
+
+	if (z_flags & MSG_TRUNC) {
+		nrf_flags |= NRF_MSG_TRUNC;
+	}
 	/* TODO: Handle missing flags, missing from zephyr,
 	 * may also be missing from bsd socket library.
 	 * Missing flags from "man recv" or "man recvfrom":
 	 *	MSG_CMSG_CLOEXEC
 	 *	MSG_ERRQUEUE
 	 *	MSG_OOB
-	 *	MSG_TRUNC
 	 *	MSG_WAITALL
 	 * Missing flags from "man send" or "man sendto":
 	 *	MSG_CONFIRM
@@ -251,6 +269,7 @@ static int z_to_nrf_flags(int z_flags)
 	 *	NRF_MSG_OOB
 	 *	NRF_MSG_PEEK (covered)
 	 *	NRF_MSG_WAITALL
+	 *	NRF_MSG_TRUNC (covered)
 	 */
 	return nrf_flags;
 }
@@ -399,6 +418,8 @@ static int nrf_to_z_dns_error_code(int nrf_error)
 		return DNS_EAI_NONAME;
 	case NRF_EINPROGRESS:
 		return DNS_EAI_INPROGRESS;
+	case NRF_ENETUNREACH:
+		errno = ENETUNREACH;
 	default:
 		return DNS_EAI_SYSTEM;
 	}
@@ -639,7 +660,7 @@ static int nrf91_socket_offload_setsockopt(void *obj, int level, int optname,
 	int retval;
 	int nrf_level;
 	int nrf_optname;
-	struct nrf_timeval nrf_rcvtimeo;
+	struct nrf_timeval nrf_timeo;
 	void *nrf_optval = (void *)optval;
 	nrf_socklen_t nrf_optlen = optlen;
 
@@ -648,10 +669,11 @@ static int nrf91_socket_offload_setsockopt(void *obj, int level, int optname,
 	if (z_to_nrf_optname(level, optname, &nrf_optname) < 0)
 		goto error;
 
-	if ((level == SOL_SOCKET) && (optname == SO_RCVTIMEO)) {
-		nrf_rcvtimeo.tv_sec = ((struct timeval *)optval)->tv_sec;
-		nrf_rcvtimeo.tv_usec = ((struct timeval *)optval)->tv_usec;
-		nrf_optval = &nrf_rcvtimeo;
+	if ((level == SOL_SOCKET) && ((optname == SO_RCVTIMEO) ||
+		(optname == SO_SNDTIMEO))) {
+		nrf_timeo.tv_sec = ((struct timeval *)optval)->tv_sec;
+		nrf_timeo.tv_usec = ((struct timeval *)optval)->tv_usec;
+		nrf_optval = &nrf_timeo;
 		nrf_optlen = sizeof(struct nrf_timeval);
 	} else if ((level == SOL_TLS) && (optname == TLS_SESSION_CACHE)) {
 		nrf_optlen = sizeof(nrf_sec_session_cache_t);
@@ -675,7 +697,7 @@ static int nrf91_socket_offload_getsockopt(void *obj, int level, int optname,
 	int retval;
 	int nrf_level;
 	int nrf_optname;
-	struct nrf_timeval nrf_rcvtimeo = {0, 0};
+	struct nrf_timeval nrf_timeo = {0, 0};
 	void *nrf_optval = optval;
 	nrf_socklen_t nrf_optlen = (nrf_socklen_t)*optlen;
 
@@ -684,8 +706,9 @@ static int nrf91_socket_offload_getsockopt(void *obj, int level, int optname,
 	if (z_to_nrf_optname(level, optname, &nrf_optname) < 0)
 		goto error;
 
-	if ((level == SOL_SOCKET) && (optname == SO_RCVTIMEO)) {
-		nrf_optval = &nrf_rcvtimeo;
+	if ((level == SOL_SOCKET) && ((optname == SO_RCVTIMEO) ||
+		(optname == SO_SNDTIMEO))) {
+		nrf_optval = &nrf_timeo;
 		nrf_optlen = sizeof(struct nrf_timeval);
 	}
 
@@ -703,11 +726,12 @@ static int nrf91_socket_offload_getsockopt(void *obj, int level, int optname,
 				 */
 				bsd_os_errno_set(*(int *)optval);
 				*(int *)optval = errno;
-			} else if (optname == SO_RCVTIMEO) {
+			} else if ((optname == SO_RCVTIMEO) ||
+				(optname == SO_SNDTIMEO)) {
 				((struct timeval *)optval)->tv_sec =
-					nrf_rcvtimeo.tv_sec;
+					nrf_timeo.tv_sec;
 				((struct timeval *)optval)->tv_usec =
-					nrf_rcvtimeo.tv_usec;
+					nrf_timeo.tv_usec;
 				*optlen = sizeof(struct timeval);
 			}
 		}
@@ -800,7 +824,7 @@ static ssize_t nrf91_socket_offload_sendmsg(void *obj, const struct msghdr *msg,
 	ssize_t ret;
 	int i;
 	static K_MUTEX_DEFINE(sendmsg_lock);
-	static u8_t buf[CONFIG_BSD_LIBRARY_SENDMSG_BUF_SIZE];
+	static uint8_t buf[CONFIG_BSD_LIBRARY_SENDMSG_BUF_SIZE];
 
 	if (msg == NULL) {
 		errno = EINVAL;
@@ -1073,10 +1097,6 @@ static int nrf91_socket_offload_ioctl(void *obj, unsigned int request,
 	int sd = OBJ_TO_SD(obj);
 
 	switch (request) {
-	/* Handle close specifically. */
-	case ZFD_IOCTL_CLOSE:
-		return nrf_close(sd);
-
 	case ZFD_IOCTL_POLL_PREPARE:
 		return -EXDEV;
 
@@ -1114,10 +1134,18 @@ static ssize_t nrf91_socket_offload_write(void *obj, const void *buffer,
 	return nrf91_socket_offload_sendto(obj, buffer, count, 0, NULL, 0);
 }
 
+static int nrf91_socket_offload_close(void *obj)
+{
+	int sd = OBJ_TO_SD(obj);
+
+	return nrf_close(sd);
+}
+
 static const struct socket_op_vtable nrf91_socket_fd_op_vtable = {
 	.fd_vtable = {
 		.read = nrf91_socket_offload_read,
 		.write = nrf91_socket_offload_write,
+		.close = nrf91_socket_offload_close,
 		.ioctl = nrf91_socket_offload_ioctl,
 	},
 	.bind = nrf91_socket_offload_bind,
@@ -1133,6 +1161,15 @@ static const struct socket_op_vtable nrf91_socket_fd_op_vtable = {
 
 static bool nrf91_socket_is_supported(int family, int type, int proto)
 {
+	if (IS_ENABLED(CONFIG_NET_SOCKETS_OFFLOAD_TLS)) {
+		return true;
+	}
+
+	if ((proto >= IPPROTO_TLS_1_0 && proto <= IPPROTO_TLS_1_2) ||
+	    (proto >= IPPROTO_DTLS_1_0 && proto <= IPPROTO_DTLS_1_2)) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -1162,7 +1199,7 @@ NET_SOCKET_REGISTER(nrf91_socket, AF_UNSPEC, nrf91_socket_is_supported,
 
 /* Create a network interface for nRF91 */
 
-static int nrf91_bsdlib_socket_offload_init(struct device *arg)
+static int nrf91_bsdlib_socket_offload_init(const struct device *arg)
 {
 	ARG_UNUSED(arg);
 

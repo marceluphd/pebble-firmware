@@ -18,6 +18,10 @@
 
 #include <logging/log.h>
 LOG_MODULE_REGISTER(gps_control, CONFIG_ASSET_TRACKER_LOG_LEVEL);
+
+#define  GPIO_DIR_OUT  GPIO_OUTPUT
+#define  gpio_pin_write gpio_pin_set
+
 // board v2.0  extern gps
 #if(EXTERN_GPS)
 static  struct device *guart_dev_gps;

@@ -69,7 +69,7 @@ static int8_t user_config_bme680(void) {
 }
 
 int iotex_bme680_init(void) {
-
+#if 1
     /* BME680 i2c bus init */
     uint8_t chip_id = 0;
     int8_t ret = BME680_OK;
@@ -105,10 +105,14 @@ int iotex_bme680_init(void) {
 
     /* Configure the sensor */
     return user_config_bme680();
+#else
+    env_sensors_init_and_start(NULL,NULL);
+    return BME680_OK;
+#endif
 }
 
 int iotex_bme680_get_sensor_data(iotex_storage_bme680 *bme680) {
-
+#if 1
     uint16_t meas_period;
     int8_t rslt = BME680_OK;
     bme680_get_profile_dur(&meas_period, &__gas_sensor);
@@ -137,4 +141,21 @@ int iotex_bme680_get_sensor_data(iotex_storage_bme680 *bme680) {
     }
 
     return rslt;
+#else
+    env_sensor_data_t env_data;
+    env_sensors_get_air_quality(&env_data);
+    bme680->gas_resistance = env_data.value;
+    env_sensors_get_pressure(&env_data);
+    bme680->pressure = env_data.value;
+    env_sensors_get_humidity(&env_data);
+    bme680->humidity = env_data.value;    
+    env_sensors_get_temperature(&env_data);
+    bme680->temperature = env_data.value; 
+    //char env_print[200];
+    //memset(env_print,0, sizeof(env_print));   
+    //snprintf(env_print, sizeof(env_print), "{\"temperature\":\"%f\",\"humidity\":%f,\"gas_resistance\":%f}",
+    //            bme680->temperature, bme680->humidity, bme680->gas_resistance);
+    //printk("BME680 read : %s \n", env_print);
+    return BME680_OK;
+#endif
 }

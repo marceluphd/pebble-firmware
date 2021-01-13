@@ -6,7 +6,7 @@ Near Field Communication (NFC)
 Near Field Communication (NFC) is a technology for wireless transfer of small amounts of data between two devices.
 The provided NFC libraries are RTOS-agnostic and built for Nordic Semiconductor nRF52 and nRF53 Series SoCs.
 
-See the `Working with NFC`_ user guide for information about how to use the libraries in the |NCS|.
+See the :ref:`nrf:ug_nfc` user guide for information about how to use the libraries in the |NCS|.
 
 The following libraries are available:
 
@@ -36,7 +36,7 @@ Each library is distributed in both soft-float and hard-float builds.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Subpages:
 
    CHANGELOG
    doc/integration_notes

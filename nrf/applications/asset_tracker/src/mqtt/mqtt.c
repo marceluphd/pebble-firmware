@@ -302,7 +302,7 @@ int iotex_mqtt_publish_data(struct mqtt_client *client, enum mqtt_qos qos, char 
 
     param.message.payload.data = data;
     param.message.payload.len = strlen(data);
-    param.message_id = sys_rand32_get();
+    param.message_id = iotex_random(); //sys_rand32_get();
     param.dup_flag = 0U;
     param.retain_flag = 0U;
 
@@ -312,18 +312,16 @@ int iotex_mqtt_publish_data(struct mqtt_client *client, enum mqtt_qos qos, char 
 int iotex_mqtt_heart_beat(struct mqtt_client *client, enum mqtt_qos qos)
 {
      struct mqtt_publish_param param;
-    u8_t pub_topic[MQTT_TOPIC_SIZE];
-    iotex_get_heart_beat_topic(pub_topic, sizeof(pub_topic));
+    u8_t pub_topic[MQTT_TOPIC_SIZE];   
+    iotex_get_heart_beat_topic(pub_topic, sizeof(pub_topic)); 
     param.message.topic.qos = qos;
-    param.message.topic.topic.utf8 = pub_topic;
+    param.message.topic.topic.utf8 = pub_topic; 
     param.message.topic.topic.size = strlen(param.message.topic.topic.utf8);
-
     param.message.payload.data = "a";
-    param.message.payload.len = 1;
-    param.message_id = sys_rand32_get();
+    param.message.payload.len = 1;    
+    param.message_id = iotex_random(); //sys_rand32_get();   
     param.dup_flag = 0U;
     param.retain_flag = 0U;
-
     return mqtt_publish(client, &param);   
 }
 

@@ -36,6 +36,9 @@ extern NRF_AAR_Type NRF_AAR_regs;
 extern NRF_RNG_Type NRF_RNG_regs;
 #undef NRF_RNG_BASE
 #define NRF_RNG_BASE                      (&NRF_RNG_regs)
+extern NRF_TEMP_Type NRF_TEMP_regs;
+#undef NRF_TEMP_BASE
+#define NRF_TEMP_BASE                     (&NRF_TEMP_regs)
 extern NRF_RTC_Type NRF_RTC_regs[];
 #undef NRF_RTC0_BASE
 #define NRF_RTC0_BASE                     (&NRF_RTC_regs[0])
@@ -72,6 +75,16 @@ extern NRF_TIMER_Type NRF_TIMER_regs[];
 #define NRF_TIMER4_BASE                   (&NRF_TIMER_regs[4])
 extern NRF_POWER_Type NRF_POWER_regs;
 #define NRF_POWER_BASE                    (&NRF_POWER_regs)
+extern NRF_GPIO_Type NRF_P0_regs;
+#undef NRF_P0_BASE
+#define NRF_P0_BASE                       (&NRF_P0_regs)
+extern NRF_GPIOTE_Type NRF_GPIOTE_regs;
+#undef NRF_GPIOTE_BASE
+#define NRF_GPIOTE_BASE                   (&NRF_GPIOTE_regs)
+extern NRF_NVMC_Type NRF_NVMC_regs;
+#undef NRF_NVMC_BASE
+#define NRF_NVMC_BASE                     (&NRF_NVMC_regs)
+
 
 /**
  * Note that the model of the CPU & IRQ controller driver must provide
@@ -81,6 +94,10 @@ extern void __WFE(void);
 extern void __SEV(void);
 extern void NVIC_SetPendingIRQ(IRQn_Type IRQn);
 extern void NVIC_ClearPendingIRQ(IRQn_Type IRQn);
+
+#ifndef NRFX_ASSERT
+#define NRFX_ASSERT(...)
+#endif
 
 #ifdef __cplusplus
 }

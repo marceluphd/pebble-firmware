@@ -3,6 +3,10 @@
 NFC: System OFF
 ###############
 
+.. contents::
+   :local:
+   :depth: 2
+
 The NFC System OFF sample shows how to make the NFC Tag device wake up from the System OFF mode when it detects the NFC field.
 The sample uses the :ref:`lib_nfc_ndef`.
 
@@ -44,13 +48,13 @@ See the `System OFF mode`_ page in the nRF52840 Product Specification for more i
 Requirements
 ************
 
-* One of the following development boards:
+The sample supports the following development kits:
 
-  * |nRF5340DK|
-  * |nRF52840DK|
-  * |nRF52DK|
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf5340pdk_nrf5340_cpuapp_and_cpuappns, nrf52840dk_nrf52840, nrf52dk_nrf52832
 
-* Smartphone or tablet with the NFC feature.
+The sample also requires a smartphone or tablet with the NFC feature.
 
 
 User interface

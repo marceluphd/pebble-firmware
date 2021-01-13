@@ -45,18 +45,9 @@ using namespace ot;
 
 otMessage *otCoapNewMessage(otInstance *aInstance, const otMessageSettings *aSettings)
 {
-    Message * message;
     Instance &instance = *static_cast<Instance *>(aInstance);
 
-    if (aSettings != NULL)
-    {
-        VerifyOrExit(aSettings->mPriority <= OT_MESSAGE_PRIORITY_HIGH, message = NULL);
-    }
-
-    message = instance.GetApplicationCoap().NewMessage(aSettings);
-
-exit:
-    return message;
+    return instance.GetApplicationCoap().NewMessage(Message::Settings(aSettings));
 }
 
 void otCoapMessageInit(otMessage *aMessage, otCoapType aType, otCoapCode aCode)
@@ -82,7 +73,7 @@ otError otCoapMessageSetToken(otMessage *aMessage, const uint8_t *aToken, uint8_
 
 void otCoapMessageGenerateToken(otMessage *aMessage, uint8_t aTokenLength)
 {
-    static_cast<Coap::Message *>(aMessage)->SetToken(aTokenLength);
+    IgnoreError(static_cast<Coap::Message *>(aMessage)->SetToken(aTokenLength));
 }
 
 otError otCoapMessageAppendContentFormatOption(otMessage *aMessage, otCoapOptionContentFormat aContentFormat)
@@ -222,7 +213,7 @@ otError otCoapSendRequestWithParameters(otInstance *              aInstance,
     Instance &                instance     = *static_cast<Instance *>(aInstance);
     const Coap::TxParameters &txParameters = Coap::TxParameters::From(aTxParameters);
 
-    if (aTxParameters != NULL)
+    if (aTxParameters != nullptr)
     {
         VerifyOrExit(txParameters.IsValid(), error = OT_ERROR_INVALID_ARGS);
     }
@@ -249,11 +240,11 @@ otError otCoapStop(otInstance *aInstance)
     return instance.GetApplicationCoap().Stop();
 }
 
-otError otCoapAddResource(otInstance *aInstance, otCoapResource *aResource)
+void otCoapAddResource(otInstance *aInstance, otCoapResource *aResource)
 {
     Instance &instance = *static_cast<Instance *>(aInstance);
 
-    return instance.GetApplicationCoap().AddResource(*static_cast<Coap::Resource *>(aResource));
+    instance.GetApplicationCoap().AddResource(*static_cast<Coap::Resource *>(aResource));
 }
 
 void otCoapRemoveResource(otInstance *aInstance, otCoapResource *aResource)
@@ -279,7 +270,7 @@ otError otCoapSendResponseWithParameters(otInstance *              aInstance,
 
     return instance.GetApplicationCoap().SendMessage(*static_cast<Coap::Message *>(aMessage),
                                                      *static_cast<const Ip6::MessageInfo *>(aMessageInfo),
-                                                     Coap::TxParameters::From(aTxParameters), NULL, NULL);
+                                                     Coap::TxParameters::From(aTxParameters), nullptr, nullptr);
 }
 
 #endif // OPENTHREAD_CONFIG_COAP_API_ENABLE

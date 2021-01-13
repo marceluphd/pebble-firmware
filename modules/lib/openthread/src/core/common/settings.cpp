@@ -57,12 +57,9 @@ void SettingsBase::LogNetworkInfo(const char *aAction, const NetworkInfo &aNetwo
         Mle::Mle::RoleToString(static_cast<Mle::DeviceRole>(aNetworkInfo.GetRole())), aNetworkInfo.GetDeviceMode(),
         aNetworkInfo.GetVersion(), aNetworkInfo.GetKeySequence());
 
-    otLogInfoCore(
-        "Non-volatile: ... pid:0x%x, mlecntr:0x%x, maccntr:0x%x, mliid:%02x%02x%02x%02x%02x%02x%02x%02x}",
-        aNetworkInfo.GetPreviousPartitionId(), aNetworkInfo.GetMleFrameCounter(), aNetworkInfo.GetMacFrameCounter(),
-        aNetworkInfo.GetMeshLocalIid()[0], aNetworkInfo.GetMeshLocalIid()[1], aNetworkInfo.GetMeshLocalIid()[2],
-        aNetworkInfo.GetMeshLocalIid()[3], aNetworkInfo.GetMeshLocalIid()[4], aNetworkInfo.GetMeshLocalIid()[5],
-        aNetworkInfo.GetMeshLocalIid()[6], aNetworkInfo.GetMeshLocalIid()[7]);
+    otLogInfoCore("Non-volatile: ... pid:0x%x, mlecntr:0x%x, maccntr:0x%x, mliid:%s}",
+                  aNetworkInfo.GetPreviousPartitionId(), aNetworkInfo.GetMleFrameCounter(),
+                  aNetworkInfo.GetMacFrameCounter(), aNetworkInfo.GetMeshLocalIid().ToString().AsCString());
 }
 
 void SettingsBase::LogParentInfo(const char *aAction, const ParentInfo &aParentInfo) const
@@ -77,6 +74,13 @@ void SettingsBase::LogChildInfo(const char *aAction, const ChildInfo &aChildInfo
                   aChildInfo.GetRloc16(), aChildInfo.GetExtAddress().ToString().AsCString(), aChildInfo.GetTimeout(),
                   aChildInfo.GetMode(), aChildInfo.GetVersion());
 }
+
+#if OPENTHREAD_CONFIG_DUA_ENABLE
+void SettingsBase::LogDadInfo(const char *aAction, const DadInfo &aDadInfo) const
+{
+    otLogInfoCore("Non-volatile: %s DadInfo {DadCounter:%2d}", aAction, aDadInfo.GetDadCounter());
+}
+#endif
 
 #endif // #if (OPENTHREAD_CONFIG_LOG_LEVEL >= OT_LOG_LEVEL_INFO)
 
@@ -248,7 +252,7 @@ otError Settings::SaveNetworkInfo(const NetworkInfo &aNetworkInfo)
     uint16_t    length = sizeof(prevNetworkInfo);
 
     if ((Read(kKeyNetworkInfo, &prevNetworkInfo, length) == OT_ERROR_NONE) && (length == sizeof(NetworkInfo)) &&
-        (memcmp(&prevNetworkInfo, &aNetworkInfo, sizeof(NetworkInfo)) == 0))
+        (prevNetworkInfo == aNetworkInfo))
     {
         LogNetworkInfo("Re-saved", aNetworkInfo);
         ExitNow();
@@ -294,7 +298,7 @@ otError Settings::SaveParentInfo(const ParentInfo &aParentInfo)
     uint16_t   length = sizeof(ParentInfo);
 
     if ((Read(kKeyParentInfo, &prevParentInfo, length) == OT_ERROR_NONE) && (length == sizeof(ParentInfo)) &&
-        (memcmp(&prevParentInfo, &aParentInfo, sizeof(ParentInfo)) == 0))
+        (prevParentInfo == aParentInfo))
     {
         LogParentInfo("Re-saved", aParentInfo);
         ExitNow();
@@ -332,7 +336,7 @@ exit:
     return error;
 }
 
-otError Settings::DeleteChildInfo(void)
+otError Settings::DeleteAllChildInfo(void)
 {
     otError error;
 
@@ -349,13 +353,6 @@ Settings::ChildInfoIterator::ChildInfoIterator(Instance &aInstance)
     , mIndex(0)
     , mIsDone(false)
 {
-    Reset();
-}
-
-void Settings::ChildInfoIterator::Reset(void)
-{
-    mIndex  = 0;
-    mIsDone = false;
     Read();
 }
 
@@ -394,6 +391,54 @@ void Settings::ChildInfoIterator::Read(void)
 exit:
     mIsDone = (error != OT_ERROR_NONE);
 }
+
+#if OPENTHREAD_CONFIG_DUA_ENABLE
+otError Settings::ReadDadInfo(DadInfo &aDadInfo) const
+{
+    otError  error;
+    uint16_t length = sizeof(DadInfo);
+
+    aDadInfo.Init();
+    SuccessOrExit(error = Read(kKeyDadInfo, &aDadInfo, length));
+    LogDadInfo("Read", aDadInfo);
+
+exit:
+    return error;
+}
+
+otError Settings::SaveDadInfo(const DadInfo &aDadInfo)
+{
+    otError  error = OT_ERROR_NONE;
+    DadInfo  prevDadInfo;
+    uint16_t length = sizeof(DadInfo);
+
+    if ((Read(kKeyDadInfo, &prevDadInfo, length) == OT_ERROR_NONE) && (length == sizeof(DadInfo)) &&
+        (prevDadInfo == aDadInfo))
+    {
+        LogDadInfo("Re-saved", aDadInfo);
+        ExitNow();
+    }
+
+    SuccessOrExit(error = Save(kKeyDadInfo, &aDadInfo, sizeof(DadInfo)));
+    LogDadInfo("Saved", aDadInfo);
+
+exit:
+    LogFailure(error, "saving DadInfo", false);
+    return error;
+}
+
+otError Settings::DeleteDadInfo(void)
+{
+    otError error;
+
+    SuccessOrExit(error = Delete(kKeyDadInfo));
+    otLogInfoCore("Non-volatile: Deleted DadInfo");
+
+exit:
+    LogFailure(error, "deleting DadInfo", true);
+    return error;
+}
+#endif // OPENTHREAD_CONFIG_DUA_ENABLE
 
 otError Settings::Read(Key aKey, void *aBuffer, uint16_t &aSize) const
 {

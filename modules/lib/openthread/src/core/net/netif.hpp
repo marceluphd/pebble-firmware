@@ -36,13 +36,17 @@
 
 #include "openthread-core-config.h"
 
+#include "common/clearable.hpp"
+#include "common/code_utils.hpp"
 #include "common/linked_list.hpp"
 #include "common/locator.hpp"
 #include "common/message.hpp"
+#include "common/non_copyable.hpp"
 #include "common/tasklet.hpp"
 #include "mac/mac_types.hpp"
 #include "net/ip6_address.hpp"
 #include "net/socket.hpp"
+#include "thread/mlr_types.hpp"
 
 namespace ot {
 namespace Ip6 {
@@ -63,17 +67,14 @@ class Ip6;
  * This class implements an IPv6 network interface unicast address.
  *
  */
-class NetifUnicastAddress : public otNetifAddress, public LinkedListEntry<NetifUnicastAddress>
+class NetifUnicastAddress : public otNetifAddress,
+                            public LinkedListEntry<NetifUnicastAddress>,
+                            public Clearable<NetifUnicastAddress>
 {
     friend class Netif;
+    friend class LinkedList<NetifUnicastAddress>;
 
 public:
-    /**
-     * This method clears the object (setting all fields to zero).
-     *
-     */
-    void Clear(void) { memset(this, 0, sizeof(*this)); }
-
     /**
      * This method returns the unicast address.
      *
@@ -102,27 +103,21 @@ public:
     }
 
 private:
-    // In an unused/available entry (i.e., entry not present in a linked
-    // list), the next pointer is set to point back to the entry itself.
-    bool IsInUse(void) const { return GetNext() != this; }
-    void MarkAsNotInUse(void) { SetNext(this); }
+    bool Matches(const Address &aAddress) const { return GetAddress() == aAddress; }
 };
 
 /**
  * This class implements an IPv6 network interface multicast address.
  *
  */
-class NetifMulticastAddress : public otNetifMulticastAddress, public LinkedListEntry<NetifMulticastAddress>
+class NetifMulticastAddress : public otNetifMulticastAddress,
+                              public LinkedListEntry<NetifMulticastAddress>,
+                              public Clearable<NetifMulticastAddress>
 {
     friend class Netif;
+    friend class LinkedList<NetifMulticastAddress>;
 
 public:
-    /**
-     * This method clears the object (setting all fields to zero).
-     *
-     */
-    void Clear(void) { memset(this, 0, sizeof(*this)); }
-
     /**
      * This method returns the multicast address.
      *
@@ -159,22 +154,180 @@ public:
     }
 
 private:
-    // In an unused/available entry (i.e., entry not present in a linked
-    // list), the next pointer is set to point back to the entry itself.
-    bool IsInUse(void) const { return GetNext() != this; }
-    void MarkAsNotInUse(void) { mNext = this; }
+    bool Matches(const Address &aAddress) const { return GetAddress() == aAddress; }
+};
+
+class ExternalNetifMulticastAddress : public NetifMulticastAddress
+{
+    friend class Netif;
+    friend class LinkedList<ExternalNetifMulticastAddress>;
+
+public:
+#if OPENTHREAD_CONFIG_MLR_ENABLE
+    /**
+     * This method returns the current Multicast Listener Registration (MLR) state.
+     *
+     * @returns The current Multicast Listener Registration state.
+     *
+     */
+    MlrState GetMlrState(void) const { return mMlrState; }
+
+    /**
+     * This method sets the Multicast Listener Registration (MLR) state.
+     *
+     * @param[in] aState  The new Multicast Listener Registration state.
+     *
+     */
+    void SetMlrState(MlrState aState) { mMlrState = aState; }
+#endif
+
+private:
+    ExternalNetifMulticastAddress *GetNext(void)
+    {
+        return static_cast<ExternalNetifMulticastAddress *>(const_cast<otNetifMulticastAddress *>(mNext));
+    }
+
+#if OPENTHREAD_CONFIG_MLR_ENABLE
+    MlrState mMlrState : 2;
+#endif
 };
 
 /**
  * This class implements an IPv6 network interface.
  *
  */
-class Netif : public InstanceLocator, public LinkedListEntry<Netif>
+class Netif : public InstanceLocator, public LinkedListEntry<Netif>, private NonCopyable
 {
     friend class Ip6;
     friend class Address;
+    class ExternalMulticastAddressIteratorBuilder;
 
 public:
+    /**
+     * This class represents an iterator for iterating external multicast addresses in a Netif instance.
+     *
+     */
+    class ExternalMulticastAddressIterator
+    {
+        friend class ExternalMulticastAddressIteratorBuilder;
+
+    public:
+        /**
+         * This constructor initializes an `ExternalMulticastAddressIterator` instance to start from the first external
+         * multicast address.
+         *
+         * @param[in] aNetif  A reference to the Netif instance.
+         *
+         */
+        explicit ExternalMulticastAddressIterator(const Netif &aNetif)
+            : mNetif(aNetif)
+        {
+            AdvanceFrom(mNetif.GetMulticastAddresses());
+        }
+
+        /**
+         * This method indicates whether the iterator has reached end of the list.
+         *
+         * @retval TRUE   There are no more entries in the list (reached end of the list).
+         * @retval FALSE  The current address entry is valid.
+         *
+         */
+        bool IsDone(void) const { return mCurrent != nullptr; }
+
+        /**
+         * This method overloads `++` operator (pre-increment) to advance the iterator.
+         *
+         * The iterator is moved to point to the next entry.  If there are no more entries matching the iterator becomes
+         * empty.
+         *
+         */
+        void operator++(void) { AdvanceFrom(mCurrent->GetNext()); }
+
+        /**
+         * This method overloads `++` operator (post-increment) to advance the iterator.
+         *
+         * The iterator is moved to point to the next entry.  If there are no more entries matching the iterator becomes
+         * empty.
+         *
+         */
+        void operator++(int) { AdvanceFrom(mCurrent->GetNext()); }
+
+        /**
+         * This method overloads the `*` dereference operator and gets a reference to `ExternalNetifMulticastAddress`
+         * entry to which the iterator is currently pointing.
+         *
+         * This method MUST be used when the iterator is not empty.
+         *
+         * @returns A reference to the `ExternalNetifMulticastAddress` entry currently pointed by the iterator.
+         *
+         */
+        ExternalNetifMulticastAddress &operator*(void) { return *mCurrent; }
+
+        /**
+         * This method overloads the `->` dereference operator and gets a pointer to `ExternalNetifMulticastAddress`
+         * entry to which the iterator is current pointing.
+         *
+         * @returns A pointer to the `ExternalNetifMulticastAddress` entry associated with the iterator, or `nullptr` if
+         * iterator is empty.
+         *
+         */
+        ExternalNetifMulticastAddress *operator->(void) { return mCurrent; }
+
+        /**
+         * This method overloads operator `==` to evaluate whether or not two `ExternalMulticastAddressIterator`
+         * instances point to the same `ExternalNetifMulticastAddress` entry.
+         *
+         * @param[in] aOther  The other `Iterator` to compare with.
+         *
+         * @retval TRUE   If the two `ExternalMulticastAddressIterator` objects point to the same
+         * `ExternalNetifMulticastAddress` entry or both are done.
+         * @retval FALSE  If the two `ExternalMulticastAddressIterator` objects do not point to the same
+         * `ExternalNetifMulticastAddress` entry.
+         *
+         */
+        bool operator==(const ExternalMulticastAddressIterator &aOther) { return mCurrent == aOther.mCurrent; }
+
+        /**
+         * This method overloads operator `!=` to evaluate whether or not two `ExternalMulticastAddressIterator`
+         * instances point to the same `ExternalNetifMulticastAddress` entry.
+         *
+         * @param[in]  aOther  The other `ExternalMulticastAddressIterator` to compare with.
+         *
+         * @retval TRUE   If the two `ExternalMulticastAddressIterator` objects do not point to the same
+         * `ExternalNetifMulticastAddress` entry.
+         * @retval FALSE  If the two `ExternalMulticastAddressIterator` objects point to the same
+         * `ExternalNetifMulticastAddress` entry or both are done.
+         *
+         */
+        bool operator!=(const ExternalMulticastAddressIterator &aOther) { return mCurrent != aOther.mCurrent; }
+
+    private:
+        enum IteratorType
+        {
+            kEndIterator,
+        };
+
+        ExternalMulticastAddressIterator(const Netif &aNetif, IteratorType)
+            : mNetif(aNetif)
+            , mCurrent(nullptr)
+        {
+        }
+
+        void AdvanceFrom(const NetifMulticastAddress *aAddr)
+        {
+            while (aAddr != nullptr && !mNetif.IsMulticastAddressExternal(*aAddr))
+            {
+                aAddr = aAddr->GetNext();
+            }
+
+            mCurrent =
+                const_cast<ExternalNetifMulticastAddress *>(static_cast<const ExternalNetifMulticastAddress *>(aAddr));
+        }
+
+        const Netif &                  mNetif;
+        ExternalNetifMulticastAddress *mCurrent;
+    };
+
     /**
      * This constructor initializes the network interface.
      *
@@ -193,9 +346,9 @@ public:
     void SetAddressCallback(otIp6AddressCallback aCallback, void *aCallbackContext);
 
     /**
-     * This method returns a pointer to the list of unicast addresses.
+     * This method returns a pointer to the head of the linked list of unicast addresses.
      *
-     * @returns A pointer to the list of unicast addresses.
+     * @returns A pointer to the head of the linked list of unicast addresses.
      *
      */
     const NetifUnicastAddress *GetUnicastAddresses(void) const { return mUnicastAddresses.GetHead(); }
@@ -203,27 +356,64 @@ public:
     /**
      * This method adds a unicast address to the network interface.
      *
+     * This method is intended for addresses internal to OpenThread. The @p aAddress instance is directly added in the
+     * unicast address linked list.
+     *
      * @param[in]  aAddress  A reference to the unicast address.
      *
-     * @retval OT_ERROR_NONE      Successfully added the unicast address.
-     * @retval OT_ERROR_ALREADY  The unicast address was already added.
-     *
      */
-    otError AddUnicastAddress(NetifUnicastAddress &aAddress);
+    void AddUnicastAddress(NetifUnicastAddress &aAddress);
 
     /**
      * This method removes a unicast address from the network interface.
      *
+     * This method is intended for addresses internal to OpenThread. The @p aAddress instance is removed from the
+     * unicast address linked list.
+     *
      * @param[in]  aAddress  A reference to the unicast address.
      *
-     * @retval OT_ERROR_NONE       Successfully removed the unicast address.
-     * @retval OT_ERROR_NOT_FOUND  The unicast address wasn't found to be removed.
+     */
+    void RemoveUnicastAddress(const NetifUnicastAddress &aAddress);
+
+    /**
+     * This method indicates whether or not an address is assigned to the interface.
+     *
+     * @param[in]  aAddress  A reference to the unicast address.
+     *
+     * @retval TRUE   If @p aAddress is assigned to the network interface,
+     * @retval FALSE  If @p aAddress is not assigned to the network interface.
      *
      */
-    otError RemoveUnicastAddress(const NetifUnicastAddress &aAddress);
+    bool HasUnicastAddress(const Address &aAddress) const;
+
+    /**
+     * This method indicates whether or not a unicast address is assigned to the network interface.
+     *
+     * @param[in]  aAddress  A reference to the unicast address.
+     *
+     * @retval TRUE   If @p aAddress is assigned to the network interface,
+     * @retval FALSE  If @p aAddress is not assigned to the network interface.
+     *
+     */
+    bool HasUnicastAddress(const NetifUnicastAddress &aAddress) const { return mUnicastAddresses.Contains(aAddress); }
+
+    /**
+     * This method indicates whether a unicast address is an external or internal address.
+     *
+     * @param[in] aAddress  A reference to the unicast address.
+     *
+     * @retval TRUE   The address is an external address.
+     * @retval FALSE  The address is not an external address (it is an OpenThread internal address).
+     *
+     */
+    bool IsUnicastAddressExternal(const NetifUnicastAddress &aAddress) const;
 
     /**
      * This method adds an external (to OpenThread) unicast address to the network interface.
+     *
+     * For external address, the @p aAddress instance is not directly used (i.e., it can be temporary). It is copied
+     * into a local entry (allocated from an internal pool) before being added in the unicast address linked list.
+     * The maximum number of external addresses is specified by `OPENTHREAD_CONFIG_IP6_MAX_EXT_UCAST_ADDRS`.
      *
      * @param[in]  aAddress  A reference to the unicast address.
      *
@@ -254,16 +444,6 @@ public:
     void RemoveAllExternalUnicastAddresses(void);
 
     /**
-     * This method indicates whether or not an address is assigned to this interface.
-     *
-     * @param[in]  aAddress  A reference to the unicast address.
-     *
-     * @returns TRUE if @p aAddress is assigned to this interface, FALSE otherwise.
-     *
-     */
-    bool IsUnicastAddress(const Address &aAddress) const;
-
-    /**
      * This method indicates whether or not the network interface is subscribed to a multicast address.
      *
      * @param[in]  aAddress  The multicast address to check.
@@ -279,67 +459,62 @@ public:
      *
      * @note This method MUST be called after `SubscribeAllNodesMulticast()` or its behavior is undefined.
      *
-     * @retval OT_ERROR_NONE     Successfully subscribed to the link-local and realm-local all routers addresses.
-     * @retval OT_ERROR_ALREADY  The multicast addresses are already subscribed.
-     *
      */
-    otError SubscribeAllRoutersMulticast(void);
+    void SubscribeAllRoutersMulticast(void);
 
     /**
      * This method unsubscribes the network interface to the link-local and realm-local all routers address.
      *
-     * @retval OT_ERROR_NONE       Successfully unsubscribed from the link-local and realm-local all routers address
-     * @retval OT_ERROR_NOT_FOUND  The multicast addresses were not found.
-     *
      */
-    otError UnsubscribeAllRoutersMulticast(void);
+    void UnsubscribeAllRoutersMulticast(void);
 
     /**
-     * This method returns a pointer to the list of multicast addresses.
+     * This method returns a pointer to the head of the linked list of multicast addresses.
      *
-     * @returns A pointer to the list of multicast addresses.
+     * @returns A pointer to the head of the linked list of multicast addresses.
      *
      */
     const NetifMulticastAddress *GetMulticastAddresses(void) const { return mMulticastAddresses.GetHead(); }
 
     /**
+     * This method indicates whether a multicast address is an external or internal address.
+     *
+     * @param[in] aAddress  A reference to the multicast address.
+     *
+     * @retval TRUE   The address is an external address.
+     * @retval FALSE  The address is not an external address (it is an OpenThread internal address).
+     *
+     */
+    bool IsMulticastAddressExternal(const NetifMulticastAddress &aAddress) const;
+
+    /**
      * This method subscribes the network interface to a multicast address.
+     *
+     * This method is intended for addresses internal to OpenThread. The @p aAddress instance is directly added in the
+     * multicast address linked list.
      *
      * @param[in]  aAddress  A reference to the multicast address.
      *
-     * @retval OT_ERROR_NONE     Successfully subscribed to @p aAddress.
-     * @retval OT_ERROR_ALREADY  The multicast address is already subscribed.
-     *
      */
-    otError SubscribeMulticast(NetifMulticastAddress &aAddress);
+    void SubscribeMulticast(NetifMulticastAddress &aAddress);
 
     /**
      * This method unsubscribes the network interface to a multicast address.
      *
+     * This method is intended for addresses internal to OpenThread. The @p aAddress instance is directly removed from
+     * the multicast address linked list.
+     *
      * @param[in]  aAddress  A reference to the multicast address.
      *
-     * @retval OT_ERROR_NONE       Successfully unsubscribed @p aAddress.
-     * @retval OT_ERROR_NOT_FOUND  The multicast address was not found.
-     *
      */
-    otError UnsubscribeMulticast(const NetifMulticastAddress &aAddress);
-
-    /**
-     * This method provides the next external multicast address that the network interface subscribed.
-     * It is used to iterate through the entries of the external multicast address table.
-     *
-     * @param[inout] aIterator A reference to the iterator context. To get the first
-     *                         external multicast address, it should be set to 0.
-     * @param[out]   aAddress  A reference where to place the external multicast address.
-     *
-     * @retval OT_ERROR_NONE       Successfully found the next external multicast address.
-     * @retval OT_ERROR_NOT_FOUND  No subsequent external multicast address.
-     *
-     */
-    otError GetNextExternalMulticast(uint8_t &aIterator, Address &aAddress) const;
+    void UnsubscribeMulticast(const NetifMulticastAddress &aAddress);
 
     /**
      * This method subscribes the network interface to the external (to OpenThread) multicast address.
+     *
+     * For external address, the @p aAddress instance is not directly used (i.e., it can be temporary). It is copied
+     * into a local entry (allocated from an internal pool) before being added in the multicast address linked list.
+     * The maximum number of external addresses is specified by `OPENTHREAD_CONFIG_IP6_MAX_EXT_MCAST_ADDRS`.
      *
      * @param[in]  aAddress  A reference to the multicast address.
      *
@@ -366,6 +541,7 @@ public:
     /**
      * This method unsubscribes the network interface from all previously added external (to OpenThread) multicast
      * addresses.
+     *
      */
     void UnsubscribeAllExternalMulticastAddresses(void);
 
@@ -374,6 +550,7 @@ public:
      *
      * @retval TRUE   If the multicast promiscuous mode is enabled.
      * @retval FALSE  If the multicast promiscuous mode is disabled.
+     *
      */
     bool IsMulticastPromiscuousEnabled(void) const { return mMulticastPromiscuous; }
 
@@ -385,16 +562,38 @@ public:
      */
     void SetMulticastPromiscuous(bool aEnabled) { mMulticastPromiscuous = aEnabled; }
 
+    /**
+     * This method enables range-based `for` loop iteration over all external multicast addresses on the Netif.
+     *
+     * This method should be used like follows:
+     *
+     *     for (Ip6::ExternalNetifMulticastAddress &addr : Get<ThreadNetif>().IterateExternalMulticastAddresses())
+     *     { ... }
+     *
+     * @returns An `ExternalMulticastAddressIteratorBuilder` instance.
+     *
+     */
+    ExternalMulticastAddressIteratorBuilder IterateExternalMulticastAddresses(void)
+    {
+        return ExternalMulticastAddressIteratorBuilder(*this);
+    }
+
+    /**
+     * This method indicates whether or not the network interfaces is subscribed to any external multicast address.
+     *
+     * @retval TRUE  The network interface is subscribed to at least one external multicast address.
+     * @retval FALSE The network interface is not subscribed to any external multicast address.
+     *
+     */
+    bool HasAnyExternalMulticastAddress(void) const { return !ExternalMulticastAddressIterator(*this).IsDone(); }
+
 protected:
     /**
      * This method subscribes the network interface to the realm-local all MPL forwarders, link-local, and realm-local
      * all nodes address.
      *
-     * @retval OT_ERROR_NONE     Successfully subscribed to all addresses.
-     * @retval OT_ERROR_ALREADY  The multicast addresses are already subscribed.
-     *
      */
-    otError SubscribeAllNodesMulticast(void);
+    void SubscribeAllNodesMulticast(void);
 
     /**
      * This method unsubscribes the network interface from the realm-local all MPL forwarders, link-local and
@@ -402,16 +601,31 @@ protected:
      *
      * @note This method MUST be called after `UnsubscribeAllRoutersMulticast()` or its behavior is undefined
      *
-     * @retval OT_ERROR_NONE          Successfully unsubscribed from all addresses.
-     * @retval OT_ERROR_NOT_FOUND     The multicast addresses were not found.
-     *
      */
-    otError UnsubscribeAllNodesMulticast(void);
+    void UnsubscribeAllNodesMulticast(void);
 
 private:
     enum
     {
         kMulticastPrefixLength = 128, ///< Multicast prefix length used to notify internal address changes.
+    };
+
+    class ExternalMulticastAddressIteratorBuilder
+    {
+    public:
+        ExternalMulticastAddressIteratorBuilder(const Netif &aNetif)
+            : mNetif(aNetif)
+        {
+        }
+
+        ExternalMulticastAddressIterator begin(void) { return ExternalMulticastAddressIterator(mNetif); }
+        ExternalMulticastAddressIterator end(void)
+        {
+            return ExternalMulticastAddressIterator(mNetif, ExternalMulticastAddressIterator::kEndIterator);
+        }
+
+    private:
+        const Netif &mNetif;
     };
 
     LinkedList<NetifUnicastAddress>   mUnicastAddresses;
@@ -421,8 +635,8 @@ private:
     otIp6AddressCallback mAddressCallback;
     void *               mAddressCallbackContext;
 
-    NetifUnicastAddress   mExtUnicastAddresses[OPENTHREAD_CONFIG_IP6_MAX_EXT_UCAST_ADDRS];
-    NetifMulticastAddress mExtMulticastAddresses[OPENTHREAD_CONFIG_IP6_MAX_EXT_MCAST_ADDRS];
+    Pool<NetifUnicastAddress, OPENTHREAD_CONFIG_IP6_MAX_EXT_UCAST_ADDRS>           mExtUnicastAddressPool;
+    Pool<ExternalNetifMulticastAddress, OPENTHREAD_CONFIG_IP6_MAX_EXT_MCAST_ADDRS> mExtMulticastAddressPool;
 
     static const otNetifMulticastAddress kRealmLocalAllMplForwardersMulticastAddress;
     static const otNetifMulticastAddress kLinkLocalAllNodesMulticastAddress;

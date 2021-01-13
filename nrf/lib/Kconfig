@@ -6,6 +6,7 @@
 
 menu "Libraries"
 
+rsource "agps/Kconfig"
 rsource "bin/Kconfig"
 rsource "bsdlib/Kconfig"
 rsource "adp536x/Kconfig"
@@ -26,5 +27,6 @@ rsource "sms/Kconfig"
 rsource "modem_key_mgmt/Kconfig"
 rsource "supl/Kconfig"
 rsource "date_time/Kconfig"
+rsource "ram_pwrdn/Kconfig"
 
 endmenu

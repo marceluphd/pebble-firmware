@@ -78,23 +78,31 @@
 void zb_secur_setup_nwk_key(zb_uint8_t *key, zb_uint8_t i);
 
 /**
- *  Initiate procedure of NWk key switching.
+ *  Initiate procedure of NWK key switching.
  *
  *  Generate next NWK key if it not exists, broadcast new NWK key, after delay broadcast NWK key switch command.
  *  Can run at TC only.
  *
- *  @param param - work buffer id or 0 (is zero, function allocates buffer itself)
+ *  @param param - work buffer ID or 0 (is zero, function allocates buffer itself)
  */
 void zb_secur_nwk_key_switch_procedure(zb_uint8_t param);
 
 /**
- *  Specifies whether Trust Center Rejoin is allowed.
+ *  Specifies whether unsecure Trust Center Rejoin is allowed.
  *
  *  If set to ZB_FALSE, devices that attempted unsecure rejoin will not be authorized.
  *
  *  @param enable - whether to enable or disable TC Rejoin.
  */
 void zb_secur_set_tc_rejoin_enabled(zb_bool_t enable);
+/**
+ *  Specifies whether Trust Center Rejoin is ignored.
+ *
+ *  If set to ZB_TRUE, devices that attempted unsecure rejoin will be ignored.
+ *
+ *  @param enable - whether to enable or disable TC Rejoin ignore.
+ */
+void zb_secur_set_ignore_tc_rejoin(zb_bool_t enable);
 /*! @} */ /* secur_api*/
 /** @endcond */ /* DOXYGEN_SECUR_SECTION */
 
@@ -103,7 +111,7 @@ void zb_secur_set_tc_rejoin_enabled(zb_bool_t enable);
 /*! @{ */
 
 /**
- *  Initiate procedure of NWk key switching.
+ *  Initiate procedure of NWK key switching.
  *
  *  Generate link key with device, update link key.
  *  Can run at TC only.
@@ -428,7 +436,7 @@ zb_bool_t zb_get_rx_on_when_idle(void);
 
 /** @brief ZBOSS start function.
   *
-  * Typical device start: init, load some parameters from nvram and proceed with startup.
+  * Typical device start: init, load some parameters from NVRAM and proceed with startup.
   *
   * Startup means either Formation (for ZC), rejoin or discovery/association join.  After startup
   * complete @ref zboss_signal_handler callback is called, so application will know when to do
@@ -468,7 +476,7 @@ const zb_char_t ZB_IAR_CODE *zb_get_version(void);
 
    For example, you can use this function if it is needed to enable leds, timers
    or any other devices on periphery to work with them before starting working in a network. It's
-   also usefull if you want to run something localy during joining.
+   also useful if you want to run something locally during joining.
 
    Application should later call ZBOSS commissioning initiation - for
    instance,
@@ -495,7 +503,7 @@ void zboss_start_continue(void);
    Start ZBOSS in the sniffer mode
 
    Initialize ZBOSS MAC layer to work as a sniffer.
-   Once ZBOSS is intialized in the sniffer mode, it can't be commissioned in the
+   Once ZBOSS is initialized in the sniffer mode, it can't be commissioned in the
    normal mode until reboot.
  */
 zb_ret_t zboss_start_in_sniffer_mode(void);
@@ -585,26 +593,6 @@ void zb_set_pan_id(zb_uint16_t pan_id);
 */
 void zb_set_node_descriptor_manufacturer_code(zb_uint16_t manuf_code);
 
-/*! @} */ /* zb_general_set */
-
-/*! @addtogroup zb_general_get */
-/*! @{ */
-
-/**
-   Get 64-bit long address
-   @param addr - pointer to memory where result will be stored
- */
-void zb_get_long_address(zb_ieee_addr_t addr);
-
-/** Get current short address of the device
- */
-zb_uint16_t zb_get_short_address(void);
-
-/*! @} */ /* zb_general_get */
-
-/*! @addtogroup zb_general_set */
-/*! @{ */
-
 /**
    Set Extended Pan ID (apsUseExtendedPANID attribute)
    @param ext_pan_id - Long (64-bit) Extended Pan ID
@@ -617,10 +605,35 @@ void zb_set_extended_pan_id(const zb_ext_pan_id_t ext_pan_id);
 /*! @{ */
 
 /**
+   Get 64-bit long address
+   @param addr - pointer to memory where result will be stored
+ */
+void zb_get_long_address(zb_ieee_addr_t addr);
+
+/**
+    Get 16-bit PAN ID
+*/
+zb_uint16_t zb_get_pan_id(void);
+
+/** Get current short address of the device
+ */
+zb_uint16_t zb_get_short_address(void);
+
+/**
    Get Extended Pan ID (nwkExtendedPANId attribute)
    @param ext_pan_id - pointer to memory where result will be stored
  */
 void zb_get_extended_pan_id(zb_ext_pan_id_t ext_pan_id);
+
+/**
+   Get the currently used channel page.
+*/
+zb_uint8_t zb_get_current_page(void);
+
+/**
+   Get the currently used channel.
+*/
+zb_uint8_t zb_get_current_channel(void);
 
 /*! @} */ /* zb_general_get */
 
@@ -661,7 +674,24 @@ void zb_set_network_ed_role(zb_uint32_t channel_mask);
 */
 void zb_set_network_ed_role_legacy(zb_uint32_t channel_mask);
 
-/*! @} */ /* zb_general_set */
+/**
+   Initiate device as a Zigbee 3.0 BDB coordinator with channel list.
+   Provides functionality to set mask for Sub-GHz and 2.4GHz page.
+   @param channel_list - Zigbee channels list
+*/
+void zb_set_network_coordinator_role_ext(zb_channel_list_t channel_list);
+
+/**
+   Initiate device as a Zigbee 3.0 BDB End Device with channel list.
+   Provides functionality to set mask for Sub-GHz and 2.4GHz page.
+   @param channel_list - Zigbee channels list
+*/
+void zb_set_network_ed_role_ext(zb_channel_list_t channel_list);
+
+/** @} */
+/** @addtogroup zb_general_get
+@{
+*/
 
 /*! @addtogroup zb_general_get */
 /*! @{ */
@@ -672,6 +702,12 @@ void zb_set_network_ed_role_legacy(zb_uint32_t channel_mask);
  * @return - zb_nwk_device_type_t device_role_id
  */
 zb_nwk_device_type_t zb_get_network_role(void);
+
+/**
+ * Returns the maximum number of children allowed
+ */
+zb_uint8_t zb_get_max_children(void);
+
 
 /*! @} */ /* zb_general_get */
 
@@ -756,6 +792,25 @@ void zb_set_ed_timeout(zb_uint_t to);
 */
 void zb_set_keepalive_timeout(zb_uint_t to);
 
+/**
+ *  Enumeration, which stores all values that a ZC/ZR can set as the supported keepalive method
+ */
+typedef enum nwk_keepalive_supported_method_e
+{
+  ED_KEEPALIVE_DISABLED = 0,    /*!< ZC/ZR doesn't support Keepalive feature */
+  MAC_DATA_POLL_KEEPALIVE,      /*!< ZC/ZR supports Keepalive feature by means of MAC Data Poll */
+  ED_TIMEOUT_REQUEST_KEEPALIVE, /*!< ZC/ZR supports Keepalive feature by means of ED Timeout Request */
+  BOTH_KEEPALIVE_METHODS,       /*!< ZC/ZR supports both MAC Data Poll and ED Timeout Request as Keepalive methods */
+} nwk_keepalive_supported_method_t;
+
+/**
+   Set keep alive mode.
+
+   Use it to set which method a device should use in poll context.
+   @param mode - the keepalive mode a device wants to set
+*/
+void zb_set_keepalive_mode(nwk_keepalive_supported_method_t mode);
+
 /** @} */ /* zb_general_set */
 
 
@@ -802,7 +857,7 @@ typedef enum zb_nvram_dataset_types_e
   ZB_NVRAM_APP_DATA1             = 9, /**< Application-specific data #1 */
   ZB_NVRAM_APP_DATA2             = 10, /**< Application-specific data #2 */
   ZB_NVRAM_ADDR_MAP              = 11, /**< Dataset stores address map info */
-  ZB_NVRAM_NEIGHBOUR_TBL         = 12, /**< Dataset stores Neighbour table info */
+  ZB_NVRAM_NEIGHBOUR_TBL         = 12, /**< Dataset stores Neighbor table info */
   ZB_NVRAM_INSTALLCODES          = 13, /**< Dataset contains APS installcodes data */
   ZB_NVRAM_APS_SECURE_DATA       = 14, /**< Dataset, contains APS secure keys data */
   ZB_NVRAM_APS_BINDING_DATA      = 15, /**< Dataset, contains APS binding data */
@@ -812,7 +867,7 @@ typedef enum zb_nvram_dataset_types_e
   ZB_NVRAM_APS_GROUPS_DATA       = 19, /**< Dataset, contains APS groups data */
   ZB_NVRAM_DATASET_SE_CERTDB     = 20, /**< Smart Energy Dataset - Certificates DataBase */
   ZB_NVRAM_ZCL_WWAH_DATA         = 21, /**< Dataset, contains ZCL WWAH data */
-
+  ZB_NVRAM_DATASET_GP_APP_TBL    = 22, /**< Dataset, contains ZCL WWAH data */
   /* Note: added new app_data datasets down and created a hole for new system datasets.
    */
   ZB_NVRAM_APP_DATA3             = 27, /**< Application-specific data #3 */
@@ -1102,7 +1157,279 @@ void zb_sleep_now(void);
 /*! @endcond */ /* DOXYGEN_LL_SECTION */
 #endif /* ZB_USE_SLEEP */
 
+#if defined ZB_JOINING_LIST_SUPPORT
 
+/**
+ *  \addtogroup zdo_joining_lists
+ *  @{
+ *    @details
+ *    The API executes only one operation at a time.
+ *    It is necessary to account for that, issuing another operation
+ *    only on completion of the previous one. See examples.
+ */
+
+
+
+/** Parameters for @ref zb_ieee_joining_list_add. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_add_params_s
+{
+  zb_callback_t callback;   /**< Callback to be scheduled on completion of adding. */
+
+  zb_ieee_addr_t address;   /**< 64-bit address to add. */
+
+} ZB_PACKED_STRUCT zb_ieee_joining_list_add_params_t;
+
+
+/** Parameters for @ref zb_ieee_joining_list_delete. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_delete_params_s
+{
+  zb_callback_t callback;  /**< Callback to be scheduled on completion of deleting. */
+
+  zb_ieee_addr_t address;  /**< 64-bit address to delete. */
+
+} ZB_PACKED_STRUCT zb_ieee_joining_list_delete_params_t;
+
+
+/** See table D-4 of Zigbee r22 spec. */
+typedef enum zb_mac_joining_policy_e
+{
+  ZB_MAC_JOINING_POLICY_ALL_JOIN = 0x0,       /* Any device is allowed to join. */
+  ZB_MAC_JOINING_POLICY_IEEELIST_JOIN = 0x1, /* Only devices on the mibJoiningIeeeList are allowed to join.*/
+  ZB_MAC_JOINING_POLICY_NO_JOIN = 0x2       /* No device is allowed to join. */
+} zb_mac_joining_policy_t;
+
+
+/** Parameters for @ref zb_ieee_joining_list_clear. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_clear_params_s
+{
+  zb_callback_t callback;  /**< Callback to be scheduled on completion
+                              of clearing IEEE joining list. */
+
+  zb_mac_joining_policy_t new_joining_policy;   /**< Joining list policy to set on the emptied list.
+                                                   See @ref zb_mac_joining_policy_t for possible
+                                                   values.*/
+
+} ZB_PACKED_STRUCT zb_ieee_joining_list_clear_params_t;
+
+
+/** Parameters for @ref zb_ieee_joining_list_set_policy. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_set_policy_s
+{
+  zb_callback_t callback;  /**< Callback to be scheduled on completion
+                              of updating IEEE joining list policy. */
+
+  zb_mac_joining_policy_t new_joining_policy;   /**< Joining list policy to set on the emptied list.
+                                                   See @ref zb_mac_joining_policy_t for possible
+                                                   values.*/
+
+} ZB_PACKED_STRUCT zb_ieee_joining_list_set_policy_t;
+
+
+/** Parameters for @ref zb_ieee_joining_list_announce. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_announce_s
+{
+  zb_callback_t callback;   /**< Callback to be scheduled on completion
+                               of clearing IEEE joining list. */
+
+  zb_bool_t silent;         /**< If set to ZB_TRUE, no broadcast happens. */
+} ZB_PACKED_STRUCT zb_ieee_joining_list_announce_t;
+
+
+/** Parameters for @ref zb_ieee_joining_list_request. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_request_s
+{
+  zb_callback_t callback;   /**< Callback to be scheduled on completion of the operation. */
+} ZB_PACKED_STRUCT zb_ieee_joining_list_request_t;
+
+
+/* Result statuses of joining list management operations */
+typedef enum zb_ieee_joining_list_result_status_e
+{
+  ZB_IEEE_JOINING_LIST_RESULT_OK,                       /**< Operation completed successfully. */
+
+  ZB_IEEE_JOINING_LIST_RESULT_INTERNAL_ERROR,          /**< Operation failed due to problems
+                                                           within ZBOSS. */
+
+  ZB_IEEE_JOINING_LIST_RESULT_BAD_RESPONSE,             /**< Operation failed due to incorrect
+                                                           behavior of the opposite side. */
+
+  ZB_IEEE_JOINING_LIST_RESULT_PERMISSION_DENIED,        /**< Basic conditions for execution of
+                                                           the operation are not satisfied
+                                                           (for example, it must be used by
+                                                           routers only, etc). */
+
+  ZB_IEEE_JOINING_LIST_RESULT_RESTART_LATER,            /**< The situation forces the command to be
+                                                           restarted.*/
+
+	ZB_IEEE_JOINING_LIST_RESULT_INSUFFICIENT_SPACE        /**< The device does not have storage space
+	                                                           to support the requested operation. */
+
+} zb_ieee_joining_list_result_status_t;
+
+
+/** Structure passed as a parameter to operation completion callbacks. */
+typedef ZB_PACKED_PRE struct zb_ieee_joining_list_result_s
+{
+  zb_ieee_joining_list_result_status_t status;
+} ZB_PACKED_STRUCT zb_ieee_joining_list_result_t;
+
+/**
+ * Add an address to IEEE joining list.
+ *
+ * For coordinators only.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_add_params_t structure as a parameter.
+ *
+ * @b Example:
+   @code
+
+void function_add_cb(zb_uint8_t param)
+{
+  zb_ieee_joining_list_result_t *res;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  res = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_result_t);
+  if (res->status == ZB_IEEE_JOINING_LIST_RESULT_OK)
+  {
+    // Address has been added
+  }
+
+  zb_free_buf(buf);
+}
+
+// 00:00:00:00:00:00:0E:01
+static zb_ieee_addr_t new_addr = {0x01, 0x0e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+void function_add(zb_uint8_t param)
+{
+  zb_ieee_joining_list_add_params_t *add_params;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  add_params = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_set_policy_t);
+  ZB_MEMCPY(add_params->address, &new_addr, sizeof(new_addr));
+  add_params->callback = &function_add_cb;
+
+  zb_ieee_joining_list_add(param);
+}
+   @endcode
+ */
+void zb_ieee_joining_list_add(zb_uint8_t param);
+
+
+/**
+ * Remove an address from IEEE joining list.
+ *
+ * For coordinators only.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_delete_params_t structure as a parameter.
+ */
+void zb_ieee_joining_list_delete(zb_uint8_t param);
+
+
+/**
+ * Clear IEEE joining list.
+ *
+ * For coordinators only.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_clear_params_t structure as a parameter.
+ *
+ * @b Example:
+   @code
+
+void function_clear_cb(zb_uint8_t param)
+{
+  zb_ieee_joining_list_result_t *res;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  res = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_result_t);
+  if (res->status == ZB_IEEE_JOINING_LIST_RESULT_OK)
+  {
+    // IEEE joining list is empty now
+  }
+
+  zb_free_buf(buf);
+}
+
+void function_clear(zb_uint8_t param)
+{
+  zb_ieee_joining_list_clear_params_t *clear_params;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  clear_params = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_clear_params_t);
+  clear_params->new_joining_policy = ZB_MAC_JOINING_POLICY_NO_JOIN;
+  clear_params->callback = &function_clear_cb;
+
+  zb_ieee_joining_list_clear(param);
+}
+   @endcode
+ */
+void zb_ieee_joining_list_clear(zb_uint8_t param);
+
+
+/**
+ * Set joining policy for IEEE joining list.
+ *
+ * For coordinators only.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_set_policy_t structure as a parameter.
+ *
+ * @b Example:
+   @code
+
+void function_policy_cb(zb_uint8_t param)
+{
+  zb_ieee_joining_list_result_t *res;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  res = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_result_t);
+  if (res->status == ZB_IEEE_JOINING_LIST_RESULT_OK)
+  {
+    // New policy has been set
+  }
+
+  zb_free_buf(buf);
+}
+
+void function_policy(zb_uint8_t param)
+{
+  zb_ieee_joining_list_set_policy_t *policy_params;
+  zb_bufid_t buf = ZB_GET_BUF_FROM_REF(param);
+
+  policy_params = ZB_BUF_GET_PARAM(buf, zb_ieee_joining_list_set_policy_t);
+  policy_params->new_joining_policy = ZB_MAC_JOINING_POLICY_NO_JOIN;
+  policy_params->callback = &function_policy_cb;
+
+  zb_ieee_joining_list_set_policy(param);
+}
+   @endcode
+ */
+void zb_ieee_joining_list_set_policy(zb_uint8_t param);
+
+
+/**
+ * Increases update_id, marks IEEE joining list as consistent and broadcasts changes.
+ *
+ * For coordinators only.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_announce_t structure as a parameter.
+ */
+void zb_ieee_joining_list_announce(zb_uint8_t param);
+
+
+/**
+ * Request IEEE joining list from the Trust Center.
+ *
+ * For routers only.
+ *
+ * If the Trust Center updates its list during zb_ieee_joining_list_request execution,
+ * zb_ieee_joining_list_request fails with ZB_IEEE_JOINING_LIST_RESULT_RESTART_LATER status.
+ *
+ * @param param - Reference to buffer containing @ref zb_ieee_joining_list_request_t structure as a parameter.
+ */
+void zb_ieee_joining_list_request(zb_uint8_t param);
+/*!@} */ /* zdo_joining_lists */
+
+#endif /* defined ZB_JOINING_LIST_SUPPORT */
 
 #ifdef ZB_SECURITY_INSTALLCODES
 /**
@@ -1118,6 +1445,12 @@ void zb_tc_set_use_installcode(zb_uint8_t use_ic);
   Permit joining Control4 Network
 */
 void zb_permit_control4_network(void);
+
+/**
+   Return if joining Control4 Network is allowed
+*/
+zb_bool_t zb_control4_network_permitted(void);
+
 #endif /* defined ZB_ED_FUNC && defined ZB_CONTROL4_NETWORK_SUPPORT */
 
 /**

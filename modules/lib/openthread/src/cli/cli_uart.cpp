@@ -51,7 +51,6 @@
 #include "common/logging.hpp"
 #include "common/new.hpp"
 #include "common/tasklet.hpp"
-#include "utils/static_assert.hpp"
 
 #if OPENTHREAD_CONFIG_ENABLE_DEBUG_UART
 #include <openthread/platform/debug_uart.h>
@@ -90,14 +89,14 @@
 #endif // OT_CLI_UART_LOCK_HDR_FILE
 
 #if OPENTHREAD_CONFIG_DIAG_ENABLE
-OT_STATIC_ASSERT(OPENTHREAD_CONFIG_DIAG_OUTPUT_BUFFER_SIZE <= OPENTHREAD_CONFIG_CLI_UART_TX_BUFFER_SIZE,
-                 "diag output buffer should be smaller than CLI UART tx buffer");
-OT_STATIC_ASSERT(OPENTHREAD_CONFIG_DIAG_CMD_LINE_BUFFER_SIZE <= OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE,
-                 "diag command line should be smaller than CLI UART rx buffer");
+static_assert(OPENTHREAD_CONFIG_DIAG_OUTPUT_BUFFER_SIZE <= OPENTHREAD_CONFIG_CLI_UART_TX_BUFFER_SIZE,
+              "diag output buffer should be smaller than CLI UART tx buffer");
+static_assert(OPENTHREAD_CONFIG_DIAG_CMD_LINE_BUFFER_SIZE <= OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE,
+              "diag command line should be smaller than CLI UART rx buffer");
 #endif
 
-OT_STATIC_ASSERT(OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH <= OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE,
-                 "command line should be should be smaller than CLI rx buffer");
+static_assert(OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH <= OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE,
+              "command line should be should be smaller than CLI rx buffer");
 
 namespace ot {
 namespace Cli {
@@ -119,7 +118,7 @@ Uart::Uart(Instance *aInstance)
     mTxLength   = 0;
     mSendLength = 0;
 
-    otPlatUartEnable();
+    IgnoreError(otPlatUartEnable());
 }
 
 extern "C" void otPlatUartReceived(const uint8_t *aBuf, uint16_t aBufLength)
@@ -150,7 +149,7 @@ void Uart::ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
             if (mRxLength > 0)
             {
                 mRxBuffer[mRxLength] = '\0';
-                ProcessCommand();
+                IgnoreError(ProcessCommand());
             }
 
             Output(sCommandPrompt, sizeof(sCommandPrompt));
@@ -311,7 +310,7 @@ void Uart::Send(void)
         /* duplicate the output to the debug uart */
         otPlatDebugUart_write_bytes(reinterpret_cast<uint8_t *>(mTxBuffer + mTxHead), mSendLength);
 #endif
-        otPlatUartSend(reinterpret_cast<uint8_t *>(mTxBuffer + mTxHead), mSendLength);
+        IgnoreError(otPlatUartSend(reinterpret_cast<uint8_t *>(mTxBuffer + mTxHead), mSendLength));
     }
 
 exit:

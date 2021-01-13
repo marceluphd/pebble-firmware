@@ -14,28 +14,73 @@
 
 
 /**
- * ZB_TRACE_MASK
+ * NCP trasnport type - Serial (UART)
+ */
+/* #undef CONFIG_ZB_NCP_TRANSPORT_TYPE_SERIAL */
+
+/**
+ * Enable UART serial interface for ZBOSS CLI
+ */
+/* #undef CONFIG_ZB_HAVE_SERIAL */
+
+/**
+ * Serial (SPI) [UNSUPPORTED]
+ */
+/* #undef CONFIG_ZB_NCP_TRANSPORT_TYPE_SPI */
+
+/**
+ * Simulator (linux pipe) [UNSUPPORTED]
+ */
+/* #undef CONFIG_ZB_NCP_TRANSPORT_TYPE_NSNG */
+
+/**
+ * Enable ZBOSS TRACE subsystem in NCP firmware
+ */
+/* #undef CONFIG_ZB_NCP_DEBUG */
+
+/**
+ * SDK Type (HA, SE, etc.) - Home Automation
+ */
+#define CONFIG_ZB_SDK_TYPE_HA y
+
+/**
+ * SDK Type (HA, SE, etc.) - Smart Energy
+ */
+/* #undef CONFIG_ZB_SDK_TYPE_SE */
+
+/**
+ * ZB_SDK_TYPE
+ */
+#define CONFIG_ZB_SDK_TYPE 1
+
+/**
+ * Compiled-in trace mask of ZBOSS stack logs
  *
  * Selectively enable Zigbee binary trace logs.
  * The mask value should be a bitwise OR of values assigned to selected modules.
- * 
+ *
  * Available modules are:
- * 
+ *
+ * - 0x8000 SPI platform implementation
  * - 0x4000 Zigbee Green Power
+ * - 0x2000 Custom components
+ * - 0x1000 UART and NCP transport
  * - 0x0800 Application
+ * - 0x0400 MAC Lower Layer
  * - 0x0200 Zigbee Light Link
  * - 0x0100 Zigbee Cluster Library
  * - 0x0080 Security
  * - 0x0040 Zigbee Device Object
+ * - 0x0020 Zigbee Smart Energy
  * - 0x0010 Application Support layer
  * - 0x0008 Network layer
  * - 0x0004 MAC layer
  * - 0x0002 Memory management
  * - 0x0001 Common
- * 
+ *
  * For example, in order to enable traces related to OTA DFU,
  * one should set this option to 0x4100.
- * 
+ *
  * Note: For general debugging purposes, please use 0x0C48.
  */
 #define CONFIG_ZB_TRACE_MASK 0x0000
@@ -76,7 +121,7 @@
 /* #undef CONFIG_ZB_ASYNC_TRACE_CONTROL */
 
 /**
- * Enable test commands
+ * Enable UART test commands support
  *
  * Enable reception of test commands on UART interface
  * (enabled in ZBOSS test configs only)
@@ -84,14 +129,19 @@
 /* #undef CONFIG_ZB_NRF_TRACE_RX_ENABLE */
 
 /**
- * Enable USB serial interface for ZBOSS CLI
+ * Enable LEDs abstract for ZBOSS OSIF
  */
-/* #undef CONFIG_ZB_HAVE_USERIAL */
+/* #undef CONFIG_ZB_USE_LEDS */
 
 /**
- * Enable UART serial interface for ZBOSS CLI
+ * Enable dimmable LED (PWM) abstract for ZBOSS OSIF
  */
-/* #undef CONFIG_ZB_HAVE_SERIAL */
+/* #undef CONFIG_ZB_USE_DIMMABLE_LED */
+
+/**
+ * Enable buttons abstract for ZBOSS OSIF
+ */
+/* #undef CONFIG_ZB_USE_BUTTONS */
 
 /**
  * NVRAM migration
@@ -157,9 +207,19 @@
 #define CONFIG_ZB_NWK_BLACKLIST y
 
 /**
- * ZB_NWK_BLACKLIST_SIZE
+ * PAN ID blacklist length
  */
 #define CONFIG_ZB_NWK_BLACKLIST_SIZE 16
+
+/**
+ * Enable Control4 network support
+ */
+#define CONFIG_ZB_CONTROL4_NETWORK_SUPPORT y
+
+/**
+ * Enable R22 extension for for mutitple MAC interfaces support.
+ */
+#define CONFIG_ZB_R22_MULTIMAC y
 
 /**
  * WWAH cluster
@@ -231,14 +291,42 @@
 /* #undef CONFIG_ZB_CERTIFICATION_HACKS */
 
 /**
- * Enable Zigbee profile, used by verification framework
+ * MAC filtering
+ *
+ * Enables filtering frames at MAC level, based on device's short or
+ * long address
+ */
+/* #undef CONFIG_ZB_LIMIT_VISIBILITY */
+
+/**
+ * Enable Zigbee test mode and features
+ */
+/* #undef CONFIG_ZB_TEST_MODE */
+
+/**
+ * Test mode - Enable Zigbee PRO test mode
+ */
+/* #undef CONFIG_ZB_TEST_MODE_PRO */
+
+/**
+ * Enable Zigbee test mode and features - Enable Zigbee profile, used by verification framework
  */
 /* #undef CONFIG_ZB_TEST_PROFILE */
 
 /**
- * ZB_MULTITEST_CONSOLE_SLEEP_TIMEOUT
+ * Test mode - Enable Zigbee MAC test mode
  */
-#define CONFIG_ZB_MULTITEST_CONSOLE_SLEEP_TIMEOUT 4000000
+/* #undef CONFIG_ZB_TEST_MODE_MAC */
+
+/**
+ * Enable Zigbee test mode and features - Enable Zigbee MAC features, used by the verification framework
+ */
+/* #undef CONFIG_ZB_MAC_TESTING_MODE */
+
+/**
+ * Enable Zigbee test mode and features - Serial console RX timeout
+ */
+/* #undef CONFIG_ZB_MULTITEST_CONSOLE_SLEEP_TIMEOUT */
 
 /**
  * Disable TRACE_FILE_ID assert
@@ -264,18 +352,35 @@
 /* #undef CONFIG_ZB_USEALIAS */
 
 /**
- * MAC filtering
- *
- * Enables filtering frames at MAC level, based on device's short or
- * long address
+ * Enable MAC duty cycle monitoring
  */
-/* #undef CONFIG_ZB_LIMIT_VISIBILITY */
+/* #undef CONFIG_ZB_MAC_DUTY_CYCLE_MONITORING */
 
 /**
- * ZB_PANID_TABLE_SIZE
+ * Enable per-device MAC TX power control
+ */
+/* #undef CONFIG_ZB_MAC_POWER_CONTROL */
+
+/**
+ * Enable internal clusters through filters
+ */
+/* #undef CONFIG_ZB_FILTER_OUT_CLUSTERS */
+
+/**
+ * Enable enhanced beacon support
+ */
+#define CONFIG_ZB_ENHANCED_BEACON_SUPPORT y
+
+/**
+ * Enable joining list support
+ */
+#define CONFIG_ZB_JOINING_LIST_SUPPORT y
+
+/**
+ * PAN ID translation table size
  *
  * NWK: size of the long-short Pan ID translation table
- * 
+ *
  * Must be <= (packet buffer size - sizeof(*discovery_confirm)) /
  *            sizeof(*network_descriptor)
  * That value limits number of Pan IDs visible for device during active scan.
@@ -283,72 +388,72 @@
 #define CONFIG_ZB_PANID_TABLE_SIZE 28
 
 /**
- * ZB_DEV_MANUFACTURER_TABLE_SIZE
+ * long addresses compression table size
  *
  * Size of table used for long addresses compression: 3 bytes of
  * manufacturer id.
- * 
+ *
  * ZBOSS implements long address compression: 3 bytes of manufacturer
  * id are stored in the separate table; reference to manufacturer
  * entry is stored in the long address giving 2 bytes economy.
- * 
+ *
  * That is an absolute limit of number of manufacturers known to the device.
- * 
+ *
  * Note: All that machinery will not work if instead of legal
  * manufacturer ids (or illegal, but fixed ids) use random values.
  */
 #define CONFIG_ZB_DEV_MANUFACTURER_TABLE_SIZE 32
 
 /**
- * ZB_BUF_Q_SIZE
+ * Packet buffer wait queue size
  *
  * Size of queue for wait for free packet buffer
- * 
+ *
  * Note: To prevent deadlocks ZB_BUF_Q_SIZE must be < ZB_IOBUF_POOL_SIZE/2
  */
 #define CONFIG_ZB_BUF_Q_SIZE 8
 
 /**
- * ZB_ZDO_TRAN_TABLE_SIZE
+ * ZDO transactions table size
  */
 #define CONFIG_ZB_ZDO_TRAN_TABLE_SIZE 16
 
 /**
- * ZB_APS_ENDPOINTS_IN_GROUP_TABLE
+ * number of endpoints per APS group table entry
  */
 #define CONFIG_ZB_APS_ENDPOINTS_IN_GROUP_TABLE 8
 
 /**
- * ZB_NWK_BTR_TABLE_SIZE
+ * Broadcast transaction record table size
  *
  * See Zigbee Specification subclause 3.6.5
  */
 #define CONFIG_ZB_NWK_BTR_TABLE_SIZE 16
 
 /**
- * ZB_NWK_BRR_TABLE_SIZE
+ * Broadcast Retransmission table size
  */
 #define CONFIG_ZB_NWK_BRR_TABLE_SIZE 16
 
 /**
- * ZB_MAX_EP_NUMBER
+ * Number of endpoints
  *
  * Maximum number of supported endpoints per device
  */
 #define CONFIG_ZB_MAX_EP_NUMBER 6
 
 /**
- * ZB_APS_GROUP_TABLE_SIZE
+ * Number of supported APS groups
  */
 #define CONFIG_ZB_APS_GROUP_TABLE_SIZE 8
 
 /**
- * ZB_ZGP_SINK_TBL_SIZE
+ * Green Power Sink table size
  */
 #define CONFIG_ZB_ZGP_SINK_TBL_SIZE 24
 
 /**
- * ZB_ZGP_PROXY_TBL_SIZE
+ * Green Power Proxy table size
  */
 #define CONFIG_ZB_ZGP_PROXY_TBL_SIZE 5
 
@@ -361,7 +466,7 @@
 #define CONFIG_ZB_CONFIGURABLE_MEM y
 
 /**
- * ZB_CONFIG_OVERALL_NETWORK_SIZE
+ * Dynamic memory configuration - Expected overall network size
  */
 #define CONFIG_ZB_CONFIG_OVERALL_NETWORK_SIZE 128
 
@@ -396,22 +501,22 @@
 /* #undef CONFIG_ZB_CONFIG_APPLICATION_SIMPLE */
 
 /**
- * ZB_APS_SRC_BINDING_TABLE_SIZE
+ * Dynamic memory configuration - Source APS binding table size
  */
 /* #undef CONFIG_ZB_APS_SRC_BINDING_TABLE_SIZE */
 
 /**
- * ZB_APS_DST_BINDING_TABLE_SIZE
+ * Dynamic memory configuration - Destination APS binding table size
  */
 /* #undef CONFIG_ZB_APS_DST_BINDING_TABLE_SIZE */
 
 /**
- * ZB_IOBUF_POOL_SIZE
+ * Dynamic memory configuration - Number of packet buffers
  */
 /* #undef CONFIG_ZB_IOBUF_POOL_SIZE */
 
 /**
- * ZB_SCHEDULER_Q_SIZE
+ * Dynamic memory configuration - Packet buffer wait queue size
  *
  * Scheduler callbacks queue size
  */

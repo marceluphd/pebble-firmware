@@ -3,10 +3,16 @@
 API documentation
 #################
 
+.. contents::
+   :local:
+   :depth: 2
+
+API reference for the mbed TLS glue layer.
+
 .. _nrf_security_api_mbedcrypto_glue:
 
 mbed TLS glue layer
-********************************
+*******************
 
 .. doxygengroup:: mbedcrypto_glue
    :project: nrfxlib
@@ -29,16 +35,6 @@ mbedcrypto AES CCM glue
 =======================
 
 .. doxygengroup:: mbedcrypto_glue_aes_ccm
-   :project: nrfxlib
-   :members:
-
-
-.. _nrf_security_api_mbedcrypto_glue_cmac:
-
-mbedcrypto CMAC glue
-====================
-
-.. doxygengroup:: mbedcrypto_glue_cmac
    :project: nrfxlib
    :members:
 
@@ -81,4 +77,3 @@ mbedcrypto RSA glue
 .. doxygengroup:: mbedcrypto_glue_rsa
    :project: nrfxlib
    :members:   
-

@@ -100,6 +100,78 @@ typedef ZB_PACKED_PRE struct zb_zgpd_id_s
 } ZB_PACKED_STRUCT
 zb_zgpd_id_t;
 
+#define ZGP_ATTR_OPT_GET_REMAINING_LEN(opt) ((opt) & 0xF)
+#define ZGP_ATTR_OPT_GET_REPORTED(opt)      (((opt) >> 4) & 0x1)
+#define ZGP_ATTR_OPT_GET_VAL_PRESENT(opt)   (((opt) >> 5) & 0x1)
+
+#define ZB_APP_DESCR_ATTR_VAL_SIZE 8
+typedef struct zgp_attr_record_s
+{
+  zb_uint16_t id;
+  zb_uint8_t  data_type;
+
+  /*
+  zb_bitfield_t remaining_len:4;
+
+    7344 The Reported sub-field is a Boolean flag which indicates if the attribute as identified by the AttributeID
+    7345 field is reported by the GPD in operation, or if it is background data required for processing of a report-
+    7346 ed attribute only conveyed once at commissioning time.
+    7350 If Reported = 0b1, Attribute Offset within Report field is present, otherwise it is absent
+
+  zb_bitfield_t reported:1;
+  zb_bitfield_t attr_val_present:1;
+  zb_bitfield_t reserved:2;
+   */
+  zb_uint8_t  options;
+
+  /*
+  7358 The Attribute Offset within Report field, when present, carries the start position (in bytes) of the data
+  7359 point identified by the AttributeID of the ClusterID in the report payload. The Attribute Offset within
+  7360 Report = 0x00 corresponds to the octet immediately following the Report identifier field in the pay-
+  7361 load of the GPD Compact Attribute Reporting command.
+  */
+  zb_uint8_t offset;
+
+  /*
+  7362 The Attribute value field, when present, carries the actual fixed value of that attribute; *the length and
+  7363 type of this field are determined by the AttributeID of the ClusterID (in case of manufacturer-specific
+  7364 attributes or clusters, corresponding to the ManufacturerID).
+  */
+  zb_uint8_t value[ZB_APP_DESCR_ATTR_VAL_SIZE];
+}zgp_attr_record_t;
+
+typedef struct zgp_data_point_desc_options_s
+{
+  zb_bitfield_t attr_records_num:3;
+  zb_bitfield_t cluster_type:1; /* server == 1, client == 0 */
+  zb_bitfield_t manuf_id_present:1;
+  zb_bitfield_t reserved:3;
+}zgp_data_point_desc_options_t;
+
+#define ZB_APP_DESCR_ATTR_REC_SIZE 4
+typedef struct zgp_data_point_desc_s
+{
+  zgp_data_point_desc_options_t options;
+  zb_uint16_t cluster_id;
+  zb_uint16_t manuf_id;
+  zgp_attr_record_t attr_records_data[ZB_APP_DESCR_ATTR_REC_SIZE]; /* contains array of not parsed zgp_attr_record_t */
+}zgp_data_point_desc_t;
+
+typedef struct zgp_report_desc_options_s
+{
+  zb_bitfield_t timeout_present:1;
+  zb_bitfield_t reserved:7;
+}zgp_report_desc_options_t;
+
+#define ZB_APP_DESCR_REPORT_DATA_SIZE 32
+typedef ZB_PACKED_PRE struct zgp_report_desc_s
+{
+  zgp_report_desc_options_t  options;
+  zb_uint16_t timeout;
+  zb_uint8_t  point_descs_data_len;
+  zb_uint8_t  point_descs_data[ZB_APP_DESCR_REPORT_DATA_SIZE]; /* contains array of not parsed zgp_data_point_desc_t */
+}ZB_PACKED_STRUCT zgp_report_desc_t;
+
 #define SIZE_BY_APP_ID(app_id) (((app_id) == ZB_ZGP_APP_ID_0000) ? 4 : 8)
 #define ZGPD_ID_SIZE(zgpd_id) SIZE_BY_APP_ID((zgpd_id)->app_id)
 
@@ -524,25 +596,6 @@ typedef void (ZB_CODE * zb_zgp_app_comm_ind_cb_t)(
    @{
 */
 
-#ifdef ZB_ENABLE_ZGP_MIGRATE_OLD_SINK_DATASET
-/**
- * @brief Application search ZGP manufactured specific device callback
- *
- * Callback is called when sink table entry data is restored from old NVRAM version.
- *
- * Application search ZGP manufactured specific device callback
- * should be set during ZGP initialization using
- * @ref ZB_ZGP_REGISTER_APP_SEARCH_ZGP_DEVICE_CB macro.
- *
- * @param zgpd_id         [in]  ZGPD ID
- * @param manuf_model_id  [out]  Manufacturer model ID
- * @return RET_OK on success, RET_NOT_FOUND otherwise
- */
-typedef zb_ret_t (ZB_CODE * zb_zgp_app_search_zgp_device_cb_t)(
-                  zb_zgpd_id_t *zgpd_id,
-                  zb_uint16_t  *manuf_model_id);
-#endif  /* ZB_ENABLE_ZGP_MIGRATE_OLD_SINK_DATASET */
-
 /*! @} */
 /*! @endcond */
 
@@ -618,19 +671,6 @@ void zb_zgps_register_app_cfm_cb(zb_zgp_app_cfm_cb_t cb);
   zb_zgps_register_app_cfm_cb((cb)); \
 }
 
-#ifdef ZB_ENABLE_ZGP_MIGRATE_OLD_SINK_DATASET
-/**
- * @brief Register application search ZGP manufactured specific device callback
- *
- * @param cb [in]  Application search ZGP manufactured specific device callback (@ref zb_zgp_app_search_zgp_device_cb_t)
- */
-void zb_zgps_register_app_search_zgp_device_cb(zb_zgp_app_search_zgp_device_cb_t cb);
-#define ZB_ZGP_REGISTER_APP_SEARCH_ZGP_DEVICE_CB(cb) \
-{ \
-  zb_zgps_register_app_search_zgp_device_cb((cb)); \
-}
-#endif  /* ZB_ENABLE_ZGP_MIGRATE_OLD_SINK_DATASET */
-
 /*! @} */
 /*! @endcond */
 
@@ -640,6 +680,11 @@ void zb_zgps_register_app_search_zgp_device_cb(zb_zgp_app_search_zgp_device_cb_t
 */
 #endif  /* ZB_ENABLE_ZGP_SINK */
 
+enum zb_zgpd_switch_type_e
+{
+  ZB_GPD_SWITCH_TYPE_BUTTON                        = 0x01, /* 0b01 */
+  ZB_GPD_SWITCH_TYPE_ROCKER                        = 0x02, /* 0b10 */
+};
 /********************************************************************/
 /********************* GPDF command IDs *****************************/
 /********************************************************************/
@@ -710,6 +755,9 @@ enum zb_zgpd_cmd_id_e
   ZB_GPDF_CMD_PRESS_1_OF_2                         = 0x62,
   ZB_GPDF_CMD_RELEASE_1_OF_2                       = 0X63,
 
+  ZB_GPDF_CMD_8BIT_VECTOR_PRESS                    = 0X69,
+  ZB_GPDF_CMD_8BIT_VECTOR_RELEASE                  = 0X6A,
+
   ZB_GPDF_CMD_ATTR_REPORT                          = 0xA0,
   ZB_GPDF_CMD_MANUF_SPEC_ATTR_REPORT               = 0xA1,
   ZB_GPDF_CMD_MULTI_CLUSTER_ATTR_REPORT            = 0xA2,
@@ -719,6 +767,7 @@ enum zb_zgpd_cmd_id_e
 
   ZB_GPDF_CMD_ZCL_TUNNELING_FROM_ZGPD              = 0xA6,
 
+  ZB_GPDF_CMD_COMPACT_ATTR_REPORTING               = 0xA8,
   /* Manufacturer-defined GPD commands (payload is manufacturer-specific) */
   ZB_GPDF_CMD_MANUF_DEFINED_B0                     = 0xB0,
   ZB_GPDF_CMD_MANUF_DEFINED_BF                     = 0xBF,
@@ -727,6 +776,7 @@ enum zb_zgpd_cmd_id_e
   ZB_GPDF_CMD_DECOMMISSIONING                      = 0xE1,
   ZB_GPDF_CMD_SUCCESS                              = 0xE2,
   ZB_GPDF_CMD_CHANNEL_REQUEST                      = 0xE3,
+  ZB_GPDF_CMD_APPLICATION_DESCR                    = 0xE4,
 
   /* GPDF commands sent to GPD */
   ZB_GPDF_CMD_COMMISSIONING_REPLY                  = 0xF0,
@@ -804,18 +854,60 @@ void zb_finish_gpdf_packet(zb_bufid_t buf_ref, zb_uint8_t** ptr);
 #define ZB_GPDF_CHANNEL_REQ_NEXT_RX_CHANNEL(par) \
   ((par) & 0x0F)
 
+
+typedef struct zb_gpdf_comm_app_info_options_s
+{
+  zb_bitfield_t manuf_id_present:1;
+  zb_bitfield_t manuf_model_id_present:1;
+  zb_bitfield_t gpd_cmds_present:1;
+  zb_bitfield_t cluster_list_present:1;
+  zb_bitfield_t switch_info_present:1;
+  zb_bitfield_t app_descr_flw:1;
+  zb_bitfield_t reserved:2;
+}zb_gpdf_comm_app_info_options_t;
+
+typedef ZB_PACKED_PRE struct zb_gpdf_comm_switch_gen_cfg_s
+{
+  zb_bitfield_t num_of_contacs:4;
+  zb_bitfield_t switch_type:2;
+  zb_bitfield_t reserved:2;
+}ZB_PACKED_STRUCT zb_gpdf_comm_switch_gen_cfg_t;
+
+typedef struct zb_gpdf_comm_switch_info_s
+{
+  zb_uint8_t    len;                       /**< Length of switch info */
+  zb_gpdf_comm_switch_gen_cfg_t configuration;
+  zb_uint8_t    current_contact_status;
+}zb_gpdf_comm_switch_info_t;
+
+typedef struct zb_gpdf_comm_app_info_s
+{
+  zb_gpdf_comm_app_info_options_t options;
+
+  zb_uint16_t   manuf_id;                  /**< Manufacturer ID */
+  zb_uint16_t   manuf_model_id;            /**< Manufacturer model ID */
+
+  zb_uint8_t    gpd_cmds_len;              /**< Number of GPD commands */
+  /* ToDo: implement GPD commands list */
+
+  zb_bitfield_t srv_cluster_num:4;         /**< Number of server clusterIDs */
+  zb_bitfield_t client_cluster_num:4;      /**< Number of client clusterIDs */
+  /* ToDo: implement server/client cluster list */
+
+  zb_gpdf_comm_switch_info_t switch_info;
+}zb_gpdf_comm_app_info_t;
+
 /**
  * @brief ZGPD Commissioning command parameters
  * @see ZGP spec, A.4.2.1.1
  */
 typedef struct zb_gpdf_comm_params_s
 {
-  zb_uint8_t     zgpd_device_id;            /**< ZGPD Device ID */
-  zb_uint8_t     options;                   /**< Options */
-  zb_uint8_t     ext_options;               /**< Extended options */
-  zb_uint8_t     ms_extensions;             /**< MS extensions */
-  zb_uint16_t    manuf_model_id;            /**< Manufacturer model ID */
-  zb_uint16_t    manuf_id;                  /**< Manufacturer ID */
+  zb_uint8_t zgpd_device_id;    /**< ZGPD Device ID */
+  zb_uint8_t options;           /**< Options */
+  zb_uint8_t ext_options;       /**< Extended options */
+  zb_gpdf_comm_app_info_t app_info; /**< Application information */
+
   /* TODO: Add fields "Number of GP commands", "GP command ID list",
    * "Number of cluster reports", "ClusterReportN" */
 }
@@ -901,7 +993,7 @@ zb_gpdf_comm_reply_t;
  * @brief Value of GPD MS extensions present bit in
  * Options field of commissioning command
  */
-#define ZB_GPDF_COMM_OPT_MS_EXT_PRESENT(options) \
+#define ZB_GPDF_COMM_OPT_APP_INF_PRESENT(options) \
   (((options) >> 2) & 0x01)
 
 /**
@@ -962,20 +1054,6 @@ zb_gpdf_comm_reply_t;
    | ((_clstr_reports)  << 3))
 
 /**
- * @brief Value of "ManufacturerID present" bit in
- * MS extensions field of commissioning command
- */
-#define ZB_GPDF_COMM_MSEXT_MANUF_ID_PRESENT(ms_ext) \
-  ((ms_ext) & 0x01)
-
-/**
- * @brief Value of "Manufacturer ModelID present" bit in
- * MS extensions field of commissioning command
- */
-#define ZB_GPDF_COMM_MSEXT_MODEL_ID_PRESENT(ms_ext) \
-  ((ms_ext >> 1) & 0x01)
-
-/**
  * @brief Construct Options field of commissioning reply command
  * @see ZGP spec, A.4.2.1.2.1
  */
@@ -1018,7 +1096,7 @@ typedef struct zb_gpdf_attr_report_fld_s
 {
   zb_uint16_t attr_id;   /**< Attribute ID specific to cluster */
   zb_uint8_t attr_type;  /**< Attribute type (see @ref zb_zcl_attr_type_t) */
-  zb_voidp_t data_p;     /**< Attribute data */
+  void* data_p;     /**< Attribute data */
 }
 zb_gpdf_attr_report_fld_t;
 
@@ -1411,6 +1489,13 @@ void zb_zgps_set_commissioning_exit_mode(zb_uint_t cem);
   */
 void zb_zgps_set_communication_mode(zgp_communication_mode_t mode);
 
+/* Override this function in app for handling 8-bit vector command (generic switch) */
+zb_ret_t zb_zgp_convert_8bit_vector(zb_uint8_t vector_8bit_cmd_id,      /* press or release cmd */
+                                    zb_uint8_t switch_type,             /* see zb_zgpd_switch_type_e */
+                                    zb_uint8_t num_of_contacs,
+                                    zb_uint8_t contact_status,
+                                    zb_uint8_t *zgp_cmd_out);
+
 #ifdef ZB_ENABLE_ZGP_DIRECT
 /**
    Set ZBOSS to skip all incoming GPDF.
@@ -1421,7 +1506,10 @@ void zb_zgps_set_communication_mode(zgp_communication_mode_t mode);
 
    @param skip if ZB_TRUE, skip incoming GP frames
   */
-void zb_zgp_set_skip_gpfd(zb_bool_t skip);
+
+void       zb_zgp_set_skip_gpdf(zb_uint8_t skip);
+zb_uint8_t zb_zgp_get_skip_gpdf(void);
+void       zb_zgp_sync_pib(zb_uint8_t param);
 
 #endif  /* ZB_ENABLE_ZGP_DIRECT */
 
@@ -1615,6 +1703,51 @@ typedef ZB_PACKED_PRE struct zgp_pair_group_list_s
   zb_uint16_t alias;
 }
 ZB_PACKED_STRUCT zgp_pair_group_list_t;
+
+/* >> Data structures for Application Desription */
+typedef enum zgp_app_descr_status_e
+{
+  ZGP_APP_TBL_ENT_STATUS_FREE              = 0,
+  ZGP_APP_TBL_ENT_STATUS_INIT_WITH_SW_INFO = 1,
+  ZGP_APP_TBL_ENT_STATUS_INIT              = 2,
+  ZGP_APP_TBL_ENT_STATUS_APP_DESCR_PROCESS = 3,
+  ZGP_APP_TBL_ENT_STATUS_COMPLETE          = 4
+} zgp_app_descr_status_t;
+
+typedef ZB_PACKED_PRE struct zgp_app_tbl_ent_options_s
+{
+  zb_bitfield_t ieee_addr_present:1;
+  zb_bitfield_t switch_info_present:1;
+  zb_bitfield_t reserved:6;
+}ZB_PACKED_STRUCT zgp_app_tbl_ent_options_t;
+
+typedef ZB_PACKED_PRE struct zgp_app_tbl_ent_info_s
+{
+  zb_zgpd_addr_t                addr;
+  zgp_app_tbl_ent_options_t     options;
+  zb_uint8_t                    total_reports_num;
+  zb_gpdf_comm_switch_gen_cfg_t switch_info_configuration;
+  zb_uint8_t                    reserved;
+}ZB_PACKED_STRUCT zgp_app_tbl_ent_info_t;
+
+
+#define ZB_APP_DESCR_REPORTS_NUM 4
+typedef ZB_PACKED_PRE struct zgp_app_tbl_ent_s
+{
+  zgp_app_tbl_ent_info_t info;
+  zgp_report_desc_t      reports[ZB_APP_DESCR_REPORTS_NUM];
+}ZB_PACKED_STRUCT zgp_app_tbl_ent_t;
+
+typedef struct zgp_runtime_app_tbl_ent_s
+{
+  zb_uint8_t status; /* zgp_app_descr_status_t */
+  zb_uint8_t receive_reports_num;
+  zb_uint8_t reply_buf;
+  zb_bool_t  need_reply;
+  zgp_app_tbl_ent_t base;
+}zgp_runtime_app_tbl_ent_t;
+
+/* << Data structures for Application Desription */
 
 typedef struct zgp_tbl_ent_s
 {

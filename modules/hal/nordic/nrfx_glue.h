@@ -56,7 +56,9 @@ extern "C" {
  *
  * @param expression Expression to be evaluated.
  */
+#ifndef NRFX_ASSERT
 #define NRFX_ASSERT(expression)  __ASSERT_NO_MSG(expression)
+#endif
 
 /**
  * @brief Macro for placing a compile time assertion.
@@ -147,7 +149,7 @@ extern "C" {
  */
 #define NRFX_DELAY_US(us_time)  nrfx_busy_wait(us_time)
 /* This is a k_busy_wait wrapper, added to avoid the inclusion of kernel.h */
-void nrfx_busy_wait(u32_t usec_to_wait);
+void nrfx_busy_wait(uint32_t usec_to_wait);
 
 //------------------------------------------------------------------------------
 
@@ -240,11 +242,17 @@ void nrfx_busy_wait(u32_t usec_to_wait);
 #define NRFX_PPI_CHANNELS_USED  (NRFX_PPI_CHANNELS_USED_BY_BT_CTLR | \
                                  NRFX_PPI_CHANNELS_USED_BY_PWM_SW)
 
+/** @brief Bitmask that defines PPI groups that are reserved for use outside of the nrfx library. */
+#define NRFX_PPI_GROUPS_USED    NRFX_PPI_GROUPS_USED_BY_BT_CTLR
+
 #if defined(CONFIG_BT_CTLR) && defined(CONFIG_BT_LL_SW_SPLIT)
-extern const u32_t z_bt_ctlr_used_nrf_ppi_channels;
+extern const uint32_t z_bt_ctlr_used_nrf_ppi_channels;
+extern const uint32_t z_bt_ctlr_used_nrf_ppi_groups;
 #define NRFX_PPI_CHANNELS_USED_BY_BT_CTLR   z_bt_ctlr_used_nrf_ppi_channels
+#define NRFX_PPI_GROUPS_USED_BY_BT_CTLR     z_bt_ctlr_used_nrf_ppi_groups
 #else
 #define NRFX_PPI_CHANNELS_USED_BY_BT_CTLR   0
+#define NRFX_PPI_GROUPS_USED_BY_BT_CTLR     0
 #endif
 
 #if defined(CONFIG_PWM_NRF5_SW)
@@ -254,16 +262,6 @@ extern const u32_t z_bt_ctlr_used_nrf_ppi_channels;
          << DT_PROP(PWM_NRF5_SW_NODE, ppi_base))
 #else
 #define NRFX_PPI_CHANNELS_USED_BY_PWM_SW    0
-#endif
-
-/** @brief Bitmask that defines PPI groups that are reserved for use outside of the nrfx library. */
-#define NRFX_PPI_GROUPS_USED    NRFX_PPI_GROUPS_USED_BY_BT_CTLR
-
-#if defined(CONFIG_BT_CTLR)
-extern const u32_t z_bt_ctlr_used_nrf_ppi_groups;
-#define NRFX_PPI_GROUPS_USED_BY_BT_CTLR     z_bt_ctlr_used_nrf_ppi_groups
-#else
-#define NRFX_PPI_GROUPS_USED_BY_BT_CTLR     0
 #endif
 
 /** @brief Bitmask that defines EGU instances that are reserved for use outside of the nrfx library. */
@@ -283,7 +281,11 @@ extern const u32_t z_bt_ctlr_used_nrf_ppi_groups;
  *
  * @param[in] irq_handler  Pointer to the nrfx IRQ handler to be called.
  */
-void nrfx_isr(void *irq_handler);
+void nrfx_isr(const void *irq_handler);
+
+#if defined(CONFIG_SOC_SERIES_BSIM_NRFXX)
+#include "nrfx_glue_bsim.h"
+#endif
 
 /** @} */
 

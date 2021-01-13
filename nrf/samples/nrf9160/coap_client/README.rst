@@ -3,6 +3,10 @@
 nRF9160: nRF CoAP Client
 ########################
 
+.. contents::
+   :local:
+   :depth: 2
+
 The nRF CoAP Client sample demonstrates the communication between a public CoAP server and an nRF9160 SiP that acts as the CoAP client.
 
 Overview
@@ -26,12 +30,15 @@ Other resources can be configured using the Kconfig option ``CONFIG_COAP_RESOURC
 Requirements
 ************
 
-* The following development board:
+The sample supports the following development kit:
 
-  * |nRF9160DK|
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf9160dk_nrf9160ns
 
-* .. include:: /includes/spm.txt
-* A public CoAP server IP address or URL available on the internet
+The sample also requires a public CoAP server IP address or URL available on the internet.
+
+.. include:: /includes/spm.txt
 
 Building and running
 ********************

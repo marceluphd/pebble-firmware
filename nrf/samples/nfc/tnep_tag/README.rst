@@ -3,6 +3,10 @@
 NFC: TNEP tag
 #############
 
+.. contents::
+   :local:
+   :depth: 2
+
 The TNEP tag sample demonstrates how to use the :ref:`tnep_tag_readme` library to exchange data using NFC's TNEP Protocol on an NFC Tag device.
 
 Overview
@@ -25,6 +29,7 @@ One of the following boards:
   * |nRF5340DK|
   * |nRF52840DK|
   * |nRF52DK|
+  * |nRF52833DK|
 
 User interface
 **************
@@ -68,6 +73,7 @@ This sample uses the following |NCS| libraries:
 * :ref:`tnep_tag_readme`
 * :ref:`nfc_ndef`
 * :ref:`nfc_text`
+* :ref:`nfc_t4t_ndef_file_readme`
 
 In addition, it uses the following Zephyr libraries:
 

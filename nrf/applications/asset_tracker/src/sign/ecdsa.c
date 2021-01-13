@@ -296,5 +296,16 @@ int GenRandom(char *out)
 	return  0;
 }
 
+int iotex_random(void)
+{
+	union
+	{
+		int  dat;
+		char buf[4];
+	}random32;
+	
+	mbedtls_ctr_drbg_random(&ctr_drbg_ctx, random32.buf, sizeof(random32.buf));
+	return random32.dat;
+}
 
 

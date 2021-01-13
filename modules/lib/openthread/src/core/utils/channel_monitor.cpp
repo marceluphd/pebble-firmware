@@ -62,7 +62,7 @@ ChannelMonitor::ChannelMonitor(Instance &aInstance)
     : InstanceLocator(aInstance)
     , mChannelMaskIndex(0)
     , mSampleCount(0)
-    , mTimer(aInstance, &ChannelMonitor::HandleTimer, this)
+    , mTimer(aInstance, ChannelMonitor::HandleTimer, this)
 {
     memset(mChannelOccupancy, 0, sizeof(mChannelOccupancy));
 }
@@ -119,7 +119,8 @@ void ChannelMonitor::HandleTimer(Timer &aTimer)
 
 void ChannelMonitor::HandleTimer(void)
 {
-    Get<Mac::Mac>().EnergyScan(mScanChannelMasks[mChannelMaskIndex], 0, &ChannelMonitor::HandleEnergyScanResult, this);
+    IgnoreError(Get<Mac::Mac>().EnergyScan(mScanChannelMasks[mChannelMaskIndex], 0,
+                                           &ChannelMonitor::HandleEnergyScanResult, this));
 
     mTimer.StartAt(mTimer.GetFireTime(), Random::NonCrypto::AddJitter(kTimerInterval, kMaxJitterInterval));
 }
@@ -131,7 +132,7 @@ void ChannelMonitor::HandleEnergyScanResult(Mac::EnergyScanResult *aResult, void
 
 void ChannelMonitor::HandleEnergyScanResult(Mac::EnergyScanResult *aResult)
 {
-    if (aResult == NULL)
+    if (aResult == nullptr)
     {
         if (mChannelMaskIndex == kNumChannelMasks - 1)
         {
@@ -192,9 +193,9 @@ void ChannelMonitor::LogResults(void)
     const size_t        kStringSize = 128;
     String<kStringSize> logString;
 
-    for (size_t i = 0; i < kNumChannels; i++)
+    for (uint16_t channel : mChannelOccupancy)
     {
-        logString.Append("%02x ", mChannelOccupancy[i] >> 8);
+        IgnoreError(logString.Append("%02x ", channel >> 8));
     }
 
     otLogInfoUtil("ChannelMonitor: %u [%s]", mSampleCount, logString.AsCString());

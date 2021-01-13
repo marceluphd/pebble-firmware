@@ -62,7 +62,7 @@ assert_exists(MBEDTLS_ASN1_DIR)
 set(NRF_DIR "${MCUBOOT_DIR}/ext/nrf")
 
 if(CONFIG_BOOT_USE_NRF_CC310_BL)
-set(NRFXLIB_DIR $ENV{ZEPHYR_BASE}/../nrfxlib)
+set(NRFXLIB_DIR ${ZEPHYR_BASE}/../nrfxlib)
 assert_exists(NRFXLIB_DIR)
 endif()
 
@@ -80,7 +80,6 @@ zephyr_library_sources(
   flash_map_extended.c
   os.c
   keys.c
-  iotex_adc.c
   )
 
 if(NOT DEFINED CONFIG_FLASH_PAGE_LAYOUT)
@@ -92,19 +91,30 @@ endif()
 # Generic bootutil sources and includes.
 zephyr_library_include_directories(${BOOT_DIR}/bootutil/include)
 zephyr_library_sources(
-  ${BOOT_DIR}/bootutil/src/loader.c
-  ${BOOT_DIR}/bootutil/src/swap_misc.c
-  ${BOOT_DIR}/bootutil/src/swap_scratch.c
-  ${BOOT_DIR}/bootutil/src/swap_move.c
-  ${BOOT_DIR}/bootutil/src/bootutil_misc.c
   ${BOOT_DIR}/bootutil/src/image_validate.c
+  ${BOOT_DIR}/bootutil/src/tlv.c
   ${BOOT_DIR}/bootutil/src/encrypted.c
   ${BOOT_DIR}/bootutil/src/image_rsa.c
   ${BOOT_DIR}/bootutil/src/image_ec256.c
   ${BOOT_DIR}/bootutil/src/image_ed25519.c
-  ${BOOT_DIR}/bootutil/src/caps.c
-  ${BOOT_DIR}/bootutil/src/tlv.c
+  ${BOOT_DIR}/bootutil/src/bootutil_misc.c
   )
+
+if(CONFIG_SINGLE_IMAGE_DFU)
+zephyr_library_sources(
+  ${BOOT_DIR}/zephyr/single_loader.c
+  )
+zephyr_library_include_directories(${BOOT_DIR}/bootutil/src)
+else()
+zephyr_library_sources(
+  ${BOOT_DIR}/bootutil/src/loader.c
+  ${BOOT_DIR}/bootutil/src/swap_misc.c
+  ${BOOT_DIR}/bootutil/src/swap_scratch.c
+  ${BOOT_DIR}/bootutil/src/swap_move.c
+  ${BOOT_DIR}/bootutil/src/caps.c
+  )
+endif()
+
 
 if(CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256 OR CONFIG_BOOT_ENCRYPT_EC256)
   zephyr_library_include_directories(
@@ -141,6 +151,16 @@ if(CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256 OR CONFIG_BOOT_ENCRYPT_EC256)
   # variable is set by its Kconfig in the Zephyr codebase.
   zephyr_library_compile_definitions(
     MBEDTLS_CONFIG_FILE="${CMAKE_CURRENT_LIST_DIR}/include/mcuboot-mbedtls-cfg.h"
+    )
+elseif(CONFIG_BOOT_SIGNATURE_TYPE_NONE)
+  zephyr_library_include_directories(
+    ${BOOT_DIR}/zephyr/include
+    ${TINYCRYPT_DIR}/include
+    )
+
+  zephyr_library_sources(
+    ${TINYCRYPT_DIR}/source/sha256.c
+    ${TINYCRYPT_DIR}/source/utils.c
     )
 elseif(CONFIG_BOOT_SIGNATURE_TYPE_RSA)
   # Use mbedTLS provided by Zephyr for RSA signatures. (Its config file
@@ -211,12 +231,29 @@ if(CONFIG_MCUBOOT_SERIAL)
     )
 endif()
 
+# CONF_FILE points to the KConfig configuration files of the bootloader.
+foreach (filepath ${CONF_FILE})
+  file(READ ${filepath} temp_text)
+  string(FIND "${temp_text}" ${CONFIG_BOOT_SIGNATURE_KEY_FILE} match)
+  if (${match} GREATER_EQUAL 0)
+    if (NOT DEFINED CONF_DIR)
+      get_filename_component(CONF_DIR ${filepath} DIRECTORY)
+    else()
+      message(FATAL_ERROR "Signature key file defined in multiple conf files")
+    endif()
+  endif()
+endforeach()
+
 if(NOT CONFIG_BOOT_SIGNATURE_KEY_FILE STREQUAL "")
   if(IS_ABSOLUTE ${CONFIG_BOOT_SIGNATURE_KEY_FILE})
     set(KEY_FILE ${CONFIG_BOOT_SIGNATURE_KEY_FILE})
+  elseif((DEFINED CONF_DIR) AND
+	 (EXISTS ${CONF_DIR}/${CONFIG_BOOT_SIGNATURE_KEY_FILE}))
+    set(KEY_FILE ${CONF_DIR}/${CONFIG_BOOT_SIGNATURE_KEY_FILE})
   else()
     set(KEY_FILE ${MCUBOOT_DIR}/${CONFIG_BOOT_SIGNATURE_KEY_FILE})
   endif()
+  message("MCUBoot bootloader key file: ${KEY_FILE}")
 
   set_property(
 	GLOBAL
@@ -243,5 +280,11 @@ endif()
 if(CONFIG_MCUBOOT_CLEANUP_ARM_CORE)
 zephyr_library_sources(
   ${BOOT_DIR}/zephyr/arm_cleanup.c
+)
+endif()
+
+if(CONFIG_MCUBOOT_NRF_CLEANUP_PERIPHERAL)
+zephyr_library_sources(
+  ${BOOT_DIR}/zephyr/nrf_cleanup.c
 )
 endif()

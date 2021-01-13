@@ -58,18 +58,19 @@ target_sources_ifdef(CONFIG_VANILLA_MBEDTLS_SHA256_C
   mbedcrypto_vanilla PRIVATE ${ARM_MBEDTLS_PATH}/library/sha256.c
 )
 
+
 target_include_directories(mbedcrypto_vanilla PRIVATE
   ${common_includes}
   ${config_include}
 )
 
 #
-# Add specific includes for threading and platform_cc310
+# Add specific includes for threading and platform_cc3xx
 #
-if(TARGET platform_cc310)
+if(TARGET platform_cc3xx)
   target_include_directories(mbedcrypto_vanilla PRIVATE
     ${mbedcrypto_glue_include_path}/threading
-    ${NRF_CC310_PLATFORM_BASE}/include
+    $<TARGET_PROPERTY:platform_cc3xx,BASE_INCLUDE_PATH>
   )
 endif()
 
