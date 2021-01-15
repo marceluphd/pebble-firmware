@@ -31,6 +31,20 @@
 #include "bootutil/bootutil.h"
 #include "flash_map_backend/flash_map_backend.h"
 
+#define  POWER_ON_PIN  15
+#define  POWER_ON_IO_VAL   1
+#define  POWER_OFF_IO_VAL  0
+//  5s  power key , entry firmware update  proc.
+#define  PWK_ENTRY_UPDATE_TIM    5000     
+//  2s   power key active time
+#define  PWK_ACTIVE_TIME    500
+
+#define GPIO_DIR_OUT  GPIO_OUTPUT
+#define GPIO_DIR_IN   GPIO_INPUT
+#define GPIO_INT  GPIO_INT_ENABLE
+#define GPIO_INT_DOUBLE_EDGE  GPIO_INT_EDGE_BOTH
+#define gpio_pin_write  gpio_pin_set
+
 #ifdef CONFIG_FW_INFO
 #include <fw_info.h>
 #endif
@@ -331,6 +345,41 @@ void zephyr_boot_log_stop(void)
 #endif/* defined(CONFIG_LOG) && !defined(CONFIG_LOG_IMMEDIATE) &&\
         !defined(CONFIG_LOG_PROCESS_THREAD) */
 
+
+struct device *detect_port;
+
+void LedCtrl(uint8_t port, uint32_t val)
+{
+    gpio_pin_write(detect_port, port,val ); 
+}
+
+void TimdeDelay(int32_t ms)
+{
+    int32_t time_stamp;
+    volatile int32_t milliseconds_spent;
+    time_stamp = k_uptime_get(); 
+    while(true)
+    {
+        milliseconds_spent = k_uptime_get();
+        if((milliseconds_spent - time_stamp) >=ms)
+            break;
+    }
+}
+
+void PowerOfIndicator(void)
+{  
+    int i;
+    for(i=0; i < 3; i++)  
+    {
+        gpio_pin_write(detect_port, 30,0);
+        TimdeDelay(1000);
+        gpio_pin_write(detect_port, 30,1);
+        TimdeDelay(1000);
+    }
+    gpio_pin_write(detect_port, 15,0);
+    TimdeDelay(5000);
+}
+
 void main(void)
 {
     struct boot_rsp rsp;
@@ -377,6 +426,7 @@ void main(void)
 #endif
            );
     __ASSERT(rc == 0, "Error of boot detect pin initialization.\n");
+    gpio_pin_configure(detect_port, POWER_ON_PIN, GPIO_DIR_OUT);
 
 #ifdef GPIO_INPUT
     rc = gpio_pin_get_raw(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN);
@@ -385,12 +435,47 @@ void main(void)
     rc = gpio_pin_read(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN,
                        &detect_value);
 #endif
-    __ASSERT(rc >= 0, "Error of the reading the detect pin.\n");
-    if (detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL &&
+    __ASSERT(rc >= 0, "Error of the reading the detect pin.\n"); 
+    gpio_pin_configure(detect_port, 26,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 27,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 30,GPIO_DIR_OUT);    //qiuhm 0526
+    gpio_pin_configure(detect_port, 15, GPIO_DIR_OUT);
+    gpio_pin_write(detect_port, 15,1);
+    gpio_pin_write(detect_port, 27,1);
+    gpio_pin_write(detect_port, 26,1 ); 
+    gpio_pin_write(detect_port, 30,1 );    
+    // check voltage
+    adc_module_init();
+    power_check();    
+    gpio_pin_write(detect_port, 27,0 );    
+    gpio_pin_write(detect_port, 26,1 ); 
+    gpio_pin_write(detect_port, 30,1 );
+	
+		   
+    int32_t time_stamp;
+    int32_t milliseconds_spent;
+    time_stamp = k_uptime_get();   
+    rc = 0;     
+     milliseconds_spent = k_uptime_delta(&time_stamp);
+    while((detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL)&&((milliseconds_spent-time_stamp) < PWK_ENTRY_UPDATE_TIM)){
+        milliseconds_spent = k_uptime_get();
+        if((!rc)&&((milliseconds_spent-time_stamp) >= PWK_ACTIVE_TIME)){
+            gpio_pin_write(detect_port, POWER_ON_PIN, POWER_ON_IO_VAL);
+            rc++;
+        }
+        //gpio_pin_read(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN, &detect_value); 
+        detect_value = gpio_pin_get(detect_port, CONFIG_BOOT_SERIAL_DETECT_PIN);
+    }    
+    //if (detect_value == CONFIG_BOOT_SERIAL_DETECT_PIN_VAL &&
+    if (((milliseconds_spent-time_stamp) >=PWK_ENTRY_UPDATE_TIM ) &&
         !boot_skip_serial_recovery()) {
         BOOT_LOG_INF("Enter the serial recovery mode");
         rc = boot_console_init();
         __ASSERT(rc == 0, "Error initializing boot console.\n");
+
+gpio_pin_write(detect_port,27, 1 );//qiuhm 0526
+gpio_pin_write(detect_port, 30,0 );
+
         boot_serial_start(&boot_funcs);
         __ASSERT(0, "Bootloader serial process was terminated unexpectedly.\n");
     }

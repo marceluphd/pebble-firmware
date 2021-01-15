@@ -65,6 +65,8 @@ MCUBOOT_LOG_MODULE_DECLARE(mcuboot);
 
 #define BOOT_SERIAL_INPUT_MAX   512
 #define BOOT_SERIAL_OUT_MAX     128
+// 20s update timeout  
+#define  SERIAL_UPDATE_TIMEOUT  20000
 
 #ifdef __ZEPHYR__
 /* base64 lib encodes data to null-terminated string */
@@ -574,6 +576,7 @@ boot_serial_in_dec(char *in, int inlen, char *out, int *out_off, int maxout)
     return 1;
 }
 
+extern void LedCtrl(uint8_t port, uint32_t val);
 /*
  * Task which waits reading console, expecting to get image over
  * serial port.
@@ -586,16 +589,23 @@ boot_serial_start(const struct boot_uart_funcs *f)
     int dec_off = 0;
     int full_line;
     int max_input;
+    int32_t time_stamp;
+    int32_t milliseconds_spent;
+    time_stamp = k_uptime_get();
 
     boot_uf = f;
     max_input = sizeof(in_buf);
 
     off = 0;
     while (1) {
-        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);
+        milliseconds_spent = k_uptime_get();
+        if((milliseconds_spent - time_stamp) > SERIAL_UPDATE_TIMEOUT)
+            break;
+        rc = f->read(in_buf + off, sizeof(in_buf) - off, &full_line);        
         if (rc <= 0 && !full_line) {
             continue;
         }
+        LedCtrl(30,1);
         off += rc;
         if (!full_line) {
             if (off == max_input) {
@@ -614,10 +624,11 @@ boot_serial_start(const struct boot_uart_funcs *f)
           in_buf[1] == SHELL_NLIP_DATA_START2) {
             rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);
         }
-
+        time_stamp = k_uptime_get();
         /* serve errors: out of decode memory, or bad encoding */
         if (rc == 1) {
-            boot_serial_input(&dec_buf[2], dec_off - 2);
+            LedCtrl(30,0);
+            boot_serial_input(&dec_buf[2], dec_off - 2);            
         }
         off = 0;
     }
