@@ -169,7 +169,7 @@ static struct k_work send_gps_data_work;
 static struct k_delayed_work send_env_data_work;
 static struct k_delayed_work long_press_button_work;
 static struct k_delayed_work power_off_button_work;
-static struct k_delayed_work send_agps_request_work;
+//static struct k_delayed_work send_agps_request_work;
 //static struct k_delayed_work gps_work;
 
 #if defined(CONFIG_AT_CMD)
@@ -359,6 +359,13 @@ static void send_env_data_work_fn(struct k_work *work) {
     config_mutex_unlock();
     return;
 }
+
+void RestartEnvWork(int s)
+{
+    k_delayed_work_cancel(&send_env_data_work);
+    k_delayed_work_submit(&send_env_data_work, K_SECONDS(s));
+}
+
 #if(!EXTERN_GPS)
 static void gps_handler(struct device *dev, struct gps_event *evt)
 {
@@ -556,8 +563,7 @@ static void periodic_publish_sensors_data() {
         /* Upload selected channel data */
         if (!iotex_mqtt_get_selected_payload(iotex_mqtt_get_data_channel(), &msg)) {           
             rc = iotex_mqtt_publish_data(&client, 0, msg.buf);            
-            printk("mqtt_publish_devicedata: %d \n", rc);  
-            //printk("message:%s \n", msg.buf);          
+            printk("mqtt_publish_devicedata: %d \n", rc);            
             //free(msg.buf);
             cJSON_free(msg.buf);
             mqttSentOnce();
@@ -664,7 +670,7 @@ static void work_init(void)
 	k_work_init(&send_gps_data_work, send_gps_data_work_fn);
 #endif
 	k_delayed_work_init(&send_env_data_work, send_env_data_work_fn);
-	k_delayed_work_init(&send_agps_request_work, send_agps_request);
+	//k_delayed_work_init(&send_agps_request_work, send_agps_request);
 	k_delayed_work_init(&long_press_button_work, long_press_handler);
 	k_delayed_work_init(&power_off_button_work, power_off_handler);
 }
@@ -863,9 +869,6 @@ static void sampling_and_store_sensor_data(void) {
         iotex_mqtt_bulk_upload_sampling_data(iotex_mqtt_get_data_channel());
     }
 }
-extern int RSA_gen_key(void);
-extern int RSA_encrypt(void);
-extern int RSA_decrypt(void);
 
 void main(void)
 {
@@ -879,14 +882,7 @@ void main(void)
 	}
     //  init ECDSA 
     initECDSA_sep256r();
-
-    //RSA_gen_key();
-    //RSA_encrypt();
-    //RSA_decrypt();
-
-    //return  0;
 	 /* HAL init, notice gpio must be the first (to set IO_POWER_ON on )*/
-    iotex_local_storage_init();
 	iotex_hal_gpio_init();
 	iotex_hal_adc_init();	
     /* Iotex Init BME680 */
@@ -895,9 +891,6 @@ void main(void)
     iotex_TSL2572_init(GAIN_1X); 
     /* Iotex Init ICM42605 */
     iotex_icm42605_init();
-
-//TestICMAct();
-//return;
 
 #if !defined(CONFIG_USE_PROVISIONED_CERTIFICATES)
     provision_certificates();
@@ -923,7 +916,7 @@ for(int i=0; i< 30; i++)
 	work_init();
 	modem_configure();
 	iotex_modem_get_clock(NULL);
-	
+	iotex_local_storage_init();
 
 #if defined(CONFIG_LWM2M_CARRIER)
 	k_sem_take(&bsdlib_initialized, K_FOREVER);
@@ -942,92 +935,9 @@ while(1){
                 "GPS", latitude, longitude);
     printk("%s \n", payload);
     k_sleep(K_MSEC(5000));
-    updateLedPattern();
 }
 #endif
-// publish_data
-#if 0
-#include "antenna_sdk/src/request.h"
-#include "antenna_sdk/src/iotex_emb.h"
-#include "antenna_sdk/src/abi_pack.h"    
-    int ret;
-    char *error_desc = NULL;
-    iotex_st_execution tx = {0};
-    iotex_t_hash tx_hash = {0};
-    //iotex_st_config config = {0};
-    iotex_st_action_info tx_action_info;
-    uint64_t version = 1, nonce = 1, gasLimit = 1000000;
 
-    //http_cert_provision();
-
-    //config.ver = 1;
-    //config.cert_file = "cacert.pem";
-    //config.cert_dir = "./";
-
-    /* Initialize iotex emb lib */
-    //if ((ret = iotex_emb_init(&config)) != 0) {
-    //    fprintf(stderr, "Initialize iotex emb failed, error code: %d\n", ret);
-    //    return -1;
-   // }
-
-    /* Execution */
-    tx.amount = "123";
-    tx.contract = "io17awtxw3cm4hhku50nshw9250dfyfj576ykumrm";
-    tx.core.privateKey = "dcdab70604b42d2a215263f5077ebbf6ceeffd46002249cb7e59015135e3bc91";
-
-    /* Optional, can be NULL */
-    tx.core.nonce = &nonce;
-    tx.core.version = &version;
-    tx.core.gasLimit = &gasLimit;
-    tx.core.gasPrice  = "1000000000000";
-
-    // assume data[40] contains the 40-bytes we want to publish to contract
-    char data[40];
-    uint64_t data_size;
-    if ((tx.data = abi_pack_publish((const uint8_t *)data, 40, &data_size)) == NULL) {
-        return IOTEX_E_MEM;
-    }
-    tx.dataLength = data_size;
-
-    /* error_desc can be NULL, if don't care error reason */
-    if ((ret = iotex_emb_execution(&tx, tx_hash, &error_desc)) != 0) {
-        if (error_desc) {
-            fprintf(stderr, "Execution failed: %s\n", error_desc);
-
-            /* XXX: Notice, error_desc is malloced from iotex_emb_transfer, after use must free */
-            free(error_desc);
-            error_desc = NULL;
-            ret = -1;
-        }
-        else {
-            fprintf(stderr, "Execution failed, error code: %d\n", ret);
-        }
-
-        // tx.data is malloced by abi_pack_publish(), free before exit
-        free(tx.data);
-        tx.data = NULL;
-        return ret;
-    }
-
-    /* Get transfer action info */
-    if ((ret = iotex_emb_get_action_by_hash(tx_hash, &tx_action_info)) != 0) {
-        fprintf(stderr, "Get hash[%s] action failed: %d\n", tx_hash, ret);
-
-        // tx.data is malloced by abi_pack_publish(), free before exit
-        free(tx.data);
-        tx.data = NULL;
-        return ret;
-    }
-
-    /* Print tx info */
-    // TODO: parse execution into tx_action_info
-    fprintf(stdout, "Execution success, amount: %s, contract: %s, hash: %s\n", tx.amount, tx.contract, tx_hash);
-
-    // tx.data is malloced by abi_pack_publish(), free before exit
-    free(tx.data);
-    tx.data = NULL;
-    return 0;
-#endif
     if ((err = iotex_mqtt_client_init(&client, &fds))) {
         printk("ERROR: mqtt_connect %d, rebooting...\n", err);
         k_sleep(K_MSEC(500));
@@ -1035,15 +945,15 @@ while(1){
         return;
     }
 
-    sensors_init();   
-    while (true) {      
+    sensors_init();
+    while (true) {
         err = poll(&fds, 1, CONFIG_MAIN_BASE_TIME);
 
         if (err < 0) {
             printk("ERROR: poll %d\n", errno);
             error_handler(ERROR_CLOUD, err);
             break;
-        }       
+        }
         err = mqtt_live(&client);
 
         if ((err != 0) && (err != -EAGAIN)) {
@@ -1052,7 +962,7 @@ while(1){
             break;
         }
         if(!err)
-        {       
+        {
             iotex_mqtt_heart_beat(&client, 0);
         }        
         printk("mqtt live ????\n");
@@ -1066,6 +976,7 @@ while(1){
                 break;
             }
         }
+
         if ((fds.revents & POLLERR) == POLLERR) {
             printk("POLLERR\n");
             error_handler(ERROR_CLOUD, -EIO);
@@ -1077,12 +988,14 @@ while(1){
             error_handler(ERROR_CLOUD, -EIO);
             break;
         }
+
         if (do_reboot) {
             /* Teardown */
             mqtt_disconnect(&client);
             sys_reboot(0);
         }
-        updateLedPattern();      
+        updateLedPattern();
+        CheckPower();
     }
 #if defined(CONFIG_LWM2M_CARRIER)
 	LOG_INF("Waiting for LWM2M carrier to complete initialization...");

@@ -25,10 +25,6 @@ typedef enum {
 
     /* MQTT configure sid */
     SID_MQTT_DATA_CHANNEL_CONFIG = 0x1001,
-
-    /* bme680 sta  sid */
-    SID_BME680_STA = 0x1002,
-    SID_BME680_STA_LEN = 0x1003,
 } iotex_storage_id;
 
 

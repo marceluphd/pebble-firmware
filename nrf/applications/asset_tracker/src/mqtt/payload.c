@@ -297,16 +297,17 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     if (!root_obj||!msg_obj||!sign_obj) {
         goto out;
     }
-
+    cJSON_AddItemToObject(root_obj, "message", msg_obj); 
+    cJSON_AddItemToObject(root_obj, "signature", sign_obj);    
     if (DATA_CHANNEL_ENV_SENSOR & channel) {
         if (iotex_bme680_get_sensor_data(&env_sensor)) {
-            return -1;
+             goto out;
         }
     }
 
     if (DATA_CHANNEL_ACTION_SENSOR & channel) {
         if (iotex_icm42605_get_sensor_data(&action_sensor)) {
-            return -1;
+             goto out;
         }
     }
 
@@ -441,7 +442,7 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     /* Add timestamp */
     if (json_add_str(msg_obj, "timestamp", iotex_modem_get_clock(NULL))) {
         goto out;
-    }  
+    }
     // get random number
     GenRandom(random);
     random[sizeof(random)-1] = 0;
@@ -450,7 +451,7 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
     {
         goto out;
     }
-    cJSON_AddItemToObject(root_obj, "message", msg_obj);      
+    
     output->buf = cJSON_PrintUnformatted(msg_obj);   
     doESDA_sep256r_Sign(output->buf,strlen(output->buf),esdaSign,&sinLen);   
     hex2str(esdaSign, sinLen,jsStr);
@@ -462,16 +463,16 @@ int iotex_mqtt_get_selected_payload(uint16_t channel, struct mqtt_payload *outpu
         goto out;
     cJSON *esdaSign_s_Obj = cJSON_CreateString(jsStr+64);
     if(!esdaSign_s_Obj  || json_add_obj(sign_obj, "s", esdaSign_s_Obj))
-        goto out;    
-    cJSON_AddItemToObject(root_obj, "signature", sign_obj);   
+        goto out; 
+                
     //memset(output->buf, 0, strlen(output->buf));   
     output->buf = cJSON_PrintUnformatted(root_obj);    
     output->len = strlen(output->buf);
-    cJSON_Delete(root_obj);       
+    cJSON_Delete(root_obj);   
     return 0;
 
 out:
-    cJSON_Delete(root_obj);  
+    cJSON_Delete(root_obj);
     return -ENOMEM;
 }
 

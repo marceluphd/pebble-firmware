@@ -218,14 +218,3 @@ int iotex_icm42605_get_sensor_data(iotex_storage_icm42605 *icm42605) {
 
     return status;
 }
-
-void TestICMAct(void)
-{
-    iotex_storage_icm42605 action_sensor;  
-    while(1){
-        iotex_icm42605_get_sensor_data(&action_sensor);
-        k_sleep(K_MSEC(3000));
-    }  
-    
-}
-

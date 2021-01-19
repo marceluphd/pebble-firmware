@@ -13,7 +13,6 @@
 #include <drivers/i2c.h>
 #include "bsec_integration.h"
 #include "env_sensors.h"
-#include "nvs/local_storage.h"
 
 #define ENV_INIT_DELAY_S (5) /* Polling delay upon initialization */
 #define MAX_INTERVAL_S   (INT_MAX/MSEC_PER_SEC)
@@ -98,7 +97,6 @@ static int settings_set(const char *key, size_t len_rd,
 
 static int enable_settings(void)
 {
-#if 0
 	int err;
 
 	settings_subsys_init();
@@ -121,8 +119,6 @@ static int enable_settings(void)
 	}
 
 	return err;
-#endif
-	return 0;
 }
 
 static int8_t bus_write(u8_t dev_addr, u8_t reg_addr,
@@ -160,12 +156,10 @@ static void output_ready(s64_t timestamp, float iaq, u8_t iaq_accuracy,
 {
 	k_spinlock_key_t key = k_spin_lock(&(temp_sensor.lock));
 
-	//temp_sensor.sensor.value = temperature;
-	temp_sensor.sensor.value = temperature-6;
+	temp_sensor.sensor.value = temperature;
 	k_spin_unlock(&(temp_sensor.lock), key);
 	key = k_spin_lock(&(humid_sensor.lock));
-	//humid_sensor.sensor.value = humidity;
-	humid_sensor.sensor.value = humidity*1.10;
+	humid_sensor.sensor.value = humidity;
 	k_spin_unlock(&(humid_sensor.lock), key);
 	key = k_spin_lock(&(pressure_sensor.lock));
 	pressure_sensor.sensor.value = pressure / 1000;
@@ -177,19 +171,9 @@ static void output_ready(s64_t timestamp, float iaq, u8_t iaq_accuracy,
 
 static u32_t state_load(u8_t *state_buffer, u32_t n_buffer)
 {
-#if 0
 	if ((s_state_buffer_len > 0) && (s_state_buffer_len <= n_buffer)) {
 		memcpy(state_buffer, s_state_buffer, s_state_buffer_len);
 		return s_state_buffer_len;
-	} else {
-		return 0;
-	}
-#endif
-	s_state_buffer_len = 0;
-	iotex_local_storage_load(SID_BME680_STA_LEN, &s_state_buffer_len, 4);
-	//printk("state_load : %d , wantted :%d \n", s_state_buffer_len, n_buffer);
-	if ((s_state_buffer_len > 0) && (s_state_buffer_len <= n_buffer)) {
-		iotex_local_storage_load(SID_BME680_STA, state_buffer, s_state_buffer_len);
 	} else {
 		return 0;
 	}
@@ -197,12 +181,7 @@ static u32_t state_load(u8_t *state_buffer, u32_t n_buffer)
 
 static void state_save(const u8_t *state_buffer, u32_t length)
 {
-	//settings_save_one("bsec/state", state_buffer, length);	
-	iotex_local_storage_del(SID_BME680_STA);
-	iotex_local_storage_del(SID_BME680_STA_LEN);
-	iotex_local_storage_save(SID_BME680_STA_LEN,&length,4);
-	iotex_local_storage_save(SID_BME680_STA,state_buffer,length);
-	//printk("state_save : %d \n", length);
+	settings_save_one("bsec/state", state_buffer, length);
 }
 
 static u32_t config_load(u8_t *config_buffer, u32_t n_buffer)
@@ -301,9 +280,9 @@ int env_sensors_init_and_start(struct k_work_q *work_q,
 	return_values_init bsec_ret;
 	int ret;
 
-//	if ((work_q == NULL) || (cb == NULL)) {
-//		return -EINVAL;
-//	}
+	if ((work_q == NULL) || (cb == NULL)) {
+		return -EINVAL;
+	}
 
 	i2c_master = device_get_binding("I2C_2");
 	if (!i2c_master) {
@@ -330,16 +309,16 @@ int env_sensors_init_and_start(struct k_work_q *work_q,
 			(k_thread_entry_t)bsec_thread, NULL, NULL, NULL,
 			CONFIG_SYSTEM_WORKQUEUE_PRIORITY, 0, K_NO_WAIT);
 
-//	data_ready_cb = cb;
+	data_ready_cb = cb;
 
-//	env_sensors_work_q = work_q;
+	env_sensors_work_q = work_q;
 
-//	k_delayed_work_init(&env_sensors_poller, env_sensors_poll_fn);
+	k_delayed_work_init(&env_sensors_poller, env_sensors_poll_fn);
 
 	initialized = true;
 
-	//return (data_send_interval_s > 0) ? submit_poll_work(ENV_INIT_DELAY_S) : 0;
-	return 0;
+	return (data_send_interval_s > 0) ?
+		submit_poll_work(ENV_INIT_DELAY_S) : 0;
 }
 
 void env_sensors_set_send_interval(const u32_t interval_s)

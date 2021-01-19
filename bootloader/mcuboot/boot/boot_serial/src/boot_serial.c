@@ -615,11 +615,12 @@ boot_serial_start(const struct boot_uart_funcs *f)
                 off = 0;
             }
             continue;
-        }
+        } 
+              
         if (in_buf[0] == SHELL_NLIP_PKT_START1 &&
           in_buf[1] == SHELL_NLIP_PKT_START2) {
             dec_off = 0;
-            rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);
+            rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);        
         } else if (in_buf[0] == SHELL_NLIP_DATA_START1 &&
           in_buf[1] == SHELL_NLIP_DATA_START2) {
             rc = boot_serial_in_dec(&in_buf[2], off - 2, dec_buf, &dec_off, max_input);
