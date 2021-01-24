@@ -14,3 +14,7 @@ The firmware implements the asset tracking application using Pebble hardware des
 . cd  zephyr
 
 . git branch manifest-rev
+
+# update
+. Add a new board: iotex_pebble_hw20, select board name iotex_pebble_hw20ns in NS mode
+
