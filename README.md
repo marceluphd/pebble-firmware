@@ -15,6 +15,24 @@ The firmware implements the asset tracking application using Pebble hardware des
 
 . git branch manifest-rev
 
+# How to securely sign firmware images for booting by MCUboot
+
+1.  Run cmd.exe in Windows system and bash shell in Linux system.
+
+2.    Go to the directory of imgtool.
+cd    xxx/v1.4.0/bootloader/mcuboot/scripts  ('xxx' is your NCS SDk directory ) .
+
+3.   Installation dependencies 
+pip3 install --user -r  requirements.txt
+
+4. Generate a keypair
+python3  imgtool.py  keygen -k root-ec-p256.pem -t ecdsa-p256
+
+5.  Copy the file 'root-ec-p256.pem' to the  "xxx/v1.4.0/bootloader/mcuboot"  directory and overwrite the original file ('xxx' is your NCS SDk directory ). 
+
+
+6.   Recompile the firmware, the new firmware will be signed with the new key and verified at startup
+
 # update
 . Add a new board: iotex_pebble_hw20, select board name iotex_pebble_hw20ns in NS mode
 
