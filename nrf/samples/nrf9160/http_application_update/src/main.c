@@ -15,13 +15,28 @@
 #include <net/fota_download.h>
 #include <dfu/mcuboot.h>
 
-#define LED_PORT	DT_GPIO_LABEL(DT_ALIAS(led0), gpios)
+//#define LED_PORT	DT_GPIO_LABEL(DT_ALIAS(led0), gpios)
+#define  LED_PORT   "GPIO_0"
 #define TLS_SEC_TAG 42
+
+#define LED_GREEN     26         //p0.00 == LED_GREEN  0=on 1=off
+#define LED_BLUE      27    //p0.01 == LED_BLUE   0=on 1=off
+#define LED_RED       30    //p0.02 == LED_RED    0=on 1=off
+
+#define LED_ON        0
+#define LED_OFF       1
+
+#define GPIO_DIR_OUT  GPIO_OUTPUT
+#define GPIO_DIR_IN   GPIO_INPUT
+#define GPIO_INT  GPIO_INT_ENABLE
+#define GPIO_INT_DOUBLE_EDGE  GPIO_INT_EDGE_BOTH
+#define gpio_pin_write  gpio_pin_set
 
 static const struct	device *gpiob;
 static struct		gpio_callback gpio_cb;
 static struct k_work	fota_work;
 
+const struct device *dev;
 
 /**@brief Recoverable BSD library error. */
 void bsd_recoverable_error_handler(uint32_t err)
@@ -108,7 +123,7 @@ static void app_dfu_transfer_start(struct k_work *unused)
  */
 static int led_app_version(void)
 {
-	const struct device *dev;
+//	const struct device *dev;
 
 	dev = device_get_binding(LED_PORT);
 	if (dev == 0) {
@@ -116,14 +131,23 @@ static int led_app_version(void)
 		return 1;
 	}
 
-	gpio_pin_configure(dev, DT_GPIO_PIN(DT_ALIAS(led0), gpios),
-			   GPIO_OUTPUT_ACTIVE |
-			   DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+//	gpio_pin_configure(dev, DT_GPIO_PIN(DT_ALIAS(led0), gpios),
+//			   GPIO_OUTPUT_ACTIVE |
+//			   DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+
+    gpio_pin_configure(dev, LED_GREEN, GPIO_DIR_OUT); 	//p0.00 == LED_GREEN
+    gpio_pin_configure(dev, LED_BLUE, GPIO_DIR_OUT);	//p0.01 == LED_BLUE
+    gpio_pin_configure(dev, LED_RED, GPIO_DIR_OUT); 	//p0.02 == LED_RED
+
+    gpio_pin_write(dev, LED_GREEN, LED_OFF);	//p0.00 == LED_GREEN ON
+    gpio_pin_write(dev, LED_BLUE, LED_ON);	//p0.00 == LED_BLUE OFF
+	gpio_pin_write(dev, LED_RED, LED_OFF);
 
 #if CONFIG_APPLICATION_VERSION == 2
-	gpio_pin_configure(dev, DT_GPIO_PIN(DT_ALIAS(led1), gpios),
-			   GPIO_OUTPUT_ACTIVE |
-			   DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));
+	//gpio_pin_configure(dev, DT_GPIO_PIN(DT_ALIAS(led1), gpios),
+	//		   GPIO_OUTPUT_ACTIVE |
+	//		   DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));
+	gpio_pin_write(dev, LED_RED, LED_ON);
 #endif
 	return 0;
 }
