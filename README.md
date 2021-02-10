@@ -39,3 +39,7 @@ The firmware implements the asset tracking application using Pebble hardware des
 # update
 . Add a new board: iotex_pebble_hw20, select board name iotex_pebble_hw20ns in NS mode
 
+#  [FOTA(firmware over-the-air)](https://github.com/iotexproject/pebble-firmware/tree/v1.4.0/nrf/samples/nrf9160/http_application_update)
+
+   The HTTP application update sample demonstrates how to do a basic FOTA (firmware over-the-air) update. It uses the FOTA download library to download a file from a remote server and write it to flash
+   
